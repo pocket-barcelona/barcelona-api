@@ -23,17 +23,18 @@ AWS.config.update({
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 
+// get path, since __dirname is not available!
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// console.log('directory-name 👉️', __dirname);
+
+
 // csv file to import
 const csvFilename = 'barrios.csv';
 // csv headers
 const csvHeaders = ['barrio_id', 'barrio_parent_id', 'barrio_label', 'barrio', 'barrio_alias', 'barrio_desc', 'barrio_zone', 'barrio_central', 'barrio_central_range', 'barrio_active'];
 
 
-
-// get path, since __dirname is not available!
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-// console.log('directory-name 👉️', __dirname);
 
 // get csv file ref
 const csvFile = path.join(__dirname, csvFilename);

@@ -1,0 +1,13 @@
+type_id,type_active,type_label,type_alias,type_icon,type_poster,type_visited_by
+1,1,Beaches,/beaches,beach_access,1.jpg,People who love to hang out on the beach or by the sea under the Barcelona sun
+2,0,Bars & Restaurants,/bars-and-restaurants,local_bar,2.jpg,Lovers of food and drink who like to wine and dine in the cool local eateries
+3,1,Experiences,/experiences,local_play,3.jpg,People who love to get the best out of the city and experience something new
+4,1,Festivals & Events,/festivals-and-events,movie_filter,4.jpg,People who like to go to the latest events and festivals in and around Barcelona
+5,1,Squares & Plazas,/squares-and-plazas,location_on,5.jpg,People who prefer to go and spend time in one spot and let the fun come to them
+6,1,"Trips, Tours & Excursions",/trips-tours-and-excursions,directions_walk,6.jpg,"People who like to explore the surroundings on day, weekend trips, or longer"
+7,1,Museums & Art Galleries,/museums-and-art-galleries,store,7.jpg,People who cannot resist an art gallery or enjoy a free museum for all the family
+8,1,Viewpoints,/viewpoints,satellite,8.jpg,People who cannot miss out on a breathtaking view over the city or from the top
+9,1,Buildings & Architecture,/buildings-and-architecture,location_city,9.jpg,"Lovers of ornate facades, historical architecture, cultural and famous buildings"
+10,1,Highstreets & Shopping,/highstreets-and-shopping,shopping_basket,10.jpg,People who love to shop and grab a bargain on the highstreet or check out the markets
+11,1,Parks & Open Spaces,/parks-and-open-spaces,nature_people,11.jpg,"People who enjoy nature, the open spaces or simply just a relaxing walk by the sea"
+12,1,Sports & Outdoor Activities,/sports-and-outdoor-activites,directions_bike,12.jpg,People who are active and like the buzz of participating in outdoor leisure activities
