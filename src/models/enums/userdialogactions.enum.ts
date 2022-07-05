@@ -1,0 +1,17 @@
+export enum UserDialogActionsEnum {
+  FirstPlaceFavourited,
+  FirstPlaceAddedToTrip,
+  FirstPlaceAddedToMultipleTrips,
+  SecondPlaceAddedToTrip,
+  ThirdPlaceAddedToTrip,
+  // FourthPlaceAddedToTrip,
+  FifthPlaceAddedToTrip,
+  MaxPlacesInCurrentTrip,
+  UserIsViewingSuggestedTripPlaces,
+  UserIsViewingOwnTripPlaces,
+  MaxNumberOfTripsReached,
+  DeleteTripAreYouSure,
+  DeletePlaceFromTripAreYouSure,
+  SwitchBetweenTrips,
+  StartTripPlanner,
+}
