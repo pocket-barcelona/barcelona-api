@@ -1,12 +1,12 @@
 // https://csv.js.org/parse/api/sync/
 // RUN this from the project root
-// node --loader ts-node/esm ./src/collections/barrios/barrioParser.ts
+// node --loader ts-node/esm ./src/collections/categories/categoriesParser.ts
 
 import * as fs from "fs";
 import * as path from "path";
-import { BarrioCsv } from "./barrioCsv.type";
+import { CategoriesCsv } from "./categoriesCsv.type";
 import { fileURLToPath } from 'url';
-import { BarrioInput } from "../../models/barrio.model";
+import { CategoryInput } from "../../models/category.model";
 import { parse } from "csv-parse/sync";
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
@@ -77,26 +77,25 @@ const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
 // CSV-SPECIFIC DATA...
 
 // csv headers
-const csvHeaders = ['barrio_id', 'barrio_parent_id', 'barrio_label', 'barrio', 'barrio_alias', 'barrio_desc', 'barrio_zone', 'barrio_central', 'barrio_central_range', 'barrio_active'];
+const csvHeaders = ['type_id','type_active','type_label','type_alias','type_icon','type_poster','type_visited_by'];
 // DynamoDB table name, where to insert the data
-const tableName = 'Barrios';
+const tableName = 'Categories';
 // parse csv file
-const records = parserService<BarrioCsv>(fileContent, csvHeaders);
+const records = parserService<CategoriesCsv>(fileContent, csvHeaders);
 
 if (records && records.length > 0) {
   
   // put the new records in the database...
 
   // build new mapped objects
-  const mappedRecords = records.map<BarrioInput>(r => {
+  const mappedRecords = records.map<CategoryInput>(r => {
     return {
-      barrioId: Number(r.barrio_id),
-      parentId: Number(r.barrio_parent_id),
-      officialName: r.barrio_label,
-      officialNameAccentless: r.barrio,
-      barrioSlug: r.barrio_alias.replace('/', '').replace('_', '-').replace('_', '-'),
-      barrioZone: Number(r.barrio_zone),
-      barrioCentrality: Number(r.barrio_central_range),
+      categoryId: Number(r.type_id),
+      label: r.type_label,
+      slug: r.type_alias,
+      icon: r.type_icon,
+      poster: r.type_poster,
+      suitableFor: r.type_visited_by,
     };
   });
   
@@ -105,7 +104,7 @@ if (records && records.length > 0) {
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
   mappedRecords
-  .slice(1, 2) // skip the header row!
+  .slice(1) // skip the header row!
   .forEach((theRecord) => {
     
     const params = {
