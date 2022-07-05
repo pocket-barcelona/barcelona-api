@@ -16,7 +16,7 @@ export interface BarrioInput {
   /** Metro zone for the barrio. Most are 1 */
   barrioZone: number;
   /** A measure of how central the barrio is: 1=central ex. Ciutat Vella, 5=not central ex. Sarria Sant Gervasi, 10=not even in BCN */
-  barrioCentralityWeight: number;
+  barrioCentrality: number;
 }
 
 export interface BarrioDocument extends BarrioInput, Document {

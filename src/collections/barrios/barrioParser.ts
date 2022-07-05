@@ -1,9 +1,12 @@
 import * as fs from "fs";
 import * as path from "path";
-import { parse } from 'csv-parse';
+import { parse } from 'csv-parse/sync';
 import { BarrioCsv } from "./barrioCsv.type";
 import { fileURLToPath } from 'url';
+import { BarrioInput } from "../../models/barrio.model";
+// import AWS from "aws-sdk";
 
+// https://csv.js.org/parse/api/sync/
 
 // RUN this from the project root
 // node --loader ts-node/esm ./src/collections/barrios/barrioParser.ts
@@ -15,49 +18,48 @@ const csvFile = path.join(__dirname, 'barrios.csv');
 
 let barriosList: BarrioCsv[] = [];
 
-const parser = () => {
-  // const csvFilePath = path.resolve(path.dirname('./barrios.csv'));
-  const csvFilePath = path.resolve(csvFile);
+// const csvFilePath = path.resolve(path.dirname('./barrios.csv'));
+const csvFilePath = path.resolve(csvFile);
 
-  const headers = ['barrio_id', 'barrio_parent_id', 'barrio_label', 'barrio', 'barrio_alias', 'barrio_desc', 'barrio_zone', 'barrio_central', 'barrio_central_range', 'barrio_active'];
-  // read file
-  const fileContent = fs.readFileSync(csvFilePath, { encoding: 'utf-8' });
+// csv headers
+const headers = ['barrio_id', 'barrio_parent_id', 'barrio_label', 'barrio', 'barrio_alias', 'barrio_desc', 'barrio_zone', 'barrio_central', 'barrio_central_range', 'barrio_active'];
+// read file
+const fileContent = fs.readFileSync(csvFilePath, { encoding: 'utf-8' });
 
-  // init output
-  const records: BarrioCsv[] = [];
+// init output
+let records: BarrioCsv[] = [];
 
-  // parse
-  const myParser = parse(fileContent, {
+// parse
+try {
+  records = parse(fileContent, {
     delimiter: ',',
     columns: headers,
-  }, (error, parsed: BarrioCsv[]) => {
-    if (error) {
-      console.error(error);
-      throw new Error(error.message);
-    }
-    
-    // console.log(parsed);
-    // return parsed;
-    // result = parsed;
-  })
-  myParser.on('readable', function() {
-    let record;
-    while ((record = myParser.read()) !== null) {
-      records.push(record);
-    }
+  });
+} catch (error) {
+  console.error(error);
+}
 
-    myParser.write(records);
+if (records && records.length > 0) {
+
+  const mappedRecords = records.map(r => {
+    const newRecord: BarrioInput = {
+      barrioId: Number(r.barrio_id),
+      parentId: Number(r.barrio_parent_id),
+      officialName: r.barrio_label,
+      officialNameAccentless: r.barrio,
+      barrioSlug: r.barrio_alias.replace('/', '').replace('_', '-'),
+      barrioZone: Number(r.barrio_zone),
+      barrioCentrality: Number(r.barrio_central_range),
+    };
+    return newRecord;
   });
 
-
-
-  return records;
-  // return records;
-};
-
-
-
-barriosList = parser();
-console.log(barriosList);
+  // put the new records in the database
+  console.log([
+    {
+      ...mappedRecords[1]
+    }
+  ]);
+}
 
 // console.log(barriosList);
