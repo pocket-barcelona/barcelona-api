@@ -1,4 +1,4 @@
-export enum TypesIdsEnum {
+export enum CategoryIdEnum {
     Beaches = 1,
     BarsRestaurants = 2,
     Experiences = 3,

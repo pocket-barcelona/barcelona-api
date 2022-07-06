@@ -94,7 +94,7 @@ if (records && records.length > 0) {
       parentId: Number(r.barrio_parent_id),
       officialName: r.barrio_label,
       officialNameAccentless: r.barrio,
-      barrioSlug: r.barrio_alias.replace('/', '').replace('_', '-').replace('_', '-'),
+      urlSlug: r.barrio_alias.replace('/', '').replace('_', '-').replace('_', '-'),
       barrioZone: Number(r.barrio_zone),
       barrioCentrality: Number(r.barrio_central_range),
     };
@@ -105,7 +105,7 @@ if (records && records.length > 0) {
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
   mappedRecords
-  .slice(1, 2) // skip the header row!
+  .slice(1) // skip the header row!
   .forEach((theRecord) => {
     
     const params = {

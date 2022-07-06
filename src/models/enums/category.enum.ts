@@ -1,4 +1,4 @@
-export enum TypesEnum {
+export enum CategoryEnum {
     Beaches = 'Beach',
     Destinations = 'Destination',
     Experiences = 'Experience',

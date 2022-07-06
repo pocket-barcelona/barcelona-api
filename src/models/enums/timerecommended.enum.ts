@@ -1,4 +1,4 @@
-export enum TimeEnum {
+export enum TimeRecommendedEnum {
   CoupleOfHours = 1,  
   QuarterDay = 2,
   HalfDay = 4,

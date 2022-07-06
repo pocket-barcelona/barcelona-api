@@ -12,7 +12,7 @@ export interface BarrioInput {
   /** The official barrio name, but without accents. Ex. Gràcia => Gracia */
   officialNameAccentless: string;
   /** The friendly URL for the barrio */
-  barrioSlug: string;
+  urlSlug: string;
   /** Metro zone for the barrio. Most are 1 */
   barrioZone: number;
   /** A measure of how central the barrio is: 1=central ex. Ciutat Vella, 5=not central ex. Sarria Sant Gervasi, 10=not even in BCN */
@@ -44,7 +44,7 @@ const barrioSchema = new dynamoose.Schema({
     required: true,
     default: '',
   },
-  barrioSlug: {
+  urlSlug: {
     type: String,
     required: true,
     default: '',

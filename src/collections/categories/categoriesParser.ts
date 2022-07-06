@@ -92,7 +92,7 @@ if (records && records.length > 0) {
     return {
       categoryId: Number(r.type_id),
       label: r.type_label,
-      slug: r.type_alias,
+      urlSlug: r.type_alias,
       icon: r.type_icon,
       poster: r.type_poster,
       suitableFor: r.type_visited_by,

@@ -7,7 +7,7 @@ export interface CategoryInput {
   categoryId: number;
   /** The label */
   label: string;
-  slug: string;
+  urlSlug: string;
   icon: string;
   poster: string;
   suitableFor: string;
@@ -28,7 +28,7 @@ const categorySchema = new dynamoose.Schema({
     type: String,
     required: true,
   },
-  slug: {
+  urlSlug: {
     type: String,
     required: true,
     default: '',
