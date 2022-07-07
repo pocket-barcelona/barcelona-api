@@ -14,7 +14,7 @@ export default async function (
     const result = PlaceModel.scan()
       // only fetch my events
       .where(activeField)
-      .eq(1)
+      .eq(true)
       .exec(); // this will scan every record
     return await result.catch((err) => {
       // logger.warn(err)

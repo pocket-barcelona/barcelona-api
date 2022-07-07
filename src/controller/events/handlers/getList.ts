@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { BarriosService } from "../../../service/barrios/barrios.service";
+import { EventsService } from "../../../service/events/events.service";
 
 /**
- * Get a list of barrios
+ * Get a list of events
  * @param req
  * @param res
  * @returns
  */
 export default async function getList(req: Request, res: Response) {
   
-  const data = await BarriosService.getList();
+  const data = await EventsService.getList();
 
   if (!data) {
     return res

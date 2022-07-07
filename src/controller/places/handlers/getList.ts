@@ -12,7 +12,7 @@ import { PlacesService } from "../../../service/places/places.service";
 export default async function getList(req: Request, res: Response) {
   
   const records = await PlacesService.getList();
-
+  
   if (!records) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

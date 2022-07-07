@@ -11,8 +11,9 @@ export default async function (
   try {
     const parentIdField: keyof BarrioDocument = "parentId";
 
+    // support for top-level barrios, where parentId is undefined
+
     const result = BarrioModel.scan()
-      // only fetch my events
       .where(parentIdField)
       .eq(parentId || 0)
       .exec(); // this will scan every record

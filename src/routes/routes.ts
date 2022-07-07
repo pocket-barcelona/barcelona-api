@@ -2,6 +2,8 @@ import express, { Express, Request, Response } from "express";
 import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
 import barriosRoutes from './barrios';
 import placesRoutes from './places';
+import eventsRoutes from './events';
+// import plannerRoutes from './planner';
 
 function routes(app: Express) {
 
@@ -10,7 +12,13 @@ function routes(app: Express) {
   // app.use('/api/another', anotherRoutes);
   
   app.use('/api/barrios', barriosRoutes);
+  // @todo - rename to explore
   app.use('/api/places', placesRoutes);
+
+
+  app.use('/api/events', eventsRoutes);
+  // app.use('/api/planner', plannerRoutes);
+
 }
 
 export default routes;
