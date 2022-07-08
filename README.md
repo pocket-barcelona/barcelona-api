@@ -1,8 +1,3 @@
-<style>
-p { font-size: 13px; }
-summary { cursor: pointer; }
-</style>
-
 # Barcelona API - NodeJS/Express, DynamoDB, Dynamoose, Zod and Typescript
 
 <details>

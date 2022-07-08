@@ -12,8 +12,8 @@ function routes(app: Express) {
   // app.use('/api/another', anotherRoutes);
   
   app.use('/api/barrios', barriosRoutes);
-  // @todo - rename to explore
-  app.use('/api/places', placesRoutes);
+  
+  app.use('/api/explore', placesRoutes);
 
 
   app.use('/api/events', eventsRoutes);

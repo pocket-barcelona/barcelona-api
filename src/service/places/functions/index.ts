@@ -1,3 +1,9 @@
 import getListHandler from './getList';
+import getByIdHandler from './getById';
+import getRelatedPlacesHandler from './getRelatedPlaces';
 
-export { getListHandler };
+export {
+    getListHandler,
+    getByIdHandler,
+    getRelatedPlacesHandler,
+};
