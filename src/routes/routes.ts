@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/packag
 import barriosRoutes from './barrios';
 import placesRoutes from './places';
 import eventsRoutes from './events';
-// import plannerRoutes from './planner';
+import plannerRoutes from './planner';
 
 function routes(app: Express) {
 
