@@ -8,7 +8,7 @@ import { PlanBuilderInput, StructuredPlan, structuredPlanObj } from "../../../mo
  */
 export default async function (input: PlanBuilderInput): Promise<StructuredPlan | null> {
   try {
-    
+    // const dayProfile = 
     // for each day, pick a theme at random. The same theme can occur again on another day, but is less likely
     // ignore themes which don't fit the input params
     // e.g. if includesPlacesOutsideCity=false, do not include day trips outside BCN
