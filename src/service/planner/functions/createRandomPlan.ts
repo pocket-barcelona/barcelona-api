@@ -1,12 +1,12 @@
 import PlaceModel, { PlaceDocument } from "../../../models/place.model";
 import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { StructuredPlan, structuredPlanObj } from "../../../models/plan.model";
+import { StructuredPlanResponse, structuredPlanObj } from "../../../models/plan.model";
 
 /**
  * Generate a random plan for 1 day
  * @returns
  */
-export default async function (): Promise<StructuredPlan | null> {
+export default async function (): Promise<StructuredPlanResponse | null> {
   try {
     // TODO
     // const result = PlaceModel.get(1);

@@ -17,7 +17,7 @@ function routes(app: Express) {
 
 
   app.use('/api/events', eventsRoutes);
-  // app.use('/api/planner', plannerRoutes);
+  app.use('/api/planner', plannerRoutes);
 
 }
 
