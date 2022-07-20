@@ -46,7 +46,7 @@ export class PlanHelper {
     
     const resp: StructuredPlanResponse = {
       // @todo - planTitle can be tokenized
-      planTitle: theme.name,
+      planTitle: typeof theme.name === 'string' ? theme.name : theme.name[0],
       planTheme: theme.theme,
       itinerary: [
         {

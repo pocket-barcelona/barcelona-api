@@ -23,7 +23,7 @@ export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> &
   /** The style/theme of the plan */
   theme: PlanThemeEnum;
   /** The name of the themed day profile */
-  name: string;
+  name: string | string[];
   /** The number of places to limit to, for this day - if not included, other params will dictate the results */
   limit?: number;
   /** If true, the final list will be randomized */

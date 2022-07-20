@@ -57,7 +57,10 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     // might need an ancient building flag?
     id: 102,
     theme: PlanThemeEnum.Category,
-    name: "Ancient buildings - self-guided walking tour",
+    name: [
+      "Ancient buildings - self-guided walking tour",
+      "Historical Buildings Tour",
+    ],
     categoryIds: [9],
     placeIdsAlwaysInclude: [119], // the cathedral
     barrioIds: [],
@@ -76,6 +79,27 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     // placeIds: [63], // include sant antoni market 63?
     limit: 4,
   },
+  {
+    id: 104,
+    theme: PlanThemeEnum.Category,
+    name: ["Parks and countryside around Barcelona", "Parks & green spaces around BCN"],
+    categoryIds: [11],
+    barrioIds: [35, 48, 44, 46],
+    seasonal: false,
+    freeToVisit: 1,
+    limit: 4,
+  },
+  {
+    id: 105,
+    theme: PlanThemeEnum.Category,
+    name: ["Cathedrals and Churches in central Barcelona"],
+    categoryIds: [225, 119],
+    barrioIds: [35, 48, 44, 46],
+    seasonal: false,
+    freeToVisit: 1,
+    limit: 4,
+  },
+  
   {
     id: 201,
     theme: PlanThemeEnum.Trips,
@@ -191,13 +215,13 @@ export const themesTestData: StructuredPlanDayProfile[] = [
 
 // CATEGORY BASED
 // 101. Barcelona Beach Tour
-// 102. Ancient buildings - self-guided walking tour
+// 102a. Ancient buildings - self-guided walking tour
+// 102b. Historical Buildings Tour
 // 103. Inner-city markets tour
-// Historical Buildings Tour
-// Parks and countryside around BCN
-// Parks & green spaces around BCN
+// 104a. Parks and countryside around Barcelona
+// 104b. Parks & green spaces around BCN
+// 105. Cathedrals and Churches in central Barcelona
 // Cathedral and Beaches
-// Cathedrals and Churches - central Barcelona
 // Plaza Tour
 // Best of cities around Barcelona
 // Parks and green spaces in Barcelona
