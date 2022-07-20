@@ -33,6 +33,46 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     // popular: true,
     // more?
   },
+  {
+    id: 4,
+    theme: PlanThemeEnum.Location,
+    name: "Best of Gràcia",
+    barrioIds: [38],
+    // popular: true,
+    // more?
+  },
+  {
+    id: 5,
+    theme: PlanThemeEnum.Location,
+    name: "Best of El Born",
+    barrioIds: [13],
+    // popular: true,
+    // more?
+  },
+  {
+    id: 6,
+    theme: PlanThemeEnum.Location,
+    name: "Best of El Barri Gòtic",
+    barrioIds: [12],
+    // popular: true,
+    // more?
+  },
+  {
+    id: 7,
+    theme: PlanThemeEnum.Location,
+    name: "Best of La Barceloneta",
+    barrioIds: [14],
+    // popular: true,
+    // more?
+  },
+  {
+    id: 8,
+    theme: PlanThemeEnum.Location,
+    name: "Best of Eixample",
+    barrioIds: [15,16,17],
+    // popular: true,
+    // more?
+  },
   
   {
     id: 101,
@@ -90,6 +130,17 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     limit: 4,
   },
   {
+    id: 1041,
+    theme: PlanThemeEnum.Category,
+    name: "Unique Barcelona Experiences",
+    categoryIds: [3],
+    seasonal: false,
+    placeIds: [72,148,71,64,4,57,58,114,288,13,154],
+    placeIdsChooseAmount: 2,
+    randomize: true,
+    // limit: 2,
+  },
+  {
     id: 105,
     theme: PlanThemeEnum.Category,
     name: ["Cathedrals and Churches in central Barcelona"],
@@ -99,7 +150,47 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     freeToVisit: 1,
     limit: 4,
   },
-  
+  {
+    id: 1051,
+    theme: PlanThemeEnum.Category,
+    name: "Go Shopping in Barcelona",
+    categoryIds: [10],
+    placeIds: [274,42,21,22,271,282,10,143,118,9,142,237],
+    placeIdsChooseAmount: 5,
+    randomize: true,
+    // limit: 2,
+  },
+  {
+    id: 106,
+    theme: PlanThemeEnum.Category,
+    name: "5 Plaza's in a day",
+    categoryIds: [5],
+    placeIdsChooseAmount: 5,
+    randomize: true,
+    metroZone: 1,
+    limit: 5,
+  },
+  {
+    id: 107,
+    theme: PlanThemeEnum.Category,
+    name: "3 Museums, 1 Day",
+    categoryIds: [7],
+    placeIdsChooseAmount: 3,
+    randomize: true,
+    metroZone: 1,
+    limit: 3,
+  },
+  {
+    id: 108,
+    theme: PlanThemeEnum.Category,
+    name: "Central Museums Tour, Barcelona",
+    categoryIds: [7],
+    placeIdsChooseAmount: 3,
+    randomize: true,
+    metroZone: 1,
+    barrioIds: [11,12,13,14],
+    limit: 3,
+  },
   {
     id: 201,
     theme: PlanThemeEnum.Trips,
@@ -117,6 +208,24 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     placeIds: [45, 270],
     placeIdsOptional: [283],
     placeIdsAreOrdered: true,
+  },
+  {
+    id: 203,
+    theme: PlanThemeEnum.Trips,
+    name: "Day trip to {place}",
+    categoryIds: [6],
+    provinceId: 2,
+    randomize: true,
+    limit: 1,
+  },
+  {
+    id: 204,
+    theme: PlanThemeEnum.Trips,
+    name: "City trip to {place}",
+    categoryIds: [8],
+    provinceId: 2,
+    randomize: true,
+    limit: 1,
   },
   {
     id: 301,
@@ -161,10 +270,14 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     limit: 15,
     randomize: true,
   },
-  // {
-  //   id: 502,
-  //   name: '',
-  // }
+  {
+    id: 502,
+    theme: PlanThemeEnum.BestOf, // @todo change?
+    name: 'Get sporty in Barcelona',
+    categoryIds: [12],
+    placeIds: [36,37,6,285,158,290],
+    placeIdsChooseAmount: 3,
+  },
   {
     id: 601,
     theme: PlanThemeEnum.Route,
