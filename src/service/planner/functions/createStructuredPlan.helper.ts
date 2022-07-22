@@ -28,6 +28,18 @@ export class PlanHelper {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  // // https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+  // randomlySortArray<T[]>(theArray: T[]): T[] {
+  //   const shuffleArray = array => {
+  //     for (let i = array.length - 1; i > 0; i--) {
+  //       const j = Math.floor(Math.random() * (i + 1));
+  //       const temp = array[i];
+  //       array[i] = array[j];
+  //       array[j] = temp;
+  //     }
+  //   }
+  // }
+
   buildPlanResponse(
     dayNumber: number,
     theme: StructuredPlanDayProfile,
@@ -43,6 +55,8 @@ export class PlanHelper {
       }
     });
 
+    const numberOfPlaces = results.length
+
     
     const resp: StructuredPlanResponse = {
       // @todo - planTitle can be tokenized
@@ -51,7 +65,7 @@ export class PlanHelper {
       itinerary: [
         {
           dayNumber,
-          action: "TODO - verb",
+          action: (theme.verbs && theme.verbs.length > 0) ? theme.verbs[0] : 'Go to',
           places: results,
         },
       ],
@@ -59,6 +73,7 @@ export class PlanHelper {
       summary: {
         // TODO
         numberOfDays: 1,
+        numberOfPlaces: numberOfPlaces,
         budget: 0,
         includesPlacesOutsideCity: false,
         easyWalking: true,

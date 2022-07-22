@@ -41,6 +41,7 @@ export interface StructuredPlanResponse {
   /** See itinerary summary model from PB */
   summary: {
     numberOfDays: number;
+    numberOfPlaces: number;
     /** Use budget ENUM */
     budget: number;
     /** should include places outside the city of Barcelona or not */
@@ -127,6 +128,7 @@ export const structuredPlanObj: StructuredPlanResponse = {
   eventNotices: [],
   summary: {
     numberOfDays: 1,
+    numberOfPlaces: 1,
     budget: 0,
     includesPlacesOutsideCity: false,
     easyWalking: true,
@@ -146,6 +148,8 @@ export const structuredPlanObj: StructuredPlanResponse = {
 
 /** The data required to generate a structured plan */
 export interface PlanBuilderInput {
+  /** Selects a specific theme by ID - for testing */
+  themeId?: number;
   /** The type of traveller that the plan is for */
   profileType: ProfileTypeEnum;
   /** Number of days for this plan: 1-7 */

@@ -123,6 +123,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     id: 104,
     theme: PlanThemeEnum.Category,
     name: ["Parks and countryside around Barcelona", "Parks & green spaces around BCN"],
+    verbs: ["Take a walk around"],
     categoryIds: [11],
     barrioIds: [35, 48, 44, 46],
     seasonal: false,

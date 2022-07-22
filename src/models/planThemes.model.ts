@@ -16,7 +16,7 @@ type PlaceKeys = 'bestTod' | 'commitmentRequired' | 'childrenSuitability' |
 // the picked props from the place model
 type PlaceAttributes = Pick<PlaceInput, PlaceKeys>;
 
-// set picked props to be optional
+
 export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> & {
   /** The theme profile ID, so we can choose it specifically */
   id: number;
@@ -24,6 +24,8 @@ export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> &
   theme: PlanThemeEnum;
   /** The name of the themed day profile */
   name: string | string[];
+  /** A list of actions to take, e.g. Take a walk around [Parc de la Ciutadella] */
+  verbs?: string[];
   /** The number of places to limit to, for this day - if not included, other params will dictate the results */
   limit?: number;
   /** If true, the final list will be randomized */

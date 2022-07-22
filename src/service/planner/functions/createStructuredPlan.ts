@@ -56,7 +56,8 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
   try {
     const helper = new PlanHelper();
     // const randomTheme = helper.getRandomItemFromArray(planThemes);
-    const themeId = 104;
+    const themeId = input.themeId ?? 101;
+
     const theme = themesTestData.find(p => p.id === themeId);
     if (!theme) {
       throw new Error("Invalid theme ID");
@@ -79,6 +80,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     const hasCategoryIdsChooseAmount = theme.categoryIdsChooseAmount !== undefined && Number.isInteger(theme.categoryIdsChooseAmount) && theme.categoryIdsChooseAmount > 0;
     const hasMetroZones = theme.metroZone !== undefined;
     const hasSeasonal = theme.seasonal === true || theme.seasonal === false;
+    const hasFreeToVisit = theme.freeToVisit !== undefined ? theme.freeToVisit : null;
     const hasKeyword = theme.keyword !== undefined && theme.keyword !== '';
     const hasRandomize = theme.randomize === true;
     const hasStart = theme.start !== undefined; // more checks?
@@ -90,7 +92,6 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     const hasFoodCategories = Array.isArray(theme.foodCategories) && theme.foodCategories.length > 0; // more checks?
     const hasDrinkCategories = Array.isArray(theme.drinkCategories) && theme.drinkCategories.length > 0; // more checks?
     const hasLimit = theme.limit !== undefined && Number.isInteger(theme.limit) && theme.limit > 0;
-
     let documents: Scan<PlaceDocument>;
     let results: ScanResponse<PlaceDocument>;
     
@@ -212,6 +213,11 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
       .and().where(seasonalField).eq(theme.seasonal);
     }
 
+    if (Number.isInteger(hasFreeToVisit)) {
+      documents
+      .and().where(freeToVisitField).eq(theme.freeToVisit);
+    }
+
     // if (hasExcludePlaceIds) {
     //   documents
     //   .and().where(placeIdField).in(theme.placeIdsExclude).not();
@@ -219,10 +225,19 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 
 
     // do a query by category and then process the results
-    results = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
 
+    
+    try {
+      results = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
+    } catch (error) {
+      return null;
+    }
+
+    // process the list response.
+    // consider randomize and limit
     const limitedResultSet = hasLimit ? results.toJSON().slice(0, 5) : results.toJSON().slice(0, DOCUMENT_LIST_RETURN_LIMIT);
 
+    
     const thePlan = helper.buildPlanResponse(dayNumber, theme, limitedResultSet);
     if (thePlan) {
       return thePlan;
