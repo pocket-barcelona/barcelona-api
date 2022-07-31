@@ -8,8 +8,8 @@ import { DrinkCategoryEnum, FoodCategoryEnum } from "./enums/foodcategory.enum";
 
 
 // the keys from the place model
-type PlaceKeys = 'bestTod' | 'commitmentRequired' | 'childrenSuitability' |
-'daytrip' | 'freeToVisit' | 'lat' | 'lng' | 'metroZone' | 'physicalLandmark' |
+type PlaceKeys = 'annualOnly' | 'bestTod' | 'commitmentRequired' | 'childrenSuitability' |
+'daytrip' | 'freeToVisit' | 'lat' | 'lng' | 'metroZone' | 'physicalLandmark' | 'placeId' |
 'popular' | 'provinceId' | 'relatedPlaceId' | 'seasonal' |
 'teenagerSuitability' | 'tags';
 
@@ -28,8 +28,6 @@ export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> &
   verbs?: string[];
   /** The number of places to limit to, for this day - if not included, other params will dictate the results */
   limit?: number;
-  /** If true, the final list will be randomized */
-  randomize?: boolean;
   /** A key word to find in the tags */
   keyword?: string;
   /** A list of category IDs */
@@ -71,8 +69,10 @@ export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> &
   internal?: 0 | 1 | 2;
   /** Client-side ordering strategy for the result set */
   orderBy?: {
-    key: string;
+    /** Key must be in place model */
+    key: PlaceKeys;
     direction: 'ASC' | 'DESC' | 'RANDOM';
+    valueType?: 'BOOLEAN' | 'STRING' | 'NUMBER';
   }[];
 }
 

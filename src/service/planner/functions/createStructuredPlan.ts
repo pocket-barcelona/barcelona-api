@@ -6,9 +6,10 @@ import { PlanThemeEnum } from "../../../models/planThemes.model";
 import { themesTestData } from "../../../collections/themes/themesTestData";
 
 const DOCUMENT_SCAN_LIMIT = 500;
-const DOCUMENT_LIST_RETURN_LIMIT = 25;
+
 
 const activeField: keyof PlaceDocument = 'active';
+const provinceIdField: keyof PlaceDocument = 'provinceId';
 const placeIdField: keyof PlaceDocument = 'placeId';
 const barrioIdField: keyof PlaceDocument = 'barrioId';
 const categoryIdField: keyof PlaceDocument = 'categoryId';
@@ -58,7 +59,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     // const randomTheme = helper.getRandomItemFromArray(planThemes);
     const themeId = input.themeId ?? 101;
 
-    const theme = themesTestData.find(p => p.id === themeId);
+    const theme = themesTestData.find(t => t.id === themeId);
     if (!theme) {
       throw new Error("Invalid theme ID");
     }
@@ -68,6 +69,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     // const dayProfile = 
     
     // put in helpers
+    const hasProvinceId = Number.isInteger(theme.provinceId);
     const hasBarrioIds = theme.barrioIds && theme.barrioIds.length > 0;
     const hasBarrioIdsChooseAmount = theme.barrioIdsChooseAmount !== undefined && Number.isInteger(theme.barrioIdsChooseAmount) && theme.barrioIdsChooseAmount > 0;
     const hasPlaceIds = theme.placeIds && theme.placeIds.length > 0;
@@ -75,14 +77,16 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     // placeIdsAlwaysInclude
     // placeIdsOptional
     const hasPlaceIdsOrdered = theme.placeIdsAreOrdered === true;
-    // placeIdsChooseAmount
+    const hasPlaceIdsChooseAmount = theme.placeIdsChooseAmount !== undefined && Number.isInteger(theme.placeIdsChooseAmount);
     const hasCategoryIds = theme.categoryIds && theme.categoryIds.length > 0;
     const hasCategoryIdsChooseAmount = theme.categoryIdsChooseAmount !== undefined && Number.isInteger(theme.categoryIdsChooseAmount) && theme.categoryIdsChooseAmount > 0;
     const hasMetroZones = theme.metroZone !== undefined;
     const hasSeasonal = theme.seasonal === true || theme.seasonal === false;
+    const hasDaytrip = Number.isInteger(theme.daytrip);
+    const hasPopular = theme.popular === true || theme.popular === false;
+    const hasAnnualOnly = Number.isInteger(theme.annualOnly);
     const hasFreeToVisit = theme.freeToVisit !== undefined ? theme.freeToVisit : null;
     const hasKeyword = theme.keyword !== undefined && theme.keyword !== '';
-    const hasRandomize = theme.randomize === true;
     const hasStart = theme.start !== undefined; // more checks?
     const hasEnd = theme.end !== undefined; // more checks?
     const hasCenter = theme.center !== undefined; // more checks?
@@ -91,11 +95,16 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     const hasRequiresBookingOptions = Array.isArray(theme.requiresBookingOptions) && theme.requiresBookingOptions.length > 0; // more checks?
     const hasFoodCategories = Array.isArray(theme.foodCategories) && theme.foodCategories.length > 0; // more checks?
     const hasDrinkCategories = Array.isArray(theme.drinkCategories) && theme.drinkCategories.length > 0; // more checks?
-    const hasLimit = theme.limit !== undefined && Number.isInteger(theme.limit) && theme.limit > 0;
+    
     let documents: Scan<PlaceDocument>;
     let results: ScanResponse<PlaceDocument>;
     
-    documents = PlaceModel.scan().where(activeField).eq(true)
+    documents = PlaceModel.scan().where(activeField).eq(true);
+
+    const placeIdsSubset = 
+      theme.placeIds && theme.placeIdsChooseAmount !== undefined && hasPlaceIds && hasPlaceIdsChooseAmount ?
+      helper.getMultipleRandomItemsFromArray(theme.placeIds, theme.placeIdsChooseAmount) :
+      theme.placeIds as number[];
 
     // decide how to query the places table
     switch (theme.theme) {
@@ -106,20 +115,20 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
           throw new Error("categoryIds required");
         }
         
-        // decide how to query
         documents.and()
         .where(categoryIdField).in(theme.categoryIds);
-
+        
+        // decide how to query
         if (hasBarrioIds && hasPlaceIds) {
           documents
           .and().where(barrioIdField).in(theme.barrioIds)
-          .and().where(placeIdField).in(theme.placeIds);
+          .and().where(placeIdField).in(placeIdsSubset);
         } else if (hasBarrioIds) {
           documents
           .and().where(barrioIdField).in(theme.barrioIds);
         } else if (hasPlaceIds) {
           documents
-          .and().where(placeIdField).in(theme.placeIds);
+          .and().where(placeIdField).in(placeIdsSubset);
         }
         
         break;
@@ -135,34 +144,32 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
           .and().where(barrioIdField).in(theme.barrioIds);
         }
 
-        // .and().where(placeIdField).in(theme.placeIds);
+        // .and().where(placeIdField).in(placeIdsSubset);
 
         // do a query based on location using barrio IDs or lat/lng
 
-        // decide how to query
-        // documents.and()
-        
-        // .and()
-        // .where(categoryIdField).in(theme.categoryIds);
+        if (theme.categoryIds?.length) {
+          documents.and()
+          .where(categoryIdField).in(theme.categoryIds);
+        }
 
         // if (hasBarrioIds && hasPlaceIds) {
         //   documents
         //   .and().where(barrioIdField).in(theme.barrioIds)
-        //   .and().where(placeIdField).in(theme.placeIds);
+        //   .and().where(placeIdField).in(placeIdsSubset);
         // } else if (hasBarrioIds) {
         //   documents
         //   .and().where(barrioIdField).in(theme.barrioIds);
         // } else if (hasPlaceIds) {
         //   documents
-        //   .and().where(placeIdField).in(theme.placeIds);
+        //   .and().where(placeIdField).in(placeIdsSubset);
         // }
         break;
-
       }
       case PlanThemeEnum.Trips: {
 
         if (hasPlaceIds) {
-          documents.where(placeIdField).in(theme.placeIds);
+          documents.where(placeIdField).in(placeIdsSubset);
         }
         if (hasBarrioIds) {
           documents
@@ -190,7 +197,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 
       case PlanThemeEnum.Route: {
         documents.and()
-        .where(placeIdField).in(theme.placeIds)
+        .where(placeIdField).in(placeIdsSubset)
 
         break;
       }
@@ -202,17 +209,30 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     }
 
     // general param filters
-
+    if (hasProvinceId) {
+      documents
+      .and().where(provinceIdField).eq(theme.provinceId);
+    }
     if (hasMetroZones) {
       documents
       .and().where(metroZoneField).in([theme.metroZone]);
     }
-
     if (hasSeasonal) {
       documents
       .and().where(seasonalField).eq(theme.seasonal);
     }
-
+    if (hasDaytrip) {
+      documents
+      .and().where(daytripField).eq(theme.daytrip);
+    }
+    if (hasPopular) {
+      documents
+      .and().where(popularField).eq(theme.popular);
+    }
+    if (hasAnnualOnly) {
+      documents
+      .and().where(annualOnlyField).eq(theme.annualOnly);
+    }
     if (Number.isInteger(hasFreeToVisit)) {
       documents
       .and().where(freeToVisitField).eq(theme.freeToVisit);
@@ -233,12 +253,8 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
       return null;
     }
 
-    // process the list response.
-    // consider randomize and limit
-    const limitedResultSet = hasLimit ? results.toJSON().slice(0, 5) : results.toJSON().slice(0, DOCUMENT_LIST_RETURN_LIMIT);
-
     
-    const thePlan = helper.buildPlanResponse(dayNumber, theme, limitedResultSet);
+    const thePlan = helper.buildPlanResponse(dayNumber, theme, results.toJSON() as PlaceDocument[]);
     if (thePlan) {
       return thePlan;
     }

@@ -7,6 +7,7 @@ import {
   StructuredPlanDayProfile,
 } from "../../../models/planThemes.model";
 
+const DOCUMENT_LIST_RETURN_LIMIT = 25;
 export class PlanHelper {
   getDayProfile(numberOfDays: number): StructuredPlanDayProfile {
     return themesTestData[0];
@@ -26,6 +27,18 @@ export class PlanHelper {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  
+  /**
+   * Get n random items from an array
+   * @link https://bobbyhadz.com/blog/javascript-get-multiple-random-elements-from-array#:~:text=To%20get%20multiple%20random%20elements,to%20get%20multiple%20random%20elements.
+   * @param  {T[]} arr
+   * @param  {number} num
+   * @returns T
+   */
+  getMultipleRandomItemsFromArray<T>(arr: T[], num: number): T[] {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, num);
   }
 
   // // https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
@@ -47,26 +60,61 @@ export class PlanHelper {
     results: PlaceDocument[]
   ): StructuredPlanResponse {
 
-    // get a distinct of categories for the places in these results
+    // sort list
+    if (theme.orderBy && theme.orderBy.length > 0) {
+      const sortKey = theme.orderBy[0].key;
+      const valueType = theme.orderBy[0].valueType ?? 'NUMBER';
+      const sortDirection = theme.orderBy[0].direction;
+      
+      // order results by array items
+      // ...could be multiple sort levels @todo
+      
+      results = results.sort((a, b) => {
+        // sort randomly!
+        if (sortDirection === 'RANDOM') {
+          return Math.random() > 0.5 ? 1 : -1;
+        }
+
+        const aVal = a[sortKey];
+        const bVal = b[sortKey];
+        switch (valueType) {
+          case 'BOOLEAN': 
+            return aVal === true && bVal === false ? 1 : (aVal === true && bVal === true ? 0 : -1);
+          
+          default:
+            return aVal > bVal ? 1 : (aVal === bVal ? 0 : -1);
+        }
+      });
+    }
+
+    // @todo - consider randomize
+
+
+    // truncate list
+    const hasLimit = theme.limit !== undefined && Number.isInteger(theme.limit) && theme.limit > 0;
+    const limitedResultSet = hasLimit ? results.slice(0, theme.limit) : results.slice(0, DOCUMENT_LIST_RETURN_LIMIT);
+
+    // get distinct categories for the places in the results
     const categoryIds: Array<PlaceDocument['categoryId']> = [];
-    results.forEach(p => {
+    limitedResultSet.forEach(p => {
       if (categoryIds.indexOf(p.categoryId) === -1) {
         categoryIds.push(p.categoryId);
       }
     });
 
-    const numberOfPlaces = results.length
+    const numberOfPlaces = limitedResultSet.length;
 
+    const planTitle = this.getPlanTitle(theme.name, limitedResultSet);
     
     const resp: StructuredPlanResponse = {
       // @todo - planTitle can be tokenized
-      planTitle: typeof theme.name === 'string' ? theme.name : theme.name[0],
+      planTitle,
       planTheme: theme.theme,
       itinerary: [
         {
           dayNumber,
           action: (theme.verbs && theme.verbs.length > 0) ? theme.verbs[0] : 'Go to',
-          places: results,
+          places: limitedResultSet,
         },
       ],
       eventNotices: [],
@@ -94,5 +142,29 @@ export class PlanHelper {
     };
 
     return resp;
+  }
+  
+  /**
+   * Convert "Daytrip to {place}" to "Daytrip to Montgat". Assumes "{" is not at the start of the name string
+   * @param  {StructuredPlanDayProfile['name']} themeName
+   * @param  {PlaceDocument[]} results
+   * @returns string
+   */
+  getPlanTitle(themeName: StructuredPlanDayProfile['name'], results: PlaceDocument[]): string {
+    const name = typeof themeName === 'string' ? themeName : themeName[0];
+    if (name.indexOf('{') > -1 && name.indexOf('}') > -1) {
+
+      // get the word between the curly braces
+      const spl = name.split('}');
+      const spl2 = spl[0].split('{');
+      // const firstPart = spl2[0].toString().trim();
+      const token = spl2[1] || '';
+
+      const placeName = results[0].nameOfficial || '';
+      const regex = new RegExp(`{${token.toString().trim()}}`, "g");
+      const replaced = name.replace(regex, placeName);
+      return replaced;
+    }
+    return name;
   }
 }

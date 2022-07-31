@@ -23,6 +23,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     name: "Best of El Raval",
     barrioIds: [11],
     popular: true,
+    seasonal: false,
     // more?
   },
   {
@@ -30,6 +31,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     theme: PlanThemeEnum.Location,
     name: "Best of Sant Antoni",
     barrioIds: [20],
+    seasonal: false,
     // popular: true,
     // more?
   },
@@ -38,6 +40,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     theme: PlanThemeEnum.Location,
     name: "Best of Gràcia",
     barrioIds: [38],
+    seasonal: false,
     // popular: true,
     // more?
   },
@@ -46,6 +49,14 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     theme: PlanThemeEnum.Location,
     name: "Best of El Born",
     barrioIds: [13],
+    seasonal: false,
+    orderBy: [
+      {
+        key: 'popular',
+        direction: 'ASC',
+        valueType: 'BOOLEAN',
+      }
+    ]
     // popular: true,
     // more?
   },
@@ -54,6 +65,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     theme: PlanThemeEnum.Location,
     name: "Best of El Barri Gòtic",
     barrioIds: [12],
+    seasonal: false,
     // popular: true,
     // more?
   },
@@ -62,6 +74,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     theme: PlanThemeEnum.Location,
     name: "Best of La Barceloneta",
     barrioIds: [14],
+    seasonal: false,
     // popular: true,
     // more?
   },
@@ -70,6 +83,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     theme: PlanThemeEnum.Location,
     name: "Best of Eixample",
     barrioIds: [15,16,17],
+    seasonal: false,
     // popular: true,
     // more?
   },
@@ -80,15 +94,16 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     name: "Barcelona Beach Tour",
     categoryIds: [1],
     metroZone: 1,
+    daytrip: 0,
     orderBy: [
       {
         key: "lat",
         direction: "ASC",
       },
-      {
-        key: "lng",
-        direction: "ASC",
-      },
+      // {
+      //   key: "lng",
+      //   direction: "ASC",
+      // },
     ],
     placeIdsExclude: [215],
   },
@@ -137,11 +152,16 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     categoryIds: [3],
     seasonal: false,
     placeIds: [72,148,71,64,4,57,58,114,288,13,154],
-    placeIdsChooseAmount: 2,
-    randomize: true,
-    // limit: 2,
+    placeIdsChooseAmount: 4,
+    orderBy: [
+      {
+        key: 'placeId',
+        direction: 'RANDOM',
+      }
+    ],
+    limit: 4,
   },
-  {
+  { // @todo!
     id: 105,
     theme: PlanThemeEnum.Category,
     name: ["Cathedrals and Churches in central Barcelona"],
@@ -158,7 +178,12 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     categoryIds: [10],
     placeIds: [274,42,21,22,271,282,10,143,118,9,142,237],
     placeIdsChooseAmount: 5,
-    randomize: true,
+    orderBy: [
+      {
+        key: 'placeId',
+        direction: 'RANDOM',
+      }
+    ],
     // limit: 2,
   },
   {
@@ -167,7 +192,12 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     name: "5 Plaza's in a day",
     categoryIds: [5],
     placeIdsChooseAmount: 5,
-    randomize: true,
+    orderBy: [
+      {
+        key: 'placeId',
+        direction: 'RANDOM',
+      }
+    ],
     metroZone: 1,
     limit: 5,
   },
@@ -176,8 +206,13 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     theme: PlanThemeEnum.Category,
     name: "3 Museums, 1 Day",
     categoryIds: [7],
-    placeIdsChooseAmount: 3,
-    randomize: true,
+    // placeIdsChooseAmount: 3,
+    orderBy: [
+      {
+        key: 'placeId',
+        direction: 'RANDOM',
+      }
+    ],
     metroZone: 1,
     limit: 3,
   },
@@ -187,12 +222,17 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     name: "Central Museums Tour, Barcelona",
     categoryIds: [7],
     placeIdsChooseAmount: 3,
-    randomize: true,
+    orderBy: [
+      {
+        key: 'placeId',
+        direction: 'RANDOM',
+      }
+    ],
     metroZone: 1,
     barrioIds: [11,12,13,14],
     limit: 3,
   },
-  {
+  { // @todo - cannot see the sea from some!
     id: 201,
     theme: PlanThemeEnum.Trips,
     // could be "Top X ..."
@@ -205,6 +245,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     id: 202,
     theme: PlanThemeEnum.Trips,
     name: "Park Guell and Lunch",
+    verbs: ['Walk to'],
     // barrioIds: [40], // helps with accuracy of food/drink recommendations
     placeIds: [45, 270],
     placeIdsOptional: [283],
@@ -213,19 +254,30 @@ export const themesTestData: StructuredPlanDayProfile[] = [
   {
     id: 203,
     theme: PlanThemeEnum.Trips,
+    verbs: ['Daytrip to'],
     name: "Day trip to {place}",
     categoryIds: [6],
     provinceId: 2,
-    randomize: true,
+    orderBy: [
+      {
+        key: 'placeId',
+        direction: 'RANDOM',
+      }
+    ],
     limit: 1,
   },
   {
     id: 204,
     theme: PlanThemeEnum.Trips,
-    name: "City trip to {place}",
+    name: "Mini daytrip to {place}",
     categoryIds: [8],
     provinceId: 2,
-    randomize: true,
+    orderBy: [
+      {
+        key: 'placeId',
+        direction: 'RANDOM',
+      }
+    ],
     limit: 1,
   },
   {
@@ -269,7 +321,12 @@ export const themesTestData: StructuredPlanDayProfile[] = [
       RequiresBookingEnum.OnArrival,
     ],
     limit: 15,
-    randomize: true,
+    orderBy: [
+      {
+        key: 'placeId',
+        direction: 'RANDOM',
+      }
+    ],
   },
   {
     id: 502,
