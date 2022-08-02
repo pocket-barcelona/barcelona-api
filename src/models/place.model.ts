@@ -279,7 +279,7 @@ const placeSchema = new dynamoose.Schema({
 });
 
 
-export const TABLE_NAME = 'Places';
-const PlaceModel = dynamoose.model<PlaceDocument>(TABLE_NAME, placeSchema);
+export const TABLE_NAME_PLACES = 'Places';
+const PlaceModel = dynamoose.model<PlaceDocument>(TABLE_NAME_PLACES, placeSchema);
 
 export default PlaceModel;

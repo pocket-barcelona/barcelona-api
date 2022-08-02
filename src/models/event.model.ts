@@ -69,7 +69,7 @@ const eventSchema = new dynamoose.Schema({
 });
 
 
-export const TABLE_NAME = 'Events';
-const EventModel = dynamoose.model<EventDocument>(TABLE_NAME, eventSchema);
+export const TABLE_NAME_EVENTS = 'Events';
+const EventModel = dynamoose.model<EventDocument>(TABLE_NAME_EVENTS, eventSchema);
 
 export default EventModel;

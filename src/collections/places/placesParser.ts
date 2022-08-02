@@ -7,7 +7,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { PlacesCsv } from "./placesCsv.type";
 import { fileURLToPath } from 'url';
-import { PlaceInput } from "../../models/place.model";
+import { PlaceInput, TABLE_NAME_PLACES } from "../../models/place.model";
 import { parse } from "csv-parse/sync";
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
@@ -79,8 +79,6 @@ const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
 
 // csv headers
 const csvHeaders: Array<keyof PlacesCsv> = ['place_id','province_id','province','place_town','barrio_id','barrio','type_id','type','place_label','place','place_alias','place_remarks','place_desc','place_time','place_time_enum','place_tod','place_tod_enum','place_commitment','place_physical','place_price','place_free_visit','place_children','place_teenagers','place_popular','place_boost','place_annual_only','place_seasonal','place_daytrip','place_daily','place_sundays','place_landmark','place_requires_booking','place_active','place_zone','place_latlng_accurate','place_lat','place_lng','place_zoom','place_website','place_related_id','place_internal','place_has_image','place_photo_ownership','place_tags','place_check'];
-// DynamoDB table name, where to insert the data
-const tableName = 'Places';
 // parse csv file
 const records = parserService<PlacesCsv>(fileContent, csvHeaders);
 
@@ -135,7 +133,7 @@ if (records && records.length > 0) {
   });
   
   
-  console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${tableName}. Please wait...`);
+  console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${TABLE_NAME_PLACES}. Please wait...`);
   
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
@@ -144,7 +142,7 @@ if (records && records.length > 0) {
   .forEach((theRecord) => {
     
     const params = {
-      TableName: tableName,
+      TableName: TABLE_NAME_PLACES,
       Item: {
         ...theRecord
       } as any,

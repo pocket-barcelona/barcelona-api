@@ -7,7 +7,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { EventsCsv } from "./eventsCsv.type";
 import { fileURLToPath } from 'url';
-import { EventInput } from "../../models/event.model";
+import { EventInput, TABLE_NAME_EVENTS } from "../../models/event.model";
 import { parse } from "csv-parse/sync";
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
@@ -79,8 +79,6 @@ const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
 
 // csv headers
 const csvHeaders: Array<keyof EventsCsv> = ['data_start', 'date_end', 'event_name', 'location', 'recurs_each_year', 'url', 'notes'];
-// DynamoDB table name, where to insert the data
-const tableName = 'Events';
 // parse csv file
 const records = parserService<EventsCsv>(fileContent, csvHeaders);
 
@@ -108,7 +106,7 @@ if (records && records.length > 0) {
   });
   
   
-  console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${tableName}. Please wait...`);
+  console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${TABLE_NAME_EVENTS}. Please wait...`);
   
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
@@ -117,7 +115,7 @@ if (records && records.length > 0) {
   .forEach((theRecord) => {
     
     const params = {
-      TableName: tableName,
+      TableName: TABLE_NAME_EVENTS,
       Item: {
         ...theRecord
       } as any,

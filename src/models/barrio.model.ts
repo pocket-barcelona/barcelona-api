@@ -65,7 +65,7 @@ const barrioSchema = new dynamoose.Schema({
 });
 
 
-export const BARRIOS_TABLE_NAME = 'Barrios';
-const BarrioModel = dynamoose.model<BarrioDocument>(BARRIOS_TABLE_NAME, barrioSchema);
+export const TABLE_NAME_BARRIOS = 'Barrios';
+const BarrioModel = dynamoose.model<BarrioDocument>(TABLE_NAME_BARRIOS, barrioSchema);
 
 export default BarrioModel;

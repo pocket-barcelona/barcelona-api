@@ -6,7 +6,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { BarrioCsv } from "./barrioCsv.type";
 import { fileURLToPath } from 'url';
-import { BarrioInput } from "../../models/barrio.model";
+import { BarrioInput, TABLE_NAME_BARRIOS } from "../../models/barrio.model";
 import { parse } from "csv-parse/sync";
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
@@ -79,7 +79,7 @@ const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
 // csv headers
 const csvHeaders = ['barrio_id', 'barrio_parent_id', 'barrio_label', 'barrio', 'barrio_alias', 'barrio_desc', 'barrio_zone', 'barrio_central', 'barrio_central_range', 'barrio_active'];
 // DynamoDB table name, where to insert the data
-const tableName = 'Barrios';
+
 // parse csv file
 const records = parserService<BarrioCsv>(fileContent, csvHeaders);
 
@@ -100,7 +100,7 @@ if (records && records.length > 0) {
     };
   });
   
-  console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${tableName}. Please wait...`);
+  console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${TABLE_NAME_BARRIOS}. Please wait...`);
   
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
@@ -109,7 +109,7 @@ if (records && records.length > 0) {
   .forEach((theRecord) => {
     
     const params = {
-      TableName: tableName,
+      TableName: TABLE_NAME_BARRIOS,
       Item: {
         ...theRecord
       } as any,

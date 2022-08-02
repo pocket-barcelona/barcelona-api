@@ -54,7 +54,7 @@ const categorySchema = new dynamoose.Schema({
 });
 
 
-export const TABLE_NAME = 'Categories';
-const CategoryModel = dynamoose.model<CategoryDocument>(TABLE_NAME, categorySchema);
+export const TABLE_NAME_CATEGORY = 'Categories';
+const CategoryModel = dynamoose.model<CategoryDocument>(TABLE_NAME_CATEGORY, categorySchema);
 
 export default CategoryModel;
