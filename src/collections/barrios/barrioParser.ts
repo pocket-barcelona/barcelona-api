@@ -23,7 +23,7 @@ AWS.config.update({
 const docClient = new AWS.DynamoDB.DocumentClient();
 class CustomDynamoService {
 
-  public putRecord<TRecord = any>(params: {
+  public putRecord<TRecord extends AWS.DynamoDB.DocumentClient.PutItemInput = any>(params: {
     TableName: string;
     Item: TRecord;
   }, theRecord: TRecord, callback?: (err: AWSError, data: any) => any) {
@@ -112,7 +112,7 @@ if (records && records.length > 0) {
       TableName: tableName,
       Item: {
         ...theRecord
-      },
+      } as any,
     };
 
     const dynamoService = new CustomDynamoService();

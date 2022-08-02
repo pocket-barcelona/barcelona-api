@@ -24,7 +24,7 @@ AWS.config.update({
 const docClient = new AWS.DynamoDB.DocumentClient();
 class CustomDynamoService {
 
-  public putRecord<TRecord = any>(params: {
+  public putRecord<TRecord extends AWS.DynamoDB.DocumentClient.PutItemInput = any>(params: {
     TableName: string;
     Item: TRecord;
   }, theRecord: TRecord, callback?: (err: AWSError, data: any) => any) {
@@ -78,7 +78,7 @@ const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
 // CSV-SPECIFIC DATA...
 
 // csv headers
-const csvHeaders = ['data_start', 'date_end', 'event_name', 'location', 'recurs', 'url', 'notes'];
+const csvHeaders: Array<keyof EventsCsv> = ['data_start', 'date_end', 'event_name', 'location', 'recurs_each_year', 'url', 'notes'];
 // DynamoDB table name, where to insert the data
 const tableName = 'Events';
 // parse csv file
@@ -101,7 +101,7 @@ if (records && records.length > 0) {
       dateEnd: excelDateToJsDate(i.date_end).getTime(),
       eventName: i.event_name,
       location: i.location,
-      recurs: i.recurs.toString().toLowerCase() === 'yes',
+      recurs: i.recurs_each_year.toString().toLowerCase() === 'yes',
       url: i.url,
       notes: i.notes,
     };
@@ -120,7 +120,7 @@ if (records && records.length > 0) {
       TableName: tableName,
       Item: {
         ...theRecord
-      },
+      } as any,
     };
     console.log('The record: ', theRecord.eventName);
 

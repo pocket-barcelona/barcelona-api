@@ -3,7 +3,7 @@ export type EventsCsv = {
   date_end: string;
   event_name: string;
   location: string;
-  recurs: string;
+  recurs_each_year: string;
   url: string;
   notes: string;
 }

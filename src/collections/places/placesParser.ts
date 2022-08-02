@@ -24,7 +24,7 @@ AWS.config.update({
 const docClient = new AWS.DynamoDB.DocumentClient();
 class CustomDynamoService {
 
-  public putRecord<TRecord = any>(params: {
+  public putRecord<TRecord extends AWS.DynamoDB.DocumentClient.PutItemInput = any>(params: {
     TableName: string;
     Item: TRecord;
   }, theRecord: TRecord, callback?: (err: AWSError, data: any) => any) {
@@ -78,7 +78,7 @@ const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
 // CSV-SPECIFIC DATA...
 
 // csv headers
-const csvHeaders = ['place_id','province_id','province','place_town','barrio_id','barrio','type_id','type','place_label','place','place_alias','place_remarks','place_desc','place_time','place_time_enum','place_tod','place_tod_enum','place_commitment','place_physical','place_price','place_free_visit','place_children','place_teenagers','place_popular','place_boost','place_annual_only','place_seasonal','place_daytrip','place_daily','place_sundays','place_landmark','place_requires_booking','place_active','place_zone','place_latlng_accurate','place_lat','place_lng','place_zoom','place_website','place_related_id','place_internal','place_has_image','place_photo_ownership','place_tags','place_check'];
+const csvHeaders: Array<keyof PlacesCsv> = ['place_id','province_id','province','place_town','barrio_id','barrio','type_id','type','place_label','place','place_alias','place_remarks','place_desc','place_time','place_time_enum','place_tod','place_tod_enum','place_commitment','place_physical','place_price','place_free_visit','place_children','place_teenagers','place_popular','place_boost','place_annual_only','place_seasonal','place_daytrip','place_daily','place_sundays','place_landmark','place_requires_booking','place_active','place_zone','place_latlng_accurate','place_lat','place_lng','place_zoom','place_website','place_related_id','place_internal','place_has_image','place_photo_ownership','place_tags','place_check'];
 // DynamoDB table name, where to insert the data
 const tableName = 'Places';
 // parse csv file
@@ -147,7 +147,7 @@ if (records && records.length > 0) {
       TableName: tableName,
       Item: {
         ...theRecord
-      },
+      } as any,
     };
     console.log('The record:', theRecord.nameEnglish);
 

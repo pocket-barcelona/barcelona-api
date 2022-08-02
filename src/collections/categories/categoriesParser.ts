@@ -23,7 +23,7 @@ AWS.config.update({
 const docClient = new AWS.DynamoDB.DocumentClient();
 class CustomDynamoService {
 
-  public putRecord<TRecord = any>(params: {
+  public putRecord<TRecord extends AWS.DynamoDB.DocumentClient.PutItemInput = any>(params: {
     TableName: string;
     Item: TRecord;
   }, theRecord: TRecord, callback?: (err: AWSError, data: any) => any) {
@@ -77,7 +77,7 @@ const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
 // CSV-SPECIFIC DATA...
 
 // csv headers
-const csvHeaders = ['type_id','type_active','type_label','type_alias','type_icon','type_poster','type_visited_by'];
+const csvHeaders: Array<keyof CategoriesCsv> = ['type_id','type_active','type_label','type_alias','type_icon','type_poster','type_visited_by'];
 // DynamoDB table name, where to insert the data
 const tableName = 'Categories';
 // parse csv file
@@ -111,7 +111,7 @@ if (records && records.length > 0) {
       TableName: tableName,
       Item: {
         ...theRecord
-      },
+      } as any,
     };
 
     const dynamoService = new CustomDynamoService();

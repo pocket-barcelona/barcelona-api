@@ -266,8 +266,22 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     ],
     limit: 1,
   },
-  {
+  { // untested
     id: 204,
+    theme: PlanThemeEnum.Trips,
+    name: "Costa Brava Daytrip",
+    barrioIds: [86],
+    provinceId: 2,
+    orderBy: [
+      {
+        key: 'lat',
+        direction: 'DESC',
+      }
+    ],
+    limit: 3,
+  },
+  { // untested
+    id: 205,
     theme: PlanThemeEnum.Trips,
     name: "Mini daytrip to {place}",
     categoryIds: [8],
@@ -280,15 +294,16 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     ],
     limit: 1,
   },
+
   {
     id: 301,
     theme: PlanThemeEnum.FoodAndDrink,
     name: "Brunch and the Beach",
     // [Poblenou/Born/Gothic/Raval]
-    barrioIds: [79, 13, 12, 11],
+    barrioIds: [79, 13, 12, 11], //@todo - no results sometimes as waiting for restaurants
     barrioIdsChooseAmount: 1,
     categoryIds: [1],
-    categoryIdsChooseAmount: 1,
+    // categoryIdsChooseAmount: 1,
     foodCategories: [FoodCategoryEnum.Brunch],
   },
   // {
@@ -300,7 +315,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     theme: PlanThemeEnum.NightsOut,
     name: "Best of Craft Beer in Barcelona",
     drinkCategories: [DrinkCategoryEnum.CraftBeer],
-    internal: 2,
+    internal: 0,
   },
   // {
   //   id: 402,
@@ -323,8 +338,8 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     limit: 15,
     orderBy: [
       {
-        key: 'placeId',
-        direction: 'RANDOM',
+        key: 'lng',
+        direction: 'ASC',
       }
     ],
   },
@@ -335,6 +350,8 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     categoryIds: [12],
     placeIds: [36,37,6,285,158,290],
     placeIdsChooseAmount: 3,
+    daytrip: 0,
+    limit: 4,
   },
   {
     id: 601,
@@ -365,9 +382,6 @@ export const themesTestData: StructuredPlanDayProfile[] = [
 // Marina area, boats and beaches
 // Football stadium?
 // Tibidabo walking trip
-// Costa Brava trip
-// Girona day trip
-// (Places around Begur, Parafrugell etc)
 // Olimpic village etc
 // Diagonal mar and the forum?
 // Central park and El Born
@@ -384,7 +398,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
 // Costa Brava calas - hiking
 
 
-// CATEGORY BASED
+// 1xx CATEGORY BASED
 // 101. Barcelona Beach Tour
 // 102a. Ancient buildings - self-guided walking tour
 // 102b. Historical Buildings Tour
@@ -406,16 +420,17 @@ export const themesTestData: StructuredPlanDayProfile[] = [
 // Sporty Barcelona
 
 
-// DAY TRIPS
+// 2xx DAY TRIPS & TRIPS
+// 201. Top 5 Sea Viewpoints
+// 202. Park Guell and Lunch
+// 203. Day trip to [place]
+// 204. Costa Brava trip
+// 205. Girona day trip
 // Costa Brava by car
 // Aquatic park day trip
 // Brunch in Castelldefels
 // Lunch in Gava Chiringuito
-
-
-// TRIPS
-// 201. Top 5 Sea Viewpoints
-// 202. Park Guell and Lunch
+// (Places around Begur, Parafrugell etc)
 // Hidden places, montjuic
 // Hidden bars, Barcelona
 // Discover Montjuic, Cable Cars and the Castle

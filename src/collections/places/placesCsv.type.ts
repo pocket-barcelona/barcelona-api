@@ -39,9 +39,12 @@
 export type PlacesCsv = {
   place_id: number | string;
   province_id: number | string;
+  province: string;
   place_town: string;
   barrio_id: number | string;
+  barrio: string;
   type_id: number | string;
+  type: string;
   place_label: string;
   place: string;
   place_alias: string;
@@ -74,6 +77,7 @@ export type PlacesCsv = {
   place_zoom: string;
   place_website: string;
   place_related_id: number | string;
+  place_internal: number;
   place_has_image: number | string;
   place_photo_ownership: number | string;
   place_tags: string;
