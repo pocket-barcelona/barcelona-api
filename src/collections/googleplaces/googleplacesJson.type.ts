@@ -10,10 +10,10 @@ export interface GooglePlacesJsonType {
       'Google Maps URL': string;
       Location: {
         /** Like "Carrer de la Mare de Déu dels Desemparats, 8, 08012 Barcelona, Spain" */
-        Address: string;
+        Address?: string;
         /** Like "Syra Coffee - Gracia" */
-        'Business Name': string;
-        'Country Code': "ES" | string;
+        'Business Name'?: string;
+        'Country Code'?: 'ES' | 'GB' | string;
         'Geo Coordinates': {
           /** Like "41.4015051" */
           Latitude: string;

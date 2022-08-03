@@ -1,6 +1,8 @@
 // https://csv.js.org/parse/api/sync/
 // RUN this from the project root
 // node --loader ts-node/esm ./src/collections/categories/categoriesParser.ts
+// IF DOES NOT WORK:
+// node --experimental-specifier-resolution=node --loader ts-node/esm ./src/collections/categories/categoriesParser.ts
 
 import * as fs from "fs";
 import * as path from "path";

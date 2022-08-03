@@ -1,6 +1,7 @@
 // RUN this from the project root
 // node --loader ts-node/esm ./src/collections/googleplaces/googleplacesParser.ts
-
+// IF DOES NOT WORK:
+// node --experimental-specifier-resolution=node --loader ts-node/esm ./src/collections/googleplaces/googleplacesParser.ts
 
 import * as fs from "fs";
 import * as path from "path";
@@ -9,9 +10,10 @@ import { fileURLToPath } from 'url';
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
 import { AWSError } from 'dynamoose/dist/aws/sdk';
-import { PoiInput } from "../../models/poi.model";
+import { PoiInput, TABLE_NAME_POI } from "../../models/poi.model";
 // import { CategoryIdEnum } from "../../models/enums/categoryid.enum";
 // import { RequiresBookingEnum } from "./../../models/enums/requiresbooking.enum";
+import urlSlug from 'url-slug'
 
 // set AWS config for client
 AWS.config.update({
@@ -58,8 +60,6 @@ const jsonFilePath = path.resolve(jsonFile);
 // read file
 const fileContent = fs.readFileSync(jsonFilePath, { encoding: 'utf-8' });
 
-// DynamoDB table name, where to insert the data
-const tableName = 'Poi';
 
 
 let rawData: GooglePlacesJsonType | undefined;
@@ -77,17 +77,44 @@ if (!hasRecords) {
   throw new Error('No data to insert');
 }
 
-const mappedRecords = rawData.features.map<PoiInput>((r, mapIndex) => {
+function getUrlSlug(str: string): string {
+  return urlSlug(str);
+}
+
+const summary: string[] = [];
+
+const mappedRecords = rawData.features
+.map<PoiInput | undefined>((r, mapIndex) => {
+  // Remove accents/diacritics from the business name (é -> e)
+  const businessName: string = r.properties.Location["Business Name"] ?? '';
+  if (!businessName) {
+    if (summary.length < 100) {
+      summary.push(`No business name found at index ${mapIndex} for ${r.properties.Title ?? 'Unknown place'}`);
+    }
+    return undefined;
+  }
+
+  let nameWithoutDiacritics = '';
+  try {
+    nameWithoutDiacritics = businessName.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+  } catch (error: any) {
+    console.log(error.message ? error.message : error);
+    throw new Error(error);
+  }
+  if (!nameWithoutDiacritics) return undefined;
+
+  const slug = getUrlSlug(nameWithoutDiacritics);
   return {
-    poiId: 1,
+    poiId: ('' + (mapIndex + 1)),
     active: true,
     provinceId: 2, // logic here
     barrioId: 86, // logic here
     // categoryId: CategoryIdEnum.BarsRestaurants,
     categoryId: 2,
-    nameOfficial: r.properties.Location["Business Name"],
-    nameOfficialAccentless: r.properties.Location["Business Name"], // logic here
-    urlSlug: r.properties.Location["Business Name"], // logic here
+    nameOfficial: businessName,
+    nameOfficialAccentless: nameWithoutDiacritics,
+    urlSlug: slug,
+    address: r.properties.Location.Address ?? '',
     description: '',
     bestTod: 0,
     price: 0,
@@ -97,31 +124,58 @@ const mappedRecords = rawData.features.map<PoiInput>((r, mapIndex) => {
     lat: r.geometry.coordinates[0],
     lng: r.geometry.coordinates[1],
     latlngAccurate: r.geometry.type === 'Point',
-    countryCode: r.properties.Location["Country Code"] || 'ES',
+    countryCode: r.properties.Location["Country Code"] || '',
     website: '',
     tags: '',
   };
 });
 
-// put the new records in the database...
+// show a summary for debugging
+// if (summary.length > 0) {
+//   console.warn('Errors: ', summary);
+//   throw new Error('Errors occurred');
+// }
 
-console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${tableName}. Please wait...`);
 
+
+const DRYRUN = true;
 // perform PUT operation for each document
 // Warning: running this multiple times will overwrite existing items by ID!
-mappedRecords
-.slice(0, 5)
-.forEach((theRecord) => {
+const filteredRecords = mappedRecords
+.filter(r => {
+  // console.log(r);
+  if (r === undefined) return false;
+  if (r.countryCode !== 'ES') return false;
+  return true;
+})
+.slice(0, 10)
+
+if (filteredRecords.length <= 0) {
+  throw new Error('Nothing to do!');
+} else {
+
+  // put the new records in the database...
+
+  console.log(`Importing ${filteredRecords.length} record/s into the DynamoDB inside table: ${TABLE_NAME_POI}. Please wait...`);
+
+  filteredRecords.forEach((theRecord) => {
+    if (DRYRUN) {
+      // console.log('The record: ', theRecord.nameOfficial);
+      console.log('The record: ', theRecord);
+    } else {
   
-  const params = {
-    TableName: tableName,
-    Item: {
-      ...theRecord
-    } as any,
-  };
-  console.log('The record: ', theRecord.nameOfficial);
+      const params = {
+        TableName: TABLE_NAME_POI,
+        Item: {
+          ...theRecord
+        } as any,
+      };
+    
+      const dynamoService = new CustomDynamoService();
+      dynamoService.putRecord(params, theRecord);
+    }
+    
+  
+  });
 
-  const dynamoService = new CustomDynamoService();
-  dynamoService.putRecord(params, theRecord);
-
-});
+}

@@ -17,7 +17,7 @@ import { TeenagerEnum } from "./enums/teenager.enum";
 
 export interface PoiInput {
   /** The POI ID */
-  poiId: number;
+  poiId: string;
   /** If the record is active in listings (1=Visible, 0=Hidden) */
   active: boolean;
   /** The province ID that this place is in. See Provinces */
@@ -35,6 +35,8 @@ export interface PoiInput {
   * urlSlug is a URL-friendly version of the place name, without a slash
   */
   urlSlug: string;
+  /** Like Carrer de Ferran, 6, 08002 Barcelona, Spain */
+  address: string;
   /**
   * A short description of the place or activity
   * Ex. A busy market for the local people of Barceloneta
@@ -80,7 +82,7 @@ export interface PoiDocument extends PoiInput, Document {
 
 const poiSchema = new dynamoose.Schema({
   poiId: {
-    type: Number,
+    type: String,
     required: true,
     hashKey: true,
   },

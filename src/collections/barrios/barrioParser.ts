@@ -1,7 +1,10 @@
 // https://csv.js.org/parse/api/sync/
 // RUN this from the project root
 // node --loader ts-node/esm ./src/collections/barrios/barrioParser.ts
-
+// IF DOES NOT WORK:
+// node --experimental-specifier-resolution=node --loader ts-node/esm ./src/collections/barrios/barrioParser.ts
+// https://stackoverflow.com/questions/63742790/unable-to-import-esm-ts-module-in-node/65163089#65163089
+// ALSO COULD LOOK INTO: --transpile-only then run the JS file: Seee "Usage" headline https://www.npmjs.com/package/ts-node#installation
 import * as fs from "fs";
 import * as path from "path";
 import { BarrioCsv } from "./barrioCsv.type";
