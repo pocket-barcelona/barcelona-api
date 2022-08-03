@@ -139,6 +139,10 @@ const mappedRecords = rawData.features
 
 
 const DRYRUN = true;
+const STAGGER = true;
+const STAGGER_DURATION = 800;
+
+
 // perform PUT operation for each document
 // Warning: running this multiple times will overwrite existing items by ID!
 const filteredRecords = mappedRecords
@@ -148,7 +152,7 @@ const filteredRecords = mappedRecords
   if (r.countryCode !== 'ES') return false;
   return true;
 })
-.slice(0, 10)
+.slice(0, 250)
 
 if (filteredRecords.length <= 0) {
   throw new Error('Nothing to do!');
@@ -158,23 +162,27 @@ if (filteredRecords.length <= 0) {
 
   console.log(`Importing ${filteredRecords.length} record/s into the DynamoDB inside table: ${TABLE_NAME_POI}. Please wait...`);
 
-  filteredRecords.forEach((theRecord) => {
-    if (DRYRUN) {
-      // console.log('The record: ', theRecord.nameOfficial);
-      console.log('The record: ', theRecord);
-    } else {
-  
-      const params = {
-        TableName: TABLE_NAME_POI,
-        Item: {
-          ...theRecord
-        } as any,
-      };
+  filteredRecords.forEach((theRecord, i) => {
+
+    setTimeout(() => {
+      
+      if (DRYRUN) {
+        // console.log('The record: ', theRecord.nameOfficial);
+        console.log('The record: ', theRecord);
+      } else {
     
-      const dynamoService = new CustomDynamoService();
-      dynamoService.putRecord(params, theRecord);
-    }
-    
+        const params = {
+          TableName: TABLE_NAME_POI,
+          Item: {
+            ...theRecord
+          } as any,
+        };
+      
+        const dynamoService = new CustomDynamoService();
+        dynamoService.putRecord(params, theRecord);
+      }
+
+    }, STAGGER ? (STAGGER_DURATION * i) : 1);
   
   });
 
