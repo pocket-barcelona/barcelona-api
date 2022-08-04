@@ -121,8 +121,8 @@ const mappedRecords = rawData.features
     boost: 0,
     // requiresBooking: RequiresBookingEnum.No,
     requiresBooking: 1,
-    lat: r.geometry.coordinates[0],
-    lng: r.geometry.coordinates[1],
+    lat: parseFloat(r.properties.Location["Geo Coordinates"].Latitude),
+    lng: parseFloat(r.properties.Location["Geo Coordinates"].Longitude),
     latlngAccurate: r.geometry.type === 'Point',
     countryCode: r.properties.Location["Country Code"] || '',
     website: '',
@@ -138,9 +138,9 @@ const mappedRecords = rawData.features
 
 
 
-const DRYRUN = true;
+const DRYRUN = false;
 const STAGGER = true;
-const STAGGER_DURATION = 800;
+const STAGGER_DURATION = 300;
 
 
 // perform PUT operation for each document
@@ -152,7 +152,7 @@ const filteredRecords = mappedRecords
   if (r.countryCode !== 'ES') return false;
   return true;
 })
-.slice(0, 250)
+.slice(0, 50)
 
 if (filteredRecords.length <= 0) {
   throw new Error('Nothing to do!');
