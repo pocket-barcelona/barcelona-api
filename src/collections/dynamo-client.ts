@@ -16,7 +16,7 @@ const docClient = new AWS.DynamoDB.DocumentClient();
 
 export class CustomDynamoService {
 
-  public putRecord<TRecord = any>(params: {
+  public putRecord<TRecord extends AWS.DynamoDB.DocumentClient.PutItemInput = any>(params: {
     TableName: string;
     Item: TRecord;
   }, theRecord: TRecord, callback?: (err: AWSError, data: any) => any) {
