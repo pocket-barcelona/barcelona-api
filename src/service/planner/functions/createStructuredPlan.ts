@@ -4,6 +4,7 @@ import { PlanBuilderInput, StructuredPlanResponse, structuredPlanObj } from "../
 import { PlanHelper } from "./createStructuredPlan.helper";
 import { PlanThemeEnum } from "../../../models/planThemes.model";
 import { themesTestData } from "../../../collections/themes/themesTestData";
+import { PoiDocument } from "../../../models/poi.model";
 
 const DOCUMENT_SCAN_LIMIT = 500;
 
@@ -104,15 +105,15 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     const placeIdsSubset = 
       theme.placeIds && theme.placeIdsChooseAmount !== undefined && hasPlaceIds && hasPlaceIdsChooseAmount ?
       helper.getMultipleRandomItemsFromArray(theme.placeIds, theme.placeIdsChooseAmount) :
-      theme.placeIds as number[];
+      theme.placeIds || [];
     
     const barrioIdsSubset = theme.barrioIds && theme.barrioIdsChooseAmount !== undefined && hasBarrioIds && hasBarrioIdsChooseAmount ?
       helper.getMultipleRandomItemsFromArray(theme.barrioIds, theme.barrioIdsChooseAmount) :
-      theme.barrioIds as number[];
+      theme.barrioIds || [];
 
     const categoryIdsSubset = theme.categoryIds && theme.categoryIdsChooseAmount !== undefined && hasCategoryIds && hasCategoryIdsChooseAmount ?
       helper.getMultipleRandomItemsFromArray(theme.categoryIds, theme.categoryIdsChooseAmount) :
-      theme.categoryIds as number[];
+      theme.categoryIds || [];
     
     // decide how to query the places table
     switch (theme.theme) {
@@ -294,12 +295,18 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     
     try {
       results = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
+      
     } catch (error) {
       return null;
     }
 
+    let foodDrinkResults: PoiDocument[] = [];
+    if (hasFoodCategories) {
+      foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(theme, results.toJSON() as PlaceDocument[]);
+    }
+
     
-    const thePlan = helper.buildPlanResponse(dayNumber, theme, results.toJSON() as PlaceDocument[]);
+    const thePlan = helper.buildPlanResponse(dayNumber, theme, results.toJSON() as PlaceDocument[], foodDrinkResults);
     if (thePlan) {
       return thePlan;
     }

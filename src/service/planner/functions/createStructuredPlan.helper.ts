@@ -1,11 +1,13 @@
-import { ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { themesTestData } from "../../../collections/themes/themesTestData";
+import { Condition } from "dynamoose";
+import { Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import { themesTestData, WALKING_DISTANCES } from "../../../collections/themes/themesTestData";
 import { PlaceDocument } from "../../../models/place.model";
 import { StructuredPlanResponse } from "../../../models/plan.model";
 import {
   PlanThemeEnum,
   StructuredPlanDayProfile,
 } from "../../../models/planThemes.model";
+import PoiModel, { PoiDocument } from "../../../models/poi.model";
 
 const DOCUMENT_LIST_RETURN_LIMIT = 25;
 export class PlanHelper {
@@ -53,11 +55,72 @@ export class PlanHelper {
   //   }
   // }
 
+  async fetchFoodAndDrinkDocuments(theme: StructuredPlanDayProfile, results: PlaceDocument[]): Promise<PoiDocument[]> {
+    if (results.length <= 0) return Promise.resolve([]);
+
+    const poiActiveField: keyof PoiDocument = 'active';
+    const poiLatField: keyof PoiDocument = 'lat';
+    const poiLngField: keyof PoiDocument = 'lng';
+
+    const latLng = {
+      lat: results[0].lat || -1,
+      lng: results[0].lng || -1,
+    };
+    if (latLng.lat === -1 || latLng.lng === -1) return Promise.resolve([])
+    
+    let documents: Scan<PoiDocument>;
+    let scanResults: ScanResponse<PoiDocument>;
+    
+
+    // match documents within a short walk away, just using lat/lng
+    const diameter = WALKING_DISTANCES.medium;
+    
+    const lowerLat = latLng.lat - diameter;
+    const upperLat = latLng.lat + diameter;
+    const lowerLng = latLng.lng - diameter;
+    const upperLng = latLng.lng + diameter;
+
+    documents = PoiModel.scan().where(poiActiveField).eq(true);
+    // do a query for food options
+    // documents = PoiModel.scan({
+    //   'lat': {
+    //     'between': [lowerLat, upperLat]
+    //     // 'gt': 2.1967216
+    //   }
+    // });
+
+    
+
+    // const f = new Condition({
+    //   between([lowerLat, upperLat]),
+    // });
+    // documents = documents.and().parenthesis(
+    //   new Condition().where(poiLatField).between(lowerLat, upperLat).or().where(poiLngField).between(lowerLng, upperLng)
+    // );
+    
+    
+
+    // @todo - doesn't work!?!?!?!?!
+    // documents
+    // .parenthesis({
+    //   gt: (f),
+    // })
+    // .where(poiLatField)
+
+    documents.and()
+    .where(poiLatField).between(lowerLat, upperLat).and().where(poiLngField).between(lowerLng, upperLng);
+
+    // get a list of places within walking distance from the lat/lng
+    scanResults = await documents.limit(10).exec();
+    return Promise.resolve(scanResults);
+  }
+
   buildPlanResponse(
     dayNumber: number,
     theme: StructuredPlanDayProfile,
     // results: ScanResponse<PlaceDocument>
-    results: PlaceDocument[]
+    results: PlaceDocument[],
+    pois: PoiDocument[],
   ): StructuredPlanResponse {
 
     // sort list
@@ -115,6 +178,7 @@ export class PlanHelper {
           dayNumber,
           action: (theme.verbs && theme.verbs.length > 0) ? theme.verbs[0] : 'Go to',
           places: limitedResultSet,
+          pois: pois,
         },
       ],
       eventNotices: [],
@@ -122,21 +186,19 @@ export class PlanHelper {
         // TODO
         numberOfDays: 1,
         numberOfPlaces: numberOfPlaces,
-        budget: 0,
+        budget: 0, // get average enum weight
         includesPlacesOutsideCity: false,
         easyWalking: true,
-        
         categoriesIncluded: categoryIds,
-        
         focusOnSameLocation: 1,
         timeOfDay: 1,
         visitCentralBarriosOnly: true,
-        excludePlaceIds: [],
+        excludePlaceIds: theme.placeIdsExclude ?? [],
         visitingWithPets: true,
         visitingWithChildren: true,
         visitingWithTeenagers: true,
-        includesFoodRecommendations: true,
-        includesDrinkRecommendations: true,
+        includesFoodRecommendations: pois.length > 0,
+        includesDrinkRecommendations: pois.length > 0, // todo
         includesEventNotices: false,
       },
     };

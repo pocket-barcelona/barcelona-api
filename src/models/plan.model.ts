@@ -17,6 +17,7 @@ import { TimeOfDayEnum } from "./enums/tod.enum";
 import { EventInput } from "./event.model";
 import { PlaceDocument, PlaceInput } from "./place.model";
 import { PlanThemeEnum } from "./planThemes.model";
+import { PoiInput } from "./poi.model";
 
 /** The response of the structured plan */
 export interface StructuredPlanResponse {
@@ -33,6 +34,7 @@ export interface StructuredPlanResponse {
     action: string;
     /** The place or list of places for this action */
     places: PlaceInput[];
+    pois: PoiInput[];
   }[];
   /** @todo - the URL for saving this exact itinerary for later */
   itinerarySaveUrl?: string;
@@ -123,6 +125,7 @@ export const structuredPlanObj: StructuredPlanResponse = {
           ...place,
         },
       ],
+      pois: [],
     },
   ],
   eventNotices: [],

@@ -9,6 +9,33 @@ import {
   StructuredPlanDayProfile,
 } from "../../models/planThemes.model";
 
+
+// Parallel metro!
+// 41.37510536783193, 2.1681203940848635
+// 5 mins up the road from parallel!
+// 41.37518964719392, 2.1625463009432675
+const fiveMinsWalk = Math.abs(2.1625463009432675 - 2.1681203940848635);
+export const WALKING_DISTANCES = {
+  // todo
+  small: fiveMinsWalk / 2,
+  // 5 mins walk
+  medium: fiveMinsWalk,
+  large: fiveMinsWalk * 1.5,
+};
+
+// Near Balius Bar:
+// 41.40204038325545, 2.2013210784114694
+
+// Llacuna Metro:
+// 41.3992152370966, 2.197241318454669
+
+// Lat:
+// 0,002825146159
+// Lng:
+// 0,004079759957
+
+
+
 export const themesTestData: StructuredPlanDayProfile[] = [
   {
     id: 1,
@@ -16,6 +43,21 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     name: "The Gothic Quarter and El Born",
     barrioIds: [12, 13],
     categoryIds: [2, 5, 7, 9],
+    foodCategories: [ // @todo
+      FoodCategoryEnum.Dinner,
+    ],
+  },
+  {
+    id: 1001,
+    theme: PlanThemeEnum.Trips,
+    name: "Testing Bars and Restaurants Data",
+    barrioIds: [12],
+    seasonal: false,
+    placeIds: [19],
+    foodCategories: [ // @todo
+      FoodCategoryEnum.Dinner,
+    ],
+    limit: 1,
   },
   {
     id: 2,
