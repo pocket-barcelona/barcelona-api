@@ -129,6 +129,19 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     // popular: true,
     // more?
   },
+
+  // to check...
+  {
+    id: 9,
+    theme: PlanThemeEnum.Location,
+    name: "Top 10 City Attractions In Barcelona",
+    // barrioIds: [15,16,17],
+    seasonal: false,
+    popular: true,
+    daytrip: 0,
+    limit: 10,
+  },
+  
   
   {
     id: 101,
@@ -418,6 +431,8 @@ export const themesTestData: StructuredPlanDayProfile[] = [
 // 1. The Gothic Quarter and El Born
 // 2. Best of El Raval
 // 3. Best of Sant Antoni
+// X. Top 10 city attractions in Barcelona
+// Top 25 Barcelona attractions (4 days)
 // Historical Barcelona, central neighbourhoods
 // Gothic Quarter tour
 // Maritime passage - walking tour
@@ -429,8 +444,6 @@ export const themesTestData: StructuredPlanDayProfile[] = [
 // Central park and El Born
 // Carmel and the bunkers
 // Badalona beaches & lunch
-// Top 10 city attractions in Barcelona
-// Top 25 Barcelona attractions (4 days)
 // Port vell and lunch
 // Raval, Gothic and Born - 1 day
 // Sant Pere, Santa Caterina I La Ribera

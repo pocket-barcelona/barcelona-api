@@ -58,7 +58,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
   try {
     const helper = new PlanHelper();
     // const randomTheme = helper.getRandomItemFromArray(planThemes);
-    const themeId = input.themeId ?? 101;
+    const themeId = input.themeId;
 
     const theme = themesTestData.find(t => t.id === themeId);
     if (!theme) {

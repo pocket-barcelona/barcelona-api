@@ -149,7 +149,7 @@ export const structuredPlanObj: StructuredPlanResponse = {
   },
 };
 
-/** The data required to generate a structured plan */
+/** The data required to generate a structured plan itinerary */
 export interface PlanBuilderInput {
   /** Selects a specific theme by ID - for testing */
   themeId?: number;

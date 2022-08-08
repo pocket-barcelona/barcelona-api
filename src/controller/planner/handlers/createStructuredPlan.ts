@@ -3,7 +3,7 @@ import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { PlannerService } from "../../../service/planner/planner.service";
 import { PlanBuilderInput } from "../../../models/plan.model";
-import { CreatePlanInput } from "../../../schema/plan/plan.schema";
+import { BuildPlanInput } from "../../../schema/plan/plan.schema";
 
 /**
  * Create a structured x-day plan
@@ -11,7 +11,7 @@ import { CreatePlanInput } from "../../../schema/plan/plan.schema";
  * @param res
  * @returns
  */
-export default async function createStructuredPlan(req: Request<CreatePlanInput>, res: Response) {
+export default async function createStructuredPlan(req: Request<BuildPlanInput>, res: Response) {
   
   const data = await PlannerService.createStructuredPlan(req.body);
   
