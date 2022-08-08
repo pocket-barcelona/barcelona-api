@@ -229,4 +229,62 @@ export class PlanHelper {
     }
     return name;
   }
+
+  private getHaversineDistance(lat1: number, lat2: number, lng1: number, lng2: number): number {
+
+    // haversineSql = getHaversineDistance('pl.place_lat', ':lat_2', 'pl.place_lng', ':lng_2');
+    // return "(
+    //   6371 * acos(
+    //       sin(radians(".lat1.")) * sin(radians(".lat2.")) + cos(radians(".lat1.")) * cos(radians(".lat2.")) * cos(radians(".lng2.") - radians(".lng1."))
+    //   )
+    // )";
+
+    const degreesToRadians = (degrees: number): number => {
+      return degrees * (Math.PI / 180);
+    };
+    const radiansToDegrees = (radians: number): number => {
+      return radians * (180 / Math.PI);
+    };
+
+    const diameterOfEarth = 6371;
+    const radians = {
+      lat1: degreesToRadians(lat1),
+      lat2: degreesToRadians(lat2),
+      lng1: degreesToRadians(lng1),
+      lng2: degreesToRadians(lng2),
+    };
+
+    const calc = Math.acos(
+      Math.sin(radians.lat1) * Math.sin(radians.lat2) + Math.cos(radians.lat1) * Math.cos(radians.lat2) * Math.cos(radians.lng2 - radians.lng1)
+    );
+    return diameterOfEarth * calc;
+  }
+
+  // getWalkingTime($walkingDist: number) {
+  //   $walkingTimeBias = 1.15; // how much to multiply the walking time by to make it more realistic
+
+  //   $walkingTime = (1000 * $walkingDist) / 60;
+  //   $walkingTime = $walkingTime * $walkingTimeBias;
+    
+  //   switch (true) {
+  //     case $walkingTime < 1:
+  //       return 'Less than a minute';
+  //     case $walkingTime <= 3:
+  //       return 'A few minutes';
+  //     case $walkingTime <= 10:
+  //       return '5 - 10 minutes';
+  //     case $walkingTime <= 15:
+  //       return 'About 15 minutes';
+  //     case $walkingTime <= 20:
+  //       return 'About 20 minutes';
+  //     case $walkingTime <= 35:
+  //       return 'About half an hour';
+  //     case $walkingTime <= 60:
+  //       return 'Up to 1 hour';
+  //     case $walkingTime <= 90:
+  //       return 'Over 1 hour';
+  //     default:
+  //       return 'Over 2 hours';
+  //   }
+  // }
 }
