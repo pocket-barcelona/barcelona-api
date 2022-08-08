@@ -1,5 +1,11 @@
 import { object, number, string, TypeOf, date, array } from "zod";
 
+
+/**
+ * @todo - these schemas need revising.
+ * Currently they are not related to CRUD operations!
+ * 
+ */
 const payload = {
   body: object({
     profileType: number({
@@ -32,8 +38,14 @@ const params = {
   }),
 };
 
-export const createPlanSchema = object({
+
+export const buildPlanSchema = object({
   ...payload,
+});
+
+export const createPlanSchema = object({
+  // TODO!
+  // ...payload,
 });
 
 export const readPlanSchema = object({
@@ -50,6 +62,10 @@ export const deletePlanSchema = object({
   ...params,
 });
 
+/** The schema for creating a new planned itinerary */
+export type BuildPlanInput = TypeOf<typeof createPlanSchema>;
+
+/** The schema for inserting a new plan template into DB */
 export type CreatePlanInput = TypeOf<typeof createPlanSchema>;
 export type ReadPlanInput = TypeOf<typeof readPlanSchema>;
 export type UpdatePlanInput = TypeOf<typeof updatePlanSchema>;
