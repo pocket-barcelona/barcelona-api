@@ -4,7 +4,7 @@ import PlaceModel, { PlaceInput } from "./place.model";
 import type { SetOptional } from 'type-fest';
 import { TimeRecommendedEnum } from "./enums/timerecommended.enum";
 import { RequiresBookingEnum } from "./enums/requiresbooking.enum";
-import { DrinkCategoryEnum, FoodCategoryEnum } from "./enums/foodcategory.enum";
+import { DrinkCategoryEnum, FoodCategoryEnum, FoodCuisinesEnum } from "./enums/foodcategory.enum";
 
 
 // the keys from the place model
@@ -24,6 +24,8 @@ export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> &
   theme: PlanThemeEnum;
   /** The name of the themed day profile */
   name: string | string[];
+  /** @todo - Travelling mode for the itinerary. Use "VARIOUS" if multiple */
+  mode?: 'BY_FOOT' | 'BY_CAR' | 'BY_BOAT' | 'VARIOUS';
   /** A list of actions to take, e.g. Take a walk around [Parc de la Ciutadella] */
   verbs?: string[];
   /** The number of places to limit to, for this day - if not included, other params will dictate the results */
@@ -64,6 +66,7 @@ export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> &
   requiresBookingOptions?: RequiresBookingEnum[];
 
   foodCategories?: FoodCategoryEnum[];
+  foodCuisines?: FoodCuisinesEnum[];
   drinkCategories?: DrinkCategoryEnum[];
   /** 1=only include places from Pocket Barcelona. 2=only include places from other people. 0=default (include all) */
   internal?: 0 | 1 | 2;
