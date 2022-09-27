@@ -71,90 +71,13 @@ export interface StructuredPlanResponse {
   };
 }
 
-const place: PlaceInput = {
-  placeId: 3,
-  active: true,
-  provinceId: 2,
-  placeTown: "Barcelona",
-  barrioId: 13,
-  categoryId: CategoryIdEnum.Buildings,
-  nameOfficial: "Arc De Triomf",
-  nameOfficialAccentless: "Arc De Triomf",
-  nameEnglish: "Arc De Triomf",
-  urlSlug: "arc-de-triomf",
-  remarks: "",
-  description: "A monumental archway near to El Born and the city park",
-  timeRecommended: TimeRecommendedEnum.CoupleOfHours,
-  bestTod: TimeOfDayEnum.Day,
-  commitmentRequired: CommitmentEnum.Casual,
-  price: PriceEnum.Free,
-  freeToVisit: 0,
-  childrenSuitability: ChildrenEnum.Suitable,
-  teenagerSuitability: TeenagerEnum.Recommended,
-  popular: true,
-  boost: 0,
-  annualOnly: false,
-  seasonal: false,
-  daytrip: 0,
-  availableDaily: true,
-  availableSundays: true,
-  physicalLandmark: true,
-  requiresBooking: RequiresBookingEnum.No,
-  metroZone: 1,
-  latlngAccurate: true,
-  lat: 41.391055,
-  lng: 2.180644,
-  zoom: 0,
-  website: "",
-  relatedPlaceId: 0,
-  hasImage: true,
-  imageOwnership: 1,
-  tags: "arc",
-  requiresChecking: false,
-};
-
-export const structuredPlanObj: StructuredPlanResponse = {
-  planTitle: "Some plan",
-  planTheme: PlanThemeEnum.BestOf,
-  itinerary: [
-    {
-      dayNumber: 1,
-      action: "",
-      places: [
-        {
-          ...place,
-        },
-      ],
-      pois: [],
-    },
-  ],
-  eventNotices: [],
-  summary: {
-    numberOfDays: 1,
-    numberOfPlaces: 1,
-    budget: 0,
-    includesPlacesOutsideCity: false,
-    easyWalking: true,
-    categoriesIncluded: [place.categoryId],
-    focusOnSameLocation: 1,
-    timeOfDay: 1,
-    visitCentralBarriosOnly: true,
-    excludePlaceIds: [],
-    visitingWithPets: true,
-    visitingWithChildren: true,
-    visitingWithTeenagers: true,
-    includesFoodRecommendations: true,
-    includesDrinkRecommendations: true,
-    includesEventNotices: false,
-  },
-};
 
 /** The data required to generate a structured plan itinerary */
 export interface PlanBuilderInput {
   /** Selects a specific theme by ID - for testing */
   themeId?: number;
   /** The type of traveller that the plan is for */
-  profileType: ProfileTypeEnum;
+  // profileType: ProfileTypeEnum;
   /** Number of days for this plan: 1-7 */
   numberOfDays: number;
   /** Budget € - €€€€€ */
@@ -208,21 +131,3 @@ export interface PlanBuilderInput {
   hasCar?: boolean;
 }
 
-export const myPlanInput: PlanBuilderInput = {
-  profileType: ProfileTypeEnum.FutureHoliday,
-  numberOfDays: 3,
-  budget: PriceEnum.Cheap,
-  categoryIds: [1, 5, 7, 8],
-  includePlacesOutsideBarcelona: false,
-  walkBetweenPlacesEnabled: true,
-  timeRecommended: TimeRecommendedEnum.QuarterDay,
-  preferredTimeOfDay: 0,
-  centralBarriosOnly: true,
-  excludePlaceIds: [21],
-  visitingWithPets: false,
-  visitingWithKids: false,
-  visitingWithTeenagers: false,
-  includeFoodSuggestions: true,
-  includeDrinkSuggestions: true,
-  includeNightclubSuggestions: true,
-};

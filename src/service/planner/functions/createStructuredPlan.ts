@@ -1,10 +1,11 @@
 import PlaceModel, { PlaceDocument } from "../../../models/place.model";
 import { Query, Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { PlanBuilderInput, StructuredPlanResponse, structuredPlanObj } from "../../../models/plan.model";
+import { PlanBuilderInput, StructuredPlanResponse } from "../../../models/plan.model";
 import { PlanHelper } from "./createStructuredPlan.helper";
 import { PlanThemeEnum } from "../../../models/planThemes.model";
 import { themesTestData } from "../../../collections/themes/themesTestData";
 import { PoiDocument } from "../../../models/poi.model";
+import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
 
 const DOCUMENT_SCAN_LIMIT = 500;
 
@@ -55,6 +56,8 @@ const lngField: keyof PlaceDocument = 'lng';
  * @returns
  */
 export default async function (input: PlanBuilderInput): Promise<StructuredPlanResponse | null> {
+  
+
   try {
     const helper = new PlanHelper();
     // const randomTheme = helper.getRandomItemFromArray(planThemes);
@@ -312,7 +315,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     }
 
     console.log('Default response');
-    return structuredPlanObj;
+    return TEST_RESPONSE_PLAN_1;
     
   } catch (e) {
     return null;

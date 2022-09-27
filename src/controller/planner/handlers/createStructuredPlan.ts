@@ -13,8 +13,8 @@ import { BuildPlanInput } from "../../../schema/plan/plan.schema";
  */
 export default async function createStructuredPlan(req: Request<BuildPlanInput>, res: Response) {
   
+  console.log(req.body);
   const data = await PlannerService.createStructuredPlan(req.body);
-  
   // @todo
   if (!data) {
     return res
