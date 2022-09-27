@@ -1,4 +1,4 @@
-import { object, number, string, TypeOf, date } from "zod";
+import { object, number, string, TypeOf, date, optional } from "zod";
 
 const payload = {
   body: object({
@@ -8,15 +8,18 @@ const payload = {
 
 /** Filter the poi's by location etc */
 const filterByParams = {
-  params: object({
-    lat: number({
+  body: object({
+    lat: optional(number({
       required_error: "lat is required",
       // invalid_type_error
-    }),
-    lng: number({
+    })),
+    lng: optional(number({
       required_error: "lng is required",
       // invalid_type_error
-    }),
+    })),
+    price: optional(number({
+      required_error: "price is required",
+    })),
   }),
 };
 
@@ -40,7 +43,7 @@ export const createPoiSchema = object({
 export const readPoiSchema = object({
   ...params,
 });
-  
+
 // @todo
 export const updatePoiSchema = object({
   ...payload,

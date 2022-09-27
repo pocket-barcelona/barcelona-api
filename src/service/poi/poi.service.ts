@@ -6,6 +6,6 @@ import { getListHandler } from './functions';
 
 export class PoiService {
 
-  static getList = async (filters: FilterByPoiInput): Promise<ScanResponse<PoiDocument> | null> => getListHandler(filters);
+  static getList = async (filters: FilterByPoiInput['body']): Promise<ScanResponse<PoiDocument> | null> => getListHandler(filters);
   
 }

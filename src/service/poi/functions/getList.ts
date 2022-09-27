@@ -7,19 +7,27 @@ import { FilterByPoiInput } from "../../../schema/poi/poi.schema";
  * @returns
  */
 export default async function (
-  filters: FilterByPoiInput
+  filters: FilterByPoiInput['body']
 ): Promise<ScanResponse<PoiDocument> | null> {
   try {
     const activeField: keyof PoiDocument = "active";
+    const latField: keyof PoiDocument = "lat";
+    const lngField: keyof PoiDocument = "lng";
 
     // @todo - check location
-    // filters.params.lat
+    // filters.lat
     
-    const result = PoiModel.scan()
+    const documents = PoiModel.scan()
       // only fetch my events
       .where(activeField)
-      .eq(true)
-      .exec(); // this will scan every record
+      .eq(true);
+      
+    // apply filters
+    // if (filters.lat) {
+    //   documents.and().where(latField).between()
+    // }
+    
+    const result = documents.exec(); // this will scan every record
     return await result.catch((err) => {
       // logger.warn(err)
       return null;
