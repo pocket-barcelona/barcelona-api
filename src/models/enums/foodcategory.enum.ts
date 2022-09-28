@@ -9,18 +9,28 @@ export enum DrinkCategoryEnum {
     Cocktails = 2,
     Coffee = 3,
     CraftBeer = 4,
+    Wine = 5,
 }
 
 export enum FoodCuisinesEnum {
     // Mediterranean = 'MED',
     French = 'FRE',
     Chinese = 'CHI',
+    Mexican = 'MEX',
     LatinAmerican = 'LAT',
     VeggieVegan = 'VEG',
     Japanese = 'JAP',
     Italian = 'ITA',
     Greek = 'GRE',
     Spanish = 'ESP',
+}
+export enum FoodStylesEnum {
+    Tapas = 'TAP',
+    Pintxos = 'PIN', // check spelling
+    Sushi = 'SUS',
+    Burritos = 'BUR',
+    Pizzas = 'PIZ',
+    // ...todo
 }
 
 /**

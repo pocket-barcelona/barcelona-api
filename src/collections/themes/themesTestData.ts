@@ -1,9 +1,11 @@
 import {
   DrinkCategoryEnum,
   FoodCategoryEnum,
+  FoodCuisinesEnum,
 } from "../../models/enums/foodcategory.enum";
 import { RequiresBookingEnum } from "../../models/enums/requiresbooking.enum";
 import { TimeRecommendedEnum } from "../../models/enums/timerecommended.enum";
+import { TimeOfDayEnum } from "../../models/enums/tod.enum";
 import {
   PlanThemeEnum,
   StructuredPlanDayProfile,
@@ -12,7 +14,7 @@ import {
 
 // Parallel metro!
 // 41.37510536783193, 2.1681203940848635
-// 5 mins up the road from parallel!
+// 5 mins up the road from parallel! ~450m
 // 41.37518964719392, 2.1625463009432675
 const fiveMinsWalk = Math.abs(2.1625463009432675 - 2.1681203940848635);
 export const WALKING_DISTANCES = {
@@ -401,10 +403,31 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     // categoryIdsChooseAmount: 1,
     foodCategories: [FoodCategoryEnum.Brunch],
   },
-  // {
-  //   id: 302,
-  //   name: '',
-  // }
+  { // @todo
+    id: 302,
+    theme: PlanThemeEnum.FoodAndDrink,
+    name: "Visit Plaza San Miguel's Bars & Restaurants",
+    bestTod: TimeOfDayEnum.Night,
+    drinkCategories: [DrinkCategoryEnum.CraftBeer, DrinkCategoryEnum.Beer, DrinkCategoryEnum.Cocktails],
+    placeIds: [31],
+    internal: 0,
+  },
+  { // @todo
+    id: 303,
+    theme: PlanThemeEnum.FoodAndDrink,
+    name: "Enjoy Wine & Tapas in Central Barcelona",
+    bestTod: TimeOfDayEnum.Night,
+    drinkCategories: [DrinkCategoryEnum.CraftBeer, DrinkCategoryEnum.Beer, DrinkCategoryEnum.Cocktails],
+    placeIds: [31],
+    foodCategories: [
+      FoodCategoryEnum.Dinner,
+    ],
+    foodCuisines: [
+      FoodCuisinesEnum.Spanish
+    ],
+    internal: 2,
+  },
+  
   {
     id: 401,
     theme: PlanThemeEnum.NightsOut,
@@ -412,10 +435,23 @@ export const themesTestData: StructuredPlanDayProfile[] = [
     drinkCategories: [DrinkCategoryEnum.CraftBeer],
     internal: 0,
   },
-  // {
-  //   id: 402,
-  //   name: '',
-  // }
+  { // @todo - query the address for this: d'Avinyó'. Addresses are like: "Address" : "Carrer d'Avinyó, 35, 08002 Barcelona, Spain",
+    id: 402,
+    theme: PlanThemeEnum.NightsOut,
+    name: "Best of Carrer d'Avinyó",
+    // drinkCategories: [DrinkCategoryEnum.CraftBeer],
+    internal: 0,
+  },
+  { // @todo
+    id: 403,
+    theme: PlanThemeEnum.NightsOut,
+    name: "Pub Crawl, El Born",
+    bestTod: TimeOfDayEnum.Night,
+    drinkCategories: [DrinkCategoryEnum.CraftBeer, DrinkCategoryEnum.Beer, DrinkCategoryEnum.Cocktails],
+    internal: 0,
+  },
+  
+  
   {
     id: 501,
     theme: PlanThemeEnum.BestOf,
@@ -451,7 +487,7 @@ export const themesTestData: StructuredPlanDayProfile[] = [
   {
     id: 601,
     theme: PlanThemeEnum.Route,
-    name: "Discover Montjuic and the Castle",
+    name: "Discover Montjuic and The Castle",
     // barrioIds: [26],
     categoryIds: [],
     placeIds: [
@@ -544,7 +580,8 @@ export const themesTestData: StructuredPlanDayProfile[] = [
 
 // FOOD & DRINK
 // 301. Brunch in [Poblenou/Born/Gothic/Raval] + Beach
-// Wine & Tapas
+// X Visit Plaza San Miguel's Bars & Restaurants
+// X Enjoy Wine & Tapas in Central Barcelona
 // Best paella?
 // Eixample food tour
 // [Gracia/Born/etc] - burgers, beers & coffee
@@ -568,10 +605,9 @@ export const themesTestData: StructuredPlanDayProfile[] = [
 
 // NIGHTS OUT
 // 401. Best of Craft Beer in Barcelona
+// X Carrer d'Avinyo - best of bars
 // Clubbing in upper diagonal, Tusset?
-// Carrer d'Avinyo - best of bars
 // Carrer de Ample - hidden bars
-// Plaza San Miguel, bars and food
 // Plaza de George Orwell, beers and cubatas
 // Pub crawl, El Born
 // Pub crawl, El Gotico
@@ -586,4 +622,12 @@ export const themesTestData: StructuredPlanDayProfile[] = [
 
 
 // ROUTES
-// 1. Discover Montjuic and the castle
+// 1. Discover Montjuic and The castle
+// 2. Discover Mount Tibidabo on Foot
+// 3. Discover Park Guell on Foot
+// 3a. Discover Park Guell on Foot (alternative route)
+// 4. Discover The Bunkers of Carmel on Foot (route up escalators and lifts through the park)
+// 5. Discover The Bunkers of Carmel on Foot (alternate route) (route from Guinardo from park)
+// 6. Discover The Bunkers of Carmel on Foot (alternate route) (route from Alfons X)
+// 7. City Park to La Sagrada Familia on foot
+// 8. Barceloneta to The Forum, via W-Hotel and Beaches on foot
