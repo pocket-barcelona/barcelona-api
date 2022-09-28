@@ -84,11 +84,11 @@ export interface PlaceInput {
   availableDaily: boolean;
   /** Place or activity is available on a sunday? */
   availableSundays: boolean;
-  /** Place or activity is a physical landmark? */
+  /** @todo - check original data as it contains 1,2,3 etc...! Place or activity is a physical landmark? */
   physicalLandmark: boolean;
   /** Place or activity requires booking?  */
   requiresBooking: RequiresBookingEnum;
-  /** The metro/train zone number for this place or activity (applies to Barcelona only). -1 and -2 are outside of Barcelona */
+  /** The metro/train zone number for this place or activity, ex. 1, 2, 3... (applies to Barcelona only). -1 and -2 are outside of Barcelona */
   metroZone: number;
   /** If the lat/lng value is accurate, or not */
   latlngAccurate: boolean;

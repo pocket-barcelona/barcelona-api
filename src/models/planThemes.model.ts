@@ -81,6 +81,7 @@ export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> &
  */
 export type PlanThemes = 'location' | 'category' | 'trips' | 'bestof' | 'nightsout' | 'fooddrink' | 'route';
 export enum PlanThemeEnum {
+  Custom = 0,
   /** A filter by barrio IDs, then filtered by params */
   Location = 1,
   /** A filter by category IDs, then filtered by params */
@@ -95,4 +96,34 @@ export enum PlanThemeEnum {
   FoodAndDrink = 6,
   /** A list of specific place IDs in an order */
   Route = 7,
+}
+
+export interface ThemeInputSpecs {
+  hasProvinceId: boolean;
+  hasBarrioIds: boolean;
+  hasBarrioIdsChooseAmount: boolean;
+  hasPlaceIds: boolean;
+  hasExcludePlaceIds: boolean;
+  // placeIdsAlwaysInclude
+  // placeIdsOptional
+  hasPlaceIdsOrdered: boolean;
+  hasPlaceIdsChooseAmount: boolean;
+  hasCategoryIds: boolean;
+  hasCategoryIdsChooseAmount: boolean;
+  hasMetroZones: boolean;
+  hasSeasonal: boolean;
+  hasDaytrip: boolean;
+  hasPopular: boolean;
+  hasAnnualOnly: boolean;
+  hasFreeToVisit: number | null;
+  hasKeyword: boolean;
+  hasStart: boolean;
+  hasEnd: boolean;
+  hasCenter: boolean;
+  hasRadius: boolean;
+  hasTimeRecommendedOptions: boolean;
+  hasRequiresBookingOptions: boolean;
+  hasFoodCategories: boolean;
+  hasDrinkCategories: boolean;
+  hasPhysicalLandmark: boolean;
 }

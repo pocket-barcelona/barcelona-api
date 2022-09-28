@@ -42,29 +42,32 @@ export interface StructuredPlanResponse {
 
   /** See itinerary summary model from PB */
   summary: {
-    numberOfDays: number;
+    // numberOfDays: number;
+    /** A count of the number of places in the result set */
     numberOfPlaces: number;
-    /** Use budget ENUM */
-    budget: number;
-    /** should include places outside the city of Barcelona or not */
+    /** This will be an average price. Ex. Cheap/Free/Very Cheap/Free/Free (4, 1, 2, 1, 1) = 9 / 5 places = 1.8 average */
+    priceAverage: number;
+    /** If dataset contains a place outside the city of Barcelona, set as true */
     includesPlacesOutsideCity: boolean;
+    /** @todo - if places are all close, mark as true */
     easyWalking: boolean;
+    /** A distinct list of the categories in the result set */
     categoriesIncluded: Array<CategoryDocument["categoryId"]>;
     /** Spend time in 1 place or move around. Use ENUM */
-    focusOnSameLocation: number;
-    /** TOD Enum */
-    timeOfDay: number;
-    /** Plan is focussed on central neighbourhoods only */
-    visitCentralBarriosOnly: boolean;
+    // focusOnSameLocation: number;
+    /** Create an average time of day. Could be day, night or both */
+    timeOfDay: TimeOfDayEnum;
+    /** True is dataset contains places only in the central neighbourhoods */
+    centralBarriosOnly: boolean;
     excludePlaceIds: Array<PlaceDocument["placeId"]>;
+    
+    /** @todo... */
     visitingWithPets: boolean;
     visitingWithChildren: boolean;
     visitingWithTeenagers: boolean;
     includesFoodRecommendations: boolean;
     includesDrinkRecommendations: boolean;
-
     includesEventNotices: boolean;
-
     routeIsOptimized?: boolean;
     planAuthor?: string;
     planOrganiser?: string;
@@ -75,7 +78,7 @@ export interface StructuredPlanResponse {
 /** The data required to generate a structured plan itinerary */
 export interface PlanBuilderInput {
   /** Selects a specific theme by ID - for testing */
-  themeId?: number;
+  // themeId?: number;
   /** The type of traveller that the plan is for */
   // profileType: ProfileTypeEnum;
   /** Number of days for this plan: 1-7 */

@@ -1,15 +1,18 @@
 import { Condition } from "dynamoose";
 import { Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 import { themesTestData, WALKING_DISTANCES } from "../../../collections/themes/themesTestData";
+import { TimeOfDayEnum } from "../../../models/enums/tod.enum";
 import { PlaceDocument } from "../../../models/place.model";
 import { StructuredPlanResponse } from "../../../models/plan.model";
 import {
   PlanThemeEnum,
   StructuredPlanDayProfile,
+  ThemeInputSpecs,
 } from "../../../models/planThemes.model";
 import PoiModel, { PoiDocument } from "../../../models/poi.model";
 
 const DOCUMENT_LIST_RETURN_LIMIT = 25;
+
 export class PlanHelper {
   getDayProfile(numberOfDays: number): StructuredPlanDayProfile {
     return themesTestData[0];
@@ -167,8 +170,25 @@ export class PlanHelper {
 
     const numberOfPlaces = limitedResultSet.length;
 
+    // sum all the price enums and find an average
+    const priceTotal = limitedResultSet.reduce((a, b) => {
+      return a + (b.price ?? 0)
+    }, 0);
+    // average is sum over count of places
+    const priceAverage = limitedResultSet.length > 0 ? priceTotal / limitedResultSet.length : 0;
+
+    const allZone1 = limitedResultSet.every(i => i.metroZone === 1);
+    const centralBarriosOnly = limitedResultSet.every(i => {
+      // return true if 
+      return [11, 12, 13].includes(i.barrioId);
+    });
+    // const centralBarriosOnly = centralBarriosOnlyCount.length === limitedResultSet.length;
+
     const planTitle = this.getPlanTitle(theme.name, limitedResultSet);
-    
+
+    const todDay = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Day);
+    const todNight = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Night);
+    const timeOfDay = todDay.length === limitedResultSet.length ? TimeOfDayEnum.Day : todNight.length === limitedResultSet.length ? TimeOfDayEnum.Night : TimeOfDayEnum.Both;
     const resp: StructuredPlanResponse = {
       // @todo - planTitle can be tokenized
       planTitle,
@@ -183,17 +203,19 @@ export class PlanHelper {
       ],
       eventNotices: [],
       summary: {
-        // TODO
-        numberOfDays: 1,
+        // numberOfDays: 1,
         numberOfPlaces: numberOfPlaces,
-        budget: 0, // get average enum weight
-        includesPlacesOutsideCity: false,
+        priceAverage,
+        includesPlacesOutsideCity: !allZone1,
+        // TODO
         easyWalking: true,
         categoriesIncluded: categoryIds,
-        focusOnSameLocation: 1,
-        timeOfDay: 1,
-        visitCentralBarriosOnly: true,
+        // focusOnSameLocation: 1,
+        timeOfDay,
+        centralBarriosOnly,
         excludePlaceIds: theme.placeIdsExclude ?? [],
+
+        // TODO
         visitingWithPets: true,
         visitingWithChildren: true,
         visitingWithTeenagers: true,
@@ -287,4 +309,112 @@ export class PlanHelper {
   //       return 'Over 2 hours';
   //   }
   // }
+
+  getThemeInputParams = (theme: StructuredPlanDayProfile): ThemeInputSpecs => {
+    const hasProvinceId = Number.isInteger(theme.provinceId);
+    const hasBarrioIds = theme.barrioIds ? theme.barrioIds.length > 0 : false;
+    const hasBarrioIdsChooseAmount = theme.barrioIdsChooseAmount !== undefined && Number.isInteger(theme.barrioIdsChooseAmount) && theme.barrioIdsChooseAmount > 0;
+    const hasPlaceIds = theme.placeIds ? theme.placeIds.length > 0 : false;
+    const hasExcludePlaceIds = theme.placeIdsExclude ? theme.placeIdsExclude.length > 0 : false;
+    
+    const hasPlaceIdsOrdered = theme.placeIdsAreOrdered === true;
+    const hasPlaceIdsChooseAmount = theme.placeIdsChooseAmount !== undefined && Number.isInteger(theme.placeIdsChooseAmount) && theme.placeIdsChooseAmount > 0;
+    const hasCategoryIds = theme.categoryIds ? theme.categoryIds.length > 0 : false;
+    const hasCategoryIdsChooseAmount = theme.categoryIdsChooseAmount !== undefined && Number.isInteger(theme.categoryIdsChooseAmount) && theme.categoryIdsChooseAmount > 0;
+    const hasMetroZones = theme.metroZone !== undefined;
+    const hasSeasonal = theme.seasonal === true || theme.seasonal === false;
+    const hasDaytrip = Number.isInteger(theme.daytrip);
+    const hasPopular = theme.popular === true || theme.popular === false;
+    const hasAnnualOnly = Number.isInteger(theme.annualOnly);
+    const hasFreeToVisit = theme.freeToVisit !== undefined ? theme.freeToVisit : null;
+    const hasKeyword = theme.keyword !== undefined && theme.keyword !== '';
+    const hasStart = theme.start !== undefined; // more checks?
+    const hasEnd = theme.end !== undefined; // more checks?
+    const hasCenter = theme.center !== undefined; // more checks?
+    const hasRadius = theme.radius !== undefined && Number.isInteger(theme.radius) && theme.radius > 0;
+    const hasTimeRecommendedOptions = Array.isArray(theme.timeRecommendedOptions) && theme.timeRecommendedOptions.length > 0; // more checks?
+    const hasRequiresBookingOptions = Array.isArray(theme.requiresBookingOptions) && theme.requiresBookingOptions.length > 0; // more checks?
+    const hasFoodCategories = Array.isArray(theme.foodCategories) && theme.foodCategories.length > 0; // more checks?
+    const hasDrinkCategories = Array.isArray(theme.drinkCategories) && theme.drinkCategories.length > 0; // more checks?
+    const hasPhysicalLandmark = theme.physicalLandmark === true || theme.physicalLandmark === false;
+    return {
+      hasProvinceId,
+      hasBarrioIds,
+      hasBarrioIdsChooseAmount,
+      hasPlaceIds,
+      hasExcludePlaceIds,
+      hasPlaceIdsOrdered,
+      hasPlaceIdsChooseAmount,
+      hasCategoryIds,
+      hasCategoryIdsChooseAmount,
+      hasMetroZones,
+      hasSeasonal,
+      hasDaytrip,
+      hasPopular,
+      hasAnnualOnly,
+      hasFreeToVisit,
+      hasKeyword,
+      hasStart,
+      hasEnd,
+      hasCenter,
+      hasRadius,
+      hasTimeRecommendedOptions,
+      hasRequiresBookingOptions,
+      hasFoodCategories,
+      hasDrinkCategories,
+      hasPhysicalLandmark,
+    }
+  }
+
+  fields = () => {
+    const activeField: keyof PlaceDocument = 'active';
+    const provinceIdField: keyof PlaceDocument = 'provinceId';
+    const placeIdField: keyof PlaceDocument = 'placeId';
+    const barrioIdField: keyof PlaceDocument = 'barrioId';
+    const categoryIdField: keyof PlaceDocument = 'categoryId';
+    const timeRecommendedField: keyof PlaceDocument = 'timeRecommended';
+    const bestTodField: keyof PlaceDocument = 'bestTod';
+    const commitmentRequiredField: keyof PlaceDocument = 'commitmentRequired';
+    const priceField: keyof PlaceDocument = 'price';
+    const freeToVisitField: keyof PlaceDocument = 'freeToVisit';
+    const childrenSuitabilityField: keyof PlaceDocument = 'childrenSuitability';
+    const teenagerSuitabilityField: keyof PlaceDocument = 'teenagerSuitability';
+    const popularField: keyof PlaceDocument = 'popular';
+    const annualOnlyField: keyof PlaceDocument = 'annualOnly';
+    const seasonalField: keyof PlaceDocument = 'seasonal';
+    const daytripField: keyof PlaceDocument = 'daytrip';
+    const availableDailyField: keyof PlaceDocument = 'availableDaily';
+    const availableSundaysField: keyof PlaceDocument = 'availableSundays';
+    const physicalLandmarkField: keyof PlaceDocument = 'physicalLandmark';
+    const requiresBookingField: keyof PlaceDocument = 'requiresBooking';
+    const metroZoneField: keyof PlaceDocument = 'metroZone';
+    const latField: keyof PlaceDocument = 'lat';
+    const lngField: keyof PlaceDocument = 'lng';
+    return {
+      activeField,
+      provinceIdField,
+      placeIdField,
+      barrioIdField,
+      categoryIdField,
+      timeRecommendedField,
+      bestTodField,
+      commitmentRequiredField,
+      priceField,
+      freeToVisitField,
+      childrenSuitabilityField,
+      teenagerSuitabilityField,
+      popularField,
+      annualOnlyField,
+      seasonalField,
+      daytripField,
+      availableDailyField,
+      availableSundaysField,
+      physicalLandmarkField,
+      requiresBookingField,
+      metroZoneField,
+      latField,
+      lngField,
+    }
+
+  }
 }
