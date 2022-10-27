@@ -77,6 +77,9 @@ export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> &
     direction: 'ASC' | 'DESC' | 'RANDOM';
     valueType?: 'BOOLEAN' | 'STRING' | 'NUMBER';
   }[];
+
+  dateStart?: number;
+  dateEnd?: number;
 }
 
 /**

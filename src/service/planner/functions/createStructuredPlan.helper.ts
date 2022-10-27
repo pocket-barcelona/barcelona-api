@@ -92,7 +92,6 @@ export class PlanHelper {
     //   }
     // });
 
-    
 
     // const f = new Condition({
     //   between([lowerLat, upperLat]),
@@ -102,7 +101,6 @@ export class PlanHelper {
     // );
     
     
-
     // @todo - doesn't work!?!?!?!?!
     // documents
     // .parenthesis({
@@ -110,10 +108,10 @@ export class PlanHelper {
     // })
     // .where(poiLatField)
 
+    // get a list of places within walking distance from the lat/lng
     documents.and()
     .where(poiLatField).between(lowerLat, upperLat).and().where(poiLngField).between(lowerLng, upperLng);
 
-    // get a list of places within walking distance from the lat/lng
     scanResults = await documents.limit(10).exec();
     return Promise.resolve(scanResults);
   }
@@ -124,6 +122,7 @@ export class PlanHelper {
     // results: ScanResponse<PlaceDocument>
     results: PlaceDocument[],
     pois: PoiDocument[],
+    startEnd?: { from: number; to: number; } | undefined,
   ): StructuredPlanResponse {
 
     // sort list
@@ -141,8 +140,8 @@ export class PlanHelper {
           return Math.random() > 0.5 ? 1 : -1;
         }
 
-        const aVal = a[sortKey];
-        const bVal = b[sortKey];
+        const aVal: any = a[sortKey];
+        const bVal: any = b[sortKey];
         switch (valueType) {
           case 'BOOLEAN': 
             return aVal === true && bVal === false ? 1 : (aVal === true && bVal === true ? 0 : -1);
@@ -179,7 +178,7 @@ export class PlanHelper {
 
     const allZone1 = limitedResultSet.every(i => i.metroZone === 1);
     const centralBarriosOnly = limitedResultSet.every(i => {
-      // return true if 
+      // return true if barrio is raval, gothic or born
       return [11, 12, 13].includes(i.barrioId);
     });
     // const centralBarriosOnly = centralBarriosOnlyCount.length === limitedResultSet.length;
@@ -416,5 +415,11 @@ export class PlanHelper {
       lngField,
     }
 
+  }
+
+  orderStructuredPlanResults = (results: PlaceDocument[]): PlaceDocument[] => {
+    return results.sort((a, b) => {
+      return a.popular < b.popular ? 1 : (a.popular === b.popular ? 0 : -1);
+    });
   }
 }

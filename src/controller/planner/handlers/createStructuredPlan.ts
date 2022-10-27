@@ -13,13 +13,16 @@ import { BuildPlanInput } from "../../../schema/plan/plan.schema";
  */
 export default async function createStructuredPlan(req: Request<BuildPlanInput>, res: Response) {
   
-  console.log(req.body);
-  const data = await PlannerService.createStructuredPlan(req.body);
+  console.log('Logging payload', req.body);
+  const data = await PlannerService.createStructuredPlan(req.body)
+  .catch((e) => {
+    console.log(e);
+  });
   // @todo
   if (!data) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(error("Error getting item", res.statusCode));
+      .send(error("Error getting itinerary", res.statusCode));
   }
 
   return res.send(success(data));
