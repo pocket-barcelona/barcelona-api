@@ -43,6 +43,7 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 
     // RANDOM
     const theme = helper.getRandomItemFromArray(themesTestData);
+    // console.log(theme);
     // SPECIFIC - FOR TESTING
     // const themeId = 1041;
     // const theme = themesTestData.find((t) => t.id === themeId);
@@ -215,7 +216,6 @@ export default async function (): Promise<StructuredPlanResponse | null> {
         }
         break;
       }
-
       case PlanThemeEnum.Route: {
         documents.and().where(placeIdField).in(placeIdsSubset);
 

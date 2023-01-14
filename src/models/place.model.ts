@@ -8,7 +8,7 @@ import { TimeRecommendedEnum } from "./enums/timerecommended.enum";
 import { TimeOfDayEnum } from "./enums/tod.enum";
 import { CategoryIdEnum } from "./enums/categoryid.enum";
 import { TeenagerEnum } from "./enums/teenager.enum";
-
+import { ImageAssets } from './imageAssets';
 
 export interface PlaceInput {
   /** The place ID */
@@ -111,6 +111,7 @@ export interface PlaceInput {
   /** If true, this item's data requires checking as it may not be accurate */
   requiresChecking: boolean;
   
+  images?: ImageAssets[];
   // @todo - place status or under moderation?
 }
 

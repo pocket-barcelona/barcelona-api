@@ -2,16 +2,17 @@ import { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { PlacesService } from "../../../service/places/places.service";
+import { ReadPlaceInput } from "../../../schema/place/place.schema";
 
 /**
- * Get a list of places
+ * Get a list of categories
  * @param req
  * @param res
  * @returns
  */
-export default async function getList(req: Request, res: Response) {
+export default async function getPlaceCategories(req: Request, res: Response) {
   
-  const records = await PlacesService.getList();
+  const records = await PlacesService.getPlaceCategories();
   
   if (!records) {
     return res
@@ -19,7 +20,5 @@ export default async function getList(req: Request, res: Response) {
       .send(error("Error getting list", res.statusCode));
   }
 
-  const mappedRecords = PlacesService.getMappedPlaceDocuments(records);
-
-  return res.send(success(mappedRecords));
+  return res.send(success(records));
 }
