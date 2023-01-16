@@ -12,7 +12,7 @@ import { ReadPlaceInput } from "../../../schema/place/place.schema";
  */
 export default async function getRelatedPlaces(req: Request<ReadPlaceInput['params']>, res: Response) {
   
-  const records = await PlacesService.getRelatedPlaces(req.body);
+  const records = await PlacesService.getRelatedPlaces(req.params);
   
   if (!records) {
     return res

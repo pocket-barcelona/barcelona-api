@@ -1,5 +1,6 @@
 import PlaceModel, { PlaceDocument } from "../../../models/place.model";
 import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import { ReadPlaceInput } from '../../../schema/place/place.schema';
 
 /**
  * Get a list of places related to this place ID
@@ -8,9 +9,10 @@ import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
  * @returns A list of places related to this, or a pseudo list of matches
  */
 export default async function (
-  placeId: PlaceDocument['placeId'],
+  placeParams: ReadPlaceInput['params'],
 ): Promise<ScanResponse<PlaceDocument> | null> {
   try {
+    const placeId = Number(placeParams.placeId);
     const activeField: keyof PlaceDocument = "active";
     const categoryField: keyof PlaceDocument = "categoryId";
 

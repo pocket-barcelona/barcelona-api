@@ -10,6 +10,12 @@ import { CategoryIdEnum } from "./enums/categoryid.enum";
 import { TeenagerEnum } from "./enums/teenager.enum";
 import { ImageAssets } from './imageAssets';
 
+interface PlaceRating {
+  rating: string
+  ratingIndex: number;
+  ratingStars: string[];
+}
+
 export interface PlaceInput {
   /** The place ID */
   placeId: number;
@@ -112,6 +118,7 @@ export interface PlaceInput {
   requiresChecking: boolean;
   
   images?: ImageAssets[];
+  rating?: PlaceRating;
   // @todo - place status or under moderation?
 }
 

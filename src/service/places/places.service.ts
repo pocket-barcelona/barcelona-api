@@ -3,6 +3,7 @@ import { PlaceDocument } from "../../models/place.model";
 import { getListHandler, getByIdHandler, getRelatedPlacesHandler, getPlaceCategoriesHandler } from './functions';
 import { CategoryDocument } from '../../models/category.model';
 import { ImageAssetsSize } from '../../models/imageAssets';
+import { ReadPlaceInput } from '../../schema/place/place.schema';
 
 export class PlacesService {
 
@@ -10,7 +11,7 @@ export class PlacesService {
   
   static getById = async (placeId: PlaceDocument['placeId']): Promise<PlaceDocument | null> => getByIdHandler(placeId);
 
-  static getRelatedPlaces = async (placeId: PlaceDocument['placeId']): Promise<ScanResponse<PlaceDocument> | null> => getRelatedPlacesHandler(placeId);
+  static getRelatedPlaces = async (placeParams: ReadPlaceInput['params']): Promise<ScanResponse<PlaceDocument> | null> => getRelatedPlacesHandler(placeParams);
   
   static getPlaceCategories = async (): Promise<ScanResponse<CategoryDocument> | null> => getPlaceCategoriesHandler();
 
@@ -31,9 +32,12 @@ export class PlacesService {
       }
     });
 
+    const rating: PlaceDocument['rating'] = PlacesService.getPlaceRating(place);
+
     return {
       ...place,
       images,
+      rating,
     };
   }
 
@@ -51,6 +55,43 @@ export class PlacesService {
 
     const path = `https://s3.eu-west-3.amazonaws.com/barcelonasite/images/places/_posters/${size}/${place.placeId}_poster.jpg`;
 		return path;
+  }
+
+  static getPlaceRating(place: PlaceDocument): PlaceDocument['rating'] {
+    const placeRating: PlaceDocument['rating'] = {
+      'rating': '0',
+      'ratingIndex': 0,
+      'ratingStars': [],
+    };
+
+    let rating = 3;
+
+    if (place.popular) {
+      rating += 1;
+    }
+
+    if (place.boost) {
+      // @todo - round to 1 dp
+      rating += Math.round(place.boost / 100);
+    }
+
+    placeRating.rating = rating.toFixed(1);
+    
+    placeRating.ratingIndex = (place.popular ? 1 : 0) + place.boost;
+
+    const stars: string[] = [];
+    for (let index = 0; index < 5; index++) {
+      if (rating <= index) {
+        stars.push('none');
+      } else if(rating >= (index + 1)) {
+        stars.push('full');
+      } else {
+        stars.push('half');
+      }
+    }
+
+    placeRating.ratingStars = [...stars];
+    return placeRating;
   }
   
 }
