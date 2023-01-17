@@ -4,14 +4,15 @@ import { getListHandler, getByIdHandler, getRelatedPlacesHandler, getPlaceCatego
 import { CategoryDocument } from '../../models/category.model';
 import { ImageAssetsSize } from '../../models/imageAssets';
 import { ReadPlaceInput } from '../../schema/place/place.schema';
+import { ReadExploreInput } from '../../schema/explore/explore.schema';
 
 export class PlacesService {
 
-  static getList = async (): Promise<ScanResponse<PlaceDocument> | null> => getListHandler();
+  static getList = async (params: ReadExploreInput['body']): Promise<ScanResponse<PlaceDocument> | null> => getListHandler(params);
   
   static getById = async (placeId: PlaceDocument['placeId']): Promise<PlaceDocument | null> => getByIdHandler(placeId);
 
-  static getRelatedPlaces = async (placeParams: ReadPlaceInput['params']): Promise<ScanResponse<PlaceDocument> | null> => getRelatedPlacesHandler(placeParams);
+  static getRelatedPlaces = async (params: ReadPlaceInput['params']): Promise<ScanResponse<PlaceDocument> | null> => getRelatedPlacesHandler(params);
   
   static getPlaceCategories = async (): Promise<ScanResponse<CategoryDocument> | null> => getPlaceCategoriesHandler();
 

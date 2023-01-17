@@ -4,13 +4,13 @@ import validateResource from "../middleware/validateResource";
 // import requireUser from "../middleware/requireUser";
 
 import { readPlaceSchema } from "../schema/place/place.schema";
+import { exploreSchema } from '../schema/explore/explore.schema';
 
 const router = express.Router()
 
 
 // ########### PLACES ###########
-router.get("/", [], PlacesController.getListHandler);
-
+router.get("/", [validateResource(exploreSchema)], PlacesController.getListHandler);
 
 router.get("/:placeId", [validateResource(readPlaceSchema)], PlacesController.getByIdHandler);
 

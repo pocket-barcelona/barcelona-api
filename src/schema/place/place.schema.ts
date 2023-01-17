@@ -20,9 +20,8 @@ export const createPlaceSchema = object({
 });
 
 export const readPlaceSchema = object({
-    ...params,
-  });
-  
+  ...params,
+});  
 
 export const updatePlaceSchema = object({
   ...payload,

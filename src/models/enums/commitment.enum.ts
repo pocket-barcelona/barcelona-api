@@ -5,3 +5,10 @@ export enum CommitmentEnum {
   Hard = 8,
   Extreme = 16
 }
+export const CommitmentBits: number[] = [
+  CommitmentEnum.Casual,
+  CommitmentEnum.Easy,
+  CommitmentEnum.Medium,
+  CommitmentEnum.Hard,
+  CommitmentEnum.Extreme,
+]
