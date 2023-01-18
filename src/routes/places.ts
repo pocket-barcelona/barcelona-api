@@ -10,7 +10,7 @@ const router = express.Router()
 
 
 // ########### PLACES ###########
-router.get("/", [validateResource(exploreSchema)], PlacesController.getListHandler);
+router.post("/", [validateResource(exploreSchema)], PlacesController.getListHandler);
 
 router.get("/:placeId", [validateResource(readPlaceSchema)], PlacesController.getByIdHandler);
 

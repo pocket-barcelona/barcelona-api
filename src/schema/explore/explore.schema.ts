@@ -74,6 +74,10 @@ const params = {
       required_error: "availableSundays is required",
       // invalid_type_error
     }).optional(),
+    daytrip: number({
+      required_error: "daytrip is required",
+      // invalid_type_error
+    }).optional(),
     exclude: number({
       required_error: "exclude is required",
       // invalid_type_error

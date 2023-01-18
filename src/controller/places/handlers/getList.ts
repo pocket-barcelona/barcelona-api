@@ -22,5 +22,8 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
 
   const mappedRecords = PlacesService.getMappedPlaceDocuments(records);
 
-  return res.send(success(mappedRecords));
+  return res.send(success(
+    // @todo - pagination
+    mappedRecords.slice(0, 25)
+  ));
 }

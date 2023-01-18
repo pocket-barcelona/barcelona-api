@@ -20,7 +20,7 @@ export default async function getRelatedPlaces(req: Request<ReadPlaceInput['para
       .send(error("Error getting list", res.statusCode));
   }
 
-  const mappedRecords = PlacesService.getMappedPlaceDocuments(records);
+  const mappedRecords = PlacesService.getMappedPlaceDocuments(records.slice(0, 12));
 
   return res.send(success(mappedRecords));
 }
