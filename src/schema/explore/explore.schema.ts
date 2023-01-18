@@ -86,10 +86,10 @@ const params = {
       required_error: "include is required",
       // invalid_type_error
     }).array().optional(),
-    poi: number({
+    poi: string({
       required_error: "poi is required",
       // invalid_type_error
-    }).array().optional(),
+    }).optional(),
     orderBy: string({
       required_error: "orderBy is required",
       // invalid_type_error
