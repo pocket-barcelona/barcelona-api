@@ -5,6 +5,7 @@ import placesRoutes from './places';
 import eventsRoutes from './events';
 import plannerRoutes from './planner';
 import poiRoutes from './poi';
+import guideRoutes from './guide';
 
 function routes(app: Express) {
 
@@ -20,6 +21,8 @@ function routes(app: Express) {
 
   app.use('/api/events', eventsRoutes);
   app.use('/api/planner', plannerRoutes);
+
+  app.use('/api/guides', guideRoutes);
 }
 
 export default routes;

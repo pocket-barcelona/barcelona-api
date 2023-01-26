@@ -5,6 +5,7 @@ import { CategoryDocument } from '../../models/category.model';
 import { ImageAssetsSize } from '../../models/imageAssets';
 import { ReadPlaceInput } from '../../schema/place/place.schema';
 import { ReadExploreInput } from '../../schema/explore/explore.schema';
+// import 'dotenv/config'; // support for dotenv injecting into the process env
 
 export class PlacesService {
 
@@ -43,18 +44,11 @@ export class PlacesService {
   }
 
   static getPoster (place: PlaceDocument, size: ImageAssetsSize): string {
-    // online
-		// https://s3.eu-west-3.amazonaws.com/barcelonasite/images/places/6_stand_up_paddleboarding_sup/paddleboarding-1973035.jpg
-		// local
-		// http://127.0.0.1/Barcelona_Barrios_And_Places/Places/6_stand_up_paddleboarding_sup/paddleboarding-1973035.jpg
-		
-		// local medium
-		// http://127.0.0.1/Barcelona_Barrios_And_Places/Places/_posters/medium/[ID]_poster.jpg
-
-    const noImagePoster = 'https://s3.eu-west-3.amazonaws.com/barcelonasite/images/assets/placeholder-image.jpg';
+    const base = process.env.AWS_S3_BUCKET;
+    const noImagePoster = `${base}/images/assets/placeholder-image.jpg`;
     if (!place.hasImage) return noImagePoster;
 
-    const path = `https://s3.eu-west-3.amazonaws.com/barcelonasite/images/places/_posters/${size}/${place.placeId}_poster.jpg`;
+    const path = `${base}/images/places/_posters/${size}/${place.placeId}_poster.jpg`;
 		return path;
   }
 
