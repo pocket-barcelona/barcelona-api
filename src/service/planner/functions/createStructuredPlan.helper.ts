@@ -10,6 +10,7 @@ import {
   ThemeInputSpecs,
 } from "../../../models/planThemes.model";
 import PoiModel, { PoiDocument } from "../../../models/poi.model";
+import { PlacesService } from '../../places/places.service';
 
 const DOCUMENT_LIST_RETURN_LIMIT = 25;
 
@@ -112,8 +113,14 @@ export class PlanHelper {
     documents.and()
     .where(poiLatField).between(lowerLat, upperLat).and().where(poiLngField).between(lowerLng, upperLng);
 
-    scanResults = await documents.limit(10).exec();
-    return Promise.resolve(scanResults);
+    try {
+      scanResults = await documents.limit(10).exec();
+      return Promise.resolve(scanResults);
+      
+    } catch (error) {
+      console.log('Error', error);
+      return Promise.resolve([]);
+    }
   }
 
   buildPlanResponse(
@@ -124,6 +131,11 @@ export class PlanHelper {
     pois: PoiDocument[],
     startEnd?: { from: number; to: number; } | undefined,
   ): StructuredPlanResponse {
+
+    // augment place data
+    results = results.map(r => {
+      return PlacesService.getMappedPlace(r) as PlaceDocument;
+    });
 
     // sort list
     if (theme.orderBy && theme.orderBy.length > 0) {
@@ -202,7 +214,7 @@ export class PlanHelper {
       ],
       eventNotices: [],
       summary: {
-        // numberOfDays: 1,
+        numberOfDays: 1, // @todo
         numberOfPlaces: numberOfPlaces,
         priceAverage,
         includesPlacesOutsideCity: !allZone1,

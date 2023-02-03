@@ -8,11 +8,14 @@ type HttpResponseType<T> = {
   error?: boolean;
   message?: string;
   code?: number;
+  meta?: any;
 }
 interface HttpResponseOptions {
   message?: string | undefined,
   statusCode?: number;
   error?: boolean;
+  /** Any additional meta data - e.g. pagination info, count of items etc */
+  meta?: any;
 }
 
 /**
@@ -32,6 +35,9 @@ export function success<T = any>(data: T, options?: HttpResponseOptions ): any {
     }
     if (options.statusCode !== undefined && options.statusCode > -1) {
       resp['code'] = options.statusCode
+    }
+    if (options.meta !== undefined) {
+      resp['meta'] = options.meta;
     }
   }
 

@@ -19,7 +19,7 @@ export default async function (
     const result = await PlaceModel.get(placeId);
     // check for place related ID
     if (result.relatedPlaceId) {
-        // get this place and put it first in the results
+      // get this place and put it first in the results
     }
     // now get a list of other related places
     

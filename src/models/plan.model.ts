@@ -42,8 +42,10 @@ export interface StructuredPlanResponse {
 
   /** See itinerary summary model from PB */
   summary: {
-    // numberOfDays: number;
-    /** A count of the number of places in the result set */
+    /** The number of days for the whole itinerary */
+    numberOfDays: number;
+
+    /** A count of the number of places in all the days */
     numberOfPlaces: number;
     /** This will be an average price. Ex. Cheap/Free/Very Cheap/Free/Free (4, 1, 2, 1, 1) = 9 / 5 places = 1.8 average */
     priceAverage: number;

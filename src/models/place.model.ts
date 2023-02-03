@@ -119,6 +119,7 @@ export interface PlaceInput {
   
   images?: ImageAssets[];
   rating?: PlaceRating;
+  province?: string;
   // @todo - place status or under moderation?
 }
 
