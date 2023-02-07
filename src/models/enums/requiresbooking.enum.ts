@@ -5,3 +5,10 @@ export enum RequiresBookingEnum {
   InAdvance = 8,
   SellingFast = 16 // not imp yet
 }
+export const RequiresBookingBits: number[] = [
+  RequiresBookingEnum.No,
+  RequiresBookingEnum.OnArrival,
+  RequiresBookingEnum.SameDay,
+  RequiresBookingEnum.InAdvance,
+  // RequiresBookingEnum.SellingFast,
+];

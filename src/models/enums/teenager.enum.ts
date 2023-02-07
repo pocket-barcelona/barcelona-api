@@ -3,3 +3,8 @@ export enum TeenagerEnum {
   Suitable = 2,
   Recommended = 4,
 }
+export const TeenagerBits: number[] = [
+  TeenagerEnum.NotSuitable,
+  TeenagerEnum.Suitable,
+  TeenagerEnum.Recommended,
+];

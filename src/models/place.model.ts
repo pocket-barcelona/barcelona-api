@@ -8,7 +8,13 @@ import { TimeRecommendedEnum } from "./enums/timerecommended.enum";
 import { TimeOfDayEnum } from "./enums/tod.enum";
 import { CategoryIdEnum } from "./enums/categoryid.enum";
 import { TeenagerEnum } from "./enums/teenager.enum";
+import { ImageAssets } from './imageAssets';
 
+interface PlaceRating {
+  rating: string
+  ratingIndex: number;
+  ratingStars: string[];
+}
 
 export interface PlaceInput {
   /** The place ID */
@@ -84,11 +90,11 @@ export interface PlaceInput {
   availableDaily: boolean;
   /** Place or activity is available on a sunday? */
   availableSundays: boolean;
-  /** Place or activity is a physical landmark? */
+  /** @todo - check original data as it contains 1,2,3 etc...! Place or activity is a physical landmark? */
   physicalLandmark: boolean;
   /** Place or activity requires booking?  */
   requiresBooking: RequiresBookingEnum;
-  /** The metro/train zone number for this place or activity (applies to Barcelona only). -1 and -2 are outside of Barcelona */
+  /** The metro/train zone number for this place or activity, ex. 1, 2, 3... (applies to Barcelona only). -1 and -2 are outside of Barcelona */
   metroZone: number;
   /** If the lat/lng value is accurate, or not */
   latlngAccurate: boolean;
@@ -111,6 +117,9 @@ export interface PlaceInput {
   /** If true, this item's data requires checking as it may not be accurate */
   requiresChecking: boolean;
   
+  images?: ImageAssets[];
+  rating?: PlaceRating;
+  province?: string;
   // @todo - place status or under moderation?
 }
 
@@ -279,7 +288,7 @@ const placeSchema = new dynamoose.Schema({
 });
 
 
-export const TABLE_NAME = 'Places';
-const PlaceModel = dynamoose.model<PlaceDocument>(TABLE_NAME, placeSchema);
+export const TABLE_NAME_PLACES = 'Places';
+const PlaceModel = dynamoose.model<PlaceDocument>(TABLE_NAME_PLACES, placeSchema);
 
 export default PlaceModel;

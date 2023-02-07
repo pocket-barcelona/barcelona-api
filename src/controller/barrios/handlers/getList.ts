@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { BarriosService } from "../../../service/barrios/barrios.service";
+import { ReadBarrioInput } from '../../../schema/barrio/barrio.schema';
 
 /**
  * Get a list of barrios
@@ -9,15 +10,17 @@ import { BarriosService } from "../../../service/barrios/barrios.service";
  * @param res
  * @returns
  */
-export default async function getList(req: Request, res: Response) {
+export default async function getList(req: Request<ReadBarrioInput>, res: Response) {
   
-  const overview = await BarriosService.getList();
+  const data = await BarriosService.getList(req.query);
 
-  if (!overview) {
+  if (!data) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send(error("Error getting list", res.statusCode));
   }
 
-  return res.send(success(overview));
+  return res.send(
+    success(data)
+  );
 }

@@ -1,0 +1,38 @@
+import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import PoiModel, { PoiDocument } from "../../../models/poi.model";
+import { FilterByPoiInput } from "../../../schema/poi/poi.schema";
+
+/**
+ * Get a list of poi's
+ * @returns
+ */
+export default async function (
+  filters: FilterByPoiInput['body']
+): Promise<ScanResponse<PoiDocument> | null> {
+  try {
+    const activeField: keyof PoiDocument = "active";
+    const latField: keyof PoiDocument = "lat";
+    const lngField: keyof PoiDocument = "lng";
+
+    // @todo - check location
+    // filters.lat
+    
+    const documents = PoiModel.scan()
+      // only fetch my events
+      .where(activeField)
+      .eq(true);
+      
+    // apply filters
+    // if (filters.lat) {
+    //   documents.and().where(latField).between()
+    // }
+    
+    const result = documents.exec(); // this will scan every record
+    return await result.catch((err) => {
+      // logger.warn(err)
+      return null;
+    });
+  } catch (e) {
+    return null;
+  }
+}

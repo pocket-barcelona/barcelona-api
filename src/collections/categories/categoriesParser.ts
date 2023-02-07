@@ -1,12 +1,14 @@
 // https://csv.js.org/parse/api/sync/
 // RUN this from the project root
 // node --loader ts-node/esm ./src/collections/categories/categoriesParser.ts
+// IF DOES NOT WORK:
+// node --experimental-specifier-resolution=node --loader ts-node/esm ./src/collections/categories/categoriesParser.ts
 
 import * as fs from "fs";
 import * as path from "path";
 import { CategoriesCsv } from "./categoriesCsv.type";
 import { fileURLToPath } from 'url';
-import { CategoryInput } from "../../models/category.model";
+import { CategoryInput, TABLE_NAME_CATEGORY } from "../../models/category.model";
 import { parse } from "csv-parse/sync";
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
@@ -23,7 +25,7 @@ AWS.config.update({
 const docClient = new AWS.DynamoDB.DocumentClient();
 class CustomDynamoService {
 
-  public putRecord<TRecord = any>(params: {
+  public putRecord<TRecord extends AWS.DynamoDB.DocumentClient.PutItemInput = any>(params: {
     TableName: string;
     Item: TRecord;
   }, theRecord: TRecord, callback?: (err: AWSError, data: any) => any) {
@@ -77,9 +79,7 @@ const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
 // CSV-SPECIFIC DATA...
 
 // csv headers
-const csvHeaders = ['type_id','type_active','type_label','type_alias','type_icon','type_poster','type_visited_by'];
-// DynamoDB table name, where to insert the data
-const tableName = 'Categories';
+const csvHeaders: Array<keyof CategoriesCsv> = ['type_id','type_active','type_label','type_alias','type_icon','type_poster','type_visited_by'];
 // parse csv file
 const records = parserService<CategoriesCsv>(fileContent, csvHeaders);
 
@@ -99,7 +99,7 @@ if (records && records.length > 0) {
     };
   });
   
-  console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${tableName}. Please wait...`);
+  console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${TABLE_NAME_CATEGORY}. Please wait...`);
   
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
@@ -108,10 +108,10 @@ if (records && records.length > 0) {
   .forEach((theRecord) => {
     
     const params = {
-      TableName: tableName,
+      TableName: TABLE_NAME_CATEGORY,
       Item: {
         ...theRecord
-      },
+      } as any,
     };
 
     const dynamoService = new CustomDynamoService();

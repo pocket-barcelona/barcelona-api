@@ -1,12 +1,15 @@
 // https://csv.js.org/parse/api/sync/
 // RUN this from the project root
 // node --loader ts-node/esm ./src/collections/barrios/barrioParser.ts
-
+// IF DOES NOT WORK:
+// node --experimental-specifier-resolution=node --loader ts-node/esm ./src/collections/barrios/barrioParser.ts
+// https://stackoverflow.com/questions/63742790/unable-to-import-esm-ts-module-in-node/65163089#65163089
+// ALSO COULD LOOK INTO: --transpile-only then run the JS file: Seee "Usage" headline https://www.npmjs.com/package/ts-node#installation
 import * as fs from "fs";
 import * as path from "path";
 import { BarrioCsv } from "./barrioCsv.type";
 import { fileURLToPath } from 'url';
-import { BarrioInput } from "../../models/barrio.model";
+import { BarrioInput, TABLE_NAME_BARRIOS } from "../../models/barrio.model";
 import { parse } from "csv-parse/sync";
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
@@ -23,7 +26,7 @@ AWS.config.update({
 const docClient = new AWS.DynamoDB.DocumentClient();
 class CustomDynamoService {
 
-  public putRecord<TRecord = any>(params: {
+  public putRecord<TRecord extends AWS.DynamoDB.DocumentClient.PutItemInput = any>(params: {
     TableName: string;
     Item: TRecord;
   }, theRecord: TRecord, callback?: (err: AWSError, data: any) => any) {
@@ -79,7 +82,7 @@ const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
 // csv headers
 const csvHeaders = ['barrio_id', 'barrio_parent_id', 'barrio_label', 'barrio', 'barrio_alias', 'barrio_desc', 'barrio_zone', 'barrio_central', 'barrio_central_range', 'barrio_active'];
 // DynamoDB table name, where to insert the data
-const tableName = 'Barrios';
+
 // parse csv file
 const records = parserService<BarrioCsv>(fileContent, csvHeaders);
 
@@ -100,7 +103,7 @@ if (records && records.length > 0) {
     };
   });
   
-  console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${tableName}. Please wait...`);
+  console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${TABLE_NAME_BARRIOS}. Please wait...`);
   
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
@@ -109,10 +112,10 @@ if (records && records.length > 0) {
   .forEach((theRecord) => {
     
     const params = {
-      TableName: tableName,
+      TableName: TABLE_NAME_BARRIOS,
       Item: {
         ...theRecord
-      },
+      } as any,
     };
 
     const dynamoService = new CustomDynamoService();

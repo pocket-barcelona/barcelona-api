@@ -1,3 +1,7 @@
+import getRegionsListHandler from './getRegionsList';
 import getListHandler from './getList';
 
-export { getListHandler };
+export {
+    getRegionsListHandler,
+    getListHandler,
+};
