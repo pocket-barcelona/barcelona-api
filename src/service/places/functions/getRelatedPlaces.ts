@@ -15,6 +15,7 @@ export default async function (
     const placeId = Number(placeParams.placeId);
     const activeField: keyof PlaceDocument = "active";
     const categoryField: keyof PlaceDocument = "categoryId";
+    const placeIdField: keyof PlaceDocument = "placeId";
 
     const result = await PlaceModel.get(placeId);
     // check for place related ID
@@ -31,6 +32,8 @@ export default async function (
     .and()
     .where(categoryField)
     .eq(result.categoryId)
+    .and()
+    .where(placeIdField).not().eq(placeId)
     .exec();
 
 
