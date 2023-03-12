@@ -86,6 +86,7 @@ const params = {
       required_error: "include is required",
       // invalid_type_error
     }).array().optional(),
+    /** This is a lat/lng like: lat,lng */
     poi: string({
       required_error: "poi is required",
       // invalid_type_error

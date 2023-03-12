@@ -26,6 +26,8 @@ export default async function (
     
     // for now, just get up to 10 places
 
+    // @todo - if the place is in barcelona, keep the related one's also in BCN
+
     const results = PlaceModel.scan()
     .where(activeField)
     .eq(true)

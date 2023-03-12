@@ -3,6 +3,44 @@ import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { PlacesService } from "../../../service/places/places.service";
 import { ReadExploreInput } from '../../../schema/explore/explore.schema';
+import { getDistance } from 'geolib';
+import { PlaceInput } from '../../../models/place.model';
+
+type LatLng = {
+  lat: number;
+  lng: number;
+}
+
+/**
+ * Return a list of records ordered by distance closest to the `from`
+ * @param from 
+ * @param records 
+ */
+function orderByDistanceClosest(from: LatLng, records: PlaceInput[]) {
+  const newRecords = records.map((place) => {
+    const to: LatLng = {
+      lat: place.lat,
+      lng: place.lng,
+    };
+    const distance = getDistance(from, to);
+    return {
+      ...place,
+      distance,
+    }
+  });
+
+  newRecords.sort((fromPlace, toPlace) => {
+    if (fromPlace.distance < toPlace.distance) {
+      return -1;
+    }
+    if (fromPlace.distance > toPlace.distance) {
+      return 1;
+    }
+    return 0;
+  });
+
+  return newRecords;
+}
 
 /**
  * Get a list of places, filtered by url params
@@ -20,7 +58,18 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
       .send(error("Error getting list", res.statusCode));
   }
 
-  const mappedRecords = PlacesService.getMappedPlaceDocuments(records);
+  let mappedRecords = PlacesService.getMappedPlaceDocuments(records);
+
+  // do ordering here...
+  if (req.body && req.body.poi) {
+    // if there is a POI then order by distance closest
+    const fromPairs = (req.body.poi as string).trim().split(',');
+    if (fromPairs.length === 2) {
+      const lat = parseFloat(fromPairs[0]);
+      const lng = parseFloat(fromPairs[1]);
+      mappedRecords = orderByDistanceClosest({ lat, lng }, mappedRecords);
+    }
+  }
 
   const sliceAt = 25;
   const subset = mappedRecords.slice(0, sliceAt);

@@ -120,6 +120,8 @@ export interface PlaceInput {
   images?: ImageAssets[];
   rating?: PlaceRating;
   province?: string;
+  /** The distance this place is away from some lat/lng */
+  distance?: number;
   // @todo - place status or under moderation?
 }
 
