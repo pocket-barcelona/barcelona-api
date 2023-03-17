@@ -1,4 +1,6 @@
-import { getListHandler } from "./functions";
+import { getListHandler, getByIdHandler } from "./functions";
 export class GuidesService {
-  static getList = async (): Promise<any> => getListHandler();
+  static getList = async () => getListHandler();
+  
+  static getById = async () => getByIdHandler();
 }
