@@ -6,6 +6,8 @@ import { ReadExploreInput } from '../../../schema/explore/explore.schema';
 import { getDistance } from 'geolib';
 import { PlaceInput } from '../../../models/place.model';
 
+const DEFAULT_PER_PAGE = 20;
+
 type LatLng = {
   lat: number;
   lng: number;
@@ -71,8 +73,23 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
     }
   }
 
-  const sliceAt = 25;
-  const subset = mappedRecords.slice(0, sliceAt);
+  // PAGINATION
+  let page = 1;
+  let sliceStart = 0;
+  let sliceEnd = DEFAULT_PER_PAGE;
+
+  if (req.body && req.body.page && req.body.page > 1) {
+    page = Number(req.body.page);
+    // @todo - make sure the page number is within range, or break early?
+  }
+
+  if (page > 1) {
+    // zero indexed
+    sliceStart = (page - 1) * DEFAULT_PER_PAGE;
+    // zero indexed
+    sliceEnd = sliceStart + DEFAULT_PER_PAGE;
+  }
+  const subset = mappedRecords.slice(sliceStart, sliceEnd);
 
   return res.send(success(
     // @todo - pagination
@@ -81,6 +98,7 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
       meta: {
         totalRecords: mappedRecords.length,
         count: subset.length,
+        page,
       }
     }
   ));

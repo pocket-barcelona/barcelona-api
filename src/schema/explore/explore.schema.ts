@@ -95,6 +95,9 @@ const params = {
       required_error: "orderBy is required",
       // invalid_type_error
     }).optional(),
+    page: number({
+      invalid_type_error: "Expected number",
+    }).optional(),
   }),
 };
 
