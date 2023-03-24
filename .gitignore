@@ -22,3 +22,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Google Takeout data - eventually this will be removed
+src/collections/googleplaces/data.json
