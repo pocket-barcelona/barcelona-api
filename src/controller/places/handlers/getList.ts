@@ -6,7 +6,7 @@ import { ReadExploreInput } from '../../../schema/explore/explore.schema';
 import { getDistance } from 'geolib';
 import { PlaceInput } from '../../../models/place.model';
 
-const DEFAULT_PER_PAGE = 20;
+const DEFAULT_PER_PAGE = 10;
 
 type LatLng = {
   lat: number;
@@ -90,7 +90,7 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
     sliceEnd = sliceStart + DEFAULT_PER_PAGE;
   }
   const subset = mappedRecords.slice(sliceStart, sliceEnd);
-
+  // console.log({page})
   return res.send(success(
     // @todo - pagination
     subset,
