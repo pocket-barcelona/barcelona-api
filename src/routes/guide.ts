@@ -9,5 +9,6 @@ const router = express.Router()
 // ########### EXPERT GUIDES ROUTES ###########
 router.get("/", [], GuideController.getListHandler);
 
+router.get("/:id", [], GuideController.getByIdHandler);
 
 export default router;

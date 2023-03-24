@@ -89,7 +89,7 @@ export const TEST_RESPONSE_PLAN_1: StructuredPlanResponse = {
   ],
   eventNotices: [],
   summary: {
-    // numberOfDays: 1,
+    numberOfDays: 1,
     numberOfPlaces: 1,
     priceAverage: 0,
     includesPlacesOutsideCity: false,

@@ -1,5 +1,5 @@
 import { ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { PlaceDocument } from "../../models/place.model";
+import { PlaceDocument, PlaceInput } from "../../models/place.model";
 import {
   getListHandler,
   getByIdHandler,
@@ -32,13 +32,13 @@ export class PlacesService {
 
   static getMappedPlaceDocuments = (
     places: PlaceDocument[]
-  ): Partial<PlaceDocument>[] => {
+  ): PlaceInput[] => {
     return places.map((p) => {
       return PlacesService.getMappedPlace(p);
     });
   };
 
-  static getMappedPlace = (place: PlaceDocument): Partial<PlaceDocument> => {
+  static getMappedPlace = (place: PlaceDocument): PlaceInput => {
     // get province
     const province = PlacesService.getProvinceById(place.provinceId);
 

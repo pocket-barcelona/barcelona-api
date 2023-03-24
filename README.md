@@ -86,3 +86,15 @@
   There is a [full list here](./HTTP_CODES.md)
 
 </details>
+
+<details>
+  <summary>Hosting & Deployment</summary>
+
+  # Hosting
+
+  The app is hosted on AWS
+
+  ## Deploying to Production - TODO!
+
+  To deploy to production, merge to `main` branch. Deployment will happen automatically using Github Actions.
+</details>

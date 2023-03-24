@@ -29,6 +29,7 @@
     "dotenv": "^16.0.1",
     "dynamoose": "^2.8.5",
     "express": "^4.17.3",
+    "geolib": "^3.3.3",
     "http-status-codes": "^2.2.0",
     "install": "^0.13.0",
     "jsonwebtoken": "^8.5.1",

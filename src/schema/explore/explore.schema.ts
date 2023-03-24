@@ -86,6 +86,7 @@ const params = {
       required_error: "include is required",
       // invalid_type_error
     }).array().optional(),
+    /** This is a lat/lng like: lat,lng */
     poi: string({
       required_error: "poi is required",
       // invalid_type_error
@@ -93,6 +94,9 @@ const params = {
     orderBy: string({
       required_error: "orderBy is required",
       // invalid_type_error
+    }).optional(),
+    page: number({
+      invalid_type_error: "Expected number",
     }).optional(),
   }),
 };
