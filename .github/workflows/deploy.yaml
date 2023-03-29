@@ -33,7 +33,7 @@ jobs:
           SOURCE: "build/"
           REMOTE_HOST: ${{ secrets.AWS_HOST }}
           REMOTE_USER: ${{ secrets.AWS_USER }}
-          TARGET: "/home/ec2-user/api"
+          TARGET: "/home/ec2-user/barcelona-api"
 
     - name: Restart backend service
       uses: appleboy/ssh-action@master
