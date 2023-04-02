@@ -46,3 +46,6 @@ QIDAQAB
   HEADER_X_ACCESS_TOKEN: 'X-Access-Token',
 
 } as const;
+
+/** PROD should not have this env var. For local, make sure .env file contains `IS_LOCAL=true` */
+export const IS_LOCAL = process.env.IS_LOCAL === "true";
