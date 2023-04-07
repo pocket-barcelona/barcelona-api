@@ -7,6 +7,7 @@ import { getDistance } from 'geolib';
 import { PlaceInput } from '../../../models/place.model';
 
 const DEFAULT_PER_PAGE = 10;
+const MAX_PER_PAGE = 100;
 
 type LatLng = {
   lat: number;
@@ -74,9 +75,18 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
   }
 
   // PAGINATION
+  // the user defined size of pagination per page - e.g. 25, 50
+  const pageSize = Number(req.body.pageSize);
+  // the actual paging size according to backend logic. Set as default
+  let perPage = DEFAULT_PER_PAGE;
+  // make sure user page size is within bounds
+  if (pageSize > 0 && pageSize < MAX_PER_PAGE) {
+    perPage = pageSize;
+  }
+
+  let sliceEnd = perPage;
   let page = 1;
   let sliceStart = 0;
-  let sliceEnd = DEFAULT_PER_PAGE;
 
   if (req.body && req.body.page && req.body.page > 1) {
     page = Number(req.body.page);
@@ -85,9 +95,9 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
 
   if (page > 1) {
     // zero indexed
-    sliceStart = (page - 1) * DEFAULT_PER_PAGE;
+    sliceStart = (page - 1) * perPage;
     // zero indexed
-    sliceEnd = sliceStart + DEFAULT_PER_PAGE;
+    sliceEnd = sliceStart + perPage;
   }
   const subset = mappedRecords.slice(sliceStart, sliceEnd);
   // console.log({page})
@@ -99,6 +109,7 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
         totalRecords: mappedRecords.length,
         count: subset.length,
         page,
+        pageSize: perPage,
       }
     }
   ));
