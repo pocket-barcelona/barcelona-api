@@ -98,6 +98,9 @@ const params = {
     page: number({
       invalid_type_error: "Expected number",
     }).optional(),
+    pageSize: number({
+      invalid_type_error: "Expected number",
+    }).optional(),
   }),
 };
 
