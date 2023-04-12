@@ -7,7 +7,7 @@ import { PlanThemeEnum } from "../../../models/planThemes.model";
 import { themesTestData } from "../../../collections/themes/themesTestData";
 import { PoiDocument } from "../../../models/poi.model";
 
-const DOCUMENT_SCAN_LIMIT = 500;
+const DOCUMENT_SCAN_LIMIT = 2500;
 
 const activeField: keyof PlaceDocument = "active";
 const provinceIdField: keyof PlaceDocument = "provinceId";
@@ -80,9 +80,18 @@ export default async function (): Promise<StructuredPlanResponse | null> {
     } = helper.getThemeInputParams(theme);
 
     let documents: Scan<PlaceDocument>;
-    let results: ScanResponse<PlaceDocument>;
+    
 
     documents = PlaceModel.scan().where(activeField).eq(true);
+
+    documents.and().where(availableDailyField)
+    
+    // filter out places which are not available on sundays if it's sunday today
+    const isSundayToday = new Date().getDay() === 0;
+    if (isSundayToday) {
+      documents.and().where(availableSundaysField).eq(true);
+    }
+    
 
     const placeIdsSubset =
       theme.placeIds &&
@@ -277,9 +286,11 @@ export default async function (): Promise<StructuredPlanResponse | null> {
     // }
 
     // do a query by category and then process the results
-
+    
+    let results: PlaceDocument[] = [];
     try {
-      results = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
+      const allResults = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
+      results = allResults.toJSON();
     } catch (error) {
       return null;
     }
@@ -290,17 +301,18 @@ export default async function (): Promise<StructuredPlanResponse | null> {
       console.log("Fetching food and drink documents...");
       foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(
         theme,
-        results.toJSON() as PlaceDocument[]
+        results,
       );
     }
 
     
     // build response
-    const dayNumber = 1;
+    
+    const dayNumber = 1; // random plans only have 1 day
     const thePlan = helper.buildPlanResponse(
       dayNumber,
       theme,
-      results.toJSON() as PlaceDocument[],
+      results,
       foodDrinkResults
     );
     if (thePlan) {
