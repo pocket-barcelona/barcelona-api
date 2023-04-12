@@ -12,6 +12,8 @@ const router = express.Router()
 // ########### PLACES ###########
 router.post("/", [validateResource(exploreSchema)], PlacesController.getListHandler);
 
+router.get("/search/prepopulate", [], PlacesController.searchPrepopulateHandler);
+
 router.get("/:placeId", [validateResource(readPlaceSchema)], PlacesController.getByIdHandler);
 
 router.get("/categories/list", [], PlacesController.getPlaceCategoriesHandler);

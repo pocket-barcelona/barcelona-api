@@ -5,11 +5,13 @@ import {
   getByIdHandler,
   getRelatedPlacesHandler,
   getPlaceCategoriesHandler,
+  getSearchPrepopulateHandler,
 } from "./functions";
 import { CategoryDocument } from "../../models/category.model";
 import { ImageAssetsSize } from "../../models/imageAssets";
 import { ReadPlaceInput } from "../../schema/place/place.schema";
 import { ReadExploreInput } from "../../schema/explore/explore.schema";
+import { PlaceSearchDocument } from "../../models/place-search.model";
 // import 'dotenv/config'; // support for dotenv injecting into the process env
 
 export class PlacesService {
@@ -30,9 +32,11 @@ export class PlacesService {
     async (): Promise<ScanResponse<CategoryDocument> | null> =>
       getPlaceCategoriesHandler();
 
-  static getMappedPlaceDocuments = (
-    places: PlaceDocument[]
-  ): PlaceInput[] => {
+  static getSearchPrepopulate =
+    async (): Promise<ScanResponse<PlaceSearchDocument> | null> =>
+      getSearchPrepopulateHandler();
+
+  static getMappedPlaceDocuments = (places: PlaceDocument[]): PlaceInput[] => {
     return places.map((p) => {
       return PlacesService.getMappedPlace(p);
     });
@@ -65,11 +69,27 @@ export class PlacesService {
     };
   };
 
+  /** Build a trimmed down version of the places document */
+  static getMappedSearchPlace = (places: PlaceDocument[]): PlaceSearchDocument[] => {
+    return places.map(place => {
+      return {
+        placeId: place.placeId,
+        nameEnglish: place.nameEnglish,
+        nameOfficial: place.nameOfficial,
+        nameOfficialAccentless: place.nameOfficialAccentless,
+        description: place.description || '',
+        urlSlug: place.urlSlug,
+        tags: place.tags,
+        barrioId: place.barrioId,
+      };
+    });
+  };
+
   /**
    * Get the poster image for a place, given a certain size. If place is set to not have an image, return the placeholder image
    * @param place The place
    * @param size The size of the image required
-   * @returns 
+   * @returns
    */
   static getPoster(place: PlaceDocument, size: ImageAssetsSize): string {
     const base = process.env.AWS_S3_BUCKET;
@@ -121,9 +141,11 @@ export class PlacesService {
   }
 
   /** Lookup a province name given its ID. If the place is not in Spain, return a fixed string */
-  static getProvinceById(provinceId: PlaceDocument['provinceId']): string {
-    const exists = PlacesService.provincesLookup.find(p => p.id === provinceId);
-    return exists ? exists.province : 'Outside Spain';
+  static getProvinceById(provinceId: PlaceDocument["provinceId"]): string {
+    const exists = PlacesService.provincesLookup.find(
+      (p) => p.id === provinceId
+    );
+    return exists ? exists.province : "Outside Spain";
   }
 
   /** List of provinces in Spain. The ID is ours and place data contains it */

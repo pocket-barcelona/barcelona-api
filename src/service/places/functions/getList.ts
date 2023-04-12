@@ -54,7 +54,6 @@ export default async function (
     let documents: Scan<PlaceDocument>;
 
     documents = PlaceModel.scan()
-      // only fetch my events
       .where(fields.active)
       .eq(true);
       
