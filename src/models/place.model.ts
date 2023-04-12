@@ -25,7 +25,7 @@ export interface PlaceInput {
   provinceId: number;
   /** The town that this place is in, ex. Barcelona or Girona... */
   placeTown: string;
-  /** The neighbourhood ID that this place is in. Note - there is a special ID for places outside of Barcelona */
+  /** The neighbourhood ID that this place is in. Note - there is a special ID for places outside of Barcelona which is 86 */
   barrioId: number;
   /** The category ID for this place or activity. See Categories */
   categoryId: CategoryIdEnum;
@@ -98,9 +98,9 @@ export interface PlaceInput {
   metroZone: number;
   /** If the lat/lng value is accurate, or not */
   latlngAccurate: boolean;
-  /** The place latitude */
+  /** The place latitude, like 41.37... */
   lat: number;
-  /** The place longitude */
+  /** The place longitude, like 2.19... */
   lng: number;
   /** The Google Maps recommended zoom. Default=0 (UI will decide), Number=zoom Ex. 18 */
   zoom: number;

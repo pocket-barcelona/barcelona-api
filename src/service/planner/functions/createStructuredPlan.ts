@@ -8,8 +8,9 @@ import { PoiDocument } from "../../../models/poi.model";
 import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
 import { RequiresBookingEnum } from '../../../models/enums/requiresbooking.enum';
 import { CommitmentEnum } from '../../../models/enums/commitment.enum';
+import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category';
 
-const DOCUMENT_SCAN_LIMIT = 500;
+const DOCUMENT_SCAN_LIMIT = 2500;
 
 
 
@@ -36,7 +37,6 @@ const DOCUMENT_SCAN_LIMIT = 500;
  */
 export default async function (input: PlanBuilderInput): Promise<StructuredPlanResponse | null> {
   let documents: Scan<PlaceDocument>;
-  let results: ScanResponse<PlaceDocument>;
   const helper = new PlanHelper();
   const { activeField,
     provinceIdField,
@@ -142,17 +142,19 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
       .where(commitmentRequiredField).in([CommitmentEnum.Casual, CommitmentEnum.Easy]);
     }
 
-
+    // filter by budget up to this budget
     if (hasBudget) {
       documents.and()
       .where(priceField).le(hasBudget); // find everything up to this budget
     }
+    
+    // filter by one or more categories
     if (categoryIdsSubset.length > 0) {
       documents.and()
       .where(categoryIdField).in(categoryIdsSubset);
     }
 
-
+    // include places outside Barcelona
     if (input.includePlacesOutsideBarcelona) {
       documents.and()
       .where(daytripField).in([0, 1]);
@@ -174,7 +176,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 
     if (hasCentralBarrios) {
       documents.and()
-      .where(barrioIdField).in([11, 12, 13]);
+      .where(barrioIdField).in([...CENTRAL_BARRIO_IDS]);
     }
 
     if (hasKids) {
@@ -189,7 +191,12 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
       .where(teenagerSuitabilityField).eq(hasTeens)
     }
 
-    
+    // TO ADD to data
+    // if (hasPets) {
+    //   // filter by places which are only suitable for pets
+    //   documents.and()
+    //   .where(petSuitabilityField).eq(hasPets)
+    // }
 
     // WORK OUT HOW TO DO "NOT IN"
     // if (hasExcludePlaceIds) {
@@ -200,9 +207,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     let results: PlaceDocument[] = [];
     try {
       const allResults = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
-      results = allResults.toJSON();
-      // result pool could be big, so order it
-      results = helper.orderStructuredPlanResults(results);
+      results = allResults.toJSON(); // will contain all results
     } catch (error) {
       return null;
     }

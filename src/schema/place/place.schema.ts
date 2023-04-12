@@ -21,7 +21,7 @@ export const createPlaceSchema = object({
 
 export const readPlaceSchema = object({
   ...params,
-});  
+});
 
 export const updatePlaceSchema = object({
   ...payload,

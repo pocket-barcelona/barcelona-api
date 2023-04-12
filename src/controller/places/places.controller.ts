@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ReadPlaceInput } from "../../schema/place/place.schema";
-import { getList, getById, getRelatedPlaces, getPlaceCategories } from './handlers';
+import { getList, getById, getRelatedPlaces, getPlaceCategories, getSearchPrepopulate } from './handlers';
 import { ReadExploreInput } from '../../schema/explore/explore.schema';
 
 export class PlacesController {
@@ -12,4 +12,6 @@ export class PlacesController {
   static getRelatedPlacesHandler = (req: Request<ReadPlaceInput['params']>, res: Response) => getRelatedPlaces(req, res);
   
   static getPlaceCategoriesHandler = (req: Request, res: Response) => getPlaceCategories(req, res);
+
+  static searchPrepopulateHandler = (req: Request, res: Response) => getSearchPrepopulate(req, res);
 }
