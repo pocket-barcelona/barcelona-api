@@ -1,5 +1,8 @@
 import { StructuredPlanDayProfile, PlanThemeEnum } from '../../../models/planThemes.model';
 
+/** The barrio IDs of Raval, Gothic and Born respectively */
+export const CENTRAL_BARRIO_IDS = [11, 12, 13];
+
 const themes: StructuredPlanDayProfile[] = [
   {
     id: 201,
@@ -90,7 +93,7 @@ const themes: StructuredPlanDayProfile[] = [
     theme: PlanThemeEnum.Category,
     name: ["Cathedrals and Churches in central Barcelona"],
     categoryIds: [9],
-    barrioIds: [11, 12, 13],
+    barrioIds: [...CENTRAL_BARRIO_IDS],
     seasonal: false,
     placeIds: [119, 229, 12, 225, 47],
     freeToVisit: 1,
@@ -154,7 +157,7 @@ const themes: StructuredPlanDayProfile[] = [
       },
     ],
     metroZone: 1,
-    barrioIds: [11, 12, 13, 14],
+    barrioIds: [...CENTRAL_BARRIO_IDS, 14], // central + barceloneta
     limit: 3,
   },
 ];

@@ -38,6 +38,9 @@ export class PlacesService {
     });
   };
 
+  /**
+   * Add additional data to the place object, such as the province, images and ratings
+   */
   static getMappedPlace = (place: PlaceDocument): PlaceInput => {
     // get province
     const province = PlacesService.getProvinceById(place.provinceId);
@@ -62,6 +65,12 @@ export class PlacesService {
     };
   };
 
+  /**
+   * Get the poster image for a place, given a certain size. If place is set to not have an image, return the placeholder image
+   * @param place The place
+   * @param size The size of the image required
+   * @returns 
+   */
   static getPoster(place: PlaceDocument, size: ImageAssetsSize): string {
     const base = process.env.AWS_S3_BUCKET;
     const noImagePoster = `${base}/images/assets/placeholder-image.jpg`;
@@ -71,6 +80,9 @@ export class PlacesService {
     return path;
   }
 
+  /**
+   * Build an easy to use rating stars object so the FE does not have to compute it
+   */
   static getPlaceRating(place: PlaceDocument): PlaceDocument["rating"] {
     const placeRating: PlaceDocument["rating"] = {
       rating: "0",
@@ -108,11 +120,13 @@ export class PlacesService {
     return placeRating;
   }
 
-  static getProvinceById(provinceId: PlaceDocument['provinceId']) {
+  /** Lookup a province name given its ID. If the place is not in Spain, return a fixed string */
+  static getProvinceById(provinceId: PlaceDocument['provinceId']): string {
     const exists = PlacesService.provincesLookup.find(p => p.id === provinceId);
     return exists ? exists.province : 'Outside Spain';
   }
 
+  /** List of provinces in Spain. The ID is ours and place data contains it */
   static readonly provincesLookup = [
     { id: 1, province: "Andalusia" },
     { id: 2, province: "Catalonia" },

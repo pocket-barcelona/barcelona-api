@@ -11,6 +11,7 @@ import {
 } from "../../../models/planThemes.model";
 import PoiModel, { PoiDocument } from "../../../models/poi.model";
 import { PlacesService } from '../../places/places.service';
+import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category';
 
 const DOCUMENT_LIST_RETURN_LIMIT = 25;
 
@@ -137,6 +138,9 @@ export class PlanHelper {
       return PlacesService.getMappedPlace(r) as PlaceDocument;
     });
 
+    // order by popularity
+    // results = this.orderStructuredPlanResults(results);
+
     // sort list
     if (theme.orderBy && theme.orderBy.length > 0) {
       const sortKey = theme.orderBy[0].key;
@@ -167,39 +171,73 @@ export class PlanHelper {
     // @todo - consider randomize
 
 
-    // truncate list
+    // truncate list...
     const hasLimit = theme.limit !== undefined && Number.isInteger(theme.limit) && theme.limit > 0;
-    const limitedResultSet = hasLimit ? results.slice(0, theme.limit) : results.slice(0, DOCUMENT_LIST_RETURN_LIMIT);
+    
+    let limitedResultSet: PlaceDocument[] = [];
+    // if the result set has a set limit in the theme, slice it
+    if (hasLimit) {
+      limitedResultSet = results.slice(0, theme.limit);
+    } else {
+      // else, include enough places to do in 1 day, using the timeRecommended as a guide
+      // the maximum number of things to do in 1 day will be about 16 (let's say 16 items of an hour each, but some places will be close to each other)
+      let dayBucket = 0;
+      let placeCounter = 0;
+      const maxBucket = 12; // one day=8 but allow for extra
+      results.every((p, idx) => {
+        placeCounter++;
+        dayBucket += p.timeRecommended;
+        if (dayBucket > maxBucket) {
+          return false;
+        }
+        return true;
+      });
 
-    // get distinct categories for the places in the results
+      const sliceAt = placeCounter > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeCounter;
+      limitedResultSet = results.slice(0, sliceAt);
+
+      // logically order the results on the map
+      limitedResultSet = this.orderResultsBasedOnLatLng(limitedResultSet);
+    }
+
+    // get distinct categories list only for the places in the result set
     const categoryIds: Array<PlaceDocument['categoryId']> = [];
     limitedResultSet.forEach(p => {
       if (categoryIds.indexOf(p.categoryId) === -1) {
         categoryIds.push(p.categoryId);
       }
     });
-
+    
+    // how many places are in the result set?
     const numberOfPlaces = limitedResultSet.length;
 
     // sum all the price enums and find an average
     const priceTotal = limitedResultSet.reduce((a, b) => {
       return a + (b.price ?? 0)
     }, 0);
+
     // average is sum over count of places
     const priceAverage = limitedResultSet.length > 0 ? priceTotal / limitedResultSet.length : 0;
-
+    
+    // check if all places in the subset are in zone 1
     const allZone1 = limitedResultSet.every(i => i.metroZone === 1);
+
+    // check if all places are in the central neighbourhoods of gothic, raval and born
     const centralBarriosOnly = limitedResultSet.every(i => {
       // return true if barrio is raval, gothic or born
-      return [11, 12, 13].includes(i.barrioId);
+      return [...CENTRAL_BARRIO_IDS].includes(i.barrioId);
     });
-    // const centralBarriosOnly = centralBarriosOnlyCount.length === limitedResultSet.length;
 
+    // generate a plan title, like "Custom Itinerary"
     const planTitle = this.getPlanTitle(theme.name, limitedResultSet);
 
+    // this is an array of places which are best visited during the day only
     const todDay = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Day);
-    const todNight = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Night);
-    const timeOfDay = todDay.length === limitedResultSet.length ? TimeOfDayEnum.Day : todNight.length === limitedResultSet.length ? TimeOfDayEnum.Night : TimeOfDayEnum.Both;
+    const todNight = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Night);// this is an array of places which are best visited during the night only
+    const timeOfDay = todDay.length === limitedResultSet.length ? TimeOfDayEnum.Day : todNight.length === limitedResultSet.length ? TimeOfDayEnum.Night : TimeOfDayEnum.Both;// if all recommendations are for day, show bestTod=day. If night, show bestTod=night. Else, show bestTod=both
+    
+
+    // BUILD THE FINAL RESPONSE
     const resp: StructuredPlanResponse = {
       // @todo - planTitle can be tokenized
       planTitle,
@@ -209,7 +247,7 @@ export class PlanHelper {
           dayNumber,
           action: (theme.verbs && theme.verbs.length > 0) ? theme.verbs[0] : 'Go to',
           places: limitedResultSet,
-          pois: pois,
+          pois: pois, // this will be a list of food and drink
         },
       ],
       eventNotices: [],
@@ -429,9 +467,134 @@ export class PlanHelper {
 
   }
 
+  /** Why are we doing this...? */
   orderStructuredPlanResults = (results: PlaceDocument[]): PlaceDocument[] => {
     return results.sort((a, b) => {
       return a.popular < b.popular ? 1 : (a.popular === b.popular ? 0 : -1);
     });
   }
+
+  /**
+   * Order a list of places by considering their lat/lng values. The logic below is based on my experience of Barcelona
+   * Note: Places could also be not in Barcelona
+   * @param places A list of places that are logically/geographically unordered
+   * @returns A list of logically ordered places, so the route is simplified as much as possible
+   */
+  private orderResultsBasedOnLatLng = (places: PlaceDocument[]): PlaceDocument[] => {
+    // 1. Check to see if all the places are outside BCN
+    // 1a. If yes, just order by up the coast or down the coast?
+    // 1b. Else...
+
+    // 2. Calculate the standard deviation of the lat/lngs to find outliers.
+    // 2a. If there's 1 outlier, do this first, then:
+    // 3. Group the places by barrio and order them up or down / left to right
+    
+    // More: could also put the day time activities first, then night time towards the end.
+    // Or...build a score sorting algorithm so score places based on: bestTod, popularity, timeRecommended, budget, daytrip, seasonal, annualOnly, availableSundays
+    // This would be on the whole resultset though and not the subset
+    
+    // If all places are in BCN
+
+    const allInsideBcn = places.every(p => p.barrioId !== 86);
+    const allOutsideBcn = !allInsideBcn;
+    const someOutsideBcn = places.some(p => p.barrioId === 86);
+    // true if more than half of the places are in BCN
+    // const mainlyInBcn = (places.filter(p => p.barrioId !== 86).length / places.length) > 0.5;
+    
+    // all places which are outside BCN
+    const placesOutsideBcn = places.filter(p => p.barrioId === 86);
+    // all places which are inside BCN
+    const placesInsideBcn = places.filter(p => p.barrioId !== 86);
+
+    const placesAllInCentralBarrios = places.every(p => {
+      // return true if barrio is raval, gothic or born
+      return [...CENTRAL_BARRIO_IDS].indexOf(p.barrioId) > -1;
+    });
+
+    // const stdDevLats = standardDeviation(places.map(p => p.lat));
+    // const stdDevLngs = standardDeviation(places.map(p => p.lng));
+    // console.log({stdDevLats, stdDevLngs});
+
+    if (allOutsideBcn) {
+      // all outside BCN
+      // order so route comes towards BCN.
+      // at the moment, just do lat asc/desc
+      return places.sort(sortByLngDesc);
+    } else if (allInsideBcn) {
+      // all inside BCN
+
+      // check neighbourhoods here...
+      // maybe do none-central neighbourhoods first, then do central one's last, or check home location
+      return places.sort(sortByLngAsc);
+
+    } else {
+      // some inside and some outside. Put outside first, then order inside
+      const orderedOutside = placesOutsideBcn.sort(sortByLngDesc);
+      const orderedInside = placesInsideBcn.sort(sortByLngDesc);
+
+      return [
+        ...orderedOutside,
+        ...orderedInside,
+      ];
+    }
+    
+
+  }
+}
+
+// These sorting algorithms are super approximate!
+
+/** Sort by sea -> mountain */
+const sortByLatAsc = (a: PlaceDocument, b: PlaceDocument) => {
+  return a.lat < b.lat ? 1 : -1;
+};
+/** Sort by mountain -> sea */
+const sortByLatDesc = (a: PlaceDocument, b: PlaceDocument) => {
+  return a.lat > b.lat ? 1 : -1;
+};
+/** Sort by tarragona -> girona */
+const sortByLngAsc = (a: PlaceDocument, b: PlaceDocument) => {
+  return a.lng > b.lng ? 1 : -1;
+};
+/** Sort by girona -> tarragona */
+const sortByLngDesc = (a: PlaceDocument, b: PlaceDocument) => {
+  return a.lng < b.lng ? 1 : -1;
+};
+
+/**
+ * Calculate the standard deviation of an array of numbers
+ * @url https://www.geeksforgeeks.org/how-to-get-the-standard-deviation-of-an-array-of-numbers-using-javascript/
+ * @param arr The array of numbers
+ * @returns The standard deviation of the numbers
+ */
+function standardDeviation(arr: number[]): {
+  stdDev: number;
+  variance: number;
+} {
+  if (arr.length === 0) return {
+    stdDev: 0,
+    variance: 0,
+  };
+  
+  // Creating the mean with Array.reduce
+  const mean = arr.reduce((acc, curr) => {
+    return acc + curr
+  }, 0) / arr.length;
+  
+  // Assigning (value - mean) ^ 2 to every array item
+  arr = arr.map((k) => {
+    return (k - mean) ** 2
+  });
+  
+  // Calculating the sum of updated array
+  let sum = arr.reduce((acc, curr) => acc + curr, 0);
+  
+  // Calculating the variance
+  const variance = sum / arr.length
+  const stdDev = Math.sqrt(sum / arr.length);
+  // Returning the standard deviation
+  return {
+    stdDev,
+    variance,
+  };
 }
