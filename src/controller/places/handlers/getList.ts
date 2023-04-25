@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { PlacesService } from "../../../service/places/places.service";
 import { ReadExploreInput } from '../../../schema/explore/explore.schema';
 import { getDistance } from 'geolib';
-import { PlaceInput } from '../../../models/place.model';
+import { PlaceDocument, PlaceInput } from '../../../models/place.model';
 
 const DEFAULT_PER_PAGE = 10;
 const MAX_PER_PAGE = 100;
@@ -53,7 +53,7 @@ function orderByDistanceClosest(from: LatLng, records: PlaceInput[]) {
  */
 export default async function getList(req: Request<any, any, any, ReadExploreInput['body']>, res: Response) {
   
-  const records = await PlacesService.getList(req.body);
+  let records = await PlacesService.getList(req.body) as PlaceDocument[];
   
   if (!records) {
     return res
@@ -61,6 +61,19 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
       .send(error("Error getting list", res.statusCode));
   }
 
+  // support for filter by tags
+  if (req.body.tags && req.body.tags.length > 0) {
+    // @todo - support for more than 1 tag?
+    const tag = (req.body.tags[0] ?? '').toString().toLowerCase();
+    records = records.filter(d => {
+      if (!d.tags) return false;
+      const tagsList = d.tags.split(',').filter(t => t);
+      if (!tagsList.includes(tag)) return false;
+      return true;
+    });
+  }
+
+  // augment data with extra info
   let mappedRecords = PlacesService.getMappedPlaceDocuments(records);
 
   // do ordering here...
