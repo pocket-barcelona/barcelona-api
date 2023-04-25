@@ -27,13 +27,14 @@ export interface StructuredPlanResponse {
   planTheme: PlanThemeEnum;
   /** The itinerary */
   itinerary: {
+    /** The day number of the itinerary starting at 1 */
     dayNumber: number;
     /** The action the person will take. Examples:
      * Eat breakfast, have lunch, coffee's, dessert, dinner @, Drink cocktails @, etc...
      */
     action: string;
     /** The place or list of places for this action */
-    places: PlaceInput[];
+    places: PlaceDocument[];
     pois: PoiInput[];
   }[];
   /** @todo - the URL for saving this exact itinerary for later */

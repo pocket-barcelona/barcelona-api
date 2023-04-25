@@ -147,68 +147,87 @@ export class PlanHelper {
     const itinerary = this.getDayByDayItinerary(theme, results, numberOfDays);
 
     // truncate list...
-    const hasLimit = theme.limit !== undefined && Number.isInteger(theme.limit) && theme.limit > 0;
+    // const hasLimit = theme.limit !== undefined && Number.isInteger(theme.limit) && theme.limit > 0;
 
-    let limitedResultSet: PlaceDocument[] = [];
+    // let limitedResultSet: PlaceDocument[] = [];
     // if the result set has a set limit in the theme, slice it
-    if (hasLimit) {
-      limitedResultSet = results.slice(0, theme.limit);
-    } else {
-      // else, include enough places to do in 1 day, using the timeRecommended as a guide
-      // the maximum number of things to do in 1 day will be about 16 (let's say 16 items of an hour each, but some places will be close to each other)
-      let dayBucket = 0;
-      let placeCounter = 0;
-      const maxBucket = 12; // one day=8 but allow for extra
-      results.every((p, idx) => {
-        placeCounter++;
-        dayBucket += p.timeRecommended;
-        if (dayBucket > maxBucket) {
-          return false;
-        }
-        return true;
-      });
+    // if (hasLimit) {
+      // limitedResultSet = results.slice(0, theme.limit);
+    // } else {
+    // }
 
-      const sliceAt = placeCounter > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeCounter;
-      limitedResultSet = results.slice(0, sliceAt);
+    // // include enough places to do in 1 day, using the timeRecommended as a guide
+    // // the maximum number of things to do in 1 day will be about 16 (let's say 16 items of an hour each, but some places will be close to each other)
 
-      // logically order the results on the map
-      limitedResultSet = this.orderResultsBasedOnLatLng(limitedResultSet);
-    }
+    // let dayBucket = 0;
+    // // let placeCounter = 0;
+    // let placeIndex = 0;
+    // const maxBucket = 12; // one day=8 but allow for extra
+    
+    // while (results.length > 0) {
+    //   placeIndex = 0;
+    //   // loop through the array until we fill a bucket
+    //   // take note of the index
+    //   results.every((p, idx) => {
+    //     placeIndex = idx;
+    //     dayBucket += p.timeRecommended;
+    //     if (dayBucket > maxBucket) {
+    //       // stop looping
+    //       return false;
+    //     }
+    //     return true;
+    //   });
+
+    //   // const sliceAt = placeCounter > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeCounter;
+    //   const sliceAt = placeIndex > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeIndex;
+    //   limitedResultSet = results.splice(0, sliceAt);  
+    // }
+
+
+    // logically order the results on the map
+    // limitedResultSet = this.orderResultsBasedOnLatLng(limitedResultSet);
+    
     
 
-    
-    
-    
-    
-    
-    // how many places are in the result set?
-    const numberOfPlaces = limitedResultSet.length;
 
-    // sum all the price enums and find an average
-    const priceTotal = limitedResultSet.reduce((a, b) => {
-      return a + (b.price ?? 0)
-    }, 0);
-
-    // average is sum over count of places
-    const priceAverage = limitedResultSet.length > 0 ? priceTotal / limitedResultSet.length : 0;
     
-    // check if all places in the subset are in zone 1
-    const allZone1 = limitedResultSet.every(i => i.metroZone === 1);
+    // // how many places are in the result set?
+    // // const numberOfPlaces = limitedResultSet.length;
+    // const numberOfPlaces = 1;
 
-    // check if all places are in the central neighbourhoods of gothic, raval and born
-    const centralBarriosOnly = limitedResultSet.every(i => {
-      // return true if barrio is raval, gothic or born
-      return [...CENTRAL_BARRIO_IDS].includes(i.barrioId);
-    });
+    // // sum all the price enums and find an average
+    // const priceTotal = limitedResultSet.reduce((a, b) => {
+    //   return a + (b.price ?? 0)
+    // }, 0);
 
-    // generate a plan title, like "Custom Itinerary"
-    const planTitle = this.getPlanTitle(theme.name, limitedResultSet);
-
-    // this is an array of places which are best visited during the day only
-    const todDay = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Day);
-    const todNight = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Night);// this is an array of places which are best visited during the night only
-    const timeOfDay = todDay.length === limitedResultSet.length ? TimeOfDayEnum.Day : todNight.length === limitedResultSet.length ? TimeOfDayEnum.Night : TimeOfDayEnum.Both;// if all recommendations are for day, show bestTod=day. If night, show bestTod=night. Else, show bestTod=both
+    // // average is sum over count of places
+    // const priceAverage = limitedResultSet.length > 0 ? priceTotal / limitedResultSet.length : 0;
     
+    // // check if all places in the subset are in zone 1
+    // const allZone1 = limitedResultSet.every(i => i.metroZone === 1);
+
+    // // check if all places are in the central neighbourhoods of gothic, raval and born
+    // const centralBarriosOnly = limitedResultSet.every(i => {
+    //   // return true if barrio is raval, gothic or born
+    //   return [...CENTRAL_BARRIO_IDS].includes(i.barrioId);
+    // });
+
+    // // generate a plan title, like "Custom Itinerary"
+    const planTitle = this.getPlanTitle(theme.name, itinerary[0].places ?? []);
+
+    // // this is an array of places which are best visited during the day only
+    // const todDay = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Day);
+    // const todNight = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Night);// this is an array of places which are best visited during the night only
+    // const timeOfDay = todDay.length === limitedResultSet.length ? TimeOfDayEnum.Day : todNight.length === limitedResultSet.length ? TimeOfDayEnum.Night : TimeOfDayEnum.Both;// if all recommendations are for day, show bestTod=day. If night, show bestTod=night. Else, show bestTod=both
+
+
+
+
+const numberOfPlaces = 1;
+const priceAverage = 1;
+const includesPlacesOutsideCity =true;
+const timeOfDay = 1;
+const centralBarriosOnly = true;
 
     // // get distinct categories list only for the places in the result set
     // const categoryIds: Array<PlaceDocument['categoryId']> = [];
@@ -238,7 +257,8 @@ export class PlanHelper {
         numberOfDays: 1, // @todo
         numberOfPlaces: numberOfPlaces,
         priceAverage,
-        includesPlacesOutsideCity: !allZone1,
+        // includesPlacesOutsideCity: !allZone1,
+        includesPlacesOutsideCity,
         // TODO
         easyWalking: true,
         // categoriesIncluded: categoryIds,
@@ -292,38 +312,73 @@ export class PlanHelper {
     let sliceLocation = 0;
 
     // for each day, fill up a 'bucket' of places
-    [...(new Array(numberOfDays) as undefined[])].forEach((_, dayIndexZero) => {
-      
-      const placesToday: PlaceDocument[] = [];
+    // [...(new Array(numberOfDays) as undefined[])].forEach((_, dayIndexZero) => {
+    // });
 
-      // a bucket for this day
-      let thisDayBucket = 0;
-      let placeCounter = 0;
-      const maxBucket = 12; // one day=8 but allow for extra
+    // include enough places to do in 1 day, using the timeRecommended as a guide
+    // the maximum number of things to do in 1 day will be about 16 (let's say 16 items of an hour each, but some places will be close to each other)
 
-      
+    let dayBucket = 0;
+    // let placeCounter = 0;
+    let placeIndex = 0;
+    const maxBucket = 12; // one day=8 but allow for extra
+    let dayNumber = 0;
+    while (allPlaces.length > 0 && itinerary.length < numberOfDays) {
+      dayNumber++;
+      placeIndex = 0;
+      dayBucket = 0;
+      // loop through the array until we fill a bucket
+      // take note of the index
       allPlaces.every((p, idx) => {
-        placeCounter++;
-        thisDayBucket += p.timeRecommended;
-        if (thisDayBucket > maxBucket) {
+        placeIndex = idx + 1; // otherwise slice pos will be zero
+        dayBucket += p.timeRecommended;
+        if (dayBucket > maxBucket) {
+          // stop looping
           return false;
         }
         return true;
       });
-      
-      
-      const sliceAt = placeCounter > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeCounter;
-      // update slice location
-      sliceLocation += sliceAt;
 
-      const thisDayPlaces = allPlaces.slice(sliceLocation, sliceAt);
+      // const sliceAt = placeCounter > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeCounter;
+      const sliceAt = placeIndex > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeIndex;
+      const thisDayPlaces = allPlaces.splice(0, sliceAt);
+      
       itinerary.push({
         action: 'Go to',
-        dayNumber: dayIndexZero + 1,
-        places: thisDayPlaces,
+        dayNumber: dayNumber,
+        places: this.orderResultsBasedOnLatLng(thisDayPlaces),
         pois: [],
       });
-    });
+    }
+    // const placesToday: PlaceDocument[] = [];
+
+    // a bucket for this day
+    // let thisDayBucket = 0;
+    // let placeCounter = 0;
+    // let placeIndex = 0;
+    // const maxBucket = 12; // one day=8 but allow for extra
+    
+    // allPlaces.every((p, idx) => {
+    //   placeCounter++;
+    //   thisDayBucket += p.timeRecommended;
+    //   if (thisDayBucket > maxBucket) {
+    //     return false;
+    //   }
+    //   return true;
+    // });
+    
+    
+    // const sliceAt = placeCounter > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeCounter;
+    // // update slice location
+    // sliceLocation += sliceAt;
+
+    // const thisDayPlaces = allPlaces.slice(sliceLocation, sliceAt);
+    // itinerary.push({
+    //   action: 'Go to',
+    //   dayNumber: dayIndexZero + 1,
+    //   places: thisDayPlaces,
+    //   pois: [],
+    // });
     
     // // else, include enough places to do in 1 day, using the timeRecommended as a guide
     // // the maximum number of things to do in 1 day will be about 16 (let's say 16 items of an hour each, but some places will be close to each other)
