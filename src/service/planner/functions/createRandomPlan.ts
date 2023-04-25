@@ -1,6 +1,6 @@
 import PlaceModel, { PlaceDocument } from "../../../models/place.model";
 import { StructuredPlanResponse } from "../../../models/plan.model";
-import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
+// import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
 import { Query, Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 import { PlanHelper } from "./createStructuredPlan.helper";
 import { PlanThemeEnum, StructuredPlanDayProfile } from "../../../models/planThemes.model";
@@ -330,8 +330,9 @@ export default async function (): Promise<StructuredPlanResponse | null> {
       return thePlan;
     }
 
-    console.log("Default response");
-    return TEST_RESPONSE_PLAN_1;
+    
+    // return TEST_RESPONSE_PLAN_1;
+    return null;
   } catch (e) {
     return null;
   }

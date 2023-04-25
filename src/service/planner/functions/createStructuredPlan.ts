@@ -5,7 +5,7 @@ import { PlanHelper } from "./createStructuredPlan.helper";
 import { PlanThemeEnum, StructuredPlanDayProfile } from "../../../models/planThemes.model";
 // import { themesTestData } from "../../../collections/themes/themesTestData";
 import { PoiDocument } from "../../../models/poi.model";
-import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
+// import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
 import { RequiresBookingEnum } from '../../../models/enums/requiresbooking.enum';
 import { CommitmentEnum } from '../../../models/enums/commitment.enum';
 import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category';
