@@ -1,3 +1,5 @@
+import { CategoryIdEnum } from '../../../models/enums/categoryid.enum';
+import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
 import { StructuredPlanDayProfile, PlanThemeEnum } from '../../../models/planThemes.model';
 
 /** The barrio IDs of Raval, Gothic and Born respectively */
@@ -7,8 +9,9 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 201,
     theme: PlanThemeEnum.Category,
+    themeTod: TimeOfDayEnum.Day,
     name: "Barcelona Beach Tour",
-    categoryIds: [1],
+    categoryIds: [CategoryIdEnum.Beaches],
     metroZone: 1,
     daytrip: 0,
     orderBy: [
@@ -28,12 +31,13 @@ const themes: StructuredPlanDayProfile[] = [
     // might need an ancient building flag?
     id: 202,
     theme: PlanThemeEnum.Category,
+    themeTod: TimeOfDayEnum.Day,
     // @todo - support for choosing a name from the array
     name: [
       "Ancient buildings - self-guided walking tour",
       "Historical Buildings Tour",
     ],
-    categoryIds: [9],
+    categoryIds: [CategoryIdEnum.Buildings],
     placeIdsAlwaysInclude: [119], // the cathedral
     barrioIds: [],
     start: { lat: 1.0, lng: 1.0 },
@@ -49,8 +53,9 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 203,
     theme: PlanThemeEnum.Category,
+    themeTod: TimeOfDayEnum.Day,
     name: "Inner-city markets tour",
-    categoryIds: [10],
+    categoryIds: [CategoryIdEnum.Shopping],
     barrioIds: [], // include central barrios
     keyword: "market",
     seasonal: false,
@@ -61,12 +66,13 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 204,
     theme: PlanThemeEnum.Category,
+    themeTod: TimeOfDayEnum.Day,
     name: [
       "Parks and countryside around Barcelona",
       "Parks & green spaces around BCN",
     ],
     verbs: ["Take a walk around"],
-    categoryIds: [11],
+    categoryIds: [CategoryIdEnum.Parks],
     barrioIds: [35, 48, 44, 46],
     seasonal: false,
     freeToVisit: 1,
@@ -75,8 +81,9 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 205,
     theme: PlanThemeEnum.Category,
+    themeTod: TimeOfDayEnum.Day,
     name: "Unique Barcelona Experiences",
-    categoryIds: [3],
+    categoryIds: [CategoryIdEnum.Experiences],
     seasonal: false,
     placeIds: [72, 148, 71, 64, 4, 57, 58, 114, 288, 13, 154],
     placeIdsChooseAmount: 4,
@@ -91,8 +98,9 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 206,
     theme: PlanThemeEnum.Category,
+    themeTod: TimeOfDayEnum.Day,
     name: ["Cathedrals and Churches in central Barcelona"],
-    categoryIds: [9],
+    categoryIds: [CategoryIdEnum.Buildings],
     barrioIds: [...CENTRAL_BARRIO_IDS],
     seasonal: false,
     placeIds: [119, 229, 12, 225, 47],
@@ -102,8 +110,9 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 207,
     theme: PlanThemeEnum.Category,
+    themeTod: TimeOfDayEnum.Day,
     name: "Go Shopping in Barcelona",
-    categoryIds: [10],
+    categoryIds: [CategoryIdEnum.Shopping],
     placeIds: [274, 42, 21, 22, 271, 282, 10, 143, 118, 9, 142, 237],
     placeIdsChooseAmount: 5,
     orderBy: [
@@ -117,8 +126,9 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 208,
     theme: PlanThemeEnum.Category,
+    themeTod: TimeOfDayEnum.Day,
     name: "5 Plaza's in a day",
-    categoryIds: [5],
+    categoryIds: [CategoryIdEnum.Plazas],
     placeIdsChooseAmount: 5,
     orderBy: [
       {
@@ -132,8 +142,9 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 209,
     theme: PlanThemeEnum.Category,
+    themeTod: TimeOfDayEnum.Day,
     name: "3 Museums, 1 Day",
-    categoryIds: [7],
+    categoryIds: [CategoryIdEnum.Museums],
     // placeIdsChooseAmount: 3,
     orderBy: [
       {
@@ -147,8 +158,9 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 210,
     theme: PlanThemeEnum.Category,
+    themeTod: TimeOfDayEnum.Day,
     name: "Central Museums Tour, Barcelona",
-    categoryIds: [7],
+    categoryIds: [CategoryIdEnum.Museums],
     placeIdsChooseAmount: 3,
     orderBy: [
       {

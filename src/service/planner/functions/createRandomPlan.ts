@@ -3,9 +3,10 @@ import { StructuredPlanResponse } from "../../../models/plan.model";
 import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
 import { Query, Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 import { PlanHelper } from "./createStructuredPlan.helper";
-import { PlanThemeEnum } from "../../../models/planThemes.model";
+import { PlanThemeEnum, StructuredPlanDayProfile } from "../../../models/planThemes.model";
 import { themesTestData } from "../../../collections/themes/themesTestData";
 import { PoiDocument } from "../../../models/poi.model";
+import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
 
 const DOCUMENT_SCAN_LIMIT = 2500;
 
@@ -40,9 +41,19 @@ const lngField: keyof PlaceDocument = "lng";
 export default async function (): Promise<StructuredPlanResponse | null> {
   try {
     const helper = new PlanHelper();
-
+    const timeHourNow = new Date().getHours(); // will be like 9 or 17 (9am or 5pm)
     // RANDOM
-    const theme = helper.getRandomItemFromArray(themesTestData);
+    
+    let theme: StructuredPlanDayProfile;
+    // let's say that anything after 3pm is the afternoon/night
+    if (timeHourNow >= 15) {
+      // only consider plans which are night time
+      theme = helper.getRandomItemFromArray(themesTestData.filter(p => p.themeTod !== TimeOfDayEnum.Day));
+    } else {
+      // only consider plans which are not night
+      theme = helper.getRandomItemFromArray(themesTestData.filter(p => p.themeTod !== TimeOfDayEnum.Night));
+    }
+
     // console.log(theme);
     // SPECIFIC - FOR TESTING
     // const themeId = 1041;

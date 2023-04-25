@@ -3,12 +3,13 @@ import { Query, Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 import { PlanBuilderInput, StructuredPlanResponse } from "../../../models/plan.model";
 import { PlanHelper } from "./createStructuredPlan.helper";
 import { PlanThemeEnum, StructuredPlanDayProfile } from "../../../models/planThemes.model";
-import { themesTestData } from "../../../collections/themes/themesTestData";
+// import { themesTestData } from "../../../collections/themes/themesTestData";
 import { PoiDocument } from "../../../models/poi.model";
 import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
 import { RequiresBookingEnum } from '../../../models/enums/requiresbooking.enum';
 import { CommitmentEnum } from '../../../models/enums/commitment.enum';
 import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category';
+import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
 
 const DOCUMENT_SCAN_LIMIT = 2500;
 
@@ -68,6 +69,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
   const hasDates = input.travelDates && input.travelDates.from && input.travelDates.to ? input.travelDates : null;
   const theme: StructuredPlanDayProfile = {
     id: 0,
+    themeTod: TimeOfDayEnum.Both, // check hour now...
     name: 'Custom Itinerary',
     theme: PlanThemeEnum.Custom,
     verbs: ['Go to'],

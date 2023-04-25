@@ -1,10 +1,13 @@
+import { CategoryIdEnum } from '../../../models/enums/categoryid.enum';
 import { FoodCategoryEnum } from '../../../models/enums/foodcategory.enum';
+import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
 import { PlanThemeEnum, StructuredPlanDayProfile } from '../../../models/planThemes.model';
 
 const themes: StructuredPlanDayProfile[] = [
   {
     id: 300,
     theme: PlanThemeEnum.Trips,
+    themeTod: TimeOfDayEnum.Both,
     name: "Testing Bars and Restaurants Data",
     barrioIds: [12],
     seasonal: false,
@@ -18,9 +21,10 @@ const themes: StructuredPlanDayProfile[] = [
   { // @todo - cannot see the sea from some!
     id: 301,
     theme: PlanThemeEnum.Trips,
+    themeTod: TimeOfDayEnum.Day,
     // could be "Top X ..."
     name: "Top 5 Sea Viewpoints", // change to Incredible not Top?
-    categoryIds: [8],
+    categoryIds: [CategoryIdEnum.Viewpoints],
     limit: 5,
     physicalLandmark: true,
     // placeIds: [],
@@ -28,6 +32,7 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 302,
     theme: PlanThemeEnum.Trips,
+    themeTod: TimeOfDayEnum.Day,
     name: "Park Guell and Lunch",
     verbs: ['Go to'],
     // barrioIds: [40], // helps with accuracy of food/drink recommendations
@@ -38,9 +43,10 @@ const themes: StructuredPlanDayProfile[] = [
   {
     id: 303,
     theme: PlanThemeEnum.Trips,
+    themeTod: TimeOfDayEnum.Day,
     verbs: ['Daytrip to'],
     name: "Day trip to {place}",
-    categoryIds: [6],
+    categoryIds: [CategoryIdEnum.Trips],
     provinceId: 2,
     orderBy: [
       {
@@ -54,6 +60,7 @@ const themes: StructuredPlanDayProfile[] = [
   { // untested
     id: 304,
     theme: PlanThemeEnum.Trips,
+    themeTod: TimeOfDayEnum.Day,
     name: "Costa Brava Daytrip",
     barrioIds: [86],
     provinceId: 2,
@@ -69,8 +76,9 @@ const themes: StructuredPlanDayProfile[] = [
   { // untested
     id: 305,
     theme: PlanThemeEnum.Trips,
+    themeTod: TimeOfDayEnum.Day,
     name: "Mini daytrip to {place}",
-    categoryIds: [8],
+    // categoryIds: [CategoryIdEnum],
     provinceId: 2,
     orderBy: [
       {
