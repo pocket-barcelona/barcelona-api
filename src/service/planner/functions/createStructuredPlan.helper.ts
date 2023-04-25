@@ -125,55 +125,30 @@ export class PlanHelper {
   }
 
   buildPlanResponse(
-    dayNumber: number,
+    // dayNumber: number,
     theme: StructuredPlanDayProfile,
     // results: ScanResponse<PlaceDocument>
     results: PlaceDocument[],
     pois: PoiDocument[],
+    numberOfDays: number,
     startEnd?: { from: number; to: number; } | undefined,
   ): StructuredPlanResponse {
 
     // augment place data
-    results = results.map(r => {
-      return PlacesService.getMappedPlace(r) as PlaceDocument;
-    });
-
-    // order by popularity
-    // results = this.orderStructuredPlanResults(results);
+    results = results.map(r => PlacesService.getMappedPlace(r) as PlaceDocument);
 
     // sort list
-    if (theme.orderBy && theme.orderBy.length > 0) {
-      const sortKey = theme.orderBy[0].key;
-      const valueType = theme.orderBy[0].valueType ?? 'NUMBER';
-      const sortDirection = theme.orderBy[0].direction;
-      
-      // order results by array items
-      // ...could be multiple sort levels @todo
-      
-      results = results.sort((a, b) => {
-        // sort randomly!
-        if (sortDirection === 'RANDOM') {
-          return Math.random() > 0.5 ? 1 : -1;
-        }
-
-        const aVal: any = a[sortKey];
-        const bVal: any = b[sortKey];
-        switch (valueType) {
-          case 'BOOLEAN': 
-            return aVal === true && bVal === false ? 1 : (aVal === true && bVal === true ? 0 : -1);
-          
-          default:
-            return aVal > bVal ? 1 : (aVal === bVal ? 0 : -1);
-        }
-      });
-    }
+    results = this.sortResultSubset(theme, results);
 
     // @todo - consider randomize
 
 
+    // put places into "day buckets" by filling up the day according time recommended metric
+    const itinerary = this.getDayByDayItinerary(theme, results, numberOfDays);
+
     // truncate list...
     const hasLimit = theme.limit !== undefined && Number.isInteger(theme.limit) && theme.limit > 0;
-    
+
     let limitedResultSet: PlaceDocument[] = [];
     // if the result set has a set limit in the theme, slice it
     if (hasLimit) {
@@ -199,14 +174,12 @@ export class PlanHelper {
       // logically order the results on the map
       limitedResultSet = this.orderResultsBasedOnLatLng(limitedResultSet);
     }
+    
 
-    // get distinct categories list only for the places in the result set
-    const categoryIds: Array<PlaceDocument['categoryId']> = [];
-    limitedResultSet.forEach(p => {
-      if (categoryIds.indexOf(p.categoryId) === -1) {
-        categoryIds.push(p.categoryId);
-      }
-    });
+    
+    
+    
+    
     
     // how many places are in the result set?
     const numberOfPlaces = limitedResultSet.length;
@@ -237,18 +210,28 @@ export class PlanHelper {
     const timeOfDay = todDay.length === limitedResultSet.length ? TimeOfDayEnum.Day : todNight.length === limitedResultSet.length ? TimeOfDayEnum.Night : TimeOfDayEnum.Both;// if all recommendations are for day, show bestTod=day. If night, show bestTod=night. Else, show bestTod=both
     
 
+    // // get distinct categories list only for the places in the result set
+    // const categoryIds: Array<PlaceDocument['categoryId']> = [];
+    // limitedResultSet.forEach(p => {
+    //   if (categoryIds.indexOf(p.categoryId) === -1) {
+    //     categoryIds.push(p.categoryId);
+    //   }
+    // });
+
+    
     // BUILD THE FINAL RESPONSE
     const resp: StructuredPlanResponse = {
       // @todo - planTitle can be tokenized
       planTitle,
       planTheme: theme.theme,
       itinerary: [
-        {
-          dayNumber,
-          action: (theme.verbs && theme.verbs.length > 0) ? theme.verbs[0] : 'Go to',
-          places: limitedResultSet,
-          pois: pois, // this will be a list of food and drink
-        },
+        ...itinerary,
+        // {
+        //   dayNumber: 1,
+        //   action: (theme.verbs && theme.verbs.length > 0) ? theme.verbs[0] : 'Go to',
+        //   places: limitedResultSet,
+        //   pois: pois, // this will be a list of food and drink
+        // },
       ],
       eventNotices: [],
       summary: {
@@ -258,7 +241,8 @@ export class PlanHelper {
         includesPlacesOutsideCity: !allZone1,
         // TODO
         easyWalking: true,
-        categoriesIncluded: categoryIds,
+        // categoriesIncluded: categoryIds,
+        categoriesIncluded: [],
         // focusOnSameLocation: 1,
         timeOfDay,
         centralBarriosOnly,
@@ -299,6 +283,66 @@ export class PlanHelper {
       return replaced;
     }
     return name;
+  }
+
+  // private getPlanCategoriesIncluded
+
+  private getDayByDayItinerary(theme: StructuredPlanDayProfile, allPlaces: PlaceDocument[], numberOfDays: number): StructuredPlanResponse['itinerary'] {
+    const itinerary: StructuredPlanResponse['itinerary'] = [];
+    let sliceLocation = 0;
+
+    // for each day, fill up a 'bucket' of places
+    [...(new Array(numberOfDays) as undefined[])].forEach((_, dayIndexZero) => {
+      
+      const placesToday: PlaceDocument[] = [];
+
+      // a bucket for this day
+      let thisDayBucket = 0;
+      let placeCounter = 0;
+      const maxBucket = 12; // one day=8 but allow for extra
+
+      
+      allPlaces.every((p, idx) => {
+        placeCounter++;
+        thisDayBucket += p.timeRecommended;
+        if (thisDayBucket > maxBucket) {
+          return false;
+        }
+        return true;
+      });
+      
+      
+      const sliceAt = placeCounter > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeCounter;
+      // update slice location
+      sliceLocation += sliceAt;
+
+      const thisDayPlaces = allPlaces.slice(sliceLocation, sliceAt);
+      itinerary.push({
+        action: 'Go to',
+        dayNumber: dayIndexZero + 1,
+        places: thisDayPlaces,
+        pois: [],
+      });
+    });
+    
+    // // else, include enough places to do in 1 day, using the timeRecommended as a guide
+    // // the maximum number of things to do in 1 day will be about 16 (let's say 16 items of an hour each, but some places will be close to each other)
+    // let dayBucket = 0;
+    // let placeCounter = 0;
+    // const maxBucket = 12; // one day=8 but allow for extra
+    // results.every((p, idx) => {
+    //   placeCounter++;
+    //   dayBucket += p.timeRecommended;
+    //   if (dayBucket > maxBucket) {
+    //     return false;
+    //   }
+    //   return true;
+    // });
+
+    // const sliceAt = placeCounter > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeCounter;
+    // limitedResultSet = results.slice(0, sliceAt);
+    
+    return itinerary;
   }
 
   private getHaversineDistance(lat1: number, lat2: number, lng1: number, lng2: number): number {
@@ -539,6 +583,38 @@ export class PlanHelper {
     }
     
 
+  }
+
+  private sortResultSubset = (theme: StructuredPlanDayProfile, subsetPlaces: PlaceDocument[]): PlaceDocument[] => {
+    // order by popularity
+    // results = this.orderStructuredPlanResults(results);
+    if (!theme.orderBy) return subsetPlaces;
+    const shouldOrderSet = theme.orderBy && theme.orderBy.length > 0;
+    if (!shouldOrderSet) return subsetPlaces;
+
+    const sortKey = theme.orderBy[0].key;
+    const valueType = theme.orderBy[0].valueType ?? 'NUMBER';
+    const sortDirection = theme.orderBy[0].direction;
+    
+    // order results by array items
+    // ...could be multiple sort levels @todo
+    
+    return subsetPlaces.sort((a, b) => {
+      // sort randomly!
+      if (sortDirection === 'RANDOM') {
+        return Math.random() > 0.5 ? 1 : -1;
+      }
+
+      const aVal: any = a[sortKey];
+      const bVal: any = b[sortKey];
+      switch (valueType) {
+        case 'BOOLEAN': 
+          return aVal === true && bVal === false ? 1 : (aVal === true && bVal === true ? 0 : -1);
+        
+        default:
+          return aVal > bVal ? 1 : (aVal === bVal ? 0 : -1);
+      }
+    });
   }
 }
 

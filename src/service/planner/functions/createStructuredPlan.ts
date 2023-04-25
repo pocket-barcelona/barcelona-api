@@ -91,6 +91,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
   const hasTeens = input.visitingWithTeenagers === true;
   const hasWalkBetweenPlaces = input.walkBetweenPlacesEnabled !== false;
   const today = new Date();
+  const numDays = input.numberOfDays;
 
   today.setHours(8);
   today.setSeconds(0);
@@ -221,8 +222,8 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 
     console.log('Number of results: ', results.length);
 
-    const dayNumber = 1;
-    const thePlan = helper.buildPlanResponse(dayNumber, theme, results, foodDrinkResults);
+    // const dayNumber = 1;
+    const thePlan = helper.buildPlanResponse(theme, results, foodDrinkResults, numDays);
     return thePlan;
     
 

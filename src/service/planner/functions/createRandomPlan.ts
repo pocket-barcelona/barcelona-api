@@ -319,12 +319,12 @@ export default async function (): Promise<StructuredPlanResponse | null> {
     
     // build response
     
-    const dayNumber = 1; // random plans only have 1 day
+    // const dayNumber = 1; // random plans only have 1 day
     const thePlan = helper.buildPlanResponse(
-      dayNumber,
       theme,
       results,
-      foodDrinkResults
+      foodDrinkResults,
+      1,
     );
     if (thePlan) {
       return thePlan;
