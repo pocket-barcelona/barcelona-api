@@ -5,6 +5,7 @@ import type { SetOptional } from 'type-fest';
 import { TimeRecommendedEnum } from "./enums/timerecommended.enum";
 import { RequiresBookingEnum } from "./enums/requiresbooking.enum";
 import { DrinkCategoryEnum, FoodCategoryEnum, FoodCuisinesEnum } from "./enums/foodcategory.enum";
+import { TimeOfDayEnum } from './enums/tod.enum';
 
 
 // the keys from the place model
@@ -22,6 +23,8 @@ export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> &
   id: number;
   /** The style/theme of the plan */
   theme: PlanThemeEnum;
+  /** Plans should be based on day, night or both day and night */
+  themeTod: TimeOfDayEnum;
   /** The name of the themed day profile */
   name: string | string[];
   /** @todo - Travelling mode for the itinerary. Use "VARIOUS" if multiple */

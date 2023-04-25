@@ -72,38 +72,38 @@ const TEST_PLACE: PlaceInput = {
   requiresChecking: false,
 };
 
-export const TEST_RESPONSE_PLAN_1: StructuredPlanResponse = {
-  planTitle: "Some plan",
-  planTheme: PlanThemeEnum.BestOf,
-  itinerary: [
-    {
-      dayNumber: 1,
-      action: "",
-      places: [
-        {
-          ...TEST_PLACE,
-        },
-      ],
-      pois: [],
-    },
-  ],
-  eventNotices: [],
-  summary: {
-    numberOfDays: 1,
-    numberOfPlaces: 1,
-    priceAverage: 0,
-    includesPlacesOutsideCity: false,
-    easyWalking: true,
-    categoriesIncluded: [TEST_PLACE.categoryId],
-    // focusOnSameLocation: 1,
-    timeOfDay: 1,
-    centralBarriosOnly: true,
-    excludePlaceIds: [],
-    visitingWithPets: true,
-    visitingWithChildren: true,
-    visitingWithTeenagers: true,
-    includesFoodRecommendations: true,
-    includesDrinkRecommendations: true,
-    includesEventNotices: false,
-  },
-};
+// export const TEST_RESPONSE_PLAN_1: StructuredPlanResponse = {
+//   planTitle: "Some plan",
+//   planTheme: PlanThemeEnum.BestOf,
+//   itinerary: [
+//     {
+//       dayNumber: 1,
+//       action: "",
+//       places: [
+//         {
+//           ...TEST_PLACE,
+//         },
+//       ],
+//       pois: [],
+//     },
+//   ],
+//   eventNotices: [],
+//   summary: {
+//     numberOfDays: 1,
+//     numberOfPlaces: 1,
+//     priceAverage: 0,
+//     includesPlacesOutsideCity: false,
+//     easyWalking: true,
+//     categoriesIncluded: [TEST_PLACE.categoryId],
+//     // focusOnSameLocation: 1,
+//     timeOfDay: 1,
+//     centralBarriosOnly: true,
+//     excludePlaceIds: [],
+//     visitingWithPets: true,
+//     visitingWithChildren: true,
+//     visitingWithTeenagers: true,
+//     includesFoodRecommendations: true,
+//     includesDrinkRecommendations: true,
+//     includesEventNotices: false,
+//   },
+// };
