@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { GuidesService } from "../../../service/guides/guides.service";
+import { PostsService } from "../../../service/posts/posts.service";
 
 /**
  * Get a guides

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { GuidesService } from "../../../service/guides/guides.service";
+import { PostsService } from "../../../service/posts/posts.service";
 
 /**
  * Get a list of guides
@@ -11,7 +11,7 @@ import { GuidesService } from "../../../service/guides/guides.service";
  */
 export default async function getList(req: Request, res: Response) {
   
-  const data = await GuidesService.getList();
+  const data = await PostsService.getList();
 
   if (!data) {
     return res
