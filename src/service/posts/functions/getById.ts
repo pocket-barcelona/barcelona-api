@@ -1,12 +1,21 @@
-import EventModel, { EventDocument } from "../../../models/event.model";
-import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 import logger from "../../../utils/logger";
+import PostModel, { PostDocument } from '../../../models/post.model';
 
-type AnyDocument = any;
 /**
  * Get a specific blog post
  * @returns
  */
-export default async function (): Promise<ScanResponse<AnyDocument> | null> {
-  return null;
+export default async function (
+  postId: PostDocument['postId'],
+): Promise<PostDocument | null> {
+  try {
+    const result = PostModel.get(postId);
+    
+    return await result.catch((err) => {
+      // logger.warn(err)
+      return null;
+    });
+  } catch (e) {
+    return null;
+  }
 }

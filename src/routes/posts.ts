@@ -9,7 +9,7 @@ const router = express.Router()
 // ########### EXPERT POSTS ROUTES ###########
 router.get("/", [], PostsController.getListHandler);
 
-router.get("/:id", [], PostsController.getByIdHandler);
+router.get("/:postId", [], PostsController.getByIdHandler);
 
 router.post("/create", [], PostsController.createPostHandler);
 
