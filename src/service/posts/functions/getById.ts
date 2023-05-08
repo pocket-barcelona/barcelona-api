@@ -4,7 +4,7 @@ import logger from "../../../utils/logger";
 
 type AnyDocument = any;
 /**
- * Get a specific guide
+ * Get a specific blog post
  * @returns
  */
 export default async function (): Promise<ScanResponse<AnyDocument> | null> {

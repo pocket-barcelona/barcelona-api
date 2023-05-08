@@ -2,9 +2,9 @@ import { object, number, string, TypeOf, date, boolean } from "zod";
 
 const createPayload = {
   body: object({
-    postId: string({
-      required_error: "postId is required",
-    }),
+    // postId: string({
+    //   required_error: "postId is required",
+    // }),
     status: string({
       required_error: "status is required",
     }),
@@ -17,7 +17,7 @@ const createPayload = {
     subtitle: string({
       required_error: "subtitle is required",
     }).max(500, "Subtitle is too long"),
-    categoryId: number({
+    categoryId: string({
       required_error: "categoryId is required",
     }),
     postTypeId: string({
@@ -47,8 +47,13 @@ const createPayload = {
     summary: string({
       required_error: "summary is required",
     }).max(2048, "summary is too long"),
-    postImages: string({
-      required_error: "postImages is required",
+    postImages: object({
+      imageId: string({
+        required_error: "imageId is required"
+      }),
+      imageUrl: string({
+        required_error: "imageUrl is required"
+      }),
     }).array(),
     provinceId: number({
       required_error: "provinceId is required",
@@ -62,7 +67,6 @@ const createPayload = {
     lng: number({
       required_error: "lat is required",
     }).optional(),
-    relatedPlaceId: number({}).optional(),
     ogTitle: string({
       required_error: "ogTitle is required",
     }).max(60, "ogTitle is too long"),
@@ -73,12 +77,15 @@ const createPayload = {
       required_error: "ogImage is required",
     }),
 
-    relatedPostId: number({
+    relatedPlaceId: number({
+      required_error: "relatedPlaceId is required",
+    }).optional(),
+    relatedPostId: string({
       required_error: "relatedPostId is required",
-    }),
+    }).optional(),
     relatedCategoryId: number({
       required_error: "relatedCategoryId is required",
-    }),
+    }).optional(),
   }),
 };
 

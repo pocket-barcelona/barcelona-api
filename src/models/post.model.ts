@@ -29,10 +29,15 @@ export interface PostAuthorModel {
   // authorAvatar?: string;
 }
 
+export interface PostImages {
+  imageId: string;
+  imageUrl: string;
+}
 
+type ID = string;
 export interface PostInput {
   /** The post ID, like UUID */
-  postId: string;
+  postId: ID;
   /** Allows post to be draft (active but hidden), active... */
   status: PostStatusEnum | string;
   /** Allows post to be on the app only, website only or all */
@@ -42,7 +47,7 @@ export interface PostInput {
   /** Post subtitle, like "Amazing view of the iconic Barcelona skyline" */
   subtitle: string;
   /** The blog post's category for main taxonomy on the blog */
-  categoryId: CategoryDocument['categoryId'];
+  categoryId: string;
   /** Post type ID - like "Best of...", "Guide to...", "Review of...", "How to..." */
   postTypeId: PostTypeModel["typeId"];
   /** Comma-separated list of tags, like "tibidabo,mirador,walking" */
@@ -62,7 +67,7 @@ export interface PostInput {
   /** Short summary for the post, without formatting */
   summary: string;
   /** @todo - The images for the post */
-  postImages: string[];
+  postImages: PostImages[];
   /** Drop down for province, where the post is based */
   provinceId: number;
   /** Optional related barrio ID - allows for finding posts by neighbourhood */
@@ -74,9 +79,9 @@ export interface PostInput {
   /** Optional: The ID of a related place */
   relatedPlaceId?: number;
   /** Allows more than 1 related post */
-  relatedPostId: number;
+  relatedPostId?: ID;
   /** The related website category ID */
-  relatedCategoryId: number;
+  relatedCategoryId?: CategoryDocument['categoryId'];
   // /** Meta data - created */
   // created: string;
   // /** Meta data - updated */
@@ -98,7 +103,7 @@ export interface PostDocument extends PostInput, Document {
 
 const postSchema = new dynamoose.Schema({
   postId: {
-    type: Number,
+    type: String,
     required: true,
     hashKey: true,
   },
@@ -118,9 +123,9 @@ const postSchema = new dynamoose.Schema({
     type: String,
     required: true,
   },
-
+  /** This is the post category, not the website category! */
   categoryId: {
-    type: Number,
+    type: String,
     required: true,
   },
   postTypeId: {
@@ -159,12 +164,25 @@ const postSchema = new dynamoose.Schema({
     type: String,
     required: true,
   },
-  // postImages: {
-  //   type: String,
-  //   required: true,
-  // },
-
-
+  postImages: {
+    type: Array,
+    // required: true,
+    schema: [
+      {
+        type: Object,
+        schema: {
+          "imageId": {
+            type: String,
+            required: true,
+          },
+          "imageUrl": {
+            type: String,
+            required: true,
+          },
+        },
+      }
+    ],
+  },
   provinceId: {
     type: Number,
     required: true,
@@ -175,29 +193,33 @@ const postSchema = new dynamoose.Schema({
   },
   lat: {
     type: Number,
-    required: true,
+    required: false,
   },
   lng: {
     type: Number,
-    required: true,
+    required: false,
   },
   relatedPlaceId: {
     type: Number,
-    required: true,
+    required: false,
   },
   relatedPostId: {
-    type: Number,
-    required: true,
+    type: String,
+    required: false,
   },
   relatedCategoryId: {
     type: Number,
-    required: true,
+    required: false,
   },
   ogTitle: {
     type: String,
     required: true,
   },
   ogDescription: {
+    type: String,
+    required: true,
+  },
+  ogImage: {
     type: String,
     required: true,
   },

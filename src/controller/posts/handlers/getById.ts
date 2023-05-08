@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { PostsService } from "../../../service/posts/posts.service";
 
 /**
- * Get a guides
+ * Get a blog post by ID
  * @param req
  * @param res
  * @returns
