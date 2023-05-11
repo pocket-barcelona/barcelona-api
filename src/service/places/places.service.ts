@@ -6,12 +6,14 @@ import {
   getRelatedPlacesHandler,
   getPlaceCategoriesHandler,
   getSearchPrepopulateHandler,
+  getPlaceLookupHandler,
 } from "./functions";
 import { CategoryDocument } from "../../models/category.model";
 import { ImageAssetsSize } from "../../models/imageAssets";
 import { ReadPlaceInput } from "../../schema/place/place.schema";
 import { ReadExploreInput } from "../../schema/explore/explore.schema";
 import { PlaceSearchDocument } from "../../models/place-search.model";
+import { PlaceLookupDocument } from '../../models/place-lookup.model';
 // import 'dotenv/config'; // support for dotenv injecting into the process env
 
 export class PlacesService {
@@ -35,6 +37,11 @@ export class PlacesService {
   static getSearchPrepopulate =
     async (): Promise<ScanResponse<PlaceSearchDocument> | null> =>
       getSearchPrepopulateHandler();
+  
+  /** This is for the Dashboard which needs a list of places and their IDs */
+  static getPlaceLookupList =
+      async (): Promise<ScanResponse<PlaceLookupDocument> | null> =>
+        getPlaceLookupHandler();
 
   static getMappedPlaceDocuments = (places: PlaceDocument[]): PlaceInput[] => {
     return places.map((p) => {
@@ -81,6 +88,16 @@ export class PlacesService {
         urlSlug: place.urlSlug,
         tags: place.tags,
         barrioId: place.barrioId,
+      };
+    });
+  };
+
+  /** Build a trimmed down version of the places document */
+  static getMappedLookupPlace = (places: PlaceDocument[]): PlaceLookupDocument[] => {
+    return places.map(place => {
+      return {
+        placeId: place.placeId,
+        nameOfficial: place.nameOfficial,
       };
     });
   };
