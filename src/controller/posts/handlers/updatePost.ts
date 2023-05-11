@@ -33,6 +33,13 @@ export default async function updatePost(
   //     );
   // }
 
+  // make sure related post ID isn't the same as the post ID
+  if (postId === req.body.relatedPostId) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send(error("Related post ID cannot be the same as the post ID", res.statusCode));
+  }
+
   const updatedItem = await PostsService.updatePost(postId, req.body);
   if (!updatedItem) {
     return res
