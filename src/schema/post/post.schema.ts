@@ -54,7 +54,7 @@ const createPayload = {
       imageUrl: string({
         required_error: "imageUrl is required"
       }),
-    }).array(),
+    }).array().optional(),
     provinceId: number({
       required_error: "provinceId is required",
     }),

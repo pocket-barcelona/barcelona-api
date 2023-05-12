@@ -14,6 +14,7 @@ export default async function (
   const newDocument: PostInput = {
     ...input,
     postId: uuidv4(),
+    postImages: input.postImages || [],
   }
 
   try {
