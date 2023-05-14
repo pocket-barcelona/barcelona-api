@@ -20,5 +20,6 @@ router.get("/categories/list", [], PlacesController.getPlaceCategoriesHandler);
 
 router.get("/:placeId/related", [validateResource(readPlaceSchema)], PlacesController.getRelatedPlacesHandler);
 
+router.get("/lookup/list", [], PlacesController.getPlaceLookupHandler);
 
 export default router;

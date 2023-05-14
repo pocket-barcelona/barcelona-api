@@ -3,6 +3,7 @@ import getByIdHandler from './getById';
 import getRelatedPlacesHandler from './getRelatedPlaces';
 import getPlaceCategoriesHandler from './getPlaceCategories';
 import getSearchPrepopulateHandler from './getSearchPrepopulate';
+import getPlaceLookupHandler from './getPlaceLookup';
 
 export {
     getListHandler,
@@ -10,4 +11,5 @@ export {
     getRelatedPlacesHandler,
     getPlaceCategoriesHandler,
     getSearchPrepopulateHandler,
+    getPlaceLookupHandler,
 };

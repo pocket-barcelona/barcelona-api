@@ -14,6 +14,7 @@ import { PoiInput, TABLE_NAME_POI } from "../../models/poi.model";
 // import { CategoryIdEnum } from "../../models/enums/categoryid.enum";
 // import { RequiresBookingEnum } from "./../../models/enums/requiresbooking.enum";
 import urlSlug from 'url-slug'
+import { TimeOfDayEnum } from '../../models/enums/tod.enum';
 
 // set AWS config for client
 AWS.config.update({
@@ -116,7 +117,7 @@ const mappedRecords = rawData.features
     urlSlug: slug,
     address: r.properties.Location.Address ?? '',
     description: '',
-    bestTod: 0,
+    bestTod: 0 as TimeOfDayEnum, // @todo - fix this
     price: 0,
     boost: 0,
     // requiresBooking: RequiresBookingEnum.No,
