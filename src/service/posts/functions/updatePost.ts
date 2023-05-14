@@ -11,6 +11,7 @@ export default async function updatePost(postId: PostInput["postId"], input: Upd
     const payload: PostInput = {
       ...input,
       postId,
+      postImages: input.postImages || [],
       // handle dates...
       // myDate: input.myDate ? new Date(input.myDate) : new Date(0),
     };
