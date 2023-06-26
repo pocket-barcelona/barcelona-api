@@ -1,0 +1,71 @@
+<mjml>
+  <mj-head>
+    <mj-title>Herding Cats - Welcome</mj-title>
+    <mj-preview>Welcome to Herding Cats!</mj-preview>
+    <mj-font name="Rubik" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400" />
+    <mj-attributes>
+      <mj-all font-family="'Rubik', Helvetica, Arial, sans-serif"></mj-all>
+      <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Rubik', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+    </mj-attributes>
+    <mj-style inline="inline">
+      .footer-link {
+      color: #888888
+      }
+    </mj-style>
+
+  </mj-head>
+  <mj-body background-color="#FFFFFF" width="500px">
+    <mj-section background-color="#ffffff">
+      <mj-column width="100%">
+        <mj-image src="https://herdcats.io/emails/header-special.png" width="500px" height="170px" alt="" padding="0" />
+      </mj-column>
+    </mj-section>
+    <mj-wrapper padding-top="0" padding-bottom="0" css-class="body-section">
+      <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px">
+        <mj-column width="400px" background-color="#FFF12B">
+          <mj-text color="#212b35" font-weight="300" font-size="30px" line-height="30px" align="center">
+            Welcome to Herding Cats!
+          </mj-text>
+        </mj-column>
+        <mj-column width="400px">
+          <mj-text color="#000000" font-size="20px" font-weight="300" align="center">
+            <br/>
+            It’s time to embark on your journey as an empowered social shepherd.
+          </mj-text>
+          <mj-text color="#000000" font-size="20px" font-weight="300" align="center">
+          	Please confirm your email and start herding.
+            <br></br>
+          </mj-text>
+
+          <mj-button background-color="#FFF12B" align="center" color="#1C1C1C" font-size="20px" font-weight="400" href="{url}" width="280px" border="2px solid #000" line-height="24px" border-radius="0">
+            Confirm email
+          </mj-button>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+    <mj-wrapper full-width="full-width" background-color="#FFF12B">
+      <mj-section>
+        <mj-column width="100%" padding="0">
+          <mj-text color="#000" font-size="14px" font-weight="300" align="center" line-height="16px">
+            You are receiving this email because you signed up to Herding Cats. Follow the link above to confirm your email address.
+          </mj-text>
+          <mj-text color="#000" font-size="14px" align="center" font-weight="300" line-height="16px">
+            &copy; Herding Cats. All Rights Reserved.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <!-- <mj-section padding-top="0">
+        <mj-group>
+          <mj-column width="100%" padding-right="0">
+            <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+              <a class="footer-link" href="https://www.google.com">Privacy</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a class="footer-link" href="https://www.google.com">Unsubscribe</a>
+            </mj-text>
+          </mj-column>
+        </mj-group>
+
+      </mj-section> -->
+    </mj-wrapper>
+
+  </mj-body>
+</mjml>

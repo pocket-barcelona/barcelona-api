@@ -1,5 +1,9 @@
 export const config = {
-  
+  SENDGRID_API_KEY: "TODO...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",
+  DOMAIN: "https://www.pocketbarcelona.com",
+  BRAND_NAME: "Pocket Barcelona",
+  EMAIL_NOREPLY: "noreply@pocketbarcelona.com",
+
   port: 3002,
   saltWorkFactor: 10,
   
@@ -9,7 +13,7 @@ export const config = {
   refreshTokenTtl: 525600,
 
   // salt used for new user confirming their email addresses from the welcome email - changing this invalidates welcome email confirm links
-  confirmNewUserSalt: '[SET SALT]',
+  confirmNewUserSalt: 'S@LTYC0FFE3ANDT3A!',
 
   // NOTE: this key should only be exposed server side. This can be used to generate JWT's for the backend system!
   // NOTE: Do not tab indent this line!
@@ -37,4 +41,4 @@ QIDAQAB
   /** The name of the header prompting the frontend interceptor to update its stale access token */
   HEADER_X_ACCESS_TOKEN: 'X-Access-Token',
 
-};
+} as const;

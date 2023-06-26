@@ -6,6 +6,9 @@ import eventsRoutes from "./events";
 import plannerRoutes from "./planner";
 import poiRoutes from "./poi";
 import postsRoutes from "./posts";
+import adminRoutes from "./admin";
+import sessionRoutes from './session';
+import usersRoutes from './users';
 
 function routes(app: Express) {
   app.get("/healthcheck", (req: Request, res: Response) => {
@@ -17,6 +20,12 @@ function routes(app: Express) {
   app.use("/api/events", eventsRoutes);
   app.use("/api/planner", plannerRoutes);
   app.use("/api/posts", postsRoutes);
+  // USER LOGIN/AUTH
+  app.use('/api/auth/session', sessionRoutes);
+  // USER CREATION, PROFILE, RESET PASSWORD etc
+  app.use('/api/user', usersRoutes);
+  // CMS ROUTES
+  app.use("/api/admin", adminRoutes);
 }
 
 export default routes;
