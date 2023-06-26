@@ -15,7 +15,7 @@ router.get("/", [requireUser], SessionController.getSessionsHandler);
 /** Refresh the user session */
 router.post("/refresh", [requireRefreshToken], SessionController.refreshSessionHandler);
 /** Logout the user */
-router.delete("/", [requireUser], SessionController.deleteSessionHandler);
+router.delete("/delete", [requireUser], SessionController.deleteSessionHandler);
 
 export default router;
 // module.exports = router;

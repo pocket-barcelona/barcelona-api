@@ -8,7 +8,7 @@ import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/packag
 export default async function getSessions(req: Request, res: Response) {
   const userId = res.locals.user ? res.locals.user.email : null;
   if (!userId) {
-    logger.warn("User not in local session!");
+    // logger.warn("User not in local session!");
     return res
       .status(StatusCodes.NOT_FOUND)
       .json(

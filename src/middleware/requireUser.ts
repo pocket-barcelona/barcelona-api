@@ -22,3 +22,4 @@ const requireUser = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export default requireUser;
+
