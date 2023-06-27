@@ -6,7 +6,6 @@ import formidable, {
 } from "formidable";
 import FormData from "form-data";
 import fs from "fs";
-// import type { NextApiRequest, NextApiResponse } from 'next';
 import { PassThrough, Transform } from "stream";
 import s3Client from "../../utils/s3.client";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
@@ -41,20 +40,11 @@ export class AdminService {
       const formidableFile = Array.isArray(files.file)
         ? files.file[0]
         : files.file;
-      // const file = fs.createReadStream(formidableFile.filepath, "binary");
       // const file = fs.createReadStream(formidableFile.filepath);
       
       const blob = fs.readFileSync(formidableFile.filepath);
-      // file.on("error", function (error) {
-      //   console.log(`error: ${error.message}`);
-      // });
-
-      // file.on("data", (chunk) => {
-      //   console.log(chunk);
-      // });
 
       // const formData = new FormData();
-
       // formData.append("file", file);
 
       // const tr = new Transform({
@@ -69,7 +59,6 @@ export class AdminService {
       // });
       // formData.pipe(tr);
 
-      
 
       // new file keys are like this: images/blog/[POST_ID]/[FILENAME].jpg
       // images/blog/78403041-2319-4613-8042-046154d648ec/paradise2.jpg
@@ -91,10 +80,15 @@ export class AdminService {
         // ContentLength: file.
         ContentType: formidableFile.mimetype ?? 'image/jpeg',
         ContentLength: blob.length,
+        
       });
+
+      
       try {
         const response = await client.send(command);
         console.log(response);
+        // s3Client.getSignedUrl()
+        
         return response;
       } catch (err) {
         console.error(err);
@@ -107,6 +101,7 @@ export class AdminService {
         msg: err,
       };
     }
+
 
     // const newFileKey = `paradise2.jpg`;
     // const pass = new PassThrough();
