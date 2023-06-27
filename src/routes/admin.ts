@@ -35,11 +35,12 @@ router.patch(
 router.post(
   "/posts/images/upload",
   [
-    requireUser,
+    // requireUser,
     // validateResource(updatePostSchema),
   ],
   AdminController.imageUploadHandler
 );
+
 
 // TODO
 // delete blog post?

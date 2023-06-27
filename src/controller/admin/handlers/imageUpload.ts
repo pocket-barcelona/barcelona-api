@@ -1,23 +1,21 @@
 import { Request, Response } from "express";
-import { error, success } from "../../../middleware/apiResponse";
-import { StatusCodes } from "http-status-codes";
-import { AdminService } from "../../../service/admin/admin.service";
-import { ReadBarrioInput } from '../../../schema/barrio/barrio.schema';
+import { StatusCodes } from 'http-status-codes';
+import { AdminService } from '../../../service/admin/admin.service';
+import { error, success } from '../../../middleware/apiResponse';
 
-/**
- * Get a list of barrios
- * @param req
- * @param res
- * @returns
- */
-export default async function (req: Request<any>, res: Response) {
+export default async function (req: Request<any>, res: Response, next: any) {
   
-  const data = await AdminService.uploadImage(req.body);
+  
+  const data = await AdminService.uploadImage(req, res);
 
   if (!data) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(error("Error getting list", res.statusCode));
+      .send(error("Error uploading file", res.statusCode));
+  } else if (data.error) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send(error(data.error, res.statusCode));
   }
 
   return res.send(
