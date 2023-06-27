@@ -42,7 +42,7 @@ export class AdminService {
         ? files.file[0]
         : files.file;
       // const file = fs.createReadStream(formidableFile.filepath, "binary");
-      const file = fs.createReadStream(formidableFile.filepath);
+      // const file = fs.createReadStream(formidableFile.filepath);
       
       const blob = fs.readFileSync(formidableFile.filepath);
       // file.on("error", function (error) {
@@ -87,8 +87,10 @@ export class AdminService {
         // Body: formData.getBuffer(),
         // Body: formData.get('file'),
         // Body: file.read(),
-        ACL: "public-read",
+        ACL: "public-read", // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/putobjectcommand.html
         // ContentLength: file.
+        ContentType: formidableFile.mimetype ?? 'image/jpeg',
+        ContentLength: blob.length,
       });
       try {
         const response = await client.send(command);
