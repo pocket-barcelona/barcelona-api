@@ -32,6 +32,7 @@ export interface PostAuthorModel {
 export interface PostImages {
   imageId: string;
   imageUrl: string;
+  imageAlt: string;
 }
 
 type ID = string;
@@ -171,11 +172,23 @@ const postSchema = new dynamoose.Schema({
       {
         type: Object,
         schema: {
-          "imageId": {
+          imageId: {
             type: String,
             required: true,
           },
-          "imageUrl": {
+          imageUrl: {
+            type: String,
+            required: true,
+          },
+          imageName: {
+            type: String,
+            required: true,
+          },
+          imageTitle: {
+            type: String,
+            required: true,
+          },
+          imageAlt: {
             type: String,
             required: true,
           },

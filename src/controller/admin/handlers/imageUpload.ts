@@ -2,12 +2,13 @@ import { Request, Response } from "express";
 import { StatusCodes } from 'http-status-codes';
 import { AdminService } from '../../../service/admin/admin.service';
 import { error, success } from '../../../middleware/apiResponse';
-
-export default async function (req: Request<any>, res: Response, next: any) {
+import FormData from "form-data";
+export default async function (req: Request<any>, res: Response) {
   
   
-  const data = await AdminService.uploadImage(req, res);
-
+  // const data = await AdminService.uploadImage(req, res);
+  const data = await AdminService.parseFileUploads(req);
+  
   if (!data) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

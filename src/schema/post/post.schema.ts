@@ -54,6 +54,16 @@ const createPayload = {
       imageUrl: string({
         required_error: "imageUrl is required"
       }),
+      // Backend generates this based on the title given
+      // imageName: string({
+      //   required_error: "imageTitle is required"
+      // }),
+      imageTitle: string({
+        required_error: "imageTitle is required"
+      }),
+      imageAlt: string({
+        required_error: "imageAlt is required"
+      }),
     }).array().optional(),
     provinceId: number({
       required_error: "provinceId is required",
