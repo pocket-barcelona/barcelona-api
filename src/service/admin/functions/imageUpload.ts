@@ -1,14 +1,31 @@
 import { Request, Response } from "express";
 import { AdminService, UploadedFile } from '../admin.service';
 
+export interface MyType {
+  file: UploadedFile | null;
+  success: boolean;
+  error: string | null;
+}
 /**
  * Upload an image to S3
  * @returns
  */
-export default async function (req: Request<any>, res: any): Promise<UploadedFile> {
+export default async function (req: Request<any>, res: any): Promise<MyType | any> {
 
-  const uploadedResp = await AdminService.parseFileUploads(req);
+  try {
+    const uploadedResp = await AdminService.handleFileUploads(req);
+    
+    return uploadedResp;
+  } catch (error) {
+    if (error instanceof Error) {
+      return {
+        file: null,
+        success: false,
+        error: error.message,
+      }
+    }
+  }
   // if file uploaded successfully, add the info the the post images array
   
-  return uploadedResp;
+  
 }

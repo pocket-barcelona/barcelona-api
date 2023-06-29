@@ -29,7 +29,7 @@ export interface PostAuthorModel {
   // authorAvatar?: string;
 }
 
-export interface PostImages {
+export interface PostImage {
   imageId: string;
   imageUrl: string;
   imageAlt: string;
@@ -68,7 +68,7 @@ export interface PostInput {
   /** Short summary for the post, without formatting */
   summary: string;
   /** @todo - The images for the post */
-  postImages: PostImages[];
+  postImages: PostImage[];
   /** Drop down for province, where the post is based */
   provinceId: number;
   /** Optional related barrio ID - allows for finding posts by neighbourhood */

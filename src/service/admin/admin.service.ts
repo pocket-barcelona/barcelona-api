@@ -8,14 +8,14 @@ import formidable, {
 } from "formidable";
 import fs from "fs";
 import { PassThrough, Transform } from "stream";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import urlSlug from "url-slug";
 import s3Client from '../../utils/s3.client';
 const IMAGE_FILESIZE_MAX = 2 * 1024 * 1024; // 2MB
 
 export class AdminService {
-  static uploadImage = async (req: any, res: any): Promise<UploadedFile> =>
+  static uploadImage = async (req: any, res: any): Promise<any> =>
     imageUploadHandler(req, res);
 
   /**
@@ -41,7 +41,7 @@ export class AdminService {
     });
   }
 
-  static parseFileUploads = async (req: any): Promise<UploadedFile | any> => {
+  static handleFileUploads = async (req: any): Promise<PutObjectCommandOutput | false> => {
     // https://stackoverflow.com/questions/72568850/nodejs-fetch-failed-object2-is-not-iterable-when-uploading-file-via-post-reque
     try {
       const { files, fields } = await AdminService.parseFile(req);
@@ -58,7 +58,7 @@ export class AdminService {
         throw new Error("No file provided!");
       }
       if (!fields) {
-        throw new Error("No file information provided");
+        throw new Error("No field information provided");
       }
       if (!fields.imageTitle) {
         throw new Error("No image title provided");
@@ -90,6 +90,12 @@ export class AdminService {
         throw new Error("Invalid post ID");
       }
 
+      // build file key
+      const fileExtension = (originalFilename ?? "").split(".").pop();
+      if (!fileExtension) {
+        throw new Error("Invalid file extension");
+      }
+
       // read file
       let blob: Buffer;
       try {
@@ -98,12 +104,7 @@ export class AdminService {
         throw new Error("Error reading file");
       }
 
-      // build file key
-      const fileExtension = (originalFilename ?? "").split(".").pop();
-      if (!fileExtension) {
-        throw new Error("Invalid file extension");
-      }
-
+      
       const newFileKey = AdminService.buildFileKey({
         imageTitle,
         fileExtension,
@@ -122,16 +123,14 @@ export class AdminService {
         // s3Client.getSignedUrl()
         return response;
       } catch (err) {
-        console.error(err);
+        // console.error(err);
       }
+
     } catch (err: any) {
-      // console.error(err);
-      // return res.status(500).json({ error: "Something went wrong" });
-      return {
-        error: "Something went wrong",
-        msg: err && err.message ? err.message : "Error!",
-      };
+      // nothing
     }
+    // return a throw
+    throw new Error('Something went wrong');
 
     // const formData = new FormData();
     // formData.append("file", file);
@@ -202,14 +201,16 @@ export class AdminService {
 
     // start building a filename...
     let smallUuid = uuidv4();
+    // create an 8 char UUID-like string - it will be unique enough!
     smallUuid = smallUuid.substring(0, 8);
+    // build a url slug based on image title from user - will include chars [a-z0-9-] and no spaces
     let safeFilename = urlSlug(imageTitle);
     safeFilename = (safeFilename || "myfile")
       .concat("-")
       .concat(smallUuid)
       .concat(".")
       .concat(fileExtension);
-
+    // return full path
     return imageFolderBase.concat([postId, safeFilename]).join("/");
   }
 
@@ -228,9 +229,10 @@ export class AdminService {
     mimetype?: string;
   }): PutObjectCommand {
     const command = new PutObjectCommand({
-      Bucket: "barcelonasite",
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: newFileKey,
       Body: blob,
+      // @todo - we need to remove this when we resolve the DNS to the bucket and add a policy...
       ACL: "public-read", // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/putobjectcommand.html
       ContentType: mimetype ?? "image/jpeg",
       ContentLength: blob.length,
