@@ -41,7 +41,10 @@ export class AdminService {
     });
   }
 
-  static handleFileUploads = async (req: any): Promise<PutObjectCommandOutput | false> => {
+  static handleFileUploads = async (req: any): Promise<{
+    object: PutObjectCommandOutput,
+    fields: formidable.Fields;
+  } | false> => {
     // https://stackoverflow.com/questions/72568850/nodejs-fetch-failed-object2-is-not-iterable-when-uploading-file-via-post-reque
     try {
       const { files, fields } = await AdminService.parseFile(req);
@@ -121,12 +124,16 @@ export class AdminService {
         const response = await s3Client.send(command);
         // console.log(response);
         // s3Client.getSignedUrl()
-        return response;
+        return {
+          object: response,
+          fields,
+        };
       } catch (err) {
         // console.error(err);
       }
 
     } catch (err: any) {
+      throw new Error(err);
       // nothing
     }
     // return a throw

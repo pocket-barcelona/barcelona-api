@@ -22,11 +22,11 @@ export default async function (req: Request<any>, res: Response) {
       success(data)
     );
 
-  } catch (error: any) {
-    if (error && error.message) {
+  } catch (err: any) {
+    if (err && err.message) {
       return res
       .status(StatusCodes.BAD_REQUEST)
-      .send(error(error.error, res.statusCode));
+      .send(error(err.message, res.statusCode));
     } else {
       return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

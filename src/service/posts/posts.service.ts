@@ -1,6 +1,6 @@
 import { PostDocument, PostInput } from '../../models/post.model';
 import { CreatePostInput, UpdatePostInput } from "../../schema/post/post.schema";
-import { getListHandler, getByIdHandler, createPostHandler, updateEventHandler } from "./functions";
+import { getListHandler, getByIdHandler, createPostHandler, updatePostHandler } from "./functions";
 
 export class PostsService {
   static getList = async () => getListHandler();
@@ -13,5 +13,5 @@ export class PostsService {
   static updatePost = async (
     postId: PostInput["postId"],
     input: UpdatePostInput["body"]
-  ): Promise<PostDocument | null> => updateEventHandler(postId, input);
+  ): Promise<PostDocument | null> => updatePostHandler(postId, input);
 }
