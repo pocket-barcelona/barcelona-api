@@ -13,10 +13,10 @@ const router = express.Router();
 // router.all("/*", [requireUser])
 
 /** Get all blog posts - regardless of published status */
-router.get("/posts", [requireUser], PostsController.getListHandler);
+router.get("/posts", [requireUser], PostsController.getAdminListHandler);
 
 /** Get blog post by ID - regardless of published status */
-router.get("/posts/:postId", [requireUser], PostsController.getByIdHandler);
+router.get("/posts/:postId", [requireUser], PostsController.getAdminByIdHandler);
 
 /** Create new blog post */
 router.post(

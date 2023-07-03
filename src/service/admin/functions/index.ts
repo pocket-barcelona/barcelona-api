@@ -1,7 +1,7 @@
-import imageUploadHandler from './imageUpload';
+// import imageUploadHandler from './imageUpload';
 // import getListHandler from './getList';
 
 export {
-  imageUploadHandler,
+  // imageUploadHandler,
     // getListHandler,
 };

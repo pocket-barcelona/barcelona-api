@@ -12,20 +12,20 @@ export interface MyType {
  */
 export default async function (req: Request<any>, res: any): Promise<MyType | any> {
 
-  try {
-    const uploadedResp = await AdminService.handleFileUploads(req);
+  // try {
+  //   const uploadedResp = await AdminService.handleFileUploads(req);
     
-    return uploadedResp;
-  } catch (error) {
-    if (error instanceof Error) {
-      return {
-        file: null,
-        success: false,
-        error: error.message,
-      }
-    }
-  }
-  // if file uploaded successfully, add the info the the post images array
+  //   return uploadedResp;
+  // } catch (error) {
+  //   if (error instanceof Error) {
+  //     return {
+  //       file: null,
+  //       success: false,
+  //       error: error.message,
+  //     }
+  //   }
+  // }
+  // // if file uploaded successfully, add the info the the post images array
   
   
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import "dotenv/config";
-import { imageUploadHandler } from "./functions";
+// import { imageUploadHandler } from "./functions";
 import formidable, {
   Fields,
   Files,
@@ -16,8 +16,8 @@ import { PostImage } from "../../models/post.model";
 const IMAGE_FILESIZE_MAX = 2 * 1024 * 1024; // 2MB
 
 export class AdminService {
-  static uploadImage = async (req: any, res: any): Promise<any> =>
-    imageUploadHandler(req, res);
+  // static uploadImage = async (req: any, res: any): Promise<any> =>
+  //   imageUploadHandler(req, res);
 
   /**
    * Parse the HTTP form data in the POST request using Formidable and extract the user's files and post data

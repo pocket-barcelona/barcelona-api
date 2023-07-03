@@ -14,7 +14,8 @@ export default async function (
   const newDocument: PostInput = {
     ...input,
     postId: uuidv4(),
-    postImages: input.postImages || [],
+    // postImages: input.postImages || [],
+    postImages: [], // images are added after post is created
   }
 
   try {
