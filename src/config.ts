@@ -8,7 +8,8 @@ export const config = {
   saltWorkFactor: 10,
   
   // the session token validity time in minutes - must be a number
-  accessTokenTtl: 15,
+  // accessTokenTtl: 15, // 15 minutes
+  accessTokenTtl: 3600, // one day
   // the refresh token validity time in minutes - must be a number (60 * 24 * 365)
   refreshTokenTtl: 525600,
 
