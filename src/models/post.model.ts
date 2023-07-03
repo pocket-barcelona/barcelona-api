@@ -31,7 +31,13 @@ export interface PostAuthorModel {
 
 export interface PostImage {
   imageId: string;
+  /** The full URL to the image on S3 */
   imageUrl: string;
+  /** The filename like my-file-1234abcd.jpg */
+  imageName: string;
+  /** The title from the user */
+  imageTitle: string;
+  /** The alt text from the user */
   imageAlt: string;
 }
 

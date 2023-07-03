@@ -11,7 +11,8 @@ import { PassThrough, Transform } from "stream";
 import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import urlSlug from "url-slug";
-import s3Client from '../../utils/s3.client';
+import s3Client from "../../utils/s3.client";
+import { PostImage } from "../../models/post.model";
 const IMAGE_FILESIZE_MAX = 2 * 1024 * 1024; // 2MB
 
 export class AdminService {
@@ -41,57 +42,82 @@ export class AdminService {
     });
   }
 
-  static handleFileUploads = async (req: any): Promise<{
-    object: PutObjectCommandOutput,
+  /** Get the POSTed file and field data and validate */
+  static async getFileUploadData(req: any): Promise<{
+    formidableFile: formidable.File;
     fields: formidable.Fields;
-  } | false> => {
+  }> {
+    const { files, fields } = await AdminService.parseFile(req);
+    // const file = fs.createReadStream(formidableFile.filepath);
+    // get the file
+    const formidableFile = Array.isArray(files.file)
+      ? files.file[0]
+      : files.file;
+
+    // validation here...
+    // check imageTitle is provided
+    // check imageAlt is provided
+    if (!formidableFile || !formidableFile.filepath) {
+      throw new Error("No file provided!");
+    }
+    if (!fields) {
+      throw new Error("No field information provided");
+    }
+    if (!fields.imageTitle) {
+      throw new Error("No image title provided");
+    }
+    if (!fields.imageAlt) {
+      throw new Error("No image alt provided");
+    }
+
+    // check file size
+    // check mime type
+    // generate safe/unique file name based on file title
+
+    const { mimetype, size: fileSize, originalFilename } = formidableFile;
+    if (fileSize > IMAGE_FILESIZE_MAX) {
+      throw new Error("File size too large!");
+    }
+    if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
+      // only allow jpg or png
+      throw new Error("File type not supported!");
+    }
+
+    // make sure postID is valid
+    if (!fields.postId || fields.postId.length !== 36) {
+      throw new Error("Invalid post ID");
+    }
+
+    return {
+      formidableFile,
+      fields,
+    };
+  }
+
+  static handleFileUploads = async ({
+    formidableFile,
+    fields,
+  }: {
+    formidableFile: formidable.File;
+    fields: formidable.Fields;
+  }): Promise<
+    | {
+        object: PutObjectCommandOutput;
+        fields: formidable.Fields;
+        uploadedFile: PostImage;
+      }
+    | false
+  > => {
     // https://stackoverflow.com/questions/72568850/nodejs-fetch-failed-object2-is-not-iterable-when-uploading-file-via-post-reque
     try {
-      const { files, fields } = await AdminService.parseFile(req);
-      // const file = fs.createReadStream(formidableFile.filepath);
-      // get the file
-      const formidableFile = Array.isArray(files.file)
-        ? files.file[0]
-        : files.file;
-
-      // validation here...
-      // check imageTitle is provided
-      // check imageAlt is provided
-      if (!formidableFile || !formidableFile.filepath) {
-        throw new Error("No file provided!");
-      }
-      if (!fields) {
-        throw new Error("No field information provided");
-      }
-      if (!fields.imageTitle) {
-        throw new Error("No image title provided");
-      }
-      if (!fields.imageAlt) {
-        throw new Error("No image alt provided");
-      }
-
-      // check file size
-      // check mime type
-      // generate safe/unique file name based on file title
-
-      const { mimetype, size: fileSize, originalFilename } = formidableFile;
-      if (fileSize > IMAGE_FILESIZE_MAX) {
-        throw new Error("File size too large!");
-      }
-      if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-        // only allow jpg or png
-        throw new Error("File type not supported!");
-      }
+      // const { fields, formidableFile } = await AdminService.getFileUploadData(req);
+      const { originalFilename, mimetype } = formidableFile;
 
       const {
         imageAlt = "",
         imageTitle = "",
         postId = "",
       } = fields as { imageAlt: string; imageTitle: string; postId: string };
-      // make sure postID is valid
-      if (!postId || postId.length !== 36) {
-        throw new Error("Invalid post ID");
-      }
 
       // build file key
       const fileExtension = (originalFilename ?? "").split(".").pop();
@@ -107,8 +133,7 @@ export class AdminService {
         throw new Error("Error reading file");
       }
 
-      
-      const newFileKey = AdminService.buildFileKey({
+      const { newFileKey, safeFilename } = AdminService.buildFileKey({
         imageTitle,
         fileExtension,
         postId,
@@ -120,6 +145,15 @@ export class AdminService {
         mimetype,
       });
 
+      const uploadedFile: PostImage = {
+        // assign the file a unique ID for later
+        imageId: uuidv4(),
+        imageUrl: newFileKey,
+        imageName: safeFilename,
+        imageTitle: imageTitle,
+        imageAlt: imageAlt,
+      };
+
       try {
         const response = await s3Client.send(command);
         // console.log(response);
@@ -127,17 +161,17 @@ export class AdminService {
         return {
           object: response,
           fields,
+          uploadedFile,
         };
       } catch (err) {
         // console.error(err);
       }
-
     } catch (err: any) {
       throw new Error(err);
       // nothing
     }
     // return a throw
-    throw new Error('Something went wrong');
+    throw new Error("Something went wrong");
 
     // const formData = new FormData();
     // formData.append("file", file);
@@ -192,7 +226,7 @@ export class AdminService {
    * New file keys are like this: images/blog/[POST_ID]/[FILENAME].jpg
    * images/blog/78403041-2319-4613-8042-046154d648ec/paradise2.jpg
    * const newFileKey = `images/blog/78403041-2319-4613-8042-046154d648ec/paradise2.jpg`;
-   * @returns 
+   * @returns
    */
   static buildFileKey({
     imageTitle,
@@ -202,7 +236,12 @@ export class AdminService {
     imageTitle: string;
     fileExtension: string;
     postId: string;
-  }) {
+  }): {
+    /** The object key on S3 */
+    newFileKey: string;
+    /** The filename like "my-new-file-abcd1234.jpg" */
+    safeFilename: string;
+  } {
     // base path folders for where the images are on S3
     const imageFolderBase: string[] = ["images", "blog"];
 
@@ -218,7 +257,10 @@ export class AdminService {
       .concat(".")
       .concat(fileExtension);
     // return full path
-    return imageFolderBase.concat([postId, safeFilename]).join("/");
+    return {
+      newFileKey: imageFolderBase.concat([postId, safeFilename]).join("/"),
+      safeFilename,
+    };
   }
 
   /**
@@ -233,7 +275,7 @@ export class AdminService {
   }: {
     newFileKey: string;
     blob: Buffer;
-    mimetype?: string;
+    mimetype: string | null;
   }): PutObjectCommand {
     const command = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
