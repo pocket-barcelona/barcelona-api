@@ -45,14 +45,14 @@ export default async function (req: Request<any>, res: Response) {
     // if file uploaded to S3, update post images array
     // const updatedPost = await PostService.updatePost(req.params.id, req.body);
 
-    post.postImages.push(uploadedFile);
-    await post.save();
+    // post.postImages.push(uploadedFile);
+    // await post.save();
 
     return res.send(success(uploadedFile, {
       meta: {
         object: newS3Object,
         fields: parsedFields,
-        post: post,
+        // post: post,
       }
     }));
 
