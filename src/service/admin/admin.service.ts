@@ -278,7 +278,7 @@ export class AdminService {
     mimetype: string | null;
   }): PutObjectCommand {
     const command = new PutObjectCommand({
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Bucket: process.env.AWS_S3_BUCKET_NAME ?? 'barcelonasite', // @todo - this should be an env var one day!!!,
       Key: newFileKey,
       Body: blob,
       // @todo - we need to remove this when we resolve the DNS to the bucket and add a policy...
