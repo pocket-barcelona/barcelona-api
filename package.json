@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node-dev --respawn --transpile-only -O '{\"module\":\"commonjs\"}' src/app.ts",
-    "start2": "npx tsc && node ./build/app.js",
+    "start:old": "npx tsc && node ./build/src/app.js",
     "build": "tsc"
   },
   "repository": {
