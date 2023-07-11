@@ -18,7 +18,7 @@ const { get } = lodash;
    * @param  {Response} res
    */
  export default async function refreshSession(req: Request, res: Response) {
-  const accessToken = get(req, `headers.${config.HEADER_AUTHORIZATION.toLowerCase()}`, "").replace(
+  const accessToken = get(req, `headers.${config.HEADER_AUTHORIZATION.toLowerCase()}`, "").toString().replace(
     /^Bearer\s/,
     ""
   ) as string;

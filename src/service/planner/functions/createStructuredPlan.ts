@@ -210,7 +210,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     let results: PlaceDocument[] = [];
     try {
       const allResults = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
-      results = allResults.toJSON(); // will contain all results
+      results = allResults.toJSON() as PlaceDocument[]; // will contain all results
     } catch (error) {
       return null;
     }

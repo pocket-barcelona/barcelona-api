@@ -21,7 +21,7 @@ const deserializeUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const accessToken = get(req, `headers.${config.HEADER_AUTHORIZATION.toLowerCase()}`, "").replace(
+  const accessToken = get(req, `headers.${config.HEADER_AUTHORIZATION.toLowerCase()}`, "").toString().replace(
     /^Bearer\s/,
     ""
   ) as string;

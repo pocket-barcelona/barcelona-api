@@ -301,7 +301,7 @@ export default async function (): Promise<StructuredPlanResponse | null> {
     let results: PlaceDocument[] = [];
     try {
       const allResults = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
-      results = allResults.toJSON();
+      results = allResults.toJSON() as PlaceDocument[];
     } catch (error) {
       return null;
     }

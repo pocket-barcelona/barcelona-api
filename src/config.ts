@@ -1,5 +1,5 @@
 export const config = {
-  SENDGRID_API_KEY: "TODO...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",
+  SENDGRID_API_KEY: "SG.TODO...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",
   DOMAIN: "https://www.pocketbarcelona.com",
   BRAND_NAME: "Pocket Barcelona",
   EMAIL_NOREPLY: "noreply@pocketbarcelona.com",

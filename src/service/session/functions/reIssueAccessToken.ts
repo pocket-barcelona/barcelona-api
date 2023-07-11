@@ -31,15 +31,18 @@ export enum ReissueAccessTokenErrorEnum {
   // refresh token is not valid or has expired
   if (valid === false) return ReissueAccessTokenErrorEnum.InvalidRefreshToken;
   if (expired) return ReissueAccessTokenErrorEnum.ExpiredRefreshToken;
+  
+  // @todo should be a string not undefined? https://www.geeksforgeeks.org/lodash-_-get-method/
+  const sessionValue = get(decoded, "session") as unknown as string;
 
-  if (!decoded || !get(decoded, "session")) return ReissueAccessTokenErrorEnum.MalformedRefreshToken; // invalid refresh token object - model could have changed!
+  if (!decoded || !sessionValue) return ReissueAccessTokenErrorEnum.MalformedRefreshToken; // invalid refresh token object - model could have changed!
   
   let session: SessionDocument;
   try {
     
     // the token can only be re-issued if there is a session document which is valid
     // a session doc is created (or updated) when the user logs in
-    session = await SessionModel.get(get(decoded, "session"));
+    session = await SessionModel.get(sessionValue);
     // could not find session in the DB
     if (!session) return ReissueAccessTokenErrorEnum.NotSignedIn;
     // session exists, but is not valid - user has logged out
