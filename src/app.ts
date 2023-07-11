@@ -4,29 +4,29 @@ import responseTime from "response-time";
 import connect from "./utils/connect";
 import logger from "./utils/logger";
 import routes from "./routes/routes";
-// import deserializeUser from "./middleware/deserializeUser";
+import deserializeUser from "./middleware/deserializeUser";
 import { restResponseTimeHistogram, startMetricsServer } from "./utils/metrics";
 
 const PORT = config.port;
 
 const app = express();
 app.use(express.json());
-// app.use(deserializeUser);
+app.use(deserializeUser);
 
-// app.use(
-//   responseTime((req: Request, res: Response, time: number) => {
-//     if (req?.route?.path) {
-//       restResponseTimeHistogram.observe(
-//         {
-//           method: req.method,
-//           route: req.route.path,
-//           status_code: res.statusCode,
-//         },
-//         time * 1000
-//       );
-//     }
-//   })
-// );
+app.use(
+  responseTime((req: Request, res: Response, time: number) => {
+    if (req?.route?.path) {
+      restResponseTimeHistogram.observe(
+        {
+          method: req.method,
+          route: req.route.path,
+          status_code: res.statusCode,
+        },
+        time * 1000
+      );
+    }
+  })
+);
 
 /**
  * Support for CORS
@@ -58,7 +58,7 @@ app.use(function (req, res, next) {
 
 app.listen(PORT, async () => {
   logger.info(`App is running at http://localhost:${PORT}`);
-  // await connect();
+  await connect();
   routes(app);
   // startMetricsServer();
   // swaggerDocs(app, port);
