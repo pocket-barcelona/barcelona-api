@@ -4,14 +4,14 @@ import responseTime from "response-time";
 import connect from "./utils/connect";
 import logger from "./utils/logger";
 import routes from "./routes/routes";
-import deserializeUser from "./middleware/deserializeUser";
+// import deserializeUser from "./middleware/deserializeUser";
 import { restResponseTimeHistogram, startMetricsServer } from "./utils/metrics";
 
 const PORT = config.port;
 
 const app = express();
 app.use(express.json());
-app.use(deserializeUser);
+// app.use(deserializeUser);
 
 app.use(
   responseTime((req: Request, res: Response, time: number) => {
