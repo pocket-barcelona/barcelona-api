@@ -3,10 +3,15 @@ import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 import PostModel, { PostDocument } from '../../../models/post.model';
 
 const sortBlogPosts = (a: PostDocument, b: PostDocument) => {
-  const aPub = new Date(a.published).getTime();
-  const bPub = new Date(b.published).getTime();
-  if (aPub < bPub) return -1;
-  if (aPub > bPub) return 1;
+  const aCreated = new Date(a.createdAt).getTime();
+  const bCreated = new Date(b.createdAt).getTime();
+
+  // const aPub = new Date(a.published).getTime();
+  // const bPub = new Date(b.published).getTime();
+  // if (aPub < bPub) return -1;
+  // if (aPub > bPub) return 1;
+  if (aCreated > bCreated) return -1;
+  if (aCreated < bCreated) return 1;
   return 0;
 };
 
