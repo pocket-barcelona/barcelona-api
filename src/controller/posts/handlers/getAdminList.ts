@@ -19,5 +19,10 @@ export default async function getAdminList(req: Request, res: Response) {
       .send(error("Error getting list", res.statusCode));
   }
 
-  return res.send(success(data));
+  // the listing endpoint doesn't need the post content, so we can trim-down the payload
+  const withoutPostContent = data.map((post) => {
+    const { content, ...rest } = post;
+    return rest;
+  });
+  return res.send(success(withoutPostContent));
 }
