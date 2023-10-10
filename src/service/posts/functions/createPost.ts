@@ -2,6 +2,7 @@ import logger from "../../../utils/logger";
 import PostModel, { PostDocument, PostInput, PostStatusEnum, PostVisibilityEnum } from '../../../models/post.model';
 import { v4 as uuidv4 } from 'uuid';
 import { CreatePostInput } from '../../../schema/post/post.schema';
+import { createTinyUuid } from '../../../utils/tiny.uuid';
 
 /**
  * Create a new blog post
@@ -13,7 +14,8 @@ export default async function (
   
   const newDocument: PostInput = {
     ...input,
-    postId: uuidv4(),
+    // postId: uuidv4(),
+    postId: createTinyUuid(),
     // postImages: input.postImages || [],
     postImages: [], // images are added after post is created
   }
