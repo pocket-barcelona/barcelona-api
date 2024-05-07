@@ -20,7 +20,7 @@ export default async function getList(req: Request<FilterByPoiInput>, res: Respo
 
   if (!data) {
     return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .status(StatusCodes.NOT_FOUND)
       .send(error("Error getting list", res.statusCode));
   }
 

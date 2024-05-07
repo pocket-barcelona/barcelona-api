@@ -18,7 +18,7 @@ export default async function getSearchPrepopulate(req: Request, res: Response) 
   
   if (!records) {
     return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .status(StatusCodes.NOT_FOUND)
       .send(error("Error getting items", res.statusCode));
   }
   const mappedRecords = PlacesService.getMappedSearchPlace(records);

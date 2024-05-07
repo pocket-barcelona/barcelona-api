@@ -22,7 +22,7 @@ export default async function getById(req: Request<ReadPlaceInput['params']>, re
   
   if (!record) {
     return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .status(StatusCodes.NOT_FOUND)
       .send(error("Error getting item", res.statusCode));
   }
   const mappedRecord = PlacesService.getMappedPlace(record);

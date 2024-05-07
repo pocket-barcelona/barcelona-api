@@ -1,5 +1,6 @@
 import * as dynamoose from "dynamoose";
 import { Document } from "dynamoose/dist/Document";
+import { ImageAssets } from './imageAssets';
 
 
 export interface EventInput {
@@ -19,6 +20,7 @@ export interface EventInput {
   url: string;
   /** Optional notes or remarks about the event */
   notes: string;
+  images?: ImageAssets[];
 }
 
 export interface EventDocument extends EventInput, Document {
