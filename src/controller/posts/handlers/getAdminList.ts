@@ -15,7 +15,7 @@ export default async function getAdminList(req: Request, res: Response) {
 
   if (!data) {
     return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .status(StatusCodes.NOT_FOUND)
       .send(error("Error getting list", res.statusCode));
   }
 

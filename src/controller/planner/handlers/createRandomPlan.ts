@@ -16,7 +16,7 @@ export default async function createRandomPlan(req: Request, res: Response) {
   // @todo
   if (!data) {
     return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .status(StatusCodes.NOT_FOUND)
       .send(error("Error getting item", res.statusCode));
   }
 

@@ -25,7 +25,7 @@ export default async function getAdminById(
 
   if (!record) {
     return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .status(StatusCodes.NOT_FOUND)
       .send(error("Error getting item", res.statusCode));
   }
   return res.send(success(record));

@@ -16,7 +16,7 @@ export default async function getRelatedPlaces(req: Request<ReadPlaceInput['para
   
   if (!records) {
     return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .status(StatusCodes.NOT_FOUND)
       .send(error("Error getting list", res.statusCode));
   }
 
