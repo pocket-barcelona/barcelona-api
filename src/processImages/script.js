@@ -99,7 +99,7 @@ if (DRY_RUN) {
 const folders = await readdir(SOURCE_FOLDER);
 
 
-let counter = 0;
+// let counter = 0;
 
 for (const folder of folders) {
   if (ignoreFiles.indexOf(folder) > -1) {
@@ -112,10 +112,10 @@ for (const folder of folders) {
   }
   
   // testing
-  counter += 1;
-  if (counter > 5) {
-    break;
-  }
+  // counter += 1;
+  // if (counter > 5) {
+  //   break;
+  // }
 }
 
 if (DRY_RUN_FILE_LIST.length > 0) {
