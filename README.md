@@ -98,3 +98,13 @@
 
   To deploy to production, merge to `main` branch. Deployment will happen automatically using Github Actions.
 </details>
+
+<details>
+  <summary>Processing images & uploading to S3</summary>
+
+  Help: https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html
+
+  1. Run script: `node ./src/processImages/script.js`
+  2. Sync to S3: `npm run sync:images:thumb` (or all)
+
+</details>
