@@ -1,6 +1,6 @@
 import * as dynamoose from "dynamoose";
-import { Document } from "dynamoose/dist/Document";
-import { CategoryDocument } from './category.model';
+import type { Document } from "dynamoose/dist/Document";
+import type { CategoryDocument } from './category.model';
 
 
 export enum PostStatusEnum {

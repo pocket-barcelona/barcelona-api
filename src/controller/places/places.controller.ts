@@ -1,11 +1,12 @@
-import { Request, Response } from "express";
-import { ReadPlaceInput } from "../../schema/place/place.schema";
+import type { Request, Response } from "express";
+import type { ReadPlaceInput } from "../../schema/place/place.schema";
 import { getList, getById, getRelatedPlaces, getPlaceCategories, getSearchPrepopulate, getPlaceLookup } from './handlers';
-import { ReadExploreInput } from '../../schema/explore/explore.schema';
+import type { ReadExploreInput } from '../../schema/explore/explore.schema';
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class PlacesController {
 
-  static getListHandler = (req: Request<any, any, any, ReadExploreInput['body']>, res: Response) => getList(req, res);
+  static getListHandler = (req: Request<unknown, unknown, unknown, ReadExploreInput['body']>, res: Response) => getList(req, res);
 
   static getByIdHandler = (req: Request<ReadPlaceInput['params']>, res: Response) => getById(req, res);
 
