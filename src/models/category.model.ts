@@ -1,5 +1,5 @@
 import * as dynamoose from "dynamoose";
-import { Document } from "dynamoose/dist/Document";
+import type { Document } from "dynamoose/dist/Document";
 
 
 export interface CategoryInput {

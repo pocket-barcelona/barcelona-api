@@ -1,14 +1,14 @@
 import * as dynamoose from "dynamoose";
-import { Document } from "dynamoose/dist/Document";
-import { ChildrenEnum } from "./enums/children.enum";
-import { CommitmentEnum } from "./enums/commitment.enum";
-import { PriceEnum } from "./enums/price.enum";
-import { RequiresBookingEnum } from "./enums/requiresbooking.enum";
-import { TimeRecommendedEnum } from "./enums/timerecommended.enum";
-import { TimeOfDayEnum } from "./enums/tod.enum";
-import { CategoryIdEnum } from "./enums/categoryid.enum";
-import { TeenagerEnum } from "./enums/teenager.enum";
-import { ImageAssets } from './imageAssets';
+import type { Document } from "dynamoose/dist/Document";
+import type { ChildrenEnum } from "./enums/children.enum";
+import type { CommitmentEnum } from "./enums/commitment.enum";
+import type { PriceEnum } from "./enums/price.enum";
+import type { RequiresBookingEnum } from "./enums/requiresbooking.enum";
+import type { TimeRecommendedEnum } from "./enums/timerecommended.enum";
+import type { TimeOfDayEnum } from "./enums/tod.enum";
+import type { CategoryIdEnum } from "./enums/categoryid.enum";
+import type { TeenagerEnum } from "./enums/teenager.enum";
+import type { ImageAssets } from './imageAssets';
 
 interface PlaceRating {
   rating: string

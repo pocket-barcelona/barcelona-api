@@ -1,6 +1,6 @@
 import * as dynamoose from "dynamoose";
-import { Document } from "dynamoose/dist/Document";
-import { ImageAssets } from './imageAssets';
+import type { Document } from "dynamoose/dist/Document";
+import type { ImageAssets } from './imageAssets';
 
 
 export interface EventInput {

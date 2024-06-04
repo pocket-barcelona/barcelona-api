@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { PlacesService } from "../../../service/places/places.service";
-import { ReadPlaceInput } from "../../../schema/place/place.schema";
+import type { ReadPlaceInput } from "../../../schema/place/place.schema";
 
 /**
  * Get a place by ID

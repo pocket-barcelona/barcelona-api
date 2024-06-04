@@ -4,20 +4,20 @@ import {
 } from "dynamoose/dist/Document";
 import { ObjectType } from "dynamoose/dist/General";
 import { SerializerOptions } from "dynamoose/dist/Serializer";
-import { CategoryDocument, CategoryInput } from "./category.model";
+import type { CategoryDocument, CategoryInput } from "./category.model";
 import { CategoryIdEnum } from "./enums/categoryid.enum";
 import { ChildrenEnum } from "./enums/children.enum";
 import { CommitmentEnum } from "./enums/commitment.enum";
-import { PriceEnum } from "./enums/price.enum";
+import type { PriceEnum } from "./enums/price.enum";
 import { ProfileTypeEnum } from "./enums/profiletype.enum";
 import { RequiresBookingEnum } from "./enums/requiresbooking.enum";
 import { TeenagerEnum } from "./enums/teenager.enum";
-import { TimeRecommendedEnum } from "./enums/timerecommended.enum";
-import { TimeOfDayEnum } from "./enums/tod.enum";
-import { EventInput } from "./event.model";
-import { PlaceDocument, PlaceInput } from "./place.model";
-import { PlanThemeEnum } from "./planThemes.model";
-import { PoiInput } from "./poi.model";
+import type { TimeRecommendedEnum } from "./enums/timerecommended.enum";
+import type { TimeOfDayEnum } from "./enums/tod.enum";
+import type { EventInput } from "./event.model";
+import type { PlaceDocument, PlaceInput } from "./place.model";
+import type { PlanThemeEnum } from "./planThemes.model";
+import type { PoiInput } from "./poi.model";
 
 /** The response of the structured plan */
 export interface StructuredPlanResponse {

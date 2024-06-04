@@ -1,5 +1,5 @@
-import { ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { PlaceDocument, PlaceInput } from "../../models/place.model";
+import type { ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { PlaceDocument, PlaceInput } from "../../models/place.model";
 import {
   getListHandler,
   getByIdHandler,
@@ -8,14 +8,15 @@ import {
   getSearchPrepopulateHandler,
   getPlaceLookupHandler,
 } from "./functions";
-import { CategoryDocument } from "../../models/category.model";
-import { ImageAssetsSize } from "../../models/imageAssets";
-import { ReadPlaceInput } from "../../schema/place/place.schema";
-import { ReadExploreInput } from "../../schema/explore/explore.schema";
-import { PlaceSearchDocument } from "../../models/place-search.model";
-import { PlaceLookupDocument } from '../../models/place-lookup.model';
+import type { CategoryDocument } from "../../models/category.model";
+import type { ImageAssetsSize } from "../../models/imageAssets";
+import type { ReadPlaceInput } from "../../schema/place/place.schema";
+import type { ReadExploreInput } from "../../schema/explore/explore.schema";
+import type { PlaceSearchDocument } from "../../models/place-search.model";
+import type { PlaceLookupDocument } from '../../models/place-lookup.model';
 // import 'dotenv/config'; // support for dotenv injecting into the process env
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class PlacesService {
   static getList = async (
     params: ReadExploreInput["body"]

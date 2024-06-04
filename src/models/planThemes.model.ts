@@ -1,11 +1,12 @@
-import BarrioModel from "./barrio.model";
-import CategoryModel from "./category.model";
-import PlaceModel, { PlaceInput } from "./place.model";
+import type BarrioModel from "./barrio.model";
+import type CategoryModel from "./category.model";
+import type PlaceModel from "./place.model";
+import type { PlaceInput } from "./place.model";
 import type { SetOptional } from 'type-fest';
-import { TimeRecommendedEnum } from "./enums/timerecommended.enum";
-import { RequiresBookingEnum } from "./enums/requiresbooking.enum";
-import { DrinkCategoryEnum, FoodCategoryEnum, FoodCuisinesEnum } from "./enums/foodcategory.enum";
-import { TimeOfDayEnum } from './enums/tod.enum';
+import type { TimeRecommendedEnum } from "./enums/timerecommended.enum";
+import type { RequiresBookingEnum } from "./enums/requiresbooking.enum";
+import type { DrinkCategoryEnum, FoodCategoryEnum, FoodCuisinesEnum } from "./enums/foodcategory.enum";
+import type { TimeOfDayEnum } from './enums/tod.enum';
 
 
 // the keys from the place model
