@@ -2,6 +2,10 @@ import { readdir, mkdir } from "node:fs/promises";
 import { statSync } from "node:fs";
 import * as path from "node:path";
 import * as sharp from "sharp";
+
+// RUN like:
+// node ./src/processImages/script.js
+
 // if error: Error: Could not load the "sharp" module using the darwin-x64 runtime
 // make sure optional dependencies are installed: yarn add sharp --ignore-engines
 
