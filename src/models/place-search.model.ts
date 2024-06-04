@@ -1,4 +1,4 @@
-import { PlaceDocument } from "./place.model";
+import type { PlaceDocument } from "./place.model";
 
 export type PlaceSearchDocument = Pick<
   PlaceDocument,

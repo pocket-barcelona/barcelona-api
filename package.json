@@ -8,7 +8,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node-dev --respawn --transpile-only -O '{\"module\":\"commonjs\"}' src/app.ts",
     "start:old": "npx tsc && node ./build/src/app.js",
-    "build": "tsc"
+    "process:images": "node --loader ts-node/esm ./src/processImages/script.ts",
+    "build": "tsc",
+    "sync:images:thumb": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/thumb/ s3://cdn.pocketbarcelona.com/app/places/images/avif/thumb  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
+    "sync:images:small": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/small/ s3://cdn.pocketbarcelona.com/app/places/images/avif/small  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
+    "sync:images:medium": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/medium/ s3://cdn.pocketbarcelona.com/app/places/images/avif/medium  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
+    "sync:images:large": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/large/ s3://cdn.pocketbarcelona.com/app/places/images/avif/large  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
+    "sync:images:xlarge": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/xlarge/ s3://cdn.pocketbarcelona.com/app/places/images/avif/xlarge  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
+    "sync:images:all": "npm run sync:images:thumb && npm run sync:images:small && npm run sync:images:medium && npm run sync:images:large && npm run sync:images:xlarge"
   },
   "repository": {
     "type": "git",
@@ -25,6 +32,7 @@
     "@aws-sdk/client-s3": "^3.359.0",
     "@aws-sdk/lib-storage": "^3.359.0",
     "@sendgrid/mail": "^7.6.2",
+    "@types/glob": "^8.1.0",
     "bcrypt": "^5.0.1",
     "config": "^3.3.7",
     "csv-parse": "^5.2.2",
@@ -64,6 +72,7 @@
     "@types/pino": "^7.0.5",
     "@types/response-time": "^2.3.5",
     "@types/uuid": "^8.3.4",
+    "sharp": "^0.33.4",
     "ts-node": "^10.8.2",
     "ts-node-dev": "^1.1.8",
     "type-fest": "^2.16.0",

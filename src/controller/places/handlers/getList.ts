@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { PlacesService } from "../../../service/places/places.service";
-import { ReadExploreInput } from '../../../schema/explore/explore.schema';
+import type { ReadExploreInput } from '../../../schema/explore/explore.schema';
 import { getDistance } from 'geolib';
-import { PlaceDocument, PlaceInput } from '../../../models/place.model';
+import type { PlaceDocument, PlaceInput } from '../../../models/place.model';
 
 const DEFAULT_PER_PAGE = 10;
 const MAX_PER_PAGE = 100;
@@ -51,7 +51,7 @@ function orderByDistanceClosest(from: LatLng, records: PlaceInput[]) {
  * @param res
  * @returns
  */
-export default async function getList(req: Request<any, any, any, ReadExploreInput['body']>, res: Response) {
+export default async function getList(req: Request<unknown, unknown, unknown, ReadExploreInput['body']>, res: Response) {
   
   let records = await PlacesService.getList(req.body) as PlaceDocument[];
   
@@ -77,12 +77,12 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
   let mappedRecords = PlacesService.getMappedPlaceDocuments(records);
 
   // do ordering here...
-  if (req.body && req.body.poi) {
+  if (req.body?.poi) {
     // if there is a POI then order by distance closest
     const fromPairs = (req.body.poi as string).trim().split(',');
     if (fromPairs.length === 2) {
-      const lat = parseFloat(fromPairs[0]);
-      const lng = parseFloat(fromPairs[1]);
+      const lat = Number.parseFloat(fromPairs[0]);
+      const lng = Number.parseFloat(fromPairs[1]);
       mappedRecords = orderByDistanceClosest({ lat, lng }, mappedRecords);
     }
   }
@@ -101,7 +101,7 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
   let page = 1;
   let sliceStart = 0;
 
-  if (req.body && req.body.page && req.body.page > 1) {
+  if (req.body?.page && req.body.page > 1) {
     page = Number(req.body.page);
     // @todo - make sure the page number is within range, or break early?
   }

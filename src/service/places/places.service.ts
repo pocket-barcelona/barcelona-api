@@ -1,5 +1,5 @@
-import { ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { PlaceDocument, PlaceInput } from "../../models/place.model";
+import type { ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { PlaceDocument, PlaceInput } from "../../models/place.model";
 import {
   getListHandler,
   getByIdHandler,
@@ -8,14 +8,15 @@ import {
   getSearchPrepopulateHandler,
   getPlaceLookupHandler,
 } from "./functions";
-import { CategoryDocument } from "../../models/category.model";
-import { ImageAssetsSize } from "../../models/imageAssets";
-import { ReadPlaceInput } from "../../schema/place/place.schema";
-import { ReadExploreInput } from "../../schema/explore/explore.schema";
-import { PlaceSearchDocument } from "../../models/place-search.model";
-import { PlaceLookupDocument } from '../../models/place-lookup.model';
+import type { CategoryDocument } from "../../models/category.model";
+import type { ImageAssetsSize } from "../../models/imageAssets";
+import type { ReadPlaceInput } from "../../schema/place/place.schema";
+import type { ReadExploreInput } from "../../schema/explore/explore.schema";
+import type { PlaceSearchDocument } from "../../models/place-search.model";
+import type { PlaceLookupDocument } from "../../models/place-lookup.model";
 // import 'dotenv/config'; // support for dotenv injecting into the process env
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class PlacesService {
   static getList = async (
     params: ReadExploreInput["body"]
@@ -37,11 +38,11 @@ export class PlacesService {
   static getSearchPrepopulate =
     async (): Promise<ScanResponse<PlaceSearchDocument> | null> =>
       getSearchPrepopulateHandler();
-  
+
   /** This is for the Dashboard which needs a list of places and their IDs */
   static getPlaceLookupList =
-      async (): Promise<ScanResponse<PlaceLookupDocument> | null> =>
-        getPlaceLookupHandler();
+    async (): Promise<ScanResponse<PlaceLookupDocument> | null> =>
+      getPlaceLookupHandler();
 
   static getMappedPlaceDocuments = (places: PlaceDocument[]): PlaceInput[] => {
     return places.map((p) => {
@@ -57,7 +58,13 @@ export class PlacesService {
     const province = PlacesService.getProvinceById(place.provinceId);
 
     // build images
-    const sizes: ImageAssetsSize[] = ["thumb", "medium", "large"];
+    const sizes: ImageAssetsSize[] = [
+      "thumb",
+      "small",
+      "medium",
+      "large",
+      "xlarge",
+    ];
     const images: PlaceDocument["images"] = sizes.map((s) => {
       const poster = PlacesService.getPoster(place, s);
       return {
@@ -77,14 +84,16 @@ export class PlacesService {
   };
 
   /** Build a trimmed down version of the places document */
-  static getMappedSearchPlace = (places: PlaceDocument[]): PlaceSearchDocument[] => {
-    return places.map(place => {
+  static getMappedSearchPlace = (
+    places: PlaceDocument[]
+  ): PlaceSearchDocument[] => {
+    return places.map((place) => {
       return {
         placeId: place.placeId,
         nameEnglish: place.nameEnglish,
         nameOfficial: place.nameOfficial,
         nameOfficialAccentless: place.nameOfficialAccentless,
-        description: place.description || '',
+        description: place.description || "",
         urlSlug: place.urlSlug,
         tags: place.tags,
         barrioId: place.barrioId,
@@ -93,8 +102,10 @@ export class PlacesService {
   };
 
   /** Build a trimmed down version of the places document */
-  static getMappedLookupPlace = (places: PlaceDocument[]): PlaceLookupDocument[] => {
-    return places.map(place => {
+  static getMappedLookupPlace = (
+    places: PlaceDocument[]
+  ): PlaceLookupDocument[] => {
+    return places.map((place) => {
       return {
         placeId: place.placeId,
         nameOfficial: place.nameOfficial,
@@ -110,10 +121,10 @@ export class PlacesService {
    */
   static getPoster(place: PlaceDocument, size: ImageAssetsSize): string {
     const base = process.env.AWS_S3_BUCKET;
-    const noImagePoster = `${base}/images/assets/placeholder-image.jpg`;
+    const noImagePoster = `${base}/app/places/images/avif/placeholder_${size}.avif`;
     if (!place.hasImage) return noImagePoster;
 
-    const path = `${base}/images/places/_posters/${size}/${place.placeId}_poster.jpg`;
+    const path = `${base}/app/places/images/avif/${size}/${place.placeId}_poster.avif`;
     return path;
   }
 
