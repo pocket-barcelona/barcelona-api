@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type { ReadPlaceInput } from "../../schema/place/place.schema";
-import type { getList, getById, getRelatedPlaces, getPlaceCategories, getSearchPrepopulate, getPlaceLookup } from './handlers';
+import { getList, getById, getRelatedPlaces, getPlaceCategories, getSearchPrepopulate, getPlaceLookup } from './handlers';
 import type { ReadExploreInput } from '../../schema/explore/explore.schema';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>

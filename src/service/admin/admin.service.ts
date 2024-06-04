@@ -1,20 +1,22 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import "dotenv/config";
 // import { imageUploadHandler } from "./functions";
 import formidable, {
-  Fields,
-  Files,
+  type Fields,
+  type Files,
   errors as formidableErrors,
 } from "formidable";
-import fs from "fs";
-import { PassThrough, Transform } from "stream";
-import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
+import fs from "node:fs";
+import { PassThrough, Transform } from "node:stream";
+import { PutObjectCommand, type PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import urlSlug from "url-slug";
 import s3Client from "../../utils/s3.client";
-import { PostImage } from "../../models/post.model";
+import type { PostImage } from "../../models/post.model";
+
 const IMAGE_FILESIZE_MAX = 2 * 1024 * 1024; // 2MB
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AdminService {
   // static uploadImage = async (req: any, res: any): Promise<any> =>
   //   imageUploadHandler(req, res);
@@ -24,7 +26,7 @@ export class AdminService {
    * @param req
    * @returns
    */
-  static async parseFile(req: Request<any>): Promise<{
+  static async parseFile(req: Request<unknown>): Promise<{
     files: formidable.Files;
     fields: formidable.Fields;
   }> {
@@ -43,7 +45,7 @@ export class AdminService {
   }
 
   /** Get the POSTed file and field data and validate */
-  static async getFileUploadData(req: any): Promise<{
+  static async getFileUploadData(req: unknown): Promise<{
     formidableFile: formidable.File;
     fields: formidable.Fields;
   }> {
@@ -278,11 +280,11 @@ export class AdminService {
     mimetype: string | null;
   }): PutObjectCommand {
     const command = new PutObjectCommand({
-      Bucket: process.env.AWS_S3_BUCKET_NAME ?? 'barcelonasite', // @todo - this should be an env var one day!!!,
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: newFileKey,
       Body: blob,
       // @todo - we need to remove this when we resolve the DNS to the bucket and add a policy...
-      ACL: "public-read", // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/putobjectcommand.html
+      // ACL: "public-read", // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/putobjectcommand.html
       ContentType: mimetype ?? "image/jpeg",
       ContentLength: blob.length,
     });
