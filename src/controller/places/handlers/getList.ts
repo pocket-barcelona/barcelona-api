@@ -51,7 +51,7 @@ function orderByDistanceClosest(from: LatLng, records: PlaceInput[]) {
  * @param res
  * @returns
  */
-export default async function getList(req: Request<unknown, unknown, unknown, ReadExploreInput['body']>, res: Response) {
+export default async function getList(req: Request<any, any, any, ReadExploreInput['body']>, res: Response) {
   
   let records = await PlacesService.getList(req.body) as PlaceDocument[];
   

@@ -45,7 +45,7 @@ export class AdminService {
   }
 
   /** Get the POSTed file and field data and validate */
-  static async getFileUploadData(req: unknown): Promise<{
+  static async getFileUploadData(req: any): Promise<{
     formidableFile: formidable.File;
     fields: formidable.Fields;
   }> {
