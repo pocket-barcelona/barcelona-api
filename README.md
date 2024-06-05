@@ -120,7 +120,10 @@
   On AWS EC2 instance, they are stored here:
 
   ```sh
-  # /etc/environment
+  # /etc/profile
+  
+  # /etc/environment << NOTE, this doesn't seem to work so use profile!!!
+  # https://superuser.com/questions/664169/what-is-the-difference-between-etc-environment-and-etc-profile
   
   # Inside file:
   export AWS_S3_BUCKET=XXX
@@ -131,12 +134,14 @@
   Using vim:
 
   ```sh
-  sudo vim /etc/environment
+  sudo vim /etc/profile
   # File opens
   # You are in command mode. Hit "i" on keyboard for Insert mode
 
   # -- Make changes --
 
+  # Exit insert mode: Escape key
+  
   # Save changes by writing to the file
   # Write changes:
   # :w
