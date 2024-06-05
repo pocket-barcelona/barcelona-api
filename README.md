@@ -108,3 +108,48 @@
   2. Sync to S3: `npm run sync:images:thumb` (or all)
 
 </details>
+
+
+<details>
+  <summary>EC2 secrets</summary>
+
+  In the code we are accessing `process.env` variables (ex: `process.env.AWS_S3_BUCKET`).
+  
+  On Local dev they are in the .env file.
+  
+  On AWS EC2 instance, they are stored here:
+
+  ```sh
+  # /etc/environment
+  
+  # Inside file:
+  export AWS_S3_BUCKET=XXX
+  ...
+
+  ```
+
+  Using vim:
+
+  ```sh
+  sudo vim /etc/environment
+  # File opens
+  # You are in command mode. Hit "i" on keyboard for Insert mode
+
+  # -- Make changes --
+
+  # Save changes by writing to the file
+  # Write changes:
+  # :w
+  # Quit:
+  # :q
+
+  # Close without saving changes (from command mode)
+  # :q!
+
+  # There is also visual mode (v on keyboard)
+
+  ```
+  
+  > Note: Now you need to restart the service!
+
+</details>
