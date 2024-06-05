@@ -120,7 +120,8 @@ export class PlacesService {
    * @returns
    */
   static getPoster(place: PlaceDocument, size: ImageAssetsSize): string {
-    const base = process.env.AWS_S3_BUCKET;
+    // const base = process.env.AWS_S3_BUCKET; @todo - where the fuck is this variable on the instance?!!!
+    const base = 'https://cdn.pocketbarcelona.com'
     const noImagePoster = `${base}/app/places/images/avif/placeholder_${size}.avif`;
     if (!place.hasImage) return noImagePoster;
 

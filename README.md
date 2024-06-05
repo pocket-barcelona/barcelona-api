@@ -155,6 +155,94 @@
 
   ```
   
-  > Note: Now you need to restart the service!
+  > Note: Now you might need to restart the service!
 
+
+  ---
+
+  # Random shit which might one day help!
+
+  ## Environment Variables on Linux:
+
+  Open the AWS terminal on the instance:
+
+  ```sh
+  # List all exported vars
+  export -p
+  ```
+
+  ## See what environment vars are available to the node process running the API
+
+  ```sh
+  # show all processes running
+  ps faux
+  # find: ec2-user ... /usr/bin/node --experimental-specifier-resolution=node /home/ec2-user/barcel...
+
+  # Can also do this for the PID:
+  sudo systemctl status nodeapi
+
+  # Ex: process ID = 1837
+  ps faux | grep '1837'
+
+  # Show vars
+  cat /proc/1837/environ
+
+  # More readable - same as the above
+  strings /proc/1837/environ
+
+
+  # export a new one:
+  # use export FOO=BAR
+  export MY_ENV_VAR=https://cdn.pocketbarcelona.com
+
+  # view all exported vars: just run without args:
+  # export
+
+  # Also in:
+  /etc/profile.d/sh.local
+
+  ```
+
+  ```sh
+  # Random shit just in case!
+  
+  cat /etc/environment 
+  sudo vim /etc/profile
+  node --experimental-specifier-resolution=node src/app.js
+  sudo systemctl status nodeapi
+  pkill node
+  sudo pkill node
+  sudo systemctl start nodeapi
+  sudo systemctl status nodeapi
+  journalctl -u nodeapi.service
+  which node
+  sudo nano /lib/systemd/system/nodeapi.service
+  sudo systemctl enable nodeapi.service
+  sudo systemctl start nodeapi.service
+  sudo systemctl status nodeapi
+
+  journalctl -u nodeapi.service
+  sudo systemctl stop nodeapi.service
+  sudo systemctl star nodeapi.service
+  sudo systemctl start nodeapi.service
+  
+  curl localhost:3002/healthcheck
+  curl localhost:3002/healthcheck -v
+  ```
+  
+
+</details>
+
+<details>
+  <summary>Restart EC2 instance</summary>
+
+  From AWS -> EC2.
+  Instances: Reboot
+
+  Then, on EC2 console:
+
+  ```sh
+  sudo systemctl restart nodeapi.service
+  sudo systemctl status nodeapi
+  ```
 </details>
