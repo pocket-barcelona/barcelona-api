@@ -1,6 +1,6 @@
-import PlaceModel, { PlaceDocument } from "../../../models/place.model";
-import { Query, Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { ReadExploreInput } from '../../../schema/explore/explore.schema';
+import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
+import { Query, type Scan, type ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ReadExploreInput } from '../../../schema/explore/explore.schema';
 import { PriceBits, PriceEnum } from '../../../models/enums/price.enum';
 import { TimeRecommendedBits } from '../../../models/enums/timerecommended.enum';
 import { TimeOfDayBits } from '../../../models/enums/tod.enum';
@@ -50,6 +50,7 @@ export default async function (
     const teenagerSuitabilityIn = getBitwiseValue(body.teenagerSuitability, TeenagerBits);
     const requiresBookingIn = getBitwiseValue(body.requiresBooking, RequiresBookingBits);
 
+    // biome-ignore lint/complexity/noForEach: <explanation>
     [
       { field: PLACE_FILTER_FIELDS.price, value: priceIn },
       { field: PLACE_FILTER_FIELDS.timeRecommended, value: timeRecommendedIn },

@@ -1,5 +1,5 @@
-import EventModel, { EventDocument } from "../../../models/event.model";
-import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import EventModel, { type EventDocument } from "../../../models/event.model";
+import { Query, type ScanResponse } from "dynamoose/dist/DocumentRetriever";
 import logger from "../../../utils/logger";
 
 /**

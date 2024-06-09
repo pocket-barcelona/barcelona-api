@@ -1,5 +1,5 @@
-import BarrioModel, { BarrioDocument } from "../../../models/barrio.model";
-import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import BarrioModel, { type BarrioDocument } from "../../../models/barrio.model";
+import { Query, type ScanResponse } from "dynamoose/dist/DocumentRetriever";
 
 /**
  * Get a list of top-level barrios
