@@ -3,18 +3,18 @@
 // IF DOES NOT WORK:
 // node --experimental-specifier-resolution=node --loader ts-node/esm ./src/collections/googleplaces/googleplacesParser.ts
 
-import * as fs from "fs";
-import * as path from "path";
-import { GooglePlacesJsonType } from "./googleplacesJson.type";
-import { fileURLToPath } from 'url';
+import * as fs from "node:fs";
+import * as path from "node:path";
+import type { GooglePlacesJsonType } from "./googleplacesJson.type";
+import { fileURLToPath } from 'node:url';
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
-import { AWSError } from 'dynamoose/dist/aws/sdk';
-import { PoiInput, TABLE_NAME_POI } from "../../models/poi.model";
+import type { AWSError } from 'dynamoose/dist/aws/sdk';
+import { type PoiInput, TABLE_NAME_POI } from "../../models/poi.model";
 // import { CategoryIdEnum } from "../../models/enums/categoryid.enum";
 // import { RequiresBookingEnum } from "./../../models/enums/requiresbooking.enum";
 import urlSlug from 'url-slug'
-import { TimeOfDayEnum } from '../../models/enums/tod.enum';
+import type { TimeOfDayEnum } from '../../models/enums/tod.enum';
 
 // set AWS config for client
 AWS.config.update({
@@ -73,7 +73,7 @@ if (!rawData) {
   throw new Error('No data to add to the DB!');
 }
 
-const hasRecords = rawData && rawData.features && rawData.features.length > 0;
+const hasRecords = rawData?.features && rawData.features.length > 0;
 if (!hasRecords) {
   throw new Error('No data to insert');
 }
@@ -106,7 +106,7 @@ const mappedRecords = rawData.features
 
   const slug = getUrlSlug(nameWithoutDiacritics);
   return {
-    poiId: ('' + (mapIndex + 1)),
+    poiId: (`${mapIndex + 1}`),
     active: true,
     provinceId: 2, // logic here
     barrioId: 86, // logic here
@@ -122,8 +122,8 @@ const mappedRecords = rawData.features
     boost: 0,
     // requiresBooking: RequiresBookingEnum.No,
     requiresBooking: 1,
-    lat: parseFloat(r.properties.Location["Geo Coordinates"].Latitude),
-    lng: parseFloat(r.properties.Location["Geo Coordinates"].Longitude),
+    lat: Number.parseFloat(r.properties.Location["Geo Coordinates"].Latitude),
+    lng: Number.parseFloat(r.properties.Location["Geo Coordinates"].Longitude),
     latlngAccurate: r.geometry.type === 'Point',
     countryCode: r.properties.Location["Country Code"] || '',
     website: '',
@@ -157,34 +157,32 @@ const filteredRecords = mappedRecords
 
 if (filteredRecords.length <= 0) {
   throw new Error('Nothing to do!');
-} else {
-
-  // put the new records in the database...
-
-  console.log(`Importing ${filteredRecords.length} record/s into the DynamoDB inside table: ${TABLE_NAME_POI}. Please wait...`);
-
-  filteredRecords.forEach((theRecord, i) => {
-
-    setTimeout(() => {
-      
-      if (DRYRUN) {
-        // console.log('The record: ', theRecord.nameOfficial);
-        console.log('The record: ', theRecord);
-      } else {
-    
-        const params = {
-          TableName: TABLE_NAME_POI,
-          Item: {
-            ...theRecord
-          } as any,
-        };
-      
-        const dynamoService = new CustomDynamoService();
-        dynamoService.putRecord(params, theRecord);
-      }
-
-    }, STAGGER ? (STAGGER_DURATION * i) : 1);
-  
-  });
-
 }
+
+// put the new records in the database...
+
+console.log(`Importing ${filteredRecords.length} record/s into the DynamoDB inside table: ${TABLE_NAME_POI}. Please wait...`);
+
+filteredRecords.forEach((theRecord, i) => {
+
+  setTimeout(() => {
+    
+    if (DRYRUN) {
+      // console.log('The record: ', theRecord.nameOfficial);
+      console.log('The record: ', theRecord);
+    } else {
+  
+      const params = {
+        TableName: TABLE_NAME_POI,
+        Item: {
+          ...theRecord
+        } as any,
+      };
+    
+      const dynamoService = new CustomDynamoService();
+      dynamoService.putRecord(params, theRecord);
+    }
+
+  }, STAGGER ? (STAGGER_DURATION * i) : 1);
+
+});

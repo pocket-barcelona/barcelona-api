@@ -16,7 +16,7 @@ import type { TimeRecommendedEnum } from "./enums/timerecommended.enum";
 import type { TimeOfDayEnum } from "./enums/tod.enum";
 import type { EventInput } from "./event.model";
 import type { PlaceDocument, PlaceInput } from "./place.model";
-import type { PlanThemeEnum } from "./planThemes.model";
+import type { PlanThemeEnum } from "./planThemes";
 import type { PoiInput } from "./poi.model";
 
 /** The response of the structured plan */

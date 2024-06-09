@@ -1,6 +1,6 @@
 import { DrinkCategoryEnum } from '../../../models/enums/foodcategory.enum';
 import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
-import { StructuredPlanDayProfile, PlanThemeEnum } from '../../../models/planThemes.model';
+import { StructuredPlanDayProfile, PlanThemeEnum } from '../../../models/planThemes';
 
 const themes: StructuredPlanDayProfile[] = [
   {

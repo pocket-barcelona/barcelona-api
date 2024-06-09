@@ -2,7 +2,7 @@ import PlaceModel, { PlaceDocument } from "../../../models/place.model";
 import { Query, Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 import { PlanBuilderInput, StructuredPlanResponse } from "../../../models/plan.model";
 import { PlanHelper } from "./createStructuredPlan.helper";
-import { PlanThemeEnum, StructuredPlanDayProfile } from "../../../models/planThemes.model";
+import { PlanThemeEnum, StructuredPlanDayProfile } from "../../../models/planThemes";
 // import { themesTestData } from "../../../collections/themes/themesTestData";
 import { PoiDocument } from "../../../models/poi.model";
 // import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";

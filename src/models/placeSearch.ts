@@ -2,12 +2,12 @@ import type { PlaceDocument } from "./place.model";
 
 export type PlaceSearchDocument = Pick<
   PlaceDocument,
-  | "nameOfficial"
-  | "nameEnglish"
-  | "nameOfficialAccentless"
+  | "labelCat"
+  | "labelEsp"
+  | "labelEng"
   | "description"
   | "placeId"
-  | "urlSlug"
+  | "slug"
   | "tags"
   | "barrioId"
 >;

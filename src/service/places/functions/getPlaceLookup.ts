@@ -1,9 +1,8 @@
-import PlaceModel, { PlaceDocument } from "../../../models/place.model";
-import { Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import PlaceModel, { type PlaceInput, type PlaceDocument } from "../../../models/place.model";
+import type { Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 const DOCUMENT_SCAN_LIMIT = 1000;
 
-type FilterFields =
-  | "active";
+type FilterFields = keyof Pick<PlaceInput, 'active'>;
 type FilterFieldsType = keyof Pick<PlaceDocument, FilterFields>;
 
 const fields: Record<FilterFieldsType, FilterFieldsType> = {
@@ -16,9 +15,7 @@ const fields: Record<FilterFieldsType, FilterFieldsType> = {
  */
 export default async function (): Promise<ScanResponse<PlaceDocument> | null> {
   try {
-    let documents: Scan<PlaceDocument>;
-
-    documents = PlaceModel.scan()
+    const documents = PlaceModel.scan()
       .where(fields.active)
       .eq(true);
 

@@ -103,6 +103,7 @@ if (records && records.length > 0) {
   
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
+  // biome-ignore lint/complexity/noForEach: <explanation>
   mappedRecords
   .slice(1) // skip the header row!
   .forEach((theRecord) => {
