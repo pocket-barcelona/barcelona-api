@@ -1,4 +1,4 @@
-import EventModel, { EventDocument } from '../../../models/event.model';
+import EventModel, { type EventDocument } from '../../../models/event.model';
 
 /**
  * Get an event by ID

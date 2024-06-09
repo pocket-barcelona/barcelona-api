@@ -4,15 +4,15 @@
 // IF DOES NOT WORK:
 // node --experimental-specifier-resolution=node --loader ts-node/esm ./src/collections/categories/categoriesParser.ts
 
-import * as fs from "fs";
-import * as path from "path";
-import { CategoriesCsv } from "./categoriesCsv.type";
-import { fileURLToPath } from 'url';
-import { CategoryInput, TABLE_NAME_CATEGORY } from "../../models/category.model";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import type { CategoriesCsv } from "./categoriesCsv.type";
+import { fileURLToPath } from 'node:url';
+import { type CategoryInput, TABLE_NAME_CATEGORY } from "../../models/category.model";
 import { parse } from "csv-parse/sync";
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
-import { AWSError } from 'dynamoose/dist/aws/sdk';
+import type { AWSError } from 'dynamoose/dist/aws/sdk';
 
 // set AWS config for client
 AWS.config.update({
@@ -103,6 +103,7 @@ if (records && records.length > 0) {
   
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
+  // biome-ignore lint/complexity/noForEach: <explanation>
   mappedRecords
   .slice(1) // skip the header row!
   .forEach((theRecord) => {

@@ -1,6 +1,6 @@
 import { CategoryIdEnum } from '../../../models/enums/categoryid.enum';
 import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
-import { StructuredPlanDayProfile, PlanThemeEnum } from '../../../models/planThemes.model';
+import { StructuredPlanDayProfile, PlanThemeEnum } from '../../../models/planThemes';
 
 /** The barrio IDs of Raval, Gothic and Born respectively */
 export const CENTRAL_BARRIO_IDS = [11, 12, 13];

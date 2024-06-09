@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { type Express, type Request, type Response } from "express";
 import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
 import barriosRoutes from "./barrios";
 import placesRoutes from "./places";

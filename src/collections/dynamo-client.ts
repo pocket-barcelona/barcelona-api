@@ -1,6 +1,6 @@
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
-import { AWSError } from 'dynamoose/dist/aws/sdk';
+import type { AWSError } from 'dynamoose/dist/aws/sdk';
 
 // set AWS config for client
 AWS.config.update({

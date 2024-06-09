@@ -1,4 +1,4 @@
-import PlaceModel, { PlaceDocument } from "../../../models/place.model";
+import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
 import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 
 /**

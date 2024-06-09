@@ -1,6 +1,6 @@
-import BarrioModel, { BarrioDocument } from "../../../models/barrio.model";
-import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { ReadBarrioInput } from '../../../schema/barrio/barrio.schema';
+import BarrioModel, { type BarrioDocument } from "../../../models/barrio.model";
+import { Query, type ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ReadBarrioInput } from '../../../schema/barrio/barrio.schema';
 
 /**
  * Get a list of barrios - top-level or by barrio parent ID
@@ -14,7 +14,7 @@ export default async function (
 
     const documents = BarrioModel.scan();
 
-    if (queryParams && queryParams.regionId) {
+    if (queryParams?.regionId) {
       
       const parentId = Number(queryParams.regionId);
       documents.where(parentIdField).eq(parentId)

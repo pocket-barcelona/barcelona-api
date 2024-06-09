@@ -1,17 +1,17 @@
 import { Condition } from "dynamoose";
-import { Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 import {
   WALKING_DISTANCES,
 } from "../../../collections/themes/themesTestData";
 import { TimeOfDayEnum } from "../../../models/enums/tod.enum";
-import { PlaceDocument } from "../../../models/place.model";
-import { StructuredPlanResponse } from "../../../models/plan.model";
+import type { PlaceDocument } from "../../../models/place.model";
+import type { StructuredPlanResponse } from "../../../models/plan.model";
 import {
   PlanThemeEnum,
-  StructuredPlanDayProfile,
-  ThemeInputSpecs,
-} from "../../../models/planThemes.model";
-import PoiModel, { PoiDocument } from "../../../models/poi.model";
+  type StructuredPlanDayProfile,
+  type ThemeInputSpecs,
+} from "../../../models/planThemes";
+import PoiModel, { type PoiDocument } from "../../../models/poi.model";
 import { PlacesService } from "../../places/places.service";
 import { CENTRAL_BARRIO_IDS } from "../../../collections/themes/all/theme-category";
 import { sortByLngAsc, sortByLngDesc } from '../../places/utils';
@@ -30,9 +30,9 @@ export class PlanHelper {
    * Returns a random number between min (inclusive) and max (exclusive)
    * @url https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
    */
-  getRandomNumberFromTo(min: number, max: number): number {
-    min = Math.ceil(min);
-    max = Math.floor(max);
+  getRandomNumberFromTo(_min: number, _max: number): number {
+    const min = Math.ceil(_min);
+    const max = Math.floor(_max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
@@ -132,13 +132,13 @@ export class PlanHelper {
     // dayNumber: number,
     theme: StructuredPlanDayProfile,
     // results: ScanResponse<PlaceDocument>
-    results: PlaceDocument[],
+    places: PlaceDocument[],
     pois: PoiDocument[],
     numberOfDays: number,
     startEnd?: { from: number; to: number } | undefined
   ): StructuredPlanResponse {
     // augment place data
-    results = results.map(
+    let results = places.map(
       (r) => PlacesService.getMappedPlace(r) as PlaceDocument
     );
 
@@ -266,7 +266,7 @@ export class PlanHelper {
       // const firstPart = spl2[0].toString().trim();
       const token = spl2[1] || "";
 
-      const placeName = results[0].nameOfficial || "";
+      const placeName = results[0].labelCat || "";
       const regex = new RegExp(`{${token.toString().trim()}}`, "g");
       const replaced = name.replace(regex, placeName);
       return replaced;
@@ -376,7 +376,7 @@ export class PlanHelper {
     const hasDrinkCategories =
       Array.isArray(theme.drinkCategories) && theme.drinkCategories.length > 0; // more checks?
     const hasPhysicalLandmark =
-      theme.physicalLandmark === true || theme.physicalLandmark === false;
+      theme.isLandmark === true || theme.isLandmark === false;
     return {
       hasProvinceId,
       hasBarrioIds,
@@ -425,7 +425,7 @@ export class PlanHelper {
     const daytripField: keyof PlaceDocument = "daytrip";
     const availableDailyField: keyof PlaceDocument = "availableDaily";
     const availableSundaysField: keyof PlaceDocument = "availableSundays";
-    const physicalLandmarkField: keyof PlaceDocument = "physicalLandmark";
+    const isLandmarkField: keyof PlaceDocument = "isLandmark";
     const requiresBookingField: keyof PlaceDocument = "requiresBooking";
     const metroZoneField: keyof PlaceDocument = "metroZone";
     const latField: keyof PlaceDocument = "lat";
@@ -449,7 +449,7 @@ export class PlanHelper {
       daytripField,
       availableDailyField,
       availableSundaysField,
-      physicalLandmarkField,
+      isLandmarkField,
       requiresBookingField,
       metroZoneField,
       latField,
@@ -505,19 +505,21 @@ export class PlanHelper {
       // order so route comes towards BCN.
       // at the moment, just do lat asc/desc
       return places.sort(sortByLngDesc);
-    } else if (allInsideBcn) {
+    }
+
+    if (allInsideBcn) {
       // all inside BCN
 
       // check neighbourhoods here...
       // maybe do none-central neighbourhoods first, then do central one's last, or check home location
       return places.sort(sortByLngAsc);
-    } else {
-      // some inside and some outside. Put outside first, then order inside
-      const orderedOutside = placesOutsideBcn.sort(sortByLngDesc);
-      const orderedInside = placesInsideBcn.sort(sortByLngDesc);
-
-      return [...orderedOutside, ...orderedInside];
     }
+
+    // some inside and some outside. Put outside first, then order inside
+    const orderedOutside = placesOutsideBcn.sort(sortByLngDesc);
+    const orderedInside = placesInsideBcn.sort(sortByLngDesc);
+
+    return [...orderedOutside, ...orderedInside];
   };
 
   private sortResultSubset = (
@@ -543,8 +545,8 @@ export class PlanHelper {
         return Math.random() > 0.5 ? 1 : -1;
       }
 
-      const aVal: any = a[sortKey];
-      const bVal: any = b[sortKey];
+      const aVal: number | boolean | string = a[sortKey];
+      const bVal: number | boolean | string = b[sortKey];
       switch (valueType) {
         case "BOOLEAN":
           return aVal === true && bVal === false

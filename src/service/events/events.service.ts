@@ -1,7 +1,8 @@
-import { ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { EventDocument } from "../../models/event.model";
+import type { ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { EventDocument } from "../../models/event.model";
 import { getListHandler, getByIdHandler } from './functions';
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class EventsService {
 
   static getList = async (): Promise<ScanResponse<EventDocument> | null> => getListHandler();

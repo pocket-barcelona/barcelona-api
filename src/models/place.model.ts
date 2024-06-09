@@ -27,25 +27,27 @@ export interface PlaceInput {
   placeTown: string;
   /** The neighbourhood ID that this place is in. Note - there is a special ID for places outside of Barcelona which is 86 */
   barrioId: number;
-  /** The category ID for this place or activity. See Categories */
+  /** The category ID for this place. See Categories */
   categoryId: CategoryIdEnum;
-  /** The official name of the place or activity. Note: Could be in Catalan */
-  nameOfficial: string;
-  /** The official name of the place or activity, but without accents. Note: Could be in Catalan */
-  nameOfficialAccentless: string;
-  /** The name of the place or activity, in English. This label will most likely be used on the UI */
-  nameEnglish: string;
+  /** 0=Has no posterimage. 1=Has poster image */
+  hasImage: boolean;
+  /** The official name of the place */
+  labelCat: string;
+  /** The name of the place in Spanish */
+  labelEsp: string;
+  /** The name of the place in English */
+  labelEng: string;
   /**
-   * urlSlug is a URL-friendly version of the place name, without a slash
+   * slug is a URL-friendly version of the place name, without a slash
    */
-  urlSlug: string;
+  slug: string;
   /**
-   * Useful remarks about the place or activity
+   * Useful remarks about the place
    * Ex. There is an entrance fee to get into the castle but it includes entrance to the museum, too
    */
   remarks: string;
   /**
-   * A short description of the place or activity
+   * A short description of the place
    * Ex. A busy market for the local people of Barceloneta
    */
   description: string;
@@ -53,7 +55,7 @@ export interface PlaceInput {
   timeRecommended: TimeRecommendedEnum;
   /** The best time of day to visit */
   bestTod: TimeOfDayEnum;
-  /** The approximate level of commitment required to visit the place or activity (Scale is 1-5) */
+  /** The approximate level of commitment required to visit the place (Scale is 1-5) */
   commitmentRequired: CommitmentEnum;
   /**
    * The estimated price people could spend at this place or doing this activity
@@ -73,7 +75,9 @@ export interface PlaceInput {
   childrenSuitability: ChildrenEnum;
   /** The level of suitability for teenagers */
   teenagerSuitability: TeenagerEnum;
-  /** Whether or not the place is considered popular for tourists, by us. TRUE=Classic or well-known tourist attraction */
+  /** True if place is considered a tourist attraction */
+  touristAttraction: boolean;
+  /** @todo - make different to touristAttraction? Whether or not the place is considered popular for tourists, by us. TRUE=Classic or well-known tourist attraction */
   popular: boolean;
   /** A number between 0-100 in order to boost the place listing in search results. Values are normalised, so most places have zero */
   boost: number;
@@ -86,37 +90,36 @@ export interface PlaceInput {
   seasonal: boolean;
   /** 0=Can be done inside a day. 1=Probably requires a full day to do. 2=Requires more, ex. is outside the city */
   daytrip: number;
-  /** Place or activity is available on a daily basis? */
+  /** Place is available on a daily basis? */
   availableDaily: boolean;
-  /** Place or activity is available on a sunday? */
+  /** Place is available on a sunday? */
   availableSundays: boolean;
-  /** @todo - check original data as it contains 1,2,3 etc...! Place or activity is a physical landmark? */
-  physicalLandmark: boolean;
-  /** Place or activity requires booking?  */
+  /** Place requires booking?  */
   requiresBooking: RequiresBookingEnum;
-  /** The metro/train zone number for this place or activity, ex. 1, 2, 3... (applies to Barcelona only). -1 and -2 are outside of Barcelona */
+  /** The metro/train zone number for this place, ex. 1, 2, 3... (applies to Barcelona only). -1 and -2 are outside of Barcelona */
   metroZone: number;
-  /** If the lat/lng value is accurate, or not */
-  latlngAccurate: boolean;
+  /** @todo - check original data as it contains 1,2,3 etc...! Place is a physical landmark? */
+  isLandmark: boolean;
+  /** @todo */
+  isPhysicalLocation: number;
   /** The place latitude, like 41.37... */
   lat: number;
   /** The place longitude, like 2.19... */
   lng: number;
+  /** If the lat/lng value is accurate, or not */
+  latlngAccurate: boolean;
   /** The Google Maps recommended zoom. Default=0 (UI will decide), Number=zoom Ex. 18 */
-  zoom: number;
-  /** The official website for this place or activity */
+  mapZoom: number;
+  /** The official website for this place */
   website: string;
   /** 0=Does not have a related place. [ID]=The ID of the related place to this one */
   relatedPlaceId: number;
-  /** 0=Has no posterimage. 1=Has poster image */
-  hasImage: boolean;
   /** 1=Permission to use (taken by us). 0=From stock photo or open source location. -1=Not taken by us, not free to use */
-  imageOwnership: number;
+  photoOwnership: number;
   /** A list of tags to assist with searching places. Ex. beach,playa,platja */
   tags: string;
-  /** If true, this item's data requires checking as it may not be accurate */
-  requiresChecking: boolean;
   
+  // ADDITIONAL FIELDS
   images?: ImageAssets[];
   rating?: PlaceRating;
   province?: string;
@@ -156,19 +159,23 @@ const placeSchema = new dynamoose.Schema({
     type: Number,
     required: true,
   },
-  nameOfficial: {
+  hasImage: {
+    type: Boolean,
+    required: true,
+  },
+  labelCat: {
     type: String,
     required: true,
   },
-  nameOfficialAccentless: {
+  labelEsp: {
     type: String,
     required: true,
   },
-  nameEnglish: {
+  labelEng: {
     type: String,
     required: true,
   },
-  urlSlug: {
+  slug: {
     type: String,
     required: true,
   },
@@ -196,12 +203,20 @@ const placeSchema = new dynamoose.Schema({
     type: Number,
     required: true,
   },
+  freeToVisit: {
+    type: Number,
+    required: true,
+  },
   childrenSuitability: {
     type: Number,
     required: true,
   },
   teenagerSuitability: {
     type: Number,
+    required: true,
+  },
+  touristAttraction: {
+    type: Boolean,
     required: true,
   },
   popular: {
@@ -232,10 +247,6 @@ const placeSchema = new dynamoose.Schema({
     type: Boolean,
     required: true,
   },
-  physicalLandmark: {
-    type: Boolean,
-    required: true,
-  },
   requiresBooking: {
     type: Number,
     required: true,
@@ -244,8 +255,12 @@ const placeSchema = new dynamoose.Schema({
     type: Number,
     required: true,
   },
-  latlngAccurate: {
+  isLandmark: {
     type: Boolean,
+    required: true,
+  },
+  isPhysicalLocation: {
+    type: Number,
     required: true,
   },
   lat: {
@@ -256,7 +271,11 @@ const placeSchema = new dynamoose.Schema({
     type: Number,
     required: true,
   },
-  zoom: {
+  latlngAccurate: {
+    type: Boolean,
+    required: true,
+  },
+  mapZoom: {
     type: Number,
     required: true,
   },
@@ -268,22 +287,14 @@ const placeSchema = new dynamoose.Schema({
     type: Number,
     required: true,
   },
-  hasImage: {
-    type: Boolean,
-    required: true,
-  },
-  imageOwnership: {
+  photoOwnership: {
     type: Number,
     required: true,
   },
   tags: {
     type: String,
     required: true,
-  },
-  requiresChecking: {
-    type: Boolean,
-    required: true,
-  },
+  }
 }, {
   timestamps: true,
   saveUnknown: false,

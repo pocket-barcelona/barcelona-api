@@ -5,6 +5,7 @@ import { PlacesService } from "../../../service/places/places.service";
 import type { ReadExploreInput } from '../../../schema/explore/explore.schema';
 import { getDistance } from 'geolib';
 import type { PlaceDocument, PlaceInput } from '../../../models/place.model';
+import { ScanResponse } from 'dynamoose/dist/DocumentRetriever';
 
 const DEFAULT_PER_PAGE = 10;
 const MAX_PER_PAGE = 100;
@@ -53,7 +54,7 @@ function orderByDistanceClosest(from: LatLng, records: PlaceInput[]) {
  */
 export default async function getList(req: Request<any, any, any, ReadExploreInput['body']>, res: Response) {
   
-  let records = await PlacesService.getList(req.body) as PlaceDocument[];
+  let records = await PlacesService.getList(req.body);
   
   if (!records) {
     return res
@@ -70,11 +71,11 @@ export default async function getList(req: Request<any, any, any, ReadExploreInp
       const tagsList = d.tags.split(',').filter(t => t);
       if (!tagsList.includes(tag)) return false;
       return true;
-    });
+    }) as any;
   }
 
   // augment data with extra info
-  let mappedRecords = PlacesService.getMappedPlaceDocuments(records);
+  let mappedRecords = PlacesService.getMappedPlaceDocuments(records as any);
 
   // do ordering here...
   if (req.body?.poi) {

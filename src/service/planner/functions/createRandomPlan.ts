@@ -1,11 +1,11 @@
-import PlaceModel, { PlaceDocument } from "../../../models/place.model";
-import { StructuredPlanResponse } from "../../../models/plan.model";
+import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
+import type { StructuredPlanResponse } from "../../../models/plan.model";
 // import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
-import { Query, Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import { Query, type Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 import { PlanHelper } from "./createStructuredPlan.helper";
-import { PlanThemeEnum, StructuredPlanDayProfile } from "../../../models/planThemes.model";
+import { PlanThemeEnum, type StructuredPlanDayProfile } from "../../../models/planThemes";
 import { themesTestData } from "../../../collections/themes/themesTestData";
-import { PoiDocument } from "../../../models/poi.model";
+import type { PoiDocument } from "../../../models/poi.model";
 import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
 
 const DOCUMENT_SCAN_LIMIT = 2500;
@@ -28,7 +28,7 @@ const seasonalField: keyof PlaceDocument = "seasonal";
 const daytripField: keyof PlaceDocument = "daytrip";
 const availableDailyField: keyof PlaceDocument = "availableDaily";
 const availableSundaysField: keyof PlaceDocument = "availableSundays";
-const physicalLandmarkField: keyof PlaceDocument = "physicalLandmark";
+const isLandmarkField: keyof PlaceDocument = "isLandmark";
 const requiresBookingField: keyof PlaceDocument = "requiresBooking";
 const metroZoneField: keyof PlaceDocument = "metroZone";
 const latField: keyof PlaceDocument = "lat";
@@ -288,7 +288,7 @@ export default async function (): Promise<StructuredPlanResponse | null> {
         .in(theme.requiresBookingOptions);
     }
     if (hasPhysicalLandmark) {
-      documents.and().where(physicalLandmarkField).in(theme.physicalLandmark);
+      documents.and().where(isLandmarkField).in(theme.isLandmark);
     }
 
     // if (hasExcludePlaceIds) {

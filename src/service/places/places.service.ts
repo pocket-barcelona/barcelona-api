@@ -12,8 +12,8 @@ import type { CategoryDocument } from "../../models/category.model";
 import type { ImageAssetsSize } from "../../models/imageAssets";
 import type { ReadPlaceInput } from "../../schema/place/place.schema";
 import type { ReadExploreInput } from "../../schema/explore/explore.schema";
-import type { PlaceSearchDocument } from "../../models/place-search.model";
-import type { PlaceLookupDocument } from "../../models/place-lookup.model";
+import type { PlaceSearchDocument } from "../../models/placeSearch";
+import type { PlaceLookupDocument } from "../../models/placeLookup";
 // import 'dotenv/config'; // support for dotenv injecting into the process env
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
@@ -90,11 +90,11 @@ export class PlacesService {
     return places.map((place) => {
       return {
         placeId: place.placeId,
-        nameEnglish: place.nameEnglish,
-        nameOfficial: place.nameOfficial,
-        nameOfficialAccentless: place.nameOfficialAccentless,
+        labelEng: place.labelEng,
+        labelCat: place.labelCat,
+        labelEsp: place.labelEsp,
         description: place.description || "",
-        urlSlug: place.urlSlug,
+        slug: place.slug,
         tags: place.tags,
         barrioId: place.barrioId,
       };
@@ -108,7 +108,7 @@ export class PlacesService {
     return places.map((place) => {
       return {
         placeId: place.placeId,
-        nameOfficial: place.nameOfficial,
+        labelCat: place.labelCat,
       };
     });
   };

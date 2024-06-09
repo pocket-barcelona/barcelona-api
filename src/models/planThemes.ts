@@ -10,10 +10,10 @@ import type { TimeOfDayEnum } from './enums/tod.enum';
 
 
 // the keys from the place model
-type PlaceKeys = 'annualOnly' | 'bestTod' | 'commitmentRequired' | 'childrenSuitability' |
-'daytrip' | 'freeToVisit' | 'lat' | 'lng' | 'metroZone' | 'physicalLandmark' | 'placeId' |
+type PlaceKeys = keyof Pick<PlaceInput, 'annualOnly' | 'bestTod' | 'commitmentRequired' | 'childrenSuitability' |
+'daytrip' | 'freeToVisit' | 'lat' | 'lng' | 'metroZone' | 'isLandmark' | 'placeId' |
 'popular' | 'provinceId' | 'relatedPlaceId' | 'seasonal' |
-'teenagerSuitability' | 'tags';
+'teenagerSuitability' | 'tags'>;
 
 // the picked props from the place model
 type PlaceAttributes = Pick<PlaceInput, PlaceKeys>;

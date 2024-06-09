@@ -1,7 +1,7 @@
 import { CategoryIdEnum } from '../../../models/enums/categoryid.enum';
 import { FoodCategoryEnum } from '../../../models/enums/foodcategory.enum';
 import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
-import { PlanThemeEnum, StructuredPlanDayProfile } from '../../../models/planThemes.model';
+import { PlanThemeEnum, type StructuredPlanDayProfile } from '../../../models/planThemes';
 
 const themes: StructuredPlanDayProfile[] = [
   {
@@ -26,7 +26,7 @@ const themes: StructuredPlanDayProfile[] = [
     name: "Top 5 Sea Viewpoints", // change to Incredible not Top?
     categoryIds: [CategoryIdEnum.Viewpoints],
     limit: 5,
-    physicalLandmark: true,
+    isLandmark: true,
     // placeIds: [],
   },
   {
@@ -55,7 +55,7 @@ const themes: StructuredPlanDayProfile[] = [
       }
     ],
     limit: 1,
-    physicalLandmark: true,
+    isLandmark: true,
   },
   { // untested
     id: 304,
@@ -71,7 +71,7 @@ const themes: StructuredPlanDayProfile[] = [
       }
     ],
     limit: 3,
-    physicalLandmark: true,
+    isLandmark: true,
   },
   { // untested
     id: 305,
@@ -87,7 +87,7 @@ const themes: StructuredPlanDayProfile[] = [
       }
     ],
     limit: 1,
-    physicalLandmark: true,
+    isLandmark: true,
   },
 ];
 export default themes;

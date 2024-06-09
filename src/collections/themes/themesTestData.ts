@@ -1,4 +1,4 @@
-import { StructuredPlanDayProfile } from "../../models/planThemes.model";
+import { StructuredPlanDayProfile } from "../../models/planThemes";
 import {
   ThemesBestOf,
   ThemesCategory,

@@ -45,11 +45,11 @@ export class AdminService {
   }
 
   /** Get the POSTed file and field data and validate */
-  static async getFileUploadData(req: any): Promise<{
+  static async getFileUploadData(req: unknown): Promise<{
     formidableFile: formidable.File;
     fields: formidable.Fields;
   }> {
-    const { files, fields } = await AdminService.parseFile(req);
+    const { files, fields } = await AdminService.parseFile(req as any);
     // const file = fs.createReadStream(formidableFile.filepath);
     // get the file
     const formidableFile = Array.isArray(files.file)
@@ -168,6 +168,7 @@ export class AdminService {
       } catch (err) {
         // console.error(err);
       }
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     } catch (err: any) {
       throw new Error(err);
       // nothing

@@ -5,7 +5,7 @@ import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
 import {
   PlanThemeEnum,
   StructuredPlanDayProfile,
-} from "../../../models/planThemes.model";
+} from "../../../models/planThemes";
 import { CENTRAL_BARRIO_IDS } from './theme-category';
 
 const themes: StructuredPlanDayProfile[] = [

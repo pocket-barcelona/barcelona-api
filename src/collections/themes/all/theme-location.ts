@@ -1,7 +1,7 @@
 import {
   PlanThemeEnum,
   StructuredPlanDayProfile,
-} from "../../../models/planThemes.model";
+} from "../../../models/planThemes";
 import { FoodCategoryEnum } from "../../../models/enums/foodcategory.enum";
 import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
 import { CategoryIdEnum } from '../../../models/enums/categoryid.enum';

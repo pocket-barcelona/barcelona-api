@@ -6,9 +6,9 @@ import { RequiresBookingEnum } from "../models/enums/requiresbooking.enum";
 import { TeenagerEnum } from "../models/enums/teenager.enum";
 import { TimeRecommendedEnum } from "../models/enums/timerecommended.enum";
 import { TimeOfDayEnum } from "../models/enums/tod.enum";
-import { PlaceInput } from "../models/place.model";
-import { PlanBuilderInput, StructuredPlanResponse } from "../models/plan.model";
-import { PlanThemeEnum } from "../models/planThemes.model";
+import type { PlaceInput } from "../models/place.model";
+import { type PlanBuilderInput, StructuredPlanResponse } from "../models/plan.model";
+import { PlanThemeEnum } from "../models/planThemes";
 
 /** A Fake input for creating a structured plan */
 export const TEST_INPUT_PLAN_1: PlanBuilderInput = {
@@ -37,10 +37,10 @@ const TEST_PLACE: PlaceInput = {
   placeTown: "Barcelona",
   barrioId: 13,
   categoryId: CategoryIdEnum.Buildings,
-  nameOfficial: "Arc De Triomf",
-  nameOfficialAccentless: "Arc De Triomf",
-  nameEnglish: "Arc De Triomf",
-  urlSlug: "arc-de-triomf",
+  labelCat: "Arc De Triomf",
+  labelEsp: "Arc De Triomf",
+  labelEng: "Arc De Triomf",
+  slug: "arc-de-triomf",
   remarks: "",
   description: "A monumental archway near to El Born and the city park",
   timeRecommended: TimeRecommendedEnum.CoupleOfHours,
@@ -50,6 +50,7 @@ const TEST_PLACE: PlaceInput = {
   freeToVisit: 0,
   childrenSuitability: ChildrenEnum.Suitable,
   teenagerSuitability: TeenagerEnum.Recommended,
+  touristAttraction: false,
   popular: true,
   boost: 0,
   annualOnly: false,
@@ -57,19 +58,19 @@ const TEST_PLACE: PlaceInput = {
   daytrip: 0,
   availableDaily: true,
   availableSundays: true,
-  physicalLandmark: true,
+  isLandmark: true,
+  isPhysicalLocation: 1,
   requiresBooking: RequiresBookingEnum.No,
   metroZone: 1,
   latlngAccurate: true,
   lat: 41.391055,
   lng: 2.180644,
-  zoom: 0,
+  mapZoom: 0,
   website: "",
   relatedPlaceId: 0,
   hasImage: true,
-  imageOwnership: 1,
+  photoOwnership: 1,
   tags: "arc",
-  requiresChecking: false,
 };
 
 // export const TEST_RESPONSE_PLAN_1: StructuredPlanResponse = {

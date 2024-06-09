@@ -1,6 +1,6 @@
-import PlaceModel, { PlaceDocument } from "../../../models/place.model";
-import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { ReadPlaceInput } from '../../../schema/place/place.schema';
+import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
+import { Query, type ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ReadPlaceInput } from '../../../schema/place/place.schema';
 
 /**
  * Get a list of places related to this place ID

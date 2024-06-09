@@ -1,17 +1,18 @@
 // https://csv.js.org/parse/api/sync/
 // RUN this from the project root
 // node --loader ts-node/esm ./src/collections/events/eventsParser.ts
+// IF DOES NOT WORK:
+// node --experimental-specifier-resolution=node --loader ts-node/esm ./src/collections/events/eventsParser.ts
 
-
-import * as fs from "fs";
-import * as path from "path";
-import { EventsCsv } from "./eventsCsv.type";
-import { fileURLToPath } from 'url';
-import { EventInput, TABLE_NAME_EVENTS } from "../../models/event.model";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import type { EventsCsv } from "./eventsCsv.type";
+import { fileURLToPath } from 'node:url';
+import { type EventInput, TABLE_NAME_EVENTS } from "../../models/event.model";
 import { parse } from "csv-parse/sync";
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
-import { AWSError } from 'dynamoose/dist/aws/sdk';
+import type { AWSError } from 'dynamoose/dist/aws/sdk';
 
 // set AWS config for client
 AWS.config.update({
@@ -27,7 +28,7 @@ class CustomDynamoService {
   public putRecord<TRecord extends AWS.DynamoDB.DocumentClient.PutItemInput = any>(params: {
     TableName: string;
     Item: TRecord;
-  }, theRecord: TRecord, callback?: (err: AWSError, data: any) => any) {
+  }, theRecord: TRecord, callback?: (err: AWSError, data: EventInput) => any) {
     
     docClient.put(params, (err, data) => {
       if (err) {
@@ -57,7 +58,7 @@ const csvFilePath = path.resolve(csvFile);
 const fileContent = fs.readFileSync(csvFilePath, { encoding: 'utf-8' });
 
 
-const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
+const parserService = <T>(fileContent: string, csvHeaders: string[]) => {
   // init output
   let records: T[] = [];
 
@@ -110,6 +111,7 @@ if (records && records.length > 0) {
   
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
+  // biome-ignore lint/complexity/noForEach: <explanation>
   mappedRecords
   .slice(1) // skip the header row!
   .forEach((theRecord) => {

@@ -1,6 +1,7 @@
-import { PlaceDocument } from "../../models/place.model";
+import type { PlaceDocument } from "../../models/place.model";
 
-type FilterFields =
+type FilterFields = keyof Pick<
+  PlaceDocument,
   | "active"
   | "placeId"
   | "provinceId"
@@ -18,13 +19,14 @@ type FilterFields =
   | "seasonal"
   | "availableDaily"
   | "availableSundays"
-  | "physicalLandmark"
+  | "isLandmark"
   | "requiresBooking"
   | "metroZone"
   | "hasImage"
   | "placeTown"
   | "daytrip"
-  | "tags";
+  | "tags"
+>;
 type FilterFieldsType = keyof Pick<PlaceDocument, FilterFields>;
 
 export const PLACE_FILTER_FIELDS: Record<FilterFieldsType, FilterFieldsType> = {
@@ -40,7 +42,7 @@ export const PLACE_FILTER_FIELDS: Record<FilterFieldsType, FilterFieldsType> = {
   daytrip: "daytrip",
   hasImage: "hasImage",
   metroZone: "metroZone",
-  physicalLandmark: "physicalLandmark",
+  isLandmark: "isLandmark",
   placeId: "placeId",
   placeTown: "placeTown",
   popular: "popular",
@@ -151,16 +153,16 @@ export function standardDeviation(arr: number[]): {
     }, 0) / arr.length;
 
   // Assigning (value - mean) ^ 2 to every array item
-  arr = arr.map((k) => {
+  const arr2 = arr.map((k) => {
     return (k - mean) ** 2;
   });
 
   // Calculating the sum of updated array
-  let sum = arr.reduce((acc, curr) => acc + curr, 0);
+  const sum = arr2.reduce((acc, curr) => acc + curr, 0);
 
   // Calculating the variance
-  const variance = sum / arr.length;
-  const stdDev = Math.sqrt(sum / arr.length);
+  const variance = sum / arr2.length;
+  const stdDev = Math.sqrt(sum / arr2.length);
   // Returning the standard deviation
   return {
     stdDev,
