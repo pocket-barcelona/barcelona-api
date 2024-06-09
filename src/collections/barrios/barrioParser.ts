@@ -5,15 +5,15 @@
 // node --experimental-specifier-resolution=node --loader ts-node/esm ./src/collections/barrios/barrioParser.ts
 // https://stackoverflow.com/questions/63742790/unable-to-import-esm-ts-module-in-node/65163089#65163089
 // ALSO COULD LOOK INTO: --transpile-only then run the JS file: Seee "Usage" headline https://www.npmjs.com/package/ts-node#installation
-import * as fs from "fs";
-import * as path from "path";
-import { BarrioCsv } from "./barrioCsv.type";
-import { fileURLToPath } from 'url';
-import { BarrioInput, TABLE_NAME_BARRIOS } from "../../models/barrio.model";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import type { BarrioCsv } from "./barrioCsv.type";
+import { fileURLToPath } from 'node:url';
+import { type BarrioInput, TABLE_NAME_BARRIOS } from "../../models/barrio.model";
 import { parse } from "csv-parse/sync";
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import AWS from "aws-sdk";
-import { AWSError } from 'dynamoose/dist/aws/sdk';
+import type { AWSError } from 'dynamoose/dist/aws/sdk';
 
 // set AWS config for client
 AWS.config.update({
@@ -29,7 +29,7 @@ class CustomDynamoService {
   public putRecord<TRecord extends AWS.DynamoDB.DocumentClient.PutItemInput = any>(params: {
     TableName: string;
     Item: TRecord;
-  }, theRecord: TRecord, callback?: (err: AWSError, data: any) => any) {
+  }, theRecord: TRecord, callback?: (err: AWSError, data: BarrioInput) => any) {
     
     docClient.put(params, (err, data) => {
       if (err) {
@@ -59,7 +59,7 @@ const csvFilePath = path.resolve(csvFile);
 const fileContent = fs.readFileSync(csvFilePath, { encoding: 'utf-8' });
 
 
-const parserService = function<T>(fileContent: string, csvHeaders: string[]) {
+const parserService = <T>(fileContent: string, csvHeaders: string[]) => {
   // init output
   let records: T[] = [];
 
@@ -107,6 +107,7 @@ if (records && records.length > 0) {
   
   // perform PUT operation for each document
   // Warning: running this multiple times will overwrite existing items by ID!
+  // biome-ignore lint/complexity/noForEach: <explanation>
   mappedRecords
   .slice(1) // skip the header row!
   .forEach((theRecord) => {
