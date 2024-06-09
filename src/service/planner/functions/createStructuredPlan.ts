@@ -1,10 +1,10 @@
-import PlaceModel, { PlaceDocument } from "../../../models/place.model";
-import { Query, Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { PlanBuilderInput, StructuredPlanResponse } from "../../../models/plan.model";
+import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
+import { Query, type Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { PlanBuilderInput, StructuredPlanResponse } from "../../../models/plan.model";
 import { PlanHelper } from "./createStructuredPlan.helper";
-import { PlanThemeEnum, StructuredPlanDayProfile } from "../../../models/planThemes";
+import { PlanThemeEnum, type StructuredPlanDayProfile } from "../../../models/planThemes";
 // import { themesTestData } from "../../../collections/themes/themesTestData";
-import { PoiDocument } from "../../../models/poi.model";
+import type { PoiDocument } from "../../../models/poi.model";
 // import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
 import { RequiresBookingEnum } from '../../../models/enums/requiresbooking.enum';
 import { CommitmentEnum } from '../../../models/enums/commitment.enum';
@@ -57,7 +57,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     daytripField,
     availableDailyField,
     availableSundaysField,
-    physicalLandmarkField,
+    isLandmarkField,
     requiresBookingField,
     metroZoneField,
     latField,
@@ -66,7 +66,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 
   const oneDayMs = 60*60*24*1000;
   const tomorrowTimestamp = new Date().getTime() + oneDayMs;
-  const hasDates = input.travelDates && input.travelDates.from && input.travelDates.to ? input.travelDates : null;
+  const hasDates = input.travelDates?.from && input.travelDates.to ? input.travelDates : null;
   const theme: StructuredPlanDayProfile = {
     id: 0,
     themeTod: TimeOfDayEnum.Both, // check hour now...
@@ -99,7 +99,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
   today.setMilliseconds(0);
   
   let travelDate: Date = new Date();
-  if (input.travelDates && input.travelDates.from) {
+  if (input.travelDates?.from) {
     travelDate = new Date(input.travelDates.from);
   }
   travelDate.setHours(8);
@@ -125,7 +125,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
     // remove partially available things
     documents.and().where(availableDailyField).eq(true);
     // remove non-landmarks
-    documents.and().where(physicalLandmarkField).eq(true);
+    documents.and().where(isLandmarkField).eq(true);
     
     // include sunday items if it's sunday today
     if (today.getDay() === 0) {

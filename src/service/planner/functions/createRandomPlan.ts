@@ -28,7 +28,7 @@ const seasonalField: keyof PlaceDocument = "seasonal";
 const daytripField: keyof PlaceDocument = "daytrip";
 const availableDailyField: keyof PlaceDocument = "availableDaily";
 const availableSundaysField: keyof PlaceDocument = "availableSundays";
-const physicalLandmarkField: keyof PlaceDocument = "physicalLandmark";
+const isLandmarkField: keyof PlaceDocument = "isLandmark";
 const requiresBookingField: keyof PlaceDocument = "requiresBooking";
 const metroZoneField: keyof PlaceDocument = "metroZone";
 const latField: keyof PlaceDocument = "lat";
@@ -288,7 +288,7 @@ export default async function (): Promise<StructuredPlanResponse | null> {
         .in(theme.requiresBookingOptions);
     }
     if (hasPhysicalLandmark) {
-      documents.and().where(physicalLandmarkField).in(theme.isLandmark);
+      documents.and().where(isLandmarkField).in(theme.isLandmark);
     }
 
     // if (hasExcludePlaceIds) {

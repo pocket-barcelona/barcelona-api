@@ -545,8 +545,8 @@ export class PlanHelper {
         return Math.random() > 0.5 ? 1 : -1;
       }
 
-      const aVal: any = a[sortKey];
-      const bVal: any = b[sortKey];
+      const aVal: number | boolean | string = a[sortKey];
+      const bVal: number | boolean | string = b[sortKey];
       switch (valueType) {
         case "BOOLEAN":
           return aVal === true && bVal === false
