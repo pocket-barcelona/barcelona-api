@@ -55,7 +55,7 @@ async function saveCredentials(client: OAuth2Client) {
  *
  */
 async function authorize() {
-  console.log('Authorize');
+  console.log('Authorizing...');
   const client = await loadSavedCredentialsIfExist();
   if (client) {
     return client;
@@ -96,8 +96,21 @@ async function listEvents(auth: any) {
   });
 }
 
+async function listCalendars(auth: any) {
+  const calendar = google.calendar({ version: "v3", auth });
+  const res = await calendar.calendarList.list();
+  
+  const calendars = res.data.items;
+  if (!calendars || calendars.length === 0) {
+    console.log("No calendars found.");
+    return;
+  }
+  console.log("Calendars:");
+  calendars.map((calendar, i) => {
+    console.log(`${calendar.summary ?? 'NO summary found'} - ${calendar.id}`);
+  });
+}
 
-authorize().then(listEvents).catch(console.error);
-// authorize().then(resp => {
-//   console.log(resp);
-// }).catch(console.error);
+
+authorize().then(listCalendars).catch(console.error);
+// authorize().then(listEvents).catch(console.error);
