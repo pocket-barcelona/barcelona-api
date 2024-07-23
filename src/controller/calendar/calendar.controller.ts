@@ -8,4 +8,6 @@ export class CalendarController {
   static getListHandler = (req: Request, res: Response) => getList(req, res);
 
   static getByIdHandler = (req: Request<ReadCalendarEventInput['params']>, res: Response) => getById(req, res);
+
+  static syncAllHandler = (req: Request, res: Response) => getList(req, res);
 }

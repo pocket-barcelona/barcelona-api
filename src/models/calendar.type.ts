@@ -1,3 +1,5 @@
+import type { calendar_v3 } from "googleapis";
+
 export type CalendarEvent = {
   /** Internal Unique ID for the event from Google Sheets. Ex: 1, 2, 3 */
   id: string;
@@ -49,7 +51,9 @@ export type CalendarEventDirectus = {
   event_notes: null | string;
 };
 
-export function mapHeadlessCalendarItem(item: CalendarEventDirectus): CalendarEvent {
+export function mapHeadlessCalendarItem(
+  item: CalendarEventDirectus
+): CalendarEvent {
   return {
     id: item.id,
     uuid: item.uuid,
@@ -65,9 +69,62 @@ export function mapHeadlessCalendarItem(item: CalendarEventDirectus): CalendarEv
     locationAccuracy: item.location_accuracy,
     isInBarcelona: item.is_in_barcelona,
     url: item.url,
-    eventNotes: item.event_notes ?? '',
+    eventNotes: item.event_notes ?? "",
   };
 }
+
+/** Convert our event structure into a Google Calendar event */
+export function mapToGoogleCalendarEvent(
+  item: CalendarEvent
+): calendar_v3.Schema$Event {
+  if (!item.uuid) {
+    throw new Error("Missing internal UUID for Google Calendar event");
+  }
+  const event: calendar_v3.Schema$Event = {
+    summary: item.eventName,
+    location: item.location, // @todo - does Google need this to be an actual location? Use LAT/LNG here
+    description: buildCalendarDescription(item),
+    start: {
+      dateTime: item.dateStart, // "2024-08-15T09:00:00+02:00"
+      timeZone: "Europe/Madrid",
+    },
+    end: {
+      dateTime: item.dateEnd, // "2024-08-21T21:00:00+02:00"
+      timeZone: "Europe/Madrid",
+    },
+    guestsCanInviteOthers: false,
+    guestsCanModify: false,
+    guestsCanSeeOtherGuests: false,
+    creator: {
+      displayName: 'Pocket Barcelona',
+      email: 'info@pocketbarcelona.com',
+    },
+    iCalUID: item.uuid, // Tell Google to use our ID, so that we don't get an automatic one! Will be used to update against later
+  };
+  return event;
+}
+
+
+function buildCalendarDescription(event: CalendarEvent) {
+  // Build this:
+  // ----------------
+  // Event type
+  // URL (if exists)
+
+  // Notes from sheet
+  // ----------------
+  let description = '';
+  
+  description += `Event type: ${event.eventType}`;
+  if (event.url) {
+    description += `\nURL: ${event.url}`;
+  }
+  if (event.eventNotes) {
+    description += `\n\nNotes: ${event.eventNotes}`;
+  }
+  return description;
+}
+
 
 // @todo - use directus-sdk?
 export interface DirectusResponse<T> {

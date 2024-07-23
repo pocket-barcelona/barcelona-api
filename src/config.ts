@@ -4,6 +4,7 @@ export const config = {
   BRAND_NAME: "Pocket Barcelona",
   EMAIL_NOREPLY: "noreply@pocketbarcelona.com",
   HEADLESS_STUB: "https://content.pocketbarcelona.com", // Directus base URL
+  POCKET_BARCELONA_CALENDAR_ID: "c_3c69c11b6d6975697418e1f928a6fef20f0bb4202b340bb3f9130425b241de1d@group.calendar.google.com",
   port: 3002,
   saltWorkFactor: 10,
   
