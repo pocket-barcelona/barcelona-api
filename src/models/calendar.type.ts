@@ -1,0 +1,75 @@
+export type CalendarEvent = {
+  /** Internal Unique ID for the event from Google Sheets. Ex: 1, 2, 3 */
+  id: string;
+  /** Internal unique UUID for the event from Google Sheets */
+  uuid: string;
+  /** Like 2024-01-14 */
+  dateStart: string;
+  /** The official ending date for the event. Like 2024-01-14 */
+  dateEnd: string;
+  /** Event type is like: Festa Major or Open Day / Weekend or Music Festival, etc */
+  eventType: string;
+  /** Whether or not the event recurs, e.g. next year */
+  eventRecurs: boolean;
+  /** The name of the event, in English */
+  eventName: string;
+  /** URL friendly pathname, like: `festa-major-de-sant-antoni-2022` */
+  slug: string;
+  /** The exact or approximate location of the event */
+  location: string;
+  /** Event lat */
+  lat: number;
+  /** Event lng */
+  lng: number;
+  /** 1 = Location is accurate to LAT/LNG. 2 = Location is accurate to Neighbourhood. 3 = Location is accurate to City */
+  locationAccuracy: 1 | 2 | 3;
+  /** True if is in BCN */
+  isInBarcelona: boolean;
+  /** The official website or URL for the event */
+  url: string;
+  /** Optional notes or remarks about the event */
+  eventNotes: string;
+};
+
+export type CalendarEventDirectus = {
+  id: string;
+  uuid: string;
+  date_start: string;
+  date_end: string;
+  event_type: string;
+  event_recurs: boolean;
+  event_name: string;
+  slug: string;
+  location: string;
+  lat: number;
+  lng: number;
+  location_accuracy: 1 | 2 | 3;
+  is_in_barcelona: boolean;
+  url: string;
+  event_notes: null | string;
+};
+
+export function mapHeadlessCalendarItem(item: CalendarEventDirectus): CalendarEvent {
+  return {
+    id: item.id,
+    uuid: item.uuid,
+    dateStart: item.date_start,
+    dateEnd: item.date_end,
+    eventType: item.event_type,
+    eventRecurs: item.event_recurs,
+    eventName: item.event_name,
+    slug: item.slug,
+    location: item.location,
+    lat: item.lat,
+    lng: item.lng,
+    locationAccuracy: item.location_accuracy,
+    isInBarcelona: item.is_in_barcelona,
+    url: item.url,
+    eventNotes: item.event_notes ?? '',
+  };
+}
+
+// @todo - use directus-sdk?
+export interface DirectusResponse<T> {
+  data: T;
+}
