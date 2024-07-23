@@ -12,7 +12,11 @@ import "dotenv/config"; // support for dotenv injecting into the process env
 import type { OAuth2Client } from 'google-auth-library';
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+const SCOPES = [
+  "https://www.googleapis.com/auth/calendar.readonly",
+  "https://www.googleapis.com/auth/calendar",
+  "https://www.googleapis.com/auth/calendar.events"
+];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first time.
 const TOKEN_PATH = path.join(process.cwd(), "token.json");
@@ -115,8 +119,28 @@ async function listEvents(auth: any) {
   });
 }
 
-async function insertEvent(auth: any) {
+async function insertEvent(auth: any, event: calendar_v3.Schema$Event): Promise<void> {
   const calendar = google.calendar({ version: "v3", auth });
+  calendar.events.insert(
+    {
+      calendarId: POCKET_BARCELONA_CALENDAR_ID,
+      requestBody: event,
+    },
+    (err, res) => {
+      if (err) {
+        console.log(`The API returned an error: ${err}`);
+        return;
+      }
+      console.log("Event created: %s", res?.data.id);
+      return res?.data;
+    }
+  );
+}
+
+
+// authorize().then(listCalendars).catch(console.error);
+// authorize().then(listEvents).catch(console.error);
+authorize().then(authResp => {
   const event: calendar_v3.Schema$Event = {
     summary: "Gràcia Festival 2024",
     location: "Gràcia, Barcelona",
@@ -128,25 +152,13 @@ async function insertEvent(auth: any) {
     end: {
       dateTime: "2024-08-21T21:00:00+02:00",
       timeZone: "Europe/Madrid",
-    }
-  };
-
-  calendar.events.insert(
-    {
-      calendarId: POCKET_BARCELONA_CALENDAR_ID,
-      requestBody: event,
     },
-    (err, res) => {
-      if (err) {
-        console.log(`The API returned an error: ${err}`);
-        return;
-      }
-      console.log("Event created: %s", res?.data.htmlLink);
-    }
-  );
-}
-
-
-// authorize().then(listCalendars).catch(console.error);
-// authorize().then(listEvents).catch(console.error);
-authorize().then(insertEvent).catch(console.error);
+    guestsCanInviteOthers: false,
+    guestsCanModify: false,
+    guestsCanSeeOtherGuests: false,
+    iCalUID: "77d86683-ec97-4753-90bd-f703579a24b3",
+    // id
+  };
+  
+  insertEvent(authResp, event);
+}).catch(console.error);
