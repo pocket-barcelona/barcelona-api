@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/packag
 import barriosRoutes from "./barrios";
 import placesRoutes from "./places";
 import eventsRoutes from "./events";
+import calendarRoutes from "./calendar";
 import plannerRoutes from "./planner";
 import poiRoutes from "./poi";
 import postsRoutes from "./posts";
@@ -18,6 +19,7 @@ function routes(app: Express) {
   app.use("/api/explore", placesRoutes);
   app.use("/api/poi", poiRoutes);
   app.use("/api/events", eventsRoutes);
+  app.use("/api/calendar", calendarRoutes);
   app.use("/api/planner", plannerRoutes);
   app.use("/api/posts", postsRoutes);
   // USER LOGIN/AUTH

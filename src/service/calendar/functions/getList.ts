@@ -12,7 +12,7 @@ import { config } from "../../../config";
 export default async function (): Promise<CalendarEvent[] | null> {
   try {
     // fetch from Directus
-    const endpoint = `${config.HEADLESS_STUB}/items/events/`;
+    const endpoint = `${config.HEADLESS_STUB}/items/events/?offset=0&limit=200`;
     const resp = await fetch(endpoint);
     const data: DirectusResponse<CalendarEventDirectus[]> = await resp.json();
     if (data?.data) {

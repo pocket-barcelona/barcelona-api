@@ -2,7 +2,7 @@ import type { CalendarEvent } from '../../models/calendar.type';
 import { getListHandler, getByIdHandler } from './functions';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
-export class EventsService {
+export class CalendarService {
 
   static getList = async (): Promise<CalendarEvent[] | null> => getListHandler();
 
