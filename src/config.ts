@@ -3,7 +3,7 @@ export const config = {
   DOMAIN: "https://www.pocketbarcelona.com",
   BRAND_NAME: "Pocket Barcelona",
   EMAIL_NOREPLY: "noreply@pocketbarcelona.com",
-
+  HEADLESS_STUB: "https://content.pocketbarcelona.com", // Directus base URL
   port: 3002,
   saltWorkFactor: 10,
   
