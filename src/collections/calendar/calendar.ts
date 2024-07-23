@@ -115,7 +115,7 @@ async function listEvents(auth: any) {
   console.log("Upcoming 10 events:");
   events.map((event, i) => {
     const start = event.start?.dateTime || event.start?.date || 'No start date';
-    console.log(`${start} - ${event.summary ?? 'NO summary found'}`);
+    console.log(`${start} - ${event.summary ?? 'NO summary found'}`, event);
   });
 }
 
@@ -139,26 +139,25 @@ async function insertEvent(auth: any, event: calendar_v3.Schema$Event): Promise<
 
 
 // authorize().then(listCalendars).catch(console.error);
-// authorize().then(listEvents).catch(console.error);
-authorize().then(authResp => {
-  const event: calendar_v3.Schema$Event = {
-    summary: "Gràcia Festival 2024",
-    location: "Gràcia, Barcelona",
-    description: "The Gràcia neighbourhood festival",
-    start: {
-      dateTime: "2024-08-15T09:00:00+02:00",
-      timeZone: "Europe/Madrid",
-    },
-    end: {
-      dateTime: "2024-08-21T21:00:00+02:00",
-      timeZone: "Europe/Madrid",
-    },
-    guestsCanInviteOthers: false,
-    guestsCanModify: false,
-    guestsCanSeeOtherGuests: false,
-    iCalUID: "77d86683-ec97-4753-90bd-f703579a24b3",
-    // id
-  };
-  
-  insertEvent(authResp, event);
-}).catch(console.error);
+authorize().then(listEvents).catch(console.error);
+// authorize().then(authResp => {
+//   const event: calendar_v3.Schema$Event = {
+//     summary: "Gràcia Festival 2024",
+//     location: "Gràcia, Barcelona",
+//     description: "The Gràcia neighbourhood festival",
+//     start: {
+//       dateTime: "2024-08-15T09:00:00+02:00",
+//       timeZone: "Europe/Madrid",
+//     },
+//     end: {
+//       dateTime: "2024-08-21T21:00:00+02:00",
+//       timeZone: "Europe/Madrid",
+//     },
+//     guestsCanInviteOthers: false,
+//     guestsCanModify: false,
+//     guestsCanSeeOtherGuests: false,
+//     iCalUID: "77d86683-ec97-4753-90bd-f703579a24b3",
+//     // id
+//   };
+  //   insertEvent(authResp, event);
+// }).catch(console.error);
