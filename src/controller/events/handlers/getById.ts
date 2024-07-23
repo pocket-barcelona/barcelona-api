@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { EventsService } from "../../../service/events/events.service";
-import { ReadEventInput } from '../../../schema/event/event.schema';
+import type { ReadEventInput } from '../../../schema/event/event.schema';
 
 /**
  * Get an event by ID
