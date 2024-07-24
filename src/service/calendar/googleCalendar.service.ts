@@ -200,6 +200,28 @@ class GoogleCalendarService {
     }
     return null;
   }
+
+  /** Update an event in Google calendar. Event ID is the GC eventID (not iCalUID) */
+  public async updateEvent(
+    eventId: string,
+    event: calendar_v3.Schema$Event
+  ): Promise<calendar_v3.Schema$Event | null> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const auth = (await this.authorize()) as any;
+    if (!auth) return null;
+    const calendar = google.calendar({ version: "v3", auth });
+
+    try {
+      const res = await calendar.events.update({
+        calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+        eventId,
+        requestBody: event,
+      });
+      return res.data;
+    } catch (error) {
+      return null;
+    }
+  }
 }
 
 export default new GoogleCalendarService();
