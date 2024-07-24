@@ -80,6 +80,9 @@ export function mapToGoogleCalendarEvent(
   if (!item.uuid) {
     throw new Error("Missing internal UUID for Google Calendar event");
   }
+  
+  // for data logic, start times, all day events etc, see this URL:
+  // https://developers.google.com/calendar/api/concepts/events-calendars#recurrence_rule
   const event: calendar_v3.Schema$Event = {
     summary: item.eventName,
     location: item.location, // @todo - does Google need this to be an actual location? Use LAT/LNG here

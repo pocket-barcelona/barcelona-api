@@ -9,7 +9,7 @@ import { google, type calendar_v3 } from "googleapis";
 import "dotenv/config"; // support for dotenv injecting into the process env
 import type { OAuth2Client } from "google-auth-library";
 import { config } from "../../config";
-import logger from '../../utils/logger';
+import logger from "../../utils/logger";
 
 // If modifying these scopes, delete token.json.
 const SCOPES = [
@@ -29,7 +29,7 @@ class GoogleCalendarService {
   private async authorize() {
     // console.debug("Authorizing...");
     logger.info({
-      message: 'Authorizing with Google Calendar API...',
+      message: "Authorizing with Google Calendar API...",
     });
     const client = await this.loadSavedCredentialsIfExist();
     if (client) {
@@ -42,7 +42,7 @@ class GoogleCalendarService {
     if (oAuthClient.credentials) {
       // console.debug("Saving credentials");
       logger.info({
-        message: 'Saving Google Calendar auth credentials...',
+        message: "Saving Google Calendar auth credentials...",
       });
       await this.saveCredentials(oAuthClient);
     }
@@ -81,11 +81,13 @@ class GoogleCalendarService {
     await fs.writeFile(TOKEN_PATH, payload);
   }
 
-  /** List all calendars and IDs for this account */
-  public async listCalendars(): Promise<calendar_v3.Schema$CalendarListEntry[]> {
+  /** List all Google calendars and IDs for this account */
+  public async listCalendars(): Promise<
+    calendar_v3.Schema$CalendarListEntry[]
+  > {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    const auth = await this.authorize() as any;
-    if (!auth) return [] // @todo - throw error?;
+    const auth = (await this.authorize()) as any;
+    if (!auth) return []; // @todo - throw error?;
     const calendar = google.calendar({ version: "v3", auth });
     const res = await calendar.calendarList.list();
 
@@ -94,7 +96,6 @@ class GoogleCalendarService {
       console.log("No calendars found.");
       return [];
     }
-    // console.log("Calendars:");
     // calendars.map((calendar, i) => {
     //   console.log(`${calendar.summary ?? "NO summary found"} - ${calendar.id}`);
     // });
@@ -104,10 +105,12 @@ class GoogleCalendarService {
   /**
    * @param maxResults Lists the next X events on a specific calendar
    */
-  public async listEvents(maxResults = 10): Promise<calendar_v3.Schema$Event[] | undefined> {
+  public async listEvents(
+    maxResults = 10
+  ): Promise<calendar_v3.Schema$Event[] | undefined> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    const auth = await this.authorize() as any;
-    if (!auth) return [] // @todo - throw error?;
+    const auth = (await this.authorize()) as any;
+    if (!auth) return []; // @todo - throw error?;
 
     const calendar = google.calendar({ version: "v3", auth });
     const res = await calendar.events.list({
@@ -125,16 +128,59 @@ class GoogleCalendarService {
     return events;
   }
 
+  /** Get an event from a Google calendar using it's GC event ID (not iCalUID) */
+  public async getEvent(
+    eventId: string
+  ): Promise<calendar_v3.Schema$Event | null> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const auth = (await this.authorize()) as any;
+    if (!auth) return null;
+    const calendar = google.calendar({ version: "v3", auth });
+
+    try {
+      const res = await calendar.events.get({
+        calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+        eventId,
+      });
+      return res.data;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /** Get an event from a Google calendar using its iCalUID */
+  public async getEventByUID(
+    uuid: string
+  ): Promise<calendar_v3.Schema$Event | null> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const auth = (await this.authorize()) as any;
+    if (!auth) return null;
+    const calendar = google.calendar({ version: "v3", auth });
+
+    try {
+      const res = await calendar.events.list({
+        calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+        iCalUID: uuid,
+      });
+      if (res?.data.items && res.data.items.length > 0) {
+        return res.data.items[0];
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /** Insert an event into Google calendar */
   public async insertEvent(
     event: calendar_v3.Schema$Event
   ): Promise<calendar_v3.Schema$Event | null> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    const auth = await this.authorize() as any;
+    const auth = (await this.authorize()) as any;
     if (!auth) return null;
     const calendar = google.calendar({ version: "v3", auth });
-    
+
     try {
-      
       calendar.events.insert(
         {
           calendarId: config.POCKET_BARCELONA_CALENDAR_ID,

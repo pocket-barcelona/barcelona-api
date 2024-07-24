@@ -13,8 +13,12 @@ import GoogleCalendarService from "../../../service/calendar/googleCalendar.serv
 export default async function syncEvents(req: Request, res: Response) {
   // TODO - for each event or do as batch?!
   
-  const data = await GoogleCalendarService.insertEvent();
-
+  // const data = await GoogleCalendarService.insertEvent();
+  // const data = await GoogleCalendarService.listEvents();
+  // const data = await GoogleCalendarService.getEvent('_6srm8e1m6os36bb5ccsjeb9k6sqj6b9p61h68bb66so36d9n75gj4d326c');
+  const data = await GoogleCalendarService.getEventByUID('77d86683-ec97-4753-90bd-f703579a24b3');
+  
+  
   if (!data) {
     return res
       .status(StatusCodes.NOT_FOUND)
