@@ -222,6 +222,49 @@ class GoogleCalendarService {
       return null;
     }
   }
+
+  /** Delete an event in Google calendar by eventID */
+  public async deleteEvent(eventId: string): Promise<boolean> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const auth = (await this.authorize()) as any;
+    if (!auth) return false;
+    const calendar = google.calendar({ version: "v3", auth });
+
+    try {
+      await calendar.events.delete({
+        calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+        eventId,
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /** @untested - Delete an event in Google calendar by iCalUID */
+  public async deleteEventByUID(uuid: string): Promise<boolean> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const auth = (await this.authorize()) as any;
+    if (!auth) return false;
+    const calendar = google.calendar({ version: "v3", auth });
+
+    try {
+      const res = await calendar.events.list({
+        calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+        iCalUID: uuid,
+      });
+      if (res?.data.items && res.data.items.length > 0) {
+        await calendar.events.delete({
+          calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+          eventId: res.data.items[0].id ?? "",
+        });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
 }
 
 export default new GoogleCalendarService();
