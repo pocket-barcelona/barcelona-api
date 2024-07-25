@@ -11,6 +11,19 @@ import GoogleCalendarService from "../../../service/calendar/googleCalendar.serv
  * @returns
  */
 export default async function syncEvents(req: Request, res: Response) {
+  // Directus - pagination
+  // https://docs.directus.io/blog/implementing-pagination-and-infinite-scrolling-in-next-js.html
+
+  // 1. Get all events from Directus
+  // 2. Get all events from Google Calendar
+  // 3. For each event in Directus, check if it exists in Google Calendar
+  // 4. If event exists, update it
+  // 5. If event does not exist, create it
+  // 6. Check for event IDs in GC events which don't exist in Directus list and delete these from GC
+
+
+  const calendarService = new CalendarService();
+  
   // TODO - for each event or do as batch?!
 
   // const data = await GoogleCalendarService.insertEvent();
