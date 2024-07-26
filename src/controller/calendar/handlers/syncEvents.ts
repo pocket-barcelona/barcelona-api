@@ -43,7 +43,7 @@ export default async function syncEvents(req: Request, res: Response) {
     await DirectusService.getAllDirectusItems<"events", CalendarEventDirectus>(
       "events"
     )
-  ).slice(0, 70);
+  ).slice(0, 200);
   if (directusEvents.length === 0) {
     return res
       .status(StatusCodes.NOT_FOUND)
