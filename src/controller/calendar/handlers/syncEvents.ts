@@ -43,11 +43,27 @@ export default async function syncEvents(req: Request, res: Response) {
     await DirectusService.getAllDirectusItems<"events", CalendarEventDirectus>(
       "events"
     )
-  ).slice(0, 5);
+  ).slice(0, 70);
   if (directusEvents.length === 0) {
     return res
       .status(StatusCodes.NOT_FOUND)
       .send(error("Headless CMS contains no items to sync", res.statusCode));
+  }
+
+  // make sure Directus event start/end times are correct
+  for (const event of directusEvents) {
+    const startTime = new Date(event.date_start);
+    const endTime = new Date(event.date_end);
+    if (startTime.getTime() > endTime.getTime()) {
+      return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(
+        error(
+          `Warning: An event has an invalid start time: ID: ${event.id} - ${event.event_name}`,
+          res.statusCode
+        )
+      );
+    }
   }
 
   const googleEvents = await GoogleCalendarService.listEvents(
@@ -99,7 +115,6 @@ export default async function syncEvents(req: Request, res: Response) {
     const gcEvent = googleEvents.find((e) => e.iCalUID === directusEvent.uuid);
     const mappedEvent =
       GoogleCalendarService.buildCalendarEventPayload(directusEvent);
-    console.log(mappedEvent);
     // compare events
     if (gcEvent) {
       // non-greedy update - only update if data is actually different
@@ -144,7 +159,12 @@ export default async function syncEvents(req: Request, res: Response) {
     }
 
     if (eventsDeleted.length >= 2) {
-      throw Error("Event deletion failed 2 times, stopping!");
+      return res.send(
+        error(
+          "Event deletion failed 2 times, stopping!",
+          StatusCodes.INTERNAL_SERVER_ERROR
+        )
+      );
     }
   }
 
@@ -161,9 +181,12 @@ export default async function syncEvents(req: Request, res: Response) {
       eventsNotUpdated.push(gEvent);
     }
 
-    if (eventsUpdated.length >= 2) {
-      throw Error("Event updating failed 2 times, stopping!");
-    }
+    return res.send(
+      error(
+        "Event updating failed 2 times, stopping!",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      )
+    );
   }
 
   console.log(
@@ -178,7 +201,12 @@ export default async function syncEvents(req: Request, res: Response) {
     }
 
     if (eventsNotCreated.length >= 2) {
-      throw Error("Event creation failed 2 times, stopping!");
+      return res.send(
+        error(
+          "Event creation failed 2 times, stopping!",
+          StatusCodes.INTERNAL_SERVER_ERROR
+        )
+      );
     }
   }
 
@@ -196,11 +224,9 @@ export default async function syncEvents(req: Request, res: Response) {
     return res.send(success("Events synced, but with errors"));
   }
 
-  // if (!googleEvents) {
-  //   return res
-  //     .status(StatusCodes.NOT_FOUND)
-  //     .send(error("Error getting list", res.statusCode));
-  // }
+  if (eventsToBeDeleted.length === 0 && eventsToBeCreated.length === 0 && eventsToBeUpdated.length === 0) {
+    return res.send(success("No events to sync. All done."));
+  }
 
   return res.send(success("Events synced!"));
 }
@@ -215,11 +241,20 @@ function compareEvents(
   if (gcEvent?.location !== directusMappedEvent.location) {
     return false;
   }
+  if (gcEvent?.description !== directusMappedEvent.description) {
+    return false;
+  }
   // compare dates
   if (gcEvent?.start?.dateTime !== directusMappedEvent.start?.dateTime) {
     return false;
   }
+  if (gcEvent?.start?.date !== directusMappedEvent.start?.date) {
+    return false;
+  }
   if (gcEvent?.end?.dateTime !== directusMappedEvent.end?.dateTime) {
+    return false;
+  }
+  if (gcEvent?.end?.date !== directusMappedEvent.end?.date) {
     return false;
   }
   return true;

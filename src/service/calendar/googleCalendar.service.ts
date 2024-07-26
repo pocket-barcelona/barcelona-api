@@ -182,10 +182,10 @@ class GoogleCalendarService {
   /** Insert an event into Google calendar */
   public async insertEvent(
     event: calendar_v3.Schema$Event
-  ): Promise<calendar_v3.Schema$Event | null> {
+  ): Promise<calendar_v3.Schema$Event | boolean> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const auth = (await this.authorize()) as any;
-    if (!auth) return null;
+    if (!auth) return false;
     const calendar = google.calendar({ version: "v3", auth });
 
     try {
@@ -196,17 +196,17 @@ class GoogleCalendarService {
         },
         (err, res) => {
           if (err) {
-            console.log(`The API returned an error: ${err}`);
-            return;
+            console.log(`The API returned an error: ${err}. Event: ${event.summary}. Start: ${event.start}`);
+            return false;
           }
-          console.log("Event created: %s", res?.data.id);
+          console.log(`Event created: ${res?.data.id}, ${res?.data.summary ?? 'No summary!'}, ${res?.data.start?.date}`);
           return res?.data;
         }
       );
+      return event;
     } catch (error) {
-      return null;
+      return false;
     }
-    return null;
   }
 
   /** Update an event in Google calendar. Event ID is the GC eventID (not iCalUID) */
