@@ -1,8 +1,10 @@
 import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
+import type { CalendarEventDirectus } from '../../../models/calendar.type';
 import { CalendarService } from "../../../service/calendar/calendar.service";
 import GoogleCalendarService from "../../../service/calendar/googleCalendar.service";
+import DirectusService from "../../../service/directus.service";
 
 /**
  * Sync all calendar events from Directus to Google Calendar
@@ -21,9 +23,22 @@ export default async function syncEvents(req: Request, res: Response) {
   // 5. If event does not exist, create it
   // 6. Check for event IDs in GC events which don't exist in Directus list and delete these from GC
 
+  const directusEvents = await DirectusService.getAllDirectusItems<'events', CalendarEventDirectus>('events');
+  if (directusEvents.length === 0) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .send(error("Headless CMS contains no items to sync", res.statusCode));
+  }
+
+  
+
+  // const hasMorePage = () => {
+  //   const recievedPostsCount = limit * currentPage;
+  //   return recievedPostsCount < totalPostCount;
+  // };
 
   const calendarService = new CalendarService();
-  
+
   // TODO - for each event or do as batch?!
 
   // const data = await GoogleCalendarService.insertEvent();
@@ -55,3 +70,4 @@ export default async function syncEvents(req: Request, res: Response) {
 
   return res.send(success(data));
 }
+

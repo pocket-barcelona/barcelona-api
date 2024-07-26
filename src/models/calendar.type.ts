@@ -127,9 +127,6 @@ function buildCalendarDescription(event: CalendarEvent) {
   }
   return description;
 }
-
-
-// @todo - use directus-sdk?
 export interface DirectusResponse<T> {
   data: T;
 }
