@@ -10,6 +10,7 @@ import "dotenv/config"; // support for dotenv injecting into the process env
 import type { OAuth2Client } from "google-auth-library";
 import { config } from "../../config";
 import logger from "../../utils/logger";
+import type { CalendarEventDirectus } from "../../models/calendar.type";
 
 // If modifying these scopes, delete token.json.
 const SCOPES = [
@@ -23,16 +24,21 @@ const TOKEN_PATH = path.join(process.cwd(), "token.json");
 const CREDENTIALS_PATH = path.join(process.cwd(), "credentials.json");
 
 class GoogleCalendarService {
+  private authClient: JSONClient | OAuth2Client | null = null;
+
   /**
    * Load or request or authorization to call APIs
    */
-  private async authorize() {
+  private async authorize(): Promise<JSONClient | OAuth2Client> {
+    if (this.authClient) return this.authClient;
+
     // console.debug("Authorizing...");
     logger.info({
       message: "Authorizing with Google Calendar API...",
     });
     const client = await this.loadSavedCredentialsIfExist();
     if (client) {
+      this.authClient = client;
       return client;
     }
     const oAuthClient = await authenticate({
@@ -46,6 +52,7 @@ class GoogleCalendarService {
       });
       await this.saveCredentials(oAuthClient);
     }
+    this.authClient = client;
     return oAuthClient;
   }
 
@@ -106,7 +113,8 @@ class GoogleCalendarService {
    * @param maxResults Lists the next X events on a specific calendar
    */
   public async listEvents(
-    maxResults = 10
+    timeMin: string,
+    maxResults = 1000
   ): Promise<calendar_v3.Schema$Event[] | undefined> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const auth = (await this.authorize()) as any;
@@ -116,7 +124,7 @@ class GoogleCalendarService {
     const res = await calendar.events.list({
       // calendarId: "primary", // this is the default calendar
       calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
-      timeMin: new Date().toISOString(),
+      timeMin,
       maxResults,
       singleEvents: true,
       orderBy: "startTime",
@@ -223,7 +231,7 @@ class GoogleCalendarService {
     }
   }
 
-  /** Delete an event in Google calendar by eventID */
+  /** Delete an event in Google calendar by eventID (Not iCalUID) */
   public async deleteEvent(eventId: string): Promise<boolean> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const auth = (await this.authorize()) as any;
@@ -265,6 +273,96 @@ class GoogleCalendarService {
       return false;
     }
   }
+
+  public buildCalendarEventPayload(
+    event: CalendarEventDirectus
+  ): calendar_v3.Schema$Event {
+
+    const payload: calendar_v3.Schema$Event = {
+      summary: event.event_name,
+      location: buildCalendarLocationString(event),
+      description: buildCalendarDescription(event),
+      start: {
+        date: event.date_start, // "2024-08-15T09:00:00+02:00"
+        timeZone: "Europe/Madrid",
+      },
+      end: {
+        date: event.date_end, // "2024-08-21T21:00:00+02:00"
+        timeZone: "Europe/Madrid",
+      },
+      guestsCanInviteOthers: false,
+      guestsCanModify: false,
+      guestsCanSeeOtherGuests: false,
+      iCalUID: event.uuid,
+    };
+    return payload;
+  }
+}
+
+
+/** Convert our event structure into a Google Calendar event */
+// export function mapToGoogleCalendarEvent(
+//   item: CalendarEvent
+// ): calendar_v3.Schema$Event {
+//   if (!item.uuid) {
+//     throw new Error("Missing internal UUID for Google Calendar event");
+//   }
+  
+//   // for data logic, start times, all day events etc, see this URL:
+//   // https://developers.google.com/calendar/api/concepts/events-calendars#recurrence_rule
+//   const event: calendar_v3.Schema$Event = {
+//     summary: item.eventName,
+//     location: item.location, // @todo - does Google need this to be an actual location? Use LAT/LNG here
+//     description: buildCalendarDescription(item),
+//     start: {
+//       dateTime: item.dateStart, // "2024-08-15T09:00:00+02:00"
+//       timeZone: "Europe/Madrid",
+//     },
+//     end: {
+//       dateTime: item.dateEnd, // "2024-08-21T21:00:00+02:00"
+//       timeZone: "Europe/Madrid",
+//     },
+//     guestsCanInviteOthers: false,
+//     guestsCanModify: false,
+//     guestsCanSeeOtherGuests: false,
+//     creator: {
+//       displayName: 'Pocket Barcelona',
+//       email: 'info@pocketbarcelona.com',
+//     },
+//     iCalUID: item.uuid, // Tell Google to use our ID, so that we don't get an automatic one! Will be used to update against later
+//   };
+//   return event;
+// }
+
+function buildCalendarLocationString(event: CalendarEventDirectus) {
+  let locationStr = '';
+    // check accuracy
+    if (event.location_accuracy === 1) {
+      locationStr = `${event.lat}, ${event.lng}`;
+    } else {
+      locationStr = event.location;
+    }
+    return locationStr;
+}
+
+function buildCalendarDescription(event: CalendarEventDirectus) {
+  // Build this:
+  // ----------------
+  // Event type
+  // URL (if exists)
+
+  // Notes from sheet
+  // ----------------
+  let description = '';
+  
+  description += `Event type: ${event.event_type}`;
+  if (event.url) {
+    description += `\nURL: ${event.url}`;
+  }
+  if (event.event_notes) {
+    description += `\n\nNotes: ${event.event_notes}`;
+  }
+  return description;
 }
 
 export default new GoogleCalendarService();

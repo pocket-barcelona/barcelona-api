@@ -1,7 +1,7 @@
 import { aggregate, readItems } from "@directus/sdk";
 import { createDirectus, rest } from "@directus/sdk";
-import type { CalendarEventDirectus } from "../models/calendar.type";
-import { config } from "../config";
+import type { CalendarEventDirectus } from "../../models/calendar.type";
+import { config } from "../../config";
 
 type HeadlessSchema = {
   events: CalendarEventDirectus[];
