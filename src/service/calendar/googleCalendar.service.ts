@@ -277,7 +277,6 @@ class GoogleCalendarService {
   public buildCalendarEventPayload(
     event: CalendarEventDirectus
   ): calendar_v3.Schema$Event {
-
     const payload: calendar_v3.Schema$Event = {
       summary: event.event_name,
       location: buildCalendarLocationString(event),
@@ -299,7 +298,6 @@ class GoogleCalendarService {
   }
 }
 
-
 /** Convert our event structure into a Google Calendar event */
 // export function mapToGoogleCalendarEvent(
 //   item: CalendarEvent
@@ -307,7 +305,7 @@ class GoogleCalendarService {
 //   if (!item.uuid) {
 //     throw new Error("Missing internal UUID for Google Calendar event");
 //   }
-  
+
 //   // for data logic, start times, all day events etc, see this URL:
 //   // https://developers.google.com/calendar/api/concepts/events-calendars#recurrence_rule
 //   const event: calendar_v3.Schema$Event = {
@@ -335,14 +333,14 @@ class GoogleCalendarService {
 // }
 
 function buildCalendarLocationString(event: CalendarEventDirectus) {
-  let locationStr = '';
-    // check accuracy
-    if (event.location_accuracy === 1) {
-      locationStr = `${event.lat}, ${event.lng}`;
-    } else {
-      locationStr = event.location;
-    }
-    return locationStr;
+  let locationStr = "";
+  // check accuracy
+  if (event.location_accuracy === 1) {
+    locationStr = `${event.lat}, ${event.lng}`;
+  } else {
+    locationStr = event.location;
+  }
+  return locationStr;
 }
 
 function buildCalendarDescription(event: CalendarEventDirectus) {
@@ -353,8 +351,8 @@ function buildCalendarDescription(event: CalendarEventDirectus) {
 
   // Notes from sheet
   // ----------------
-  let description = '';
-  
+  let description = "";
+
   description += `Event type: ${event.event_type}`;
   if (event.url) {
     description += `\nURL: ${event.url}`;
