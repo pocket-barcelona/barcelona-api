@@ -279,13 +279,15 @@ class GoogleCalendarService {
   ): calendar_v3.Schema$Event {
     const payload: calendar_v3.Schema$Event = {
       summary: event.event_name,
-      location: buildCalendarLocationString(event),
+      // location: buildCalendarLocationString(event),
+      location: event.location,
       description: buildCalendarDescription(event),
       start: {
         date: event.date_start, // "2024-08-15T09:00:00+02:00"
         timeZone: "Europe/Madrid",
       },
       end: {
+        // @todo - this needs to be inclusive - currently not adding the last event day on Google!
         date: event.date_end, // "2024-08-21T21:00:00+02:00"
         timeZone: "Europe/Madrid",
       },
@@ -332,15 +334,24 @@ class GoogleCalendarService {
 //   return event;
 // }
 
-function buildCalendarLocationString(event: CalendarEventDirectus) {
-  let locationStr = "";
+
+/**
+ * Build the map link based on location accuracy
+ * If lat/lng accurate, do this: https://maps.google.com/?q=42.346646,1.9572331
+ * If not, do this: https://maps.google.com/?q=Ciutadella%20Park
+ * 
+ * @url See also: https://stackoverflow.com/questions/1801732/how-do-i-link-to-google-maps-with-a-particular-longitude-and-latitude
+ */
+function buildMapLocationString(event: CalendarEventDirectus) {
+  let mapStr = "https://maps.google.com/?q=";
   // check accuracy
   if (event.location_accuracy === 1) {
-    locationStr = `${event.lat}, ${event.lng}`;
+    mapStr += `${event.lat},${event.lng}`;
   } else {
-    locationStr = event.location;
+    mapStr += encodeURIComponent(event.location);
   }
-  return locationStr;
+  mapStr += ',16z';
+  return mapStr;
 }
 
 function buildCalendarDescription(event: CalendarEventDirectus) {
@@ -348,6 +359,8 @@ function buildCalendarDescription(event: CalendarEventDirectus) {
   // ----------------
   // Event type
   // URL (if exists)
+  // Location map link
+  // Is in Barcelona?: Yes/No
 
   // Notes from sheet
   // ----------------
@@ -357,8 +370,18 @@ function buildCalendarDescription(event: CalendarEventDirectus) {
   if (event.url) {
     description += `\nURL: ${event.url}`;
   }
+  
+  // location on map link
+  description += `\nLocation: ${buildMapLocationString(event)}`;
+
   if (event.event_notes) {
     description += `\n\nNotes: ${event.event_notes}`;
+  }
+  
+  if (event.is_in_barcelona) {
+    // description += '\n\nNote: This event is in Barcelona';
+  } else {
+    description += '\n\nNote: This event is NOT in Barcelona';
   }
   return description;
 }
