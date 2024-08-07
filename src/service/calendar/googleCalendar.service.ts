@@ -196,15 +196,25 @@ class GoogleCalendarService {
         },
         (err, res) => {
           if (err) {
-            console.log(`The API returned an error: ${err}. Event: ${event.summary}. Start: ${event.start}`);
+            console.log(
+              `The API returned an error: ${err}. Event: ${event.summary}. Start: ${event.start}`
+            );
             return false;
           }
-          console.log(`Event created: ${res?.data.id}, ${res?.data.summary ?? 'No summary!'}, ${res?.data.start?.date}`);
+          console.log(
+            `Event created: ${res?.data.id}, ${
+              res?.data.summary ?? "No summary!"
+            }, ${res?.data.start?.date}`
+          );
           return res?.data;
         }
       );
       return event;
     } catch (error) {
+      console.warn(error);
+      console.log({
+        payload: event
+      });
       return false;
     }
   }
@@ -227,6 +237,11 @@ class GoogleCalendarService {
       });
       return res.data;
     } catch (error) {
+      console.warn(error);
+      console.log({
+        payload: event,
+        id: eventId
+      });
       return null;
     }
   }
@@ -245,6 +260,10 @@ class GoogleCalendarService {
       });
       return true;
     } catch (error) {
+      console.warn(error);
+      console.log({
+        id: eventId
+      });
       return false;
     }
   }
@@ -277,25 +296,32 @@ class GoogleCalendarService {
   public buildCalendarEventPayload(
     event: CalendarEventDirectus
   ): calendar_v3.Schema$Event {
+    // https://stackoverflow.com/questions/59867825/google-calendar-api-bug-end-date-is-1
+    const { formatted: realEndDate } = getEventRealEndDate(event.date_end);
+
     const payload: calendar_v3.Schema$Event = {
       summary: event.event_name,
       // location: buildCalendarLocationString(event),
       location: event.location,
       description: buildCalendarDescription(event),
       start: {
-        date: event.date_start, // "2024-08-15T09:00:00+02:00"
+        date: event.date_start, // "2024-08-15T09:00:00+02:00" or "2024-08-15"
         timeZone: "Europe/Madrid",
       },
       end: {
         // @todo - this needs to be inclusive - currently not adding the last event day on Google!
-        date: event.date_end, // "2024-08-21T21:00:00+02:00"
+        date: realEndDate, // "2024-08-21T21:00:00+02:00" or "2024-08-21"
         timeZone: "Europe/Madrid",
       },
       guestsCanInviteOthers: false,
       guestsCanModify: false,
       guestsCanSeeOtherGuests: false,
       iCalUID: event.uuid,
+      recurrence: event.recurrence_rule
+        ? event.recurrence_rule.split(",")
+        : undefined,
     };
+
     return payload;
   }
 }
@@ -334,12 +360,30 @@ class GoogleCalendarService {
 //   return event;
 // }
 
+function getEventRealEndDate(dateEndStr: string): {
+  /** Date like: yyyy-mm-dd */
+  formatted: string;
+  realEndDate: Date;
+} {
+  const realEndDate = new Date(dateEndStr);
+  realEndDate.setUTCDate(realEndDate.getUTCDate() + 1);
+
+  const year = realEndDate.getFullYear();
+  const month = String(realEndDate.getMonth() + 1).padStart(2, "0");
+  const day = String(realEndDate.getDate()).padStart(2, "0");
+  const formatted = `${year}-${month}-${day}`;
+
+  return {
+    formatted,
+    realEndDate,
+  };
+}
 
 /**
  * Build the map link based on location accuracy
  * If lat/lng accurate, do this: https://maps.google.com/?q=42.346646,1.9572331
  * If not, do this: https://maps.google.com/?q=Ciutadella%20Park
- * 
+ *
  * @url See also: https://stackoverflow.com/questions/1801732/how-do-i-link-to-google-maps-with-a-particular-longitude-and-latitude
  */
 function buildMapLocationString(event: CalendarEventDirectus) {
@@ -350,7 +394,7 @@ function buildMapLocationString(event: CalendarEventDirectus) {
   } else {
     mapStr += encodeURIComponent(event.location);
   }
-  mapStr += ',16z';
+  mapStr += ",16z";
   return mapStr;
 }
 
@@ -370,18 +414,18 @@ function buildCalendarDescription(event: CalendarEventDirectus) {
   if (event.url) {
     description += `\nURL: ${event.url}`;
   }
-  
+
   // location on map link
   description += `\nLocation: ${buildMapLocationString(event)}`;
 
   if (event.event_notes) {
     description += `\n\nNotes: ${event.event_notes}`;
   }
-  
+
   if (event.is_in_barcelona) {
     // description += '\n\nNote: This event is in Barcelona';
   } else {
-    description += '\n\nNote: This event is NOT in Barcelona';
+    description += "\n\nNote: This event is NOT in Barcelona";
   }
   return description;
 }

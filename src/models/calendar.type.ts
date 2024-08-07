@@ -11,8 +11,12 @@ export type CalendarEvent = {
   dateEnd: string;
   /** Event type is like: Festa Major or Open Day / Weekend or Music Festival, etc */
   eventType: string;
+  /** Enabled/disable events from being shown */
+  eventActive: boolean;
   /** Whether or not the event recurs, e.g. next year */
   eventRecurs: boolean;
+  /** Google Calendar rule. @url https://developers.google.com/calendar/api/v3/reference/events#recurrence */
+  recurrenceRule: string;
   /** The name of the event, in English */
   eventName: string;
   /** URL friendly pathname, like: `festa-major-de-sant-antoni-2022` */
@@ -39,7 +43,9 @@ export type CalendarEventDirectus = {
   date_start: string;
   date_end: string;
   event_type: string;
+  event_active: boolean;
   event_recurs: boolean;
+  recurrence_rule: string;
   event_name: string;
   slug: string;
   location: string;
@@ -61,7 +67,9 @@ export function mapHeadlessCalendarItem(
     dateStart: item.date_start,
     dateEnd: item.date_end,
     eventType: item.event_type,
+    eventActive: item.event_active,
     eventRecurs: item.event_recurs,
+    recurrenceRule: item.recurrence_rule,
     eventName: item.event_name,
     slug: item.slug,
     location: item.location,

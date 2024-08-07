@@ -7,9 +7,9 @@ import GoogleCalendarService from "../../../service/calendar/googleCalendar.serv
 import DirectusService from "../../../service/shared/directus.service";
 import type { calendar_v3 } from "googleapis";
 
-const OLDEST_PB_EVENT = new Date("2020-01-01T01:00:00").toISOString(); // need to tell GC from when we want events in a list
+const OLDEST_PB_EVENT = new Date("2020-01-01T01:00:00").toISOString(); // need to tell GC from when we want events in a list. PB=Pocket Barcelona
 const DRY_RUN = false;
-
+const CALENDAR_API_ERROR_THRESHOLD_TIMES = 1; // stop syncing to google if this many errors are encountered
 /**
  * Sync all calendar events from Directus to Google Calendar
  * @param req
@@ -29,6 +29,10 @@ export default async function syncEvents(req: Request, res: Response) {
   // 5. If event exists, update it
   // 6. If event does not exist, create it
 
+  if (DRY_RUN) {
+    console.log('PERFORMING DRY-RUN...');
+  }
+
   const eventsToBeDeleted: calendar_v3.Schema$Event[] = [];
   const eventsDeleted: calendar_v3.Schema$Event[] = [];
   const eventsNotDeleted: calendar_v3.Schema$Event[] = [];
@@ -43,7 +47,16 @@ export default async function syncEvents(req: Request, res: Response) {
     await DirectusService.getAllDirectusItems<"events", CalendarEventDirectus>(
       "events"
     )
-  ).slice(0, 200);
+  )
+    .filter((e) => e.event_active)
+    .filter((e) => {
+      // make sure to ignore events from previous year - will save on calendar create requests
+      const start = new Date(e.date_start);
+      const year = start.getFullYear();
+      const thisYear = new Date().getFullYear();
+      return year >= thisYear;
+    })
+    .slice(0, 1);
   if (directusEvents.length === 0) {
     return res
       .status(StatusCodes.NOT_FOUND)
@@ -56,13 +69,13 @@ export default async function syncEvents(req: Request, res: Response) {
     const endTime = new Date(event.date_end);
     if (startTime.getTime() > endTime.getTime()) {
       return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(
-        error(
-          `Warning: An event has an invalid start time: ID: ${event.id} - ${event.event_name}`,
-          res.statusCode
-        )
-      );
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(
+          error(
+            `Warning: An event has an invalid start time: ID: ${event.id} - ${event.event_name}`,
+            res.statusCode
+          )
+        );
     }
   }
 
@@ -137,6 +150,24 @@ export default async function syncEvents(req: Request, res: Response) {
     for (const i of eventsToBeCreated) {
       console.log(`Would create: ${i.iCalUID} - ${i.summary}`);
     }
+    for (const i of eventsToBeUpdated) {
+      console.log(`Would update: ${i.iCalUID} - ${i.summary}`);
+    }
+    for (const i of eventsToBeDeleted) {
+      console.log(`Would delete: ${i.iCalUID} - ${i.summary}`);
+    }
+
+    // spit out payload if there's only 1
+    if (eventsToBeCreated.length === 1) {
+      console.log("Single created event payload: ", eventsToBeCreated[0]);
+    }
+    if (eventsToBeUpdated.length === 1) {
+      console.log("Single updated event payload: ", eventsToBeUpdated[0]);
+    }
+    if (eventsToBeDeleted.length === 1) {
+      console.log("Single deleted event payload: ", eventsToBeDeleted[0]);
+    }
+
     return res.send(
       success(true, {
         message: "Dry run completed.",
@@ -152,16 +183,17 @@ export default async function syncEvents(req: Request, res: Response) {
     // delete this event from GC
     console.log(`Deleting ${gEvent.summary}. id: ${gEvent.id}`);
     const success = await GoogleCalendarService.deleteEvent(gEvent.id);
+    console.log(`Delete success: ${success}`);
     if (success) {
       eventsDeleted.push(gEvent);
     } else {
       eventsNotDeleted.push(gEvent);
     }
 
-    if (eventsDeleted.length >= 2) {
+    if (eventsNotDeleted.length >= CALENDAR_API_ERROR_THRESHOLD_TIMES) {
       return res.send(
         error(
-          "Event deletion failed 2 times, stopping!",
+          `Event deletion failed ${CALENDAR_API_ERROR_THRESHOLD_TIMES} time/s, stopping!`,
           StatusCodes.INTERNAL_SERVER_ERROR
         )
       );
@@ -172,38 +204,44 @@ export default async function syncEvents(req: Request, res: Response) {
     `---------- Updating ${eventsToBeUpdated.length} event/s... ----------`
   );
   for (const gEvent of eventsToBeUpdated) {
+    console.log(`Updating ${gEvent.summary}. id: ${gEvent.id}`);
     const success = gEvent.id
       ? await GoogleCalendarService.updateEvent(gEvent.id, gEvent)
       : false;
+    console.log(`Update success: ${success}`);
     if (success) {
       eventsUpdated.push(gEvent);
     } else {
       eventsNotUpdated.push(gEvent);
     }
 
-    return res.send(
-      error(
-        "Event updating failed 2 times, stopping!",
-        StatusCodes.INTERNAL_SERVER_ERROR
-      )
-    );
+    if (eventsNotUpdated.length >= CALENDAR_API_ERROR_THRESHOLD_TIMES) {
+      return res.send(
+        error(
+          `Event updating failed ${CALENDAR_API_ERROR_THRESHOLD_TIMES} time/s, stopping!`,
+          StatusCodes.INTERNAL_SERVER_ERROR
+        )
+      );
+    }
   }
 
   console.log(
     `---------- Creating ${eventsToBeCreated.length} event/s... ----------`
   );
   for (const gEvent of eventsToBeCreated) {
+    console.log(`Creating ${gEvent.summary}. id: ${gEvent.id}`);
     const success = await GoogleCalendarService.insertEvent(gEvent);
+    console.log(`Create success: ${success}`);
     if (success) {
       eventsCreated.push(gEvent);
     } else {
       eventsNotCreated.push(gEvent);
     }
 
-    if (eventsNotCreated.length >= 2) {
+    if (eventsNotCreated.length >= CALENDAR_API_ERROR_THRESHOLD_TIMES) {
       return res.send(
         error(
-          "Event creation failed 2 times, stopping!",
+          `Event creation failed ${CALENDAR_API_ERROR_THRESHOLD_TIMES} time/s, stopping!`,
           StatusCodes.INTERNAL_SERVER_ERROR
         )
       );
@@ -224,7 +262,11 @@ export default async function syncEvents(req: Request, res: Response) {
     return res.send(success("Events synced, but with errors"));
   }
 
-  if (eventsToBeDeleted.length === 0 && eventsToBeCreated.length === 0 && eventsToBeUpdated.length === 0) {
+  if (
+    eventsToBeDeleted.length === 0 &&
+    eventsToBeCreated.length === 0 &&
+    eventsToBeUpdated.length === 0
+  ) {
     return res.send(success("No events to sync. All done."));
   }
 
