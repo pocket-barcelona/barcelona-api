@@ -1,11 +1,11 @@
 import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { CalendarService } from "../../../service/calendar/calendar.service";
 import type { ReadCalendarEventInput } from '../../../schema/calendar/calendar.schema';
+import GoogleCalendarService from "../../../service/calendar/googleCalendar.service";
 
 /**
- * Get a calendar item by ID
+ * Get a google calendar item by ID
  * @param req
  * @param res
  * @returns
@@ -14,11 +14,11 @@ export default async function getById(req: Request<ReadCalendarEventInput['param
   if (!req.params.calendarEventId) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .send(error("Please provide a calendarEventId", res.statusCode));
+      .send(error("Please provide a calendarEventId - must be a iCalUID", res.statusCode));
   }
 
   const { calendarEventId: id } = req.params;
-  const record = await CalendarService.getByHeadlessId(id);
+  const record = await GoogleCalendarService.getEventByUID(id);
 
   if (!record) {
     return res

@@ -7,10 +7,15 @@ const router = express.Router()
 
 
 // ########### CALENDAR ###########
-router.get("/", [], CalendarController.getListHandler);
+router.get("/headless", [], CalendarController.getListHandler);
 
-router.get("/sync", [requireUser], CalendarController.syncAllHandler);
+router.get("/headless/:calendarEventId", [validateResource(readCalendarEventSchema)], CalendarController.getByIdHandler);
 
-router.get("/:calendarEventId", [validateResource(readCalendarEventSchema)], CalendarController.getByIdHandler);
+router.get("/google/sync", [requireUser], CalendarController.syncToGoogleCalendarHandler);
+
+router.get("/google", [requireUser], CalendarController.getGoogleCalendarListHandler);
+
+router.get("/google/:calendarEventId", [requireUser, validateResource(readCalendarEventSchema)], CalendarController.getGoogleCalendarEventByIdHandler);
+
 
 export default router;

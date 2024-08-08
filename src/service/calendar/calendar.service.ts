@@ -4,9 +4,9 @@ import { getListHandler, getByIdHandler, syncEventsHandler } from './functions';
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class CalendarService {
 
-  static getList = async (): Promise<CalendarEvent[] | null> => getListHandler();
+  static getHeadlessList = async (): Promise<CalendarEvent[] | null> => getListHandler();
 
-  static getById = async (
+  static getByHeadlessId = async (
     calendarEventId: CalendarEvent['id']
   ): Promise<CalendarEvent | null> => getByIdHandler(calendarEventId);
 

@@ -28,9 +28,14 @@ export default async function syncEvents(req: Request, res: Response) {
   // 5. If event exists, update it
   // 6. If event does not exist, create it
 
-  // Delete all events in calendar!
+  // Delete all events in google calendar!
   // GoogleCalendarService.deleteAllGoogleCalendarEvents();
   // return;
+
+  // List all events in google calendar
+  // const events = GoogleCalendarService.listEvents(OLDEST_PB_EVENT, 100, true);
+  // return res.send(success(events));
+
 
   if (DRY_RUN) {
     console.log('PERFORMING DRY-RUN...');
@@ -65,7 +70,7 @@ export default async function syncEvents(req: Request, res: Response) {
       const thisYear = new Date().getFullYear();
       return year >= thisYear;
     })
-    .slice(0, 20);
+    .slice(0, 2);
   if (directusEvents.length === 0) {
     return res
       .status(StatusCodes.NOT_FOUND)

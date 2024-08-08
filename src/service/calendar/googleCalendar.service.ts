@@ -116,7 +116,8 @@ class GoogleCalendarService {
    */
   public async listEvents(
     timeMin: string,
-    maxResults = 1000
+    maxResults = 1000,
+    showDeleted = false
   ): Promise<calendar_v3.Schema$Event[] | undefined> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const auth = (await this.authorize()) as any;
@@ -130,6 +131,7 @@ class GoogleCalendarService {
       maxResults,
       singleEvents: true,
       orderBy: "startTime",
+      showDeleted,
     });
     const events = res.data.items;
     if (!events || events.length === 0) {
@@ -171,6 +173,7 @@ class GoogleCalendarService {
       const res = await calendar.events.list({
         calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
         iCalUID: uuid,
+        showDeleted: true
       });
       if (res?.data.items && res.data.items.length > 0) {
         return res.data.items[0];
@@ -189,27 +192,39 @@ class GoogleCalendarService {
     const auth = (await this.authorize()) as any;
     if (!auth) return false;
     const calendar = google.calendar({ version: "v3", auth });
-
-    try {
-      calendar.events.insert(
-        {
-          calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
-          requestBody: event,
-        },
-        (err, res) => {
-          if (err) {
-            console.log(
-              `Insert event - the API returned an error: ${err}. Event: ${event.summary}. Start: ${event.start?.date}`, event
-            );
-            return false;
+    
+    const insertFunc = (eventPayload: calendar_v3.Schema$Event): Promise<calendar_v3.Schema$Event> => {
+      return new Promise((resolve, reject) => {
+        calendar.events.insert(
+          {
+            calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+            requestBody: eventPayload
+          },
+          (err, res) => {
+            if (err) {
+              console.log(
+                `Insert event - the API returned an error: ${err}. Event: ${eventPayload.summary}. Start: ${eventPayload.start?.date}`, eventPayload
+              );
+              return reject(err);
+            }
+            if (!res) {
+              return reject("No response from Google Calendar API");
+            }
+            
+            return resolve(res.data);
           }
-          console.log(
-            `Event created: ${res?.data.id}, ${res?.data.summary ?? "No summary!"}, ${res?.data.start?.date}`
-          );
-          return res?.data;
-        }
-      );
-      return event;
+        );
+      });
+    };
+    
+    try {
+      const createdEvent = await insertFunc(event);
+      if (createdEvent) {
+        console.log(
+          `Event created: ${createdEvent.id}, ${createdEvent.summary ?? "No summary!"}, ${createdEvent.start?.date}`
+        );
+      }
+      return createdEvent;
     } catch (error) {
       console.warn(error);
       console.log({
