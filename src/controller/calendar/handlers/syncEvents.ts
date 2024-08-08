@@ -3,11 +3,10 @@ import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import type { CalendarEventDirectus } from "../../../models/calendar.type";
 import { CalendarService } from "../../../service/calendar/calendar.service";
-import GoogleCalendarService from "../../../service/calendar/googleCalendar.service";
+import GoogleCalendarService, { OLDEST_PB_EVENT } from "../../../service/calendar/googleCalendar.service";
 import DirectusService from "../../../service/shared/directus.service";
 import type { calendar_v3 } from "googleapis";
 
-const OLDEST_PB_EVENT = new Date("2020-01-01T01:00:00").toISOString(); // need to tell GC from when we want events in a list. PB=Pocket Barcelona
 const DRY_RUN = false;
 const CALENDAR_API_ERROR_THRESHOLD_TIMES = 1; // stop syncing to google if this many errors are encountered
 /**
@@ -29,18 +28,28 @@ export default async function syncEvents(req: Request, res: Response) {
   // 5. If event exists, update it
   // 6. If event does not exist, create it
 
+  // Delete all events in calendar!
+  // GoogleCalendarService.deleteAllGoogleCalendarEvents();
+  // return;
+
   if (DRY_RUN) {
     console.log('PERFORMING DRY-RUN...');
   }
 
   const eventsToBeDeleted: calendar_v3.Schema$Event[] = [];
+  /** List of events which actually were successfully deleted */
   const eventsDeleted: calendar_v3.Schema$Event[] = [];
+  /** List of events which were not successfully deleted due to Google errors */
   const eventsNotDeleted: calendar_v3.Schema$Event[] = [];
   const eventsToBeCreated: calendar_v3.Schema$Event[] = [];
+  /** List of events which actually were successfully created */
   const eventsCreated: calendar_v3.Schema$Event[] = [];
+  /** List of events which were not successfully created due to Google errors */
   const eventsNotCreated: calendar_v3.Schema$Event[] = [];
   const eventsToBeUpdated: calendar_v3.Schema$Event[] = [];
+  /** List of events which actually were successfully updated */
   const eventsUpdated: calendar_v3.Schema$Event[] = [];
+  /** List of events which were not successfully updated due to Google errors */
   const eventsNotUpdated: calendar_v3.Schema$Event[] = [];
 
   const directusEvents = (
@@ -56,7 +65,7 @@ export default async function syncEvents(req: Request, res: Response) {
       const thisYear = new Date().getFullYear();
       return year >= thisYear;
     })
-    .slice(0, 1);
+    .slice(0, 20);
   if (directusEvents.length === 0) {
     return res
       .status(StatusCodes.NOT_FOUND)
@@ -134,7 +143,10 @@ export default async function syncEvents(req: Request, res: Response) {
       const isSame = compareEvents(gcEvent, mappedEvent);
       if (!isSame) {
         // mark event for update
-        eventsToBeUpdated.push(mappedEvent);
+        eventsToBeUpdated.push({
+          ...mappedEvent,
+          id: gcEvent.id // updating needs the GCID
+        });
       }
     } else {
       // mark event for creation
@@ -159,18 +171,27 @@ export default async function syncEvents(req: Request, res: Response) {
 
     // spit out payload if there's only 1
     if (eventsToBeCreated.length === 1) {
-      console.log("Single created event payload: ", eventsToBeCreated[0]);
+      console.log("Single create event payload: ", eventsToBeCreated[0]);
     }
     if (eventsToBeUpdated.length === 1) {
-      console.log("Single updated event payload: ", eventsToBeUpdated[0]);
+      console.log("Single update event payload: ", eventsToBeUpdated[0]);
     }
     if (eventsToBeDeleted.length === 1) {
-      console.log("Single deleted event payload: ", eventsToBeDeleted[0]);
+      console.log("Single delete event payload: ", eventsToBeDeleted[0]);
     }
 
     return res.send(
-      success(true, {
+      success({
+        toDelete: eventsToBeDeleted,
+        toCreated: eventsToBeCreated,
+        toUpdated: eventsToBeUpdated
+      }, {
         message: "Dry run completed.",
+        meta: {
+          toDelete: eventsToBeDeleted.length,
+          toCreated: eventsToBeCreated.length,
+          toUpdated: eventsToBeUpdated.length
+        }
       })
     );
   }
@@ -178,16 +199,16 @@ export default async function syncEvents(req: Request, res: Response) {
   console.log(
     `---------- Deleting ${eventsToBeDeleted.length} event/s... ----------`
   );
-  for (const gEvent of eventsToBeDeleted) {
-    if (!gEvent.id) continue;
+  for (const eventPayload of eventsToBeDeleted) {
+    if (!eventPayload.id) continue;
     // delete this event from GC
-    console.log(`Deleting ${gEvent.summary}. id: ${gEvent.id}`);
-    const success = await GoogleCalendarService.deleteEvent(gEvent.id);
+    console.log(`Deleting ${eventPayload.summary}. id: ${eventPayload.id}`);
+    const success = await GoogleCalendarService.deleteEvent(eventPayload.id);
     console.log(`Delete success: ${success}`);
     if (success) {
-      eventsDeleted.push(gEvent);
+      eventsDeleted.push(eventPayload);
     } else {
-      eventsNotDeleted.push(gEvent);
+      eventsNotDeleted.push(eventPayload);
     }
 
     if (eventsNotDeleted.length >= CALENDAR_API_ERROR_THRESHOLD_TIMES) {
@@ -203,16 +224,16 @@ export default async function syncEvents(req: Request, res: Response) {
   console.log(
     `---------- Updating ${eventsToBeUpdated.length} event/s... ----------`
   );
-  for (const gEvent of eventsToBeUpdated) {
-    console.log(`Updating ${gEvent.summary}. id: ${gEvent.id}`);
-    const success = gEvent.id
-      ? await GoogleCalendarService.updateEvent(gEvent.id, gEvent)
+  for (const eventPayload of eventsToBeUpdated) {
+    console.log(`Updating ${eventPayload.summary}. id: ${eventPayload.id}`);
+    const success = eventPayload.id
+      ? await GoogleCalendarService.updateEvent(eventPayload.id, eventPayload)
       : false;
     console.log(`Update success: ${success}`);
     if (success) {
-      eventsUpdated.push(gEvent);
+      eventsUpdated.push(eventPayload);
     } else {
-      eventsNotUpdated.push(gEvent);
+      eventsNotUpdated.push(eventPayload);
     }
 
     if (eventsNotUpdated.length >= CALENDAR_API_ERROR_THRESHOLD_TIMES) {
@@ -228,14 +249,14 @@ export default async function syncEvents(req: Request, res: Response) {
   console.log(
     `---------- Creating ${eventsToBeCreated.length} event/s... ----------`
   );
-  for (const gEvent of eventsToBeCreated) {
-    console.log(`Creating ${gEvent.summary}. id: ${gEvent.id}`);
-    const success = await GoogleCalendarService.insertEvent(gEvent);
-    console.log(`Create success: ${success}`);
+  for (const eventPayload of eventsToBeCreated) {
+    console.log(`Creating ${eventPayload.summary}. iCalUID: ${eventPayload.iCalUID}`);
+    const success = await GoogleCalendarService.insertEvent(eventPayload);
+    console.log(`Create success: ${!!success}. Event: ${!success ? 'No event data' : success.summary}`);
     if (success) {
-      eventsCreated.push(gEvent);
+      eventsCreated.push(eventPayload);
     } else {
-      eventsNotCreated.push(gEvent);
+      eventsNotCreated.push(eventPayload);
     }
 
     if (eventsNotCreated.length >= CALENDAR_API_ERROR_THRESHOLD_TIMES) {
@@ -270,7 +291,18 @@ export default async function syncEvents(req: Request, res: Response) {
     return res.send(success("No events to sync. All done."));
   }
 
-  return res.send(success("Events synced!"));
+  console.log('DONE!');
+
+  return res.send(success("Events synced!", {
+    meta: {
+      deleted: eventsDeleted.length,
+      notDeleted: eventsNotDeleted.length,
+      created: eventsCreated.length,
+      notCreated: eventsNotCreated.length,
+      updated: eventsUpdated.length,
+      notUpdated: eventsNotUpdated.length,
+    }
+  }));
 }
 
 function compareEvents(
@@ -287,13 +319,7 @@ function compareEvents(
     return false;
   }
   // compare dates
-  if (gcEvent?.start?.dateTime !== directusMappedEvent.start?.dateTime) {
-    return false;
-  }
   if (gcEvent?.start?.date !== directusMappedEvent.start?.date) {
-    return false;
-  }
-  if (gcEvent?.end?.dateTime !== directusMappedEvent.end?.dateTime) {
     return false;
   }
   if (gcEvent?.end?.date !== directusMappedEvent.end?.date) {

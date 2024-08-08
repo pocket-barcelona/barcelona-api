@@ -12,6 +12,8 @@ import { config } from "../../config";
 import logger from "../../utils/logger";
 import type { CalendarEventDirectus } from "../../models/calendar.type";
 
+export const OLDEST_PB_EVENT = new Date("2020-01-01T01:00:00").toISOString(); // need to tell GC from when we want events in a list. PB=Pocket Barcelona
+
 // If modifying these scopes, delete token.json.
 const SCOPES = [
   "https://www.googleapis.com/auth/calendar.readonly",
@@ -182,7 +184,7 @@ class GoogleCalendarService {
   /** Insert an event into Google calendar */
   public async insertEvent(
     event: calendar_v3.Schema$Event
-  ): Promise<calendar_v3.Schema$Event | boolean> {
+  ): Promise<calendar_v3.Schema$Event | false> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const auth = (await this.authorize()) as any;
     if (!auth) return false;
@@ -197,14 +199,12 @@ class GoogleCalendarService {
         (err, res) => {
           if (err) {
             console.log(
-              `The API returned an error: ${err}. Event: ${event.summary}. Start: ${event.start}`
+              `Insert event - the API returned an error: ${err}. Event: ${event.summary}. Start: ${event.start?.date}`, event
             );
             return false;
           }
           console.log(
-            `Event created: ${res?.data.id}, ${
-              res?.data.summary ?? "No summary!"
-            }, ${res?.data.start?.date}`
+            `Event created: ${res?.data.id}, ${res?.data.summary ?? "No summary!"}, ${res?.data.start?.date}`
           );
           return res?.data;
         }
@@ -291,6 +291,26 @@ class GoogleCalendarService {
     } catch (error) {
       return false;
     }
+  }
+
+  public async deleteAllGoogleCalendarEvents(): Promise<Record<string, boolean>> {
+    const events = await this.listEvents(
+      OLDEST_PB_EVENT,
+      1000
+    );
+
+    const eventDeleteInfo: Record<string, boolean> = {};
+    if (!events) {
+      logger.warn('No events to delete!');
+      return eventDeleteInfo;
+    }
+    for (const gEvent of events) {
+      if (!gEvent.id) continue; // ID should be defined
+      const success = await this.deleteEvent(gEvent.id);
+      console.log(`Delete ${gEvent.id} - ${success ? 'success' : 'failed'}`);
+      eventDeleteInfo[gEvent.id] = success;
+    }
+    return eventDeleteInfo;
   }
 
   public buildCalendarEventPayload(
