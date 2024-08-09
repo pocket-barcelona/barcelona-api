@@ -13,6 +13,8 @@ import logger from "../../utils/logger";
 import type { CalendarEventDirectus } from "../../models/calendar.type";
 
 export const OLDEST_PB_EVENT = new Date("2020-01-01T01:00:00").toISOString(); // need to tell GC from when we want events in a list. PB=Pocket Barcelona
+export const HIDDEN_EVENT_DATE = "2020-01-02";
+export const EVENT_TIMEZONE = "Europe/Madrid";
 
 // If modifying these scopes, delete token.json.
 const SCOPES = [
@@ -173,7 +175,7 @@ class GoogleCalendarService {
       const res = await calendar.events.list({
         calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
         iCalUID: uuid,
-        showDeleted: true
+        showDeleted: true, // show deleted events, which will be cancelled
       });
       if (res?.data.items && res.data.items.length > 0) {
         return res.data.items[0];
@@ -192,44 +194,72 @@ class GoogleCalendarService {
     const auth = (await this.authorize()) as any;
     if (!auth) return false;
     const calendar = google.calendar({ version: "v3", auth });
-    
-    const insertFunc = (eventPayload: calendar_v3.Schema$Event): Promise<calendar_v3.Schema$Event> => {
+
+    const insertFunc = (
+      eventPayload: calendar_v3.Schema$Event
+    ): Promise<calendar_v3.Schema$Event> => {
       return new Promise((resolve, reject) => {
         calendar.events.insert(
           {
             calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
-            requestBody: eventPayload
+            requestBody: eventPayload,
           },
           (err, res) => {
             if (err) {
               console.log(
-                `Insert event - the API returned an error: ${err}. Event: ${eventPayload.summary}. Start: ${eventPayload.start?.date}`, eventPayload
+                `Insert event - the API returned an error: ${err}. Event: ${eventPayload.summary}. Start: ${eventPayload.start?.date}`,
+                eventPayload
               );
               return reject(err);
             }
             if (!res) {
               return reject("No response from Google Calendar API");
             }
-            
+
             return resolve(res.data);
           }
         );
       });
     };
-    
+
     try {
       const createdEvent = await insertFunc(event);
       if (createdEvent) {
         console.log(
-          `Event created: ${createdEvent.id}, ${createdEvent.summary ?? "No summary!"}, ${createdEvent.start?.date}`
+          `Event created: ${createdEvent.id}, ${
+            createdEvent.summary ?? "No summary!"
+          }, ${createdEvent.start?.date}`
         );
       }
       return createdEvent;
-    } catch (error) {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    } catch (error: any) {
+      // If the google event already exists, update the event instead...
+      // Google events seem to be never deleted, instead they are status=cancelled
+      // So we have to reuse the event by ID, or create a new iCalUID our side!
+      if (error?.response?.status === 409) {
+        console.log(
+          "This event was previously cancelled. Attempting to update the event instead..."
+        );
+        if (!event.iCalUID) {
+          throw new Error("No iCalUID found for event!");
+        }
+        const cancelledEvent = await this.getEventByUID(event.iCalUID);
+        if (cancelledEvent?.id) {
+          console.log(`Creating Google ID: ${cancelledEvent.id}`);
+          // return await this.updateEvent(cancelledEvent.id, event);
+          return await this.patchEvent(cancelledEvent, event);
+        }
+        // await this.updateEvent(event.id, eventPayload)
+      }
+
+      console.log(
+        "------------------ Could not create event ------------------"
+      );
       console.warn(error);
-      console.log({
-        payload: event
-      });
+      // console.log({
+      //   payload: event
+      // });
       return false;
     }
   }
@@ -238,30 +268,77 @@ class GoogleCalendarService {
   public async updateEvent(
     eventId: string,
     event: calendar_v3.Schema$Event
-  ): Promise<calendar_v3.Schema$Event | null> {
+  ): Promise<calendar_v3.Schema$Event | false> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const auth = (await this.authorize()) as any;
-    if (!auth) return null;
+    if (!auth) return false;
     const calendar = google.calendar({ version: "v3", auth });
 
     try {
       const res = await calendar.events.update({
         calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
         eventId,
-        requestBody: event,
+        requestBody: {
+          ...event,
+          // status: 'confirmed'
+        },
       });
       return res.data;
     } catch (error) {
       console.warn(error);
       console.log({
         payload: event,
-        id: eventId
+        id: eventId,
       });
-      return null;
+      return false;
     }
   }
 
-  /** Delete an event in Google calendar by eventID (Not iCalUID) */
+  public async patchEvent(
+    originalEvent: calendar_v3.Schema$Event,
+    newEvent: Partial<calendar_v3.Schema$Event>
+  ): Promise<calendar_v3.Schema$Event | false> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const auth = (await this.authorize()) as any;
+    if (!auth) return false;
+    if (!originalEvent.id) return false;
+    const calendar = google.calendar({ version: "v3", auth });
+
+    try {
+      const res = await calendar.events.patch({
+        calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+        eventId: originalEvent.id,
+        requestBody: {
+          ...originalEvent,
+          ...newEvent,
+          start: {
+            ...originalEvent.start,
+            ...newEvent.start,
+          },
+          end: {
+            ...originalEvent.end,
+            ...newEvent.end,
+          },
+          status: "confirmed",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      console.warn(error);
+      console.log({
+        payload: newEvent,
+        id: originalEvent.id,
+      });
+      return false;
+    }
+  }
+
+  /**
+   * Delete an event in Google calendar by eventID (Not iCalUID)
+   * Note: Deleted events don't actually get deleted and the ID will
+   * still exist, so it's not possible to create another event in
+   * the future with the same ID!
+   */
   public async deleteEvent(eventId: string): Promise<boolean> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const auth = (await this.authorize()) as any;
@@ -277,7 +354,47 @@ class GoogleCalendarService {
     } catch (error) {
       console.warn(error);
       console.log({
-        id: eventId
+        id: eventId,
+      });
+      return false;
+    }
+  }
+
+  public async deleteEventByHiding(
+    event: calendar_v3.Schema$Event
+  ): Promise<calendar_v3.Schema$Event | false> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const auth = (await this.authorize()) as any;
+    if (!auth) return false;
+    const calendar = google.calendar({ version: "v3", auth });
+
+    const { id: eventId } = event;
+    if (!eventId) return false;
+
+    try {
+      const res = await calendar.events.update({
+        calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+        eventId,
+        requestBody: {
+          ...event,
+          start: {
+            ...event.start,
+            timeZone: EVENT_TIMEZONE,
+            date: HIDDEN_EVENT_DATE,
+          },
+          end: {
+            ...event.end,
+            timeZone: EVENT_TIMEZONE,
+            date: HIDDEN_EVENT_DATE,
+          },
+        },
+      });
+      return res.data;
+    } catch (error) {
+      console.warn(error);
+      console.log({
+        payload: event,
+        id: eventId,
       });
       return false;
     }
@@ -308,21 +425,20 @@ class GoogleCalendarService {
     }
   }
 
-  public async deleteAllGoogleCalendarEvents(): Promise<Record<string, boolean>> {
-    const events = await this.listEvents(
-      OLDEST_PB_EVENT,
-      1000
-    );
+  public async deleteAllGoogleCalendarEvents(): Promise<
+    Record<string, boolean>
+  > {
+    const events = await this.listEvents(OLDEST_PB_EVENT, 1000);
 
     const eventDeleteInfo: Record<string, boolean> = {};
     if (!events) {
-      logger.warn('No events to delete!');
+      logger.warn("No events to delete!");
       return eventDeleteInfo;
     }
     for (const gEvent of events) {
       if (!gEvent.id) continue; // ID should be defined
       const success = await this.deleteEvent(gEvent.id);
-      console.log(`Delete ${gEvent.id} - ${success ? 'success' : 'failed'}`);
+      console.log(`Delete ${gEvent.id} - ${success ? "success" : "failed"}`);
       eventDeleteInfo[gEvent.id] = success;
     }
     return eventDeleteInfo;
@@ -341,12 +457,12 @@ class GoogleCalendarService {
       description: buildCalendarDescription(event),
       start: {
         date: event.date_start, // "2024-08-15T09:00:00+02:00" or "2024-08-15"
-        timeZone: "Europe/Madrid",
+        timeZone: EVENT_TIMEZONE,
       },
       end: {
         // @todo - this needs to be inclusive - currently not adding the last event day on Google!
         date: realEndDate, // "2024-08-21T21:00:00+02:00" or "2024-08-21"
-        timeZone: "Europe/Madrid",
+        timeZone: EVENT_TIMEZONE,
       },
       guestsCanInviteOthers: false,
       guestsCanModify: false,
@@ -419,17 +535,30 @@ function getEventRealEndDate(dateEndStr: string): {
  * If lat/lng accurate, do this: https://maps.google.com/?q=42.346646,1.9572331
  * If not, do this: https://maps.google.com/?q=Ciutadella%20Park
  *
- * @url See also: https://stackoverflow.com/questions/1801732/how-do-i-link-to-google-maps-with-a-particular-longitude-and-latitude
+ * @url See also: https://stackoverflow.com/questions/1801732/how-do-i-link-to-google-maps-with-a-particular-longitude-and-latitude/52943975#52943975
  */
 function buildMapLocationString(event: CalendarEventDirectus) {
-  let mapStr = "https://maps.google.com/?q=";
-  // check accuracy
-  if (event.location_accuracy === 1) {
-    mapStr += `${event.lat},${event.lng}`;
-  } else {
-    mapStr += encodeURIComponent(event.location);
+  if (!event.lat || !event.lng) {
+    return "";
   }
-  mapStr += ",16z";
+  // https://www.google.com/maps/search/?api=1&query=<lat>,<lng>
+  // Ex: https://www.google.com/maps/search/?api=1&query=41.37903407143937,2.1742959490764666
+  // Ex: https://www.google.com/maps/search/?api=1&query=Poblenou%20Neighbourhood
+  let mapStr = "https://www.google.com/maps/search/?api=1&query=";
+
+  // https://www.google.com/maps/search/?api=1&query=28.6139,77.2090
+  // https://www.google.com/maps/search/?api=1&query=41.4134488,2.0182425&query_place_id=Molins%20de%20Rei
+
+  // check accuracy
+  // if (event.location_accuracy === 1) {
+  //   mapStr += `${event.lat},${event.lng}`;
+  // } else {
+  //   mapStr += encodeURIComponent(event.location);
+  // }
+
+  // currently, lat/lng is handled in Google Sheets
+  mapStr += `${event.lat},${event.lng}`;
+  // mapStr += ",16z"; // this doesn't work
   return mapStr;
 }
 
@@ -445,24 +574,71 @@ function buildCalendarDescription(event: CalendarEventDirectus) {
   // ----------------
   let description = "";
 
-  description += `Event type: ${event.event_type}`;
+  description += `Event type: ${getEventTypeEmoji(event)} ${event.event_type}\n`;
   if (event.url) {
-    description += `\nURL: ${event.url}`;
+    description += `\nURL: ${event.url}\n`;
   }
 
+  const startStr = new Date(event.date_start).toDateString();
+  const endStr = new Date(event.date_end).toDateString();
+  description += `\nStart: ${startStr}.\nEnd: ${endStr}\n`;
+
+  const isMultiDays = isMultiDayEvent(event.date_start, event.date_end);
+  if (isMultiDays) {
+    description += '\n(note: This event spans multiple days)\n';
+  }
+  
+  
+
   // location on map link
-  description += `\nLocation: ${buildMapLocationString(event)}`;
+  description += `\nLocation: ${buildMapLocationString(event)}\n`;
 
   if (event.event_notes) {
-    description += `\n\nNotes: ${event.event_notes}`;
+    description += `\nNotes: ${event.event_notes}\n`;
   }
 
   if (event.is_in_barcelona) {
     // description += '\n\nNote: This event is in Barcelona';
   } else {
-    description += "\n\nNote: This event is NOT in Barcelona";
+    description += "\nNote: This event is NOT in Barcelona\n";
   }
+
   return description;
+}
+
+function getEventTypeEmoji({ event_type }: CalendarEventDirectus): string {
+  switch (event_type.toLowerCase()) {
+    case "culture / arts festival":
+      return "🎭";
+    case "festa major":
+      return "🥁";
+    case "food / drink festival":
+      return "🍸";
+    case "lgbt festival":
+      return "🏳️‍🌈";
+    case "local / neighbourhood festival":
+      return "🍻";
+    case "music / film festival":
+      return "🎤";
+    case "open day / weekend":
+      return "🎟";
+    case "sporting event / festival":
+      return "🥇";
+    case "barcelona public holiday":
+      return "🛌";
+    case "tech festival":
+      return "👾";
+    default:
+      return "🎫";
+  }
+}
+
+/** Start and end dates are always a day apart so check if event is more than 48 hours apart! Ignores leap time! */
+function isMultiDayEvent(startStr: string, endStr: string) {
+  const start = new Date(startStr);
+  const end = new Date(endStr);
+  const twoDaysMs = 2 * 24 * 60 * 60 * 1000;
+  return Math.abs(start.getTime() - end.getTime()) >= twoDaysMs;
 }
 
 export default new GoogleCalendarService();
