@@ -9,13 +9,18 @@ const router = express.Router()
 // ########### CALENDAR ###########
 router.get("/headless", [], CalendarController.getListHandler);
 
-router.get("/headless/:calendarEventId", [validateResource(readCalendarEventSchema)], CalendarController.getByIdHandler);
+// id=Directus internal ID
+router.get("/headless/:id", [validateResource(readCalendarEventSchema)], CalendarController.getByIdHandler);
 
 router.get("/google/sync", [requireUser], CalendarController.syncToGoogleCalendarHandler);
 
 router.get("/google", [requireUser], CalendarController.getGoogleCalendarListHandler);
 
-router.get("/google/:calendarEventId", [requireUser, validateResource(readCalendarEventSchema)], CalendarController.getGoogleCalendarEventByIdHandler);
+// id=Google calendar ID
+router.get("/google/id/:id", [requireUser, validateResource(readCalendarEventSchema)], CalendarController.getGoogleCalendarEventByIdHandler);
+
+// id=iCalUID
+router.get("/google/ical/:id", [requireUser, validateResource(readCalendarEventSchema)], CalendarController.getGoogleCalendarEventByIcalUidHandler);
 
 
 export default router;

@@ -11,14 +11,14 @@ import GoogleCalendarService from "../../../service/calendar/googleCalendar.serv
  * @returns
  */
 export default async function getById(req: Request<ReadCalendarEventInput['params']>, res: Response) {
-  if (!req.params.calendarEventId) {
+  if (!req.params.id) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .send(error("Please provide a calendarEventId - must be a iCalUID", res.statusCode));
+      .send(error("Please provide an ID - must be a Google event ID (not iCalUID)", res.statusCode));
   }
 
-  const { calendarEventId: id } = req.params;
-  const record = await GoogleCalendarService.getEventByUID(id);
+  const { id } = req.params;
+  const record = await GoogleCalendarService.getEventById(id);
 
   if (!record) {
     return res

@@ -143,7 +143,7 @@ class GoogleCalendarService {
   }
 
   /** Get an event from a Google calendar using it's GC event ID (not iCalUID) */
-  public async getEvent(
+  public async getEventById(
     eventId: string
   ): Promise<calendar_v3.Schema$Event | null> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -574,27 +574,27 @@ function buildCalendarDescription(event: CalendarEventDirectus) {
   // ----------------
   let description = "";
 
-  description += `Event type: ${getEventTypeEmoji(event)} ${event.event_type}\n`;
+  description += `Type: ${getEventTypeEmoji(event)} ${event.event_type}\n`;
   if (event.url) {
-    description += `\nURL: ${event.url}\n`;
+    description += `\n🔗 URL: ${event.url}\n`;
   }
 
   const startStr = new Date(event.date_start).toDateString();
   const endStr = new Date(event.date_end).toDateString();
-  description += `\nStart: ${startStr}.\nEnd: ${endStr}\n`;
+  description += `\n📆 Start: ${startStr}.\nEnd: ${endStr}\n`;
 
   const isMultiDays = isMultiDayEvent(event.date_start, event.date_end);
   if (isMultiDays) {
-    description += '\n(note: This event spans multiple days)\n';
+    description += '\nℹ️ (note: This event spans multiple days)\n';
   }
   
   
 
   // location on map link
-  description += `\nLocation: ${buildMapLocationString(event)}\n`;
+  description += `\n📍 Location: ${buildMapLocationString(event)}\n`;
 
   if (event.event_notes) {
-    description += `\nNotes: ${event.event_notes}\n`;
+    description += `\n📝 Notes: ${event.event_notes}\n`;
   }
 
   if (event.is_in_barcelona) {

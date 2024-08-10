@@ -7,8 +7,8 @@ export class CalendarService {
   static getHeadlessList = async (): Promise<CalendarEvent[] | null> => getListHandler();
 
   static getByHeadlessId = async (
-    calendarEventId: CalendarEvent['id']
-  ): Promise<CalendarEvent | null> => getByIdHandler(calendarEventId);
+    id: CalendarEvent['id']
+  ): Promise<CalendarEvent | null> => getByIdHandler(id);
 
   static syncEvents = async (): Promise<CalendarEvent[] | null> => syncEventsHandler();
 }

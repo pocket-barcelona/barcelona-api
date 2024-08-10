@@ -8,10 +8,10 @@ const payload = {
 
 const params = {
   params: object({
-    calendarEventId: string({
-      required_error: "calendarEventId is required",
+    id: string({
+      required_error: "id is required",
       // invalid_type_error
-    }),
+    })
   }),
 };
 
