@@ -574,7 +574,7 @@ function buildCalendarDescription(event: CalendarEventDirectus) {
   // ----------------
   let description = "";
 
-  description += `Type: ${getEventTypeEmoji(event)} ${event.event_type}\n`;
+  description += `${getEventTypeEmoji(event)} Type: ${event.event_type}\n`;
   if (event.url) {
     description += `\n🔗 URL: ${event.url}\n`;
   }
@@ -588,7 +588,7 @@ function buildCalendarDescription(event: CalendarEventDirectus) {
     description += '\nℹ️ (note: This event spans multiple days)\n';
   }
   
-  
+
 
   // location on map link
   description += `\n📍 Location: ${buildMapLocationString(event)}\n`;
