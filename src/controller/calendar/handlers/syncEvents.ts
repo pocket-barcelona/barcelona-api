@@ -2,12 +2,14 @@ import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import type { CalendarEventDirectus } from "../../../models/calendar.type";
-import GoogleCalendarService, { OLDEST_PB_EVENT } from "../../../service/calendar/googleCalendar.service";
+import GoogleCalendarService, {
+  OLDEST_PB_EVENT,
+} from "../../../service/calendar/googleCalendar.service";
 import DirectusService from "../../../service/shared/directus.service";
 import type { calendar_v3 } from "googleapis";
 
 const DRY_RUN = false;
-const CALENDAR_API_ERROR_THRESHOLD_TIMES = 10; // stop syncing to google if this many errors are encountered
+const CALENDAR_API_ERROR_THRESHOLD_TIMES = 1; // stop syncing to google if this many errors are encountered
 const THROTTLE_MAX_CREATE_OR_UPDATE = 100;
 
 /**
@@ -37,9 +39,8 @@ export default async function syncEvents(req: Request, res: Response) {
   // const events = GoogleCalendarService.listEvents(OLDEST_PB_EVENT, 100, true);
   // return res.send(success(events));
 
-
   if (DRY_RUN) {
-    console.log('PERFORMING DRY-RUN...');
+    console.log("PERFORMING DRY-RUN...");
   }
 
   const eventsToBeDeleted: calendar_v3.Schema$Event[] = [];
@@ -120,7 +121,7 @@ export default async function syncEvents(req: Request, res: Response) {
       );
   }
 
-  // Logic check - see if there are more Directus events than Google events
+  // Logic check warning - see if there are more Directus events than Google events
   if (googleEvents.length > directusEvents.length) {
     console.debug(
       "Warning: Less Directus events than Google Calendar events. Is this right?!"
@@ -150,7 +151,7 @@ export default async function syncEvents(req: Request, res: Response) {
         // mark event for update
         eventsToBeUpdated.push({
           ...mappedEvent,
-          id: gcEvent.id // updating needs the GCID
+          id: gcEvent.id, // updating needs the GCID
         });
       }
     } else {
@@ -186,18 +187,21 @@ export default async function syncEvents(req: Request, res: Response) {
     }
 
     return res.send(
-      success({
-        toDelete: eventsToBeDeleted,
-        toCreated: eventsToBeCreated,
-        toUpdated: eventsToBeUpdated
-      }, {
-        message: "Dry run completed.",
-        meta: {
-          toDelete: eventsToBeDeleted.length,
-          toCreated: eventsToBeCreated.length,
-          toUpdated: eventsToBeUpdated.length
+      success(
+        {
+          toDelete: eventsToBeDeleted,
+          toCreated: eventsToBeCreated,
+          toUpdated: eventsToBeUpdated,
+        },
+        {
+          message: "Dry run completed.",
+          meta: {
+            toDelete: eventsToBeDeleted.length,
+            toCreated: eventsToBeCreated.length,
+            toUpdated: eventsToBeUpdated.length,
+          },
         }
-      })
+      )
     );
   }
 
@@ -209,7 +213,9 @@ export default async function syncEvents(req: Request, res: Response) {
     // delete this event from GC
     console.log(`Deleting ${eventPayload.summary}. id: ${eventPayload.id}`);
     // const success = await GoogleCalendarService.deleteEvent(eventPayload.id);
-    const success = await GoogleCalendarService.deleteEventByHiding(eventPayload);
+    const success = await GoogleCalendarService.deleteEventByHiding(
+      eventPayload
+    );
     console.log(`Delete success: ${success ? success.id : success}`);
     if (success) {
       eventsDeleted.push(eventPayload);
@@ -235,7 +241,7 @@ export default async function syncEvents(req: Request, res: Response) {
   for (const eventPayload of eventsToBeUpdated) {
     // break for throttling sync action
     if (createdOrUpdatedCounter >= THROTTLE_MAX_CREATE_OR_UPDATE) continue;
-    // if (eventPayload.recurrence) continue; // fix this
+    // if (eventPayload.recurrence === undefined) continue;
 
     console.log(`Updating ${eventPayload.summary}. id: ${eventPayload.id}`);
     const success = eventPayload.id
@@ -266,9 +272,15 @@ export default async function syncEvents(req: Request, res: Response) {
     // break for throttling sync action
     if (createdOrUpdatedCounter >= THROTTLE_MAX_CREATE_OR_UPDATE) continue;
 
-    console.log(`Creating ${eventPayload.summary}. iCalUID: ${eventPayload.iCalUID}`);
+    console.log(
+      `Creating ${eventPayload.summary}. iCalUID: ${eventPayload.iCalUID}`
+    );
     const success = await GoogleCalendarService.insertEvent(eventPayload);
-    console.log(`Create success: ${!!success}. Event: ${!success ? 'No event data' : success.summary}`);
+    console.log(
+      `Create success: ${!!success}. Event: ${
+        !success ? "No event data" : success.summary
+      }`
+    );
     if (success) {
       eventsCreated.push(eventPayload);
     } else {
@@ -308,18 +320,20 @@ export default async function syncEvents(req: Request, res: Response) {
     return res.send(success("No events to sync. All done."));
   }
 
-  console.log('DONE!');
+  console.log("DONE!");
 
-  return res.send(success("Events synced!", {
-    meta: {
-      deleted: eventsDeleted.length,
-      notDeleted: eventsNotDeleted.length,
-      created: eventsCreated.length,
-      notCreated: eventsNotCreated.length,
-      updated: eventsUpdated.length,
-      notUpdated: eventsNotUpdated.length,
-    }
-  }));
+  return res.send(
+    success("Events synced!", {
+      meta: {
+        deleted: eventsDeleted.length,
+        notDeleted: eventsNotDeleted.length,
+        created: eventsCreated.length,
+        notCreated: eventsNotCreated.length,
+        updated: eventsUpdated.length,
+        notUpdated: eventsNotUpdated.length,
+      },
+    })
+  );
 }
 
 function compareEvents(

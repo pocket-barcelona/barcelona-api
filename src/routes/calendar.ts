@@ -19,6 +19,9 @@ router.get("/google", [requireUser], CalendarController.getGoogleCalendarListHan
 // id=Google calendar ID
 router.get("/google/id/:id", [requireUser, validateResource(readCalendarEventSchema)], CalendarController.getGoogleCalendarEventByIdHandler);
 
+// id=Google calendar ID
+router.get("/google/id/:id/instances", [requireUser, validateResource(readCalendarEventSchema)], CalendarController.getGoogleCalendarEventInstancesHandler);
+
 // id=iCalUID
 router.get("/google/ical/:id", [requireUser, validateResource(readCalendarEventSchema)], CalendarController.getGoogleCalendarEventByIcalUidHandler);
 

@@ -3,6 +3,7 @@ import getById from './getById';
 import syncEvents from './syncEvents';
 import getGoogleCalendarEventsList from './getGoogleCalendarEventsList';
 import getGoogleCalendarEventById from './getGoogleCalendarEventById';
+import getGoogleCalendarEventInstances from './getGoogleCalendarEventInstances';
 import getGoogleCalendarEventByIcalUid from './getGoogleCalendarEventByIcalUid';
 
 export {
@@ -11,5 +12,6 @@ export {
   syncEvents,
   getGoogleCalendarEventsList,
   getGoogleCalendarEventById,
+  getGoogleCalendarEventInstances,
   getGoogleCalendarEventByIcalUid
 }

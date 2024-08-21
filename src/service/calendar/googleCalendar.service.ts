@@ -264,11 +264,53 @@ class GoogleCalendarService {
     }
   }
 
-  /** Update an event in Google calendar. Event ID is the GC eventID (not iCalUID) */
+  /**
+   * Update a single or recurring event in Google Calendar.
+   * Event ID is the GC eventID (not iCalUID)
+   */
   public async updateEvent(
     eventId: string,
     event: calendar_v3.Schema$Event
   ): Promise<calendar_v3.Schema$Event | false> {
+    // // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // const auth = (await this.authorize()) as any;
+    // if (!auth) return false;
+    // const calendar = google.calendar({ version: "v3", auth });
+    
+    if (event.recurrence) {
+      console.warn('Recurring event, needs updating manually');
+      return event;
+      // const updatedSuccess: boolean[] = [];
+      // const instances = await this.getEventInstances(eventId);
+      // if (instances) {
+        
+      //   // @todo - do we need to update the main event too?
+        
+      //   // update each event - we only want to update the event's description for recurring instances
+      //   for (const eventInstance of instances) {
+      //     const done = await this._updateEventById(eventId, {
+      //       ...eventInstance,
+      //       description: event.description
+      //     });
+      //     updatedSuccess.push(!!done);
+      //   }
+      //   const allDone = updatedSuccess.every(i => i);
+      //   return allDone ? event : false;
+        
+      // }
+
+      // console.warn(`No event instances found for ${event.id}: ${event.summary ?? 'No summary'}`);
+      // return false; // no instances!?
+    }
+
+    const success = await this._updateEventById(eventId, event);
+    return success;
+  }
+
+  private async _updateEventById(
+    eventId: string,
+    payload: calendar_v3.Schema$Event
+  ): Promise<false | calendar_v3.Schema$Event> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const auth = (await this.authorize()) as any;
     if (!auth) return false;
@@ -279,7 +321,7 @@ class GoogleCalendarService {
         calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
         eventId,
         requestBody: {
-          ...event,
+          ...payload,
           // status: 'confirmed'
         },
       });
@@ -287,13 +329,40 @@ class GoogleCalendarService {
     } catch (error) {
       console.warn(error);
       console.log({
-        payload: event,
+        payload,
         id: eventId,
       });
       return false;
     }
   }
 
+  /**
+   * Get all instances of a recurring event
+   * @param eventId Google calendar ID
+   */
+  public async getEventInstances(eventId: string): Promise<calendar_v3.Schema$Event[] | false> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const auth = (await this.authorize()) as any;
+    if (!auth) return false;
+    const calendar = google.calendar({ version: "v3", auth });
+    try {
+      const res = await calendar.events.instances({
+        calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+        eventId,
+      });
+      return res.data.items ?? [];
+    } catch (error) {
+      console.warn(error);
+      console.log({
+        id: eventId,
+      });
+      return false;
+    }
+  }
+
+  /**
+   * @untested Patch an event in Google calendar by eventID (Not iCalUID)
+   */
   public async patchEvent(
     originalEvent: calendar_v3.Schema$Event,
     newEvent: Partial<calendar_v3.Schema$Event>
@@ -544,7 +613,7 @@ function buildMapLocationString(event: CalendarEventDirectus) {
   // https://www.google.com/maps/search/?api=1&query=<lat>,<lng>
   // Ex: https://www.google.com/maps/search/?api=1&query=41.37903407143937,2.1742959490764666
   // Ex: https://www.google.com/maps/search/?api=1&query=Poblenou%20Neighbourhood
-  let mapStr = "https://www.google.com/maps/search/?api=1&query=";
+  let mapStr = "https://www.google.com/maps/search/?query=";
 
   // https://www.google.com/maps/search/?api=1&query=28.6139,77.2090
   // https://www.google.com/maps/search/?api=1&query=41.4134488,2.0182425&query_place_id=Molins%20de%20Rei
@@ -558,6 +627,7 @@ function buildMapLocationString(event: CalendarEventDirectus) {
 
   // currently, lat/lng is handled in Google Sheets
   mapStr += `${event.lat},${event.lng}`;
+  mapStr += '&api=1';
   // mapStr += ",16z"; // this doesn't work
   return mapStr;
 }
