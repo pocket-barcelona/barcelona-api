@@ -8,7 +8,7 @@ import GoogleCalendarService, {
 import DirectusService from "../../../service/shared/directus.service";
 import type { calendar_v3 } from "googleapis";
 
-const DRY_RUN = false;
+const DRY_RUN = true;
 const CALENDAR_API_ERROR_THRESHOLD_TIMES = 1; // stop syncing to google if this many errors are encountered
 const THROTTLE_MAX_CREATE_OR_UPDATE = 100;
 
@@ -190,15 +190,15 @@ export default async function syncEvents(req: Request, res: Response) {
       success(
         {
           toDelete: eventsToBeDeleted,
-          toCreated: eventsToBeCreated,
-          toUpdated: eventsToBeUpdated,
+          toCreate: eventsToBeCreated,
+          toUpdate: eventsToBeUpdated,
         },
         {
           message: "Dry run completed.",
           meta: {
             toDelete: eventsToBeDeleted.length,
-            toCreated: eventsToBeCreated.length,
-            toUpdated: eventsToBeUpdated.length,
+            toCreate: eventsToBeCreated.length,
+            toUpdate: eventsToBeUpdated.length,
           },
         }
       )

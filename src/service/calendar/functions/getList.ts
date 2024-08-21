@@ -7,7 +7,7 @@ import {
 import { config } from "../../../config";
 
 /**
- * Get a list of calendar events from Headless CMS
+ * Get a list of active calendar events from Headless CMS
  */
 export default async function (): Promise<CalendarEvent[] | null> {
   try {
@@ -16,7 +16,9 @@ export default async function (): Promise<CalendarEvent[] | null> {
     const resp = await fetch(endpoint);
     const data: DirectusResponse<CalendarEventDirectus[]> = await resp.json();
     if (data?.data) {
-      return data.data.map((i) => mapHeadlessCalendarItem(i));
+      return data.data
+        .filter((e) => e.event_active)
+        .map((i) => mapHeadlessCalendarItem(i));
     }
     return null;
   } catch (e) {

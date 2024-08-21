@@ -1,5 +1,5 @@
 import type { CalendarEvent } from '../../models/calendar.type';
-import { getListHandler, getByIdHandler, syncEventsHandler } from './functions';
+import { getListHandler, getByIdHandler } from './functions';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class CalendarService {
@@ -9,6 +9,4 @@ export class CalendarService {
   static getByHeadlessId = async (
     id: CalendarEvent['id']
   ): Promise<CalendarEvent | null> => getByIdHandler(id);
-
-  static syncEvents = async (): Promise<CalendarEvent[] | null> => syncEventsHandler();
 }
