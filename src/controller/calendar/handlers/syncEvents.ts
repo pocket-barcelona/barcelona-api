@@ -8,7 +8,7 @@ import GoogleCalendarService, {
 import DirectusService from "../../../service/shared/directus.service";
 import type { calendar_v3 } from "googleapis";
 
-const DRY_RUN = true;
+const DRY_RUN = false;
 const CALENDAR_API_ERROR_THRESHOLD_TIMES = 1; // stop syncing to google if this many errors are encountered
 const THROTTLE_MAX_CREATE_OR_UPDATE = 100;
 
@@ -241,7 +241,10 @@ export default async function syncEvents(req: Request, res: Response) {
   for (const eventPayload of eventsToBeUpdated) {
     // break for throttling sync action
     if (createdOrUpdatedCounter >= THROTTLE_MAX_CREATE_OR_UPDATE) continue;
-    // if (eventPayload.recurrence === undefined) continue;
+    if (eventPayload.recurrence !== undefined) {
+      console.warn(`Skipping recurring event: ${eventPayload.id} - ${eventPayload.summary}`);
+      continue;
+    }
 
     console.log(`Updating ${eventPayload.summary}. id: ${eventPayload.id}`);
     const success = eventPayload.id
