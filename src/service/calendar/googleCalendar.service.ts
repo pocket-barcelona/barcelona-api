@@ -276,16 +276,16 @@ class GoogleCalendarService {
     // const auth = (await this.authorize()) as any;
     // if (!auth) return false;
     // const calendar = google.calendar({ version: "v3", auth });
-    
+
     if (event.recurrence) {
-      console.warn('Recurring event, needs updating manually');
+      console.warn("Recurring event, needs updating manually");
       return event;
       // const updatedSuccess: boolean[] = [];
       // const instances = await this.getEventInstances(eventId);
       // if (instances) {
-        
+
       //   // @todo - do we need to update the main event too?
-        
+
       //   // update each event - we only want to update the event's description for recurring instances
       //   for (const eventInstance of instances) {
       //     const done = await this._updateEventById(eventId, {
@@ -296,7 +296,7 @@ class GoogleCalendarService {
       //   }
       //   const allDone = updatedSuccess.every(i => i);
       //   return allDone ? event : false;
-        
+
       // }
 
       // console.warn(`No event instances found for ${event.id}: ${event.summary ?? 'No summary'}`);
@@ -305,6 +305,65 @@ class GoogleCalendarService {
 
     const success = await this._updateEventById(eventId, event);
     return success;
+  }
+
+  public async patchEventInstance(
+    instances: calendar_v3.Schema$Event[],
+    event: calendar_v3.Schema$Event
+  ): Promise<calendar_v3.Schema$Event | false> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const auth = (await this.authorize()) as any;
+    if (!auth) return false;
+    const calendar = google.calendar({ version: "v3", auth });
+
+    const updated: Array<calendar_v3.Schema$Event | false> = [];
+
+    const sleep = (time: number) => {
+      return new Promise((resolve) =>
+        setTimeout(resolve, Math.ceil(time * 1000))
+      );
+    };
+    
+    // biome-ignore lint/complexity/noForEach: <explanation>
+    instances.forEach(async (instance) => {
+      if (!instance.id) return false;
+      await sleep(5);
+      try {
+        if (instance.summary === event.summary && instance.description === event.description && instance.location === event.location) {
+          // skip if already updated
+          return instance;
+        }
+        const res = await calendar.events.patch({
+          calendarId: config.POCKET_BARCELONA_CALENDAR_ID,
+          eventId: instance.id,
+          requestBody: {
+            summary: event.summary,
+            description: event.description ?? "",
+            location: event.location ?? "",
+          },
+        });
+        if (res.data) {
+          updated.push(res.data);
+          console.log(`Patched ${instance.id}`);
+          return res.data;
+        }
+        return false;
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      } catch (error: any) {
+        console.log(`${error?.message ?? 'Error'} - Failed to patch ${instance.id}`);
+        return false;
+      }
+    });
+
+    const allUpdated = updated.every((i) => i !== false);
+    if (!allUpdated) {
+      console.warn(
+        `Failed to update all instances of ${event.id}: ${
+          event.summary ?? "No summary"
+        }`
+      );
+    }
+    return allUpdated ? event : false;
   }
 
   private async _updateEventById(
@@ -340,7 +399,9 @@ class GoogleCalendarService {
    * Get all instances of a recurring event
    * @param eventId Google calendar ID
    */
-  public async getEventInstances(eventId: string): Promise<calendar_v3.Schema$Event[] | false> {
+  public async getEventInstances(
+    eventId: string
+  ): Promise<calendar_v3.Schema$Event[] | false> {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const auth = (await this.authorize()) as any;
     if (!auth) return false;
@@ -627,7 +688,7 @@ function buildMapLocationString(event: CalendarEventDirectus) {
 
   // currently, lat/lng is handled in Google Sheets
   mapStr += `${event.lat},${event.lng}`;
-  mapStr += '&api=1';
+  mapStr += "&api=1";
   // mapStr += ",16z"; // this doesn't work
   return mapStr;
 }
@@ -655,10 +716,8 @@ function buildCalendarDescription(event: CalendarEventDirectus) {
 
   const isMultiDays = isMultiDayEvent(event.date_start, event.date_end);
   if (isMultiDays) {
-    description += '\nℹ️ (note: This event spans multiple days)\n';
+    description += "\nℹ️ (note: This event spans multiple days)\n";
   }
-  
-
 
   // location on map link
   description += `\n📍 Location: ${buildMapLocationString(event)}\n`;
