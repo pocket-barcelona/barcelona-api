@@ -1,4 +1,4 @@
-import express, { type Request, type Response } from "express";
+import express, { type Express, type Request, type Response } from "express";
 import { config } from "./config";
 import responseTime from "response-time";
 import connect from "./utils/connect";
@@ -9,7 +9,7 @@ import { restResponseTimeHistogram, startMetricsServer } from "./utils/metrics";
 
 const PORT = config.port;
 
-const app = express();
+const app: Express = express();
 app.use(express.json());
 app.use(deserializeUser);
 
@@ -32,7 +32,7 @@ app.use(
  * Support for CORS
  * @link https://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue
  */
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   // Add headers before the routes are defined
 
   // Website you wish to allow to connect

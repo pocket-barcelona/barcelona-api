@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { PoiService } from "../../../service/poi/poi.service";
-import { FilterByPoiInput } from "../../../schema/poi/poi.schema";
+import type { FilterByPoiInput } from "../../../schema/poi/poi.schema";
 
 /**
  * Get a list of points of interest

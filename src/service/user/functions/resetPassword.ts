@@ -1,5 +1,5 @@
-import UserModel, { UserDocument } from "../../../models/auth/user.model";
-import { ResetPasswordUserInput } from "../../../schema/user/reset-password.schema";
+import UserModel, { type UserDocument } from "../../../models/auth/user.model";
+import type { ResetPasswordUserInput } from "../../../schema/user/reset-password.schema";
 import lodash from "lodash";
 const { omit } = lodash;
 

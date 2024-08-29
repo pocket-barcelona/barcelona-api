@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { error } from "./apiResponse";
 import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
 import { config } from "../config";

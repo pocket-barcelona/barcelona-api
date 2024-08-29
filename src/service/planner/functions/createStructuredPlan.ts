@@ -1,5 +1,5 @@
 import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
-import { Query, type Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import type { PlanBuilderInput, StructuredPlanResponse } from "../../../models/plan.model";
 import { PlanHelper } from "./createStructuredPlan.helper";
 import { PlanThemeEnum, type StructuredPlanDayProfile } from "../../../models/planThemes";

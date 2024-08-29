@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import { config } from "../config";
 import logger from "./logger";
 
@@ -13,7 +13,7 @@ export namespace SessionUtils {
    * @returns 
    */
   export function signJwt(
-    object: Object,
+    object: object,
     keyName: "accessTokenPrivateKey" | "refreshTokenPrivateKey",
     options?: jwt.SignOptions | undefined
   ): string | undefined {
@@ -70,7 +70,7 @@ export namespace SessionUtils {
     let validity: JWTTokenValidity;
   
     try {
-      const decoded = jwt.verify(token, publicKey) as any;
+      const decoded = jwt.verify(token, publicKey) as JwtPayload;
       const { exp } = decoded;
       const expired = new Date().getTime() > (exp || 0);
       validity = {
@@ -78,6 +78,7 @@ export namespace SessionUtils {
         expired: expired,
         decoded,
       };
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     } catch (e: any) {
       // logger.warn('############### BAD / EMPTY TOKEN ##################');
       // console.error(e);

@@ -51,7 +51,7 @@ export default async function sendMail(
     }
     // console.log('Sent!');
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     // logger.info({
     //   message: 'Email template render issue!',
     // });

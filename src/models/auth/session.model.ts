@@ -1,6 +1,6 @@
-import * as dynamoose from "dynamoose";
-import { UserDocument } from "./user.model";
-import { Document } from "dynamoose/dist/Document";
+import dynamoose from "dynamoose";
+import type { UserDocument } from "./user.model";
+import type { Item } from "dynamoose/dist/Item";
 
 export interface SessionTokenModel {
   accessToken: string;
@@ -13,7 +13,7 @@ export interface SessionExpiry {
   exp: number;
 }
 
-export interface SessionDocument extends Document {
+export interface SessionDocument extends Item {
   // user: UserDocument["_id"];
   // id: string;
   // user: string;

@@ -1,4 +1,4 @@
-import { SessionExpiry } from "../../../models/auth/session.model";
+import type { SessionExpiry } from "../../../models/auth/session.model";
 import { config } from "../../../config";
 
 export default function getSessionExpiryData(

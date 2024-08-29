@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { PlannerService } from "../../../service/planner/planner.service";
 import { PlanBuilderInput } from "../../../models/plan.model";
-import { BuildPlanInput } from "../../../schema/plan/plan.schema";
+import type { BuildPlanInput } from "../../../schema/plan/plan.schema";
 
 /**
  * Create a structured x-day plan

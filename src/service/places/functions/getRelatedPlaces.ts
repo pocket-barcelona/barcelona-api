@@ -1,5 +1,5 @@
 import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
-import { Query, type ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import type { ReadPlaceInput } from '../../../schema/place/place.schema';
 
 /**

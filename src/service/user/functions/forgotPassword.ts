@@ -1,6 +1,6 @@
 import { EmailTemplates } from "../../../emails/mjml";
-import { ResetPasswordDocument } from "../../../models/auth/reset-password.model";
-import { UserDocument } from "../../../models/auth/user.model";
+import type { ResetPasswordDocument } from "../../../models/auth/reset-password.model";
+import type { UserDocument } from "../../../models/auth/user.model";
 import { EmailService } from "../../email/email.service";
 import { EmailUtils } from "../../email/email.utils";
 import { config } from "../../../config";
@@ -71,13 +71,11 @@ export default async function forgotPassword(
     });
     if (sent) {
       return Promise.resolve(1);
-    } else {
-      return Promise.resolve(-4);
     }
-  } else {
-    // logger.info({
-    //   message: 'Email template render issue!',
-    // });
-    return Promise.resolve(-5);
+    return Promise.resolve(-4);
   }
+  // logger.info({
+  //   message: 'Email template render issue!',
+  // });
+  return Promise.resolve(-5);
 }

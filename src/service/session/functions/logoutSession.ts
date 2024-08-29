@@ -1,4 +1,4 @@
-import SessionModel, { SessionDocument } from "../../../models/auth/session.model";
+import SessionModel, { type SessionDocument } from "../../../models/auth/session.model";
 
 /**
  * Update a DB session record with partial data

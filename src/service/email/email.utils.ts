@@ -5,7 +5,7 @@ import { config } from "../../config";
 
 export namespace EmailUtils {
 
-  export function signData<T>(anyObject: T, optionalSaltyString: string = ''): string {
+  export function signData<T>(anyObject: T, optionalSaltyString = ''): string {
     const str = JSON.stringify(anyObject);
     // use same work factor as passwords
     const salt = bcrypt.genSaltSync(config.saltWorkFactor);
@@ -49,6 +49,7 @@ export namespace EmailUtils {
       return {
         renderedHtml: "",
         error:
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           (error as any).message ||
           "An error occurred injecting html template values",
       };

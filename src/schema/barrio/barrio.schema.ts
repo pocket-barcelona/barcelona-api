@@ -1,4 +1,4 @@
-import { object, number, string, TypeOf, date, optional } from "zod";
+import { object, number, string, type TypeOf, date, optional } from "zod";
 
 const params = {
   query: object({

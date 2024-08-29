@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { PostsService } from "../../../service/posts/posts.service";
-import { ReadPostInput } from "../../../schema/post/post.schema";
+import type { ReadPostInput } from "../../../schema/post/post.schema";
 
 /**
  * Get a blog post by ID

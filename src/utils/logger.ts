@@ -1,4 +1,3 @@
-// import logger from "pino";
 import { pino } from "pino";
 import dayjs from "dayjs";
 

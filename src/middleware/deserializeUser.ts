@@ -1,5 +1,5 @@
 import lodash from 'lodash';
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { SessionUtils } from "../utils/jwt.utils";
 import { SessionService } from "../service/session/session.service";
 import logger from "../utils/logger";

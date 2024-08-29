@@ -1,5 +1,5 @@
 import CategoryModel, { type CategoryDocument } from '../../../models/category.model';
-import { Query, type ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 
 /**
  * Get a list of place categories (for Legacy pocketbarcelona.com)

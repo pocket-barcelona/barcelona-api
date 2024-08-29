@@ -1,5 +1,5 @@
 import BarrioModel, { type BarrioDocument } from "../../../models/barrio.model";
-import { Query, type ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 
 /**
  * Get a list of top-level barrios
@@ -15,7 +15,7 @@ export default async function (): Promise<ScanResponse<BarrioDocument> | null> {
       .where(parentIdField)
       .eq(0)
       .exec(); // this will scan every record
-    return await result.catch((err) => {
+    return await result.catch((err: unknown) => {
       // logger.warn(err)
       return null;
     });

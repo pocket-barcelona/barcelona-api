@@ -4,8 +4,8 @@
  * Bars, Restaurants, Coffee Shops, Clubs etc
  * */
 
-import * as dynamoose from "dynamoose";
-import type { Document } from "dynamoose/dist/Document";
+import dynamoose from "dynamoose";
+import type { Item } from "dynamoose/dist/Item";
 import { ChildrenEnum } from "./enums/children.enum";
 import { CommitmentEnum } from "./enums/commitment.enum";
 import { PriceEnum } from "./enums/price.enum";
@@ -75,7 +75,7 @@ export interface PoiInput {
   tags: string;
 }
 
-export interface PoiDocument extends PoiInput, Document {
+export interface PoiDocument extends PoiInput, Item {
   createdAt: Date;
   updatedAt: Date;
 }

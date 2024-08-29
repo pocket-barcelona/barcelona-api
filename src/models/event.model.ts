@@ -1,5 +1,5 @@
-import * as dynamoose from "dynamoose";
-import type { Document } from "dynamoose/dist/Document";
+import dynamoose from "dynamoose";
+import type { Item } from "dynamoose/dist/Item";
 import type { ImageAssets } from './imageAssets';
 
 
@@ -23,10 +23,11 @@ export interface EventInput {
   images?: ImageAssets[];
 }
 
-export interface EventDocument extends EventInput, Document {
+export interface EventDocument extends EventInput, Item {
   createdAt: Date;
   updatedAt: Date;
 }
+
 
 const eventSchema = new dynamoose.Schema({
   eventId: {

@@ -1,5 +1,5 @@
-import ResetPasswordModel, { ResetPasswordDocument } from "../../../models/auth/reset-password.model";
-import { UserDocument } from "../../../models/auth/user.model";
+import ResetPasswordModel, { type ResetPasswordDocument } from "../../../models/auth/reset-password.model";
+import type { UserDocument } from "../../../models/auth/user.model";
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -12,7 +12,7 @@ export default async function generatePasswordResetToken(
 ): Promise<ResetPasswordDocument | null> {
   const resetToken = uuidv4();
 
-  let resetDocument: ResetPasswordDocument | null = null;
+  const resetDocument: ResetPasswordDocument | null = null;
   try {
     // calling update will create OR update, depending on if the document exists or not!
     const resetDocument = await ResetPasswordModel.update({

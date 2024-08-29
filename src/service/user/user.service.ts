@@ -1,14 +1,15 @@
-import { ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import UserModel, {
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type UserModel from "../../models/auth/user.model";
+import type {
   CheckResetTokenEnum,
   UserDocument,
   UserInput,
 } from "../../models/auth/user.model";
-import { CheckResetTokenUserInput } from "../../schema/user/check-reset-token.schema";
-import { ResetPasswordUserInput } from "../../schema/user/reset-password.schema";
-import { ResetPasswordDocument } from "../../models/auth/reset-password.model";
-import { SessionInput } from "../../schema/session/session.schema";
-import { UpdateUserInput } from "../../schema/user/user.schema";
+import type { CheckResetTokenUserInput } from "../../schema/user/check-reset-token.schema";
+import type { ResetPasswordUserInput } from "../../schema/user/reset-password.schema";
+import type { ResetPasswordDocument } from "../../models/auth/reset-password.model";
+import type { SessionInput } from "../../schema/session/session.schema";
+import type { UpdateUserInput } from "../../schema/user/user.schema";
 import {
   checkResetTokenHandler,
   createUserHandler,
@@ -23,8 +24,9 @@ import {
   validatePasswordHandler,
   confirmEmailAddressHandler,
 } from "./functions";
-import { ConfirmEmailAddressUserInput } from "../../schema/user/confirm-email-address";
+import type { ConfirmEmailAddressUserInput } from "../../schema/user/confirm-email-address";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class UserService {
   static checkResetToken = (
     user: CheckResetTokenUserInput
@@ -55,7 +57,7 @@ export class UserService {
 
   static getUserByEmail = (
     user: Pick<UserDocument, "email">,
-    revealPasswordHash: boolean = false
+    revealPasswordHash = false
   ): Promise<UserDocument | null> =>
     getUserByEmailHandler(user, revealPasswordHash);
 

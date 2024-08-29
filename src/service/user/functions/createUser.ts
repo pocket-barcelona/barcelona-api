@@ -1,4 +1,4 @@
-import UserModel, { UserDocument, UserEmailConfirmedEnum, UserInput, UserStatusEnum } from "../../../models/auth/user.model";
+import UserModel, { type UserDocument, UserEmailConfirmedEnum, type UserInput, UserStatusEnum } from "../../../models/auth/user.model";
 import { v4 as uuidv4 } from 'uuid';
 import lodash from 'lodash';
 const { omit } = lodash;
@@ -31,9 +31,10 @@ export default async function createUser(input: UserInput): Promise<UserDocument
 
     // only return certain field from the document
     return omit(user.toJSON(), "password") as UserDocument;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   } catch (e: any) {
     // throw new Error(e);
-    if (e && e.message) {
+    if (e?.message) {
       return e.message
     }
     return null

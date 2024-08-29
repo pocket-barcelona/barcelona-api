@@ -1,4 +1,4 @@
-import type { ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import type { EventDocument } from "../../models/event.model";
 import { getListHandler, getByIdHandler } from './functions';
 

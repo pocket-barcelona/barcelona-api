@@ -1,4 +1,4 @@
-import SessionModel, { SessionDocument, SessionTokenModel } from "../../../models/auth/session.model";
+import SessionModel, { type SessionDocument, type SessionTokenModel } from "../../../models/auth/session.model";
 import { UserStatusEnum } from "../../../models/auth/user.model";
 import { SessionUtils } from "../../../utils/jwt.utils";
 import { UserService } from "../../user/user.service";

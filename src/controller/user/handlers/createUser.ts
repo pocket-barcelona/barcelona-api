@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { UserService } from "../../../service/user/user.service";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { CreateUserInput } from "../../../schema/user/user.schema";
-import { UserDocument } from "../../../models/auth/user.model";
+import type { CreateUserInput } from "../../../schema/user/user.schema";
+import type { UserDocument } from "../../../models/auth/user.model";
 
 /** Signup */
 export default async function createUser(
-  req: Request<{}, {}, CreateUserInput["body"]>,
+  req: Request<unknown, unknown, CreateUserInput["body"]>,
   res: Response
 ) {
   // check if user already exists
@@ -28,7 +28,8 @@ export default async function createUser(
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json(error("Error, the user was not created", res.statusCode));
-  } else if (typeof newUser === "string") {
+  }
+  if (typeof newUser === "string") {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json(error(newUser, res.statusCode));

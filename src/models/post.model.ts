@@ -1,7 +1,6 @@
-import * as dynamoose from "dynamoose";
-import type { Document } from "dynamoose/dist/Document";
+import dynamoose from "dynamoose";
+import type { Item } from "dynamoose/dist/Item";
 import type { CategoryDocument } from './category.model';
-
 
 export enum PostStatusEnum {
   Draft = 'draft',
@@ -101,12 +100,10 @@ export interface PostInput {
   ogImage: string;
 }
 
-
-export interface PostDocument extends PostInput, Document {
+export interface PostDocument extends PostInput, Item {
   createdAt: Date;
   updatedAt: Date;
 }
-
 
 const postSchema = new dynamoose.Schema({
   postId: {

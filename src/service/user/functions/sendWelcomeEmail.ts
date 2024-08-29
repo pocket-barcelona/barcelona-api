@@ -1,6 +1,6 @@
 import { EmailTemplates } from "../../../emails/mjml";
-import { ConfirmEmail } from "../../../models/auth/confirm-email.model";
-import { UserDocument } from "../../../models/auth/user.model";
+import type { ConfirmEmail } from "../../../models/auth/confirm-email.model";
+import type { UserDocument } from "../../../models/auth/user.model";
 import { config } from "../../../config";
 import { EmailService } from "../../email/email.service";
 import { EmailUtils } from "../../email/email.utils";
@@ -33,7 +33,7 @@ export default async function sendWelcomeEmail(
     const userEmail = encodeURIComponent(user.email);
     const confirmEmailUrl = `${domainStub}/auth/confirm-email?email=${userEmail}&data=${signatureBase64}`;
 
-    rendered = EmailUtils.getRenderedEmailTemplateHtml<'url'>(
+    rendered = EmailUtils.getRenderedEmailTemplateHtml<"url">(
       EmailTemplates.newUserWelcomeHtmlEmailTemplate,
       {
         url: confirmEmailUrl,
@@ -56,10 +56,9 @@ export default async function sendWelcomeEmail(
       html: rendered.renderedHtml,
     });
     return Promise.resolve(sent);
-  } else {
-    // logger.info({
-    //   message: 'Email template render issue!',
-    // });
-    return Promise.resolve(false);
   }
+  // logger.info({
+  //   message: 'Email template render issue!',
+  // });
+  return Promise.resolve(false);
 }

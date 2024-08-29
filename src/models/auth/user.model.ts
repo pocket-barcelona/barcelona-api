@@ -1,5 +1,5 @@
-import * as dynamoose from "dynamoose";
-import { Document } from "dynamoose/dist/Document";
+import dynamoose from "dynamoose";
+import type { Item } from "dynamoose/dist/Item";
 import { UserUtils } from '../../service/user/user.utils';
 
 /** What the user must provide to create their user account */
@@ -28,7 +28,7 @@ export enum CheckResetTokenEnum {
   TokenValid = 4,
 }
 
-export interface UserDocument extends UserInput, Document {
+export interface UserDocument extends UserInput, Item {
   /** Newly registered users are 0 (unconfirmed). After clicking email link, become confirmed */
   emailConfirmed: UserEmailConfirmedEnum;
   /** User active status */
@@ -41,7 +41,7 @@ export interface UserDocument extends UserInput, Document {
   avatarColor: string;
 
   /** An auto-generated uuid for the user */
-  userId: String;
+  userId: string;
   /**
    * DynamoDB handles created/updated timestamps. See https://dynamoosejs.com/guide/Schema/#required-boolean
    */
@@ -54,7 +54,7 @@ export interface UserDocument extends UserInput, Document {
    * @todo - attach an accessory method to the document model to handle bcrypt password comparing
    * @param candidatePassword 
    */
-  comparePassword(candidatePassword: string): Promise<Boolean>;
+  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const userSchema = new dynamoose.Schema({

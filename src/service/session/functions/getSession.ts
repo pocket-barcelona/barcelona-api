@@ -1,5 +1,5 @@
-import SessionModel, { SessionDocument } from "../../../models/auth/session.model";
-import { UserDocument } from "../../../models/auth/user.model";
+import SessionModel, { type SessionDocument } from "../../../models/auth/session.model";
+import type { UserDocument } from "../../../models/auth/user.model";
 
 /**
  * Find an existing session document in the DB. If exists, check if it is valid

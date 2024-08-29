@@ -1,4 +1,4 @@
-import type { ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import type { PlaceDocument, PlaceInput } from "../../models/place.model";
 import {
   getListHandler,

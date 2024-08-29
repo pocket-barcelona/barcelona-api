@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { UserService } from "../../../service/user/user.service";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { CheckResetTokenEnum } from "../../../models/auth/user.model";
-import { CheckResetTokenUserInput } from "../../../schema/user/check-reset-token.schema";
+import type { CheckResetTokenUserInput } from "../../../schema/user/check-reset-token.schema";
 
 export default async function checkResetToken(
-  req: Request<{}, {}, CheckResetTokenUserInput["body"]>,
+  req: Request<unknown, unknown, CheckResetTokenUserInput["body"]>,
   res: Response
 ) {
   const tokenValidity = await UserService.checkResetToken(req);

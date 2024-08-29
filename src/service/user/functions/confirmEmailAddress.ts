@@ -1,7 +1,7 @@
 import UserModel, { UserEmailConfirmedEnum, UserStatusEnum } from "../../../models/auth/user.model";
-import { ConfirmEmail } from "../../../models/auth/confirm-email.model";
+import type { ConfirmEmail } from "../../../models/auth/confirm-email.model";
 import { EmailUtils } from "../../email/email.utils";
-import { ConfirmEmailAddressUserInput } from "../../../schema/user/confirm-email-address";
+import type { ConfirmEmailAddressUserInput } from "../../../schema/user/confirm-email-address";
 
 /**
  * Handle confirm email address action

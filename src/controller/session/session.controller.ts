@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { SessionInput } from "../../schema/session/session.schema";
+import type { Request, Response } from "express";
+import type { SessionInput } from "../../schema/session/session.schema";
 import {
   createSession,
   deleteSession,
@@ -7,9 +7,10 @@ import {
   refreshSession,
 } from "./handlers";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class SessionController {
   static createSessionHandler = (
-    req: Request<{}, {}, SessionInput["body"]>,
+    req: Request<unknown, unknown, SessionInput["body"]>,
     res: Response
   ) => createSession(req, res);
 

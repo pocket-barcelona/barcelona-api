@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { PostsService } from "../../../service/posts/posts.service";
-import { CreatePostInput } from '../../../schema/post/post.schema';
+import type { CreatePostInput } from '../../../schema/post/post.schema';
 
 /**
  * Create a new blog post
@@ -11,7 +11,7 @@ import { CreatePostInput } from '../../../schema/post/post.schema';
  * @returns
  */
 export default async function createPost(
-  req: Request<{}, {}, CreatePostInput["body"]>,
+  req: Request<any, any, CreatePostInput["body"]>,
   res: Response) {
   
   const newItem = await PostsService.createPost(req.body);

@@ -1,6 +1,6 @@
 import ResetPasswordModel from "../../../models/auth/reset-password.model";
 import { CheckResetTokenEnum } from "../../../models/auth/user.model";
-import { CheckResetTokenUserInput } from "../../../schema/user/check-reset-token.schema";
+import type { CheckResetTokenUserInput } from "../../../schema/user/check-reset-token.schema";
 import { USER_RESET_PASSWORD_LINK_EXPIRY } from "../../../schema/user/constants";
 
 /**

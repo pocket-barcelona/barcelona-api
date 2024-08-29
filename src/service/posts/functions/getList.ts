@@ -1,7 +1,7 @@
 import logger from "../../../utils/logger";
-import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import PostModel, {
-  PostDocument,
+  type PostDocument,
   PostStatusEnum,
 } from "../../../models/post.model";
 

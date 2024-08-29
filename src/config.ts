@@ -43,4 +43,4 @@ QIDAQAB
   /** The name of the header prompting the frontend interceptor to update its stale access token */
   HEADER_X_ACCESS_TOKEN: 'X-Access-Token',
 
-};
+} as const;

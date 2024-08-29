@@ -1,4 +1,4 @@
-import { UserDocument } from "./user.model";
+import type { UserDocument } from "./user.model";
 
 
 export interface ConfirmEmail {

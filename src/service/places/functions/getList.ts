@@ -1,5 +1,5 @@
 import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
-import { Query, type Scan, type ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import type { ReadExploreInput } from '../../../schema/explore/explore.schema';
 import { PriceBits, PriceEnum } from '../../../models/enums/price.enum';
 import { TimeRecommendedBits } from '../../../models/enums/timerecommended.enum';

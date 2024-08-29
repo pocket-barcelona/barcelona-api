@@ -1,4 +1,4 @@
-import SessionModel, { SessionDocument } from "../../../models/auth/session.model";
+import SessionModel, { type SessionDocument } from "../../../models/auth/session.model";
 
 /**
  * Find a valid user session record in the database

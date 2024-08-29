@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { SessionService } from "../../../service/session/session.service";
 import { SessionUtils } from "../../../utils/jwt.utils";
 import { UserService } from "../../../service/user/user.service";
-import { SessionTokenModel } from "../../../models/auth/session.model";
+import type { SessionTokenModel } from "../../../models/auth/session.model";
 import { error, success } from "../../../middleware/apiResponse";
-import { SessionInput } from "../../../schema/session/session.schema";
+import type { SessionInput } from "../../../schema/session/session.schema";
 import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
 
 /**
@@ -14,7 +14,7 @@ import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/packag
  * @returns
  */
 export default async function createSession(
-  req: Request<{}, {}, SessionInput["body"]>,
+  req: Request<unknown, unknown, SessionInput["body"]>,
   res: Response
 ) {
   // Validate the user's password

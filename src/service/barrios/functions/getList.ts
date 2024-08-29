@@ -1,5 +1,5 @@
 import BarrioModel, { type BarrioDocument } from "../../../models/barrio.model";
-import { Query, type ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import type { ReadBarrioInput } from '../../../schema/barrio/barrio.schema';
 
 /**
@@ -25,7 +25,7 @@ export default async function (
     
     const result = documents.exec(); // this will scan every record
     
-    return await result.catch((err) => {
+    return await result.catch((err: unknown) => {
       // logger.warn(err)
       return null;
     });
