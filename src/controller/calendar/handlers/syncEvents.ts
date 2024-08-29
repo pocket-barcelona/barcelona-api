@@ -241,31 +241,48 @@ export default async function syncEvents(req: Request, res: Response) {
   for (const eventPayload of eventsToBeUpdated) {
     // break for throttling sync action
     if (createdOrUpdatedCounter >= THROTTLE_MAX_CREATE_OR_UPDATE) continue;
+    
     if (eventPayload.recurrence !== undefined) {
-      console.warn(`Skipping recurring event: ${eventPayload.id} - ${eventPayload.summary}`);
-      continue;
-    }
+      if (!eventPayload.id) continue;
+      
+      const instances = await GoogleCalendarService.getEventInstances(eventPayload.id);
+      if (instances && instances.length !== 0) {
+        const success = await GoogleCalendarService.patchEventInstance(instances, eventPayload)
+        console.log(`Update success: ${success ? success.id : success}`);
+        if (success) {
+          eventsUpdated.push(eventPayload);
+        } else {
+          eventsNotUpdated.push(eventPayload);
+        }
+      } else {
+        console.warn('No instances found for event!');
+      }
 
-    console.log(`Updating ${eventPayload.summary}. id: ${eventPayload.id}`);
-    const success = eventPayload.id
-      ? await GoogleCalendarService.updateEvent(eventPayload.id, eventPayload)
-      : false;
-    console.log(`Update success: ${success ? success.id : success}`);
-    if (success) {
-      eventsUpdated.push(eventPayload);
     } else {
-      eventsNotUpdated.push(eventPayload);
-    }
 
-    if (eventsNotUpdated.length >= CALENDAR_API_ERROR_THRESHOLD_TIMES) {
-      return res.send(
-        error(
-          `Event updating failed ${CALENDAR_API_ERROR_THRESHOLD_TIMES} time/s, stopping!`,
-          StatusCodes.INTERNAL_SERVER_ERROR
-        )
-      );
+      console.log(`Updating ${eventPayload.summary}. id: ${eventPayload.id}`);
+      const success = eventPayload.id
+        ? await GoogleCalendarService.updateEvent(eventPayload.id, eventPayload)
+        : false;
+      console.log(`Update success: ${success ? success.id : success}`);
+      if (success) {
+        eventsUpdated.push(eventPayload);
+      } else {
+        eventsNotUpdated.push(eventPayload);
+      }
+  
+      if (eventsNotUpdated.length >= CALENDAR_API_ERROR_THRESHOLD_TIMES) {
+        return res.send(
+          error(
+            `Event updating failed ${CALENDAR_API_ERROR_THRESHOLD_TIMES} time/s, stopping!`,
+            StatusCodes.INTERNAL_SERVER_ERROR
+          )
+        );
+      }
+
+      await sleep(5);
+      createdOrUpdatedCounter++;
     }
-    createdOrUpdatedCounter++;
   }
 
   console.log(
@@ -359,8 +376,14 @@ function compareEvents(
   if (gcEvent?.end?.date !== directusMappedEvent.end?.date) {
     return false;
   }
-  if (gcEvent?.recurrence !== directusMappedEvent.recurrence) {
+  if (gcEvent?.recurrence && gcEvent?.recurrence !== directusMappedEvent.recurrence) {
     return false;
   }
   return true;
 }
+
+const sleep = (time: number) => {
+  return new Promise((resolve) =>
+    setTimeout(resolve, Math.ceil(time * 1000))
+  );
+};
