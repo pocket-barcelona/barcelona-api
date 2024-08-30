@@ -5,7 +5,8 @@ import { CalendarService } from "../../../service/calendar/calendar.service";
 import type { ReadCalendarEventInput } from '../../../schema/calendar/calendar.schema';
 
 /**
- * Get a calendar item by ID
+ * @deprecated
+ * Get a calendar item by ID from Directus
  * @param req
  * @param res
  * @returns
