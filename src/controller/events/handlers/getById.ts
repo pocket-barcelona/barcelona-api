@@ -17,7 +17,7 @@ export default async function getById(req: Request<ReadEventInput['params']>, re
       .send(error("Please provide an event ID", res.statusCode));
   }
 
-  const eventId = Number(req.params.eventId);
+  const eventId = String(req.params.eventId);
   const record = await EventsService.getById(eventId);
 
   if (!record) {

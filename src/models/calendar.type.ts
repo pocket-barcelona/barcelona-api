@@ -5,7 +5,7 @@ export type CalendarEvent = {
   id: string;
   /** Internal unique UUID for the event from Google Sheets */
   uuid: string;
-  /** Like 2024-01-14 */
+  /** The official starting date for the event. Like 2024-01-14 */
   dateStart: string;
   /** The official ending date for the event. Like 2024-01-14 */
   dateEnd: string;
@@ -13,7 +13,7 @@ export type CalendarEvent = {
   eventType: string;
   /** Enabled/disable events from being shown */
   eventActive: boolean;
-  /** Whether or not the event recurs, e.g. next year */
+  /** Whether or not the event recurs, e.g. next year. Note: this isn't accurate to the exact date next year! */
   eventRecurs: boolean;
   /** Google Calendar rule. @url https://developers.google.com/calendar/api/v3/reference/events#recurrence */
   recurrenceRule: string;

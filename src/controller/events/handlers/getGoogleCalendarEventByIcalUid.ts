@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import type { ReadCalendarEventInput } from '../../../schema/calendar/calendar.schema';
+import type { ReadCalendarEventInput } from '../../../schema/event/calendar.schema';
 import GoogleCalendarService from "../../../service/calendar/googleCalendar.service";
 
 /**

@@ -18,7 +18,7 @@ const THROTTLE_MAX_CREATE_OR_UPDATE = 100;
  * @param res
  * @returns
  */
-export default async function syncEvents(req: Request, res: Response) {
+export default async function syncEventsGoogle(req: Request, res: Response) {
   // Directus - pagination
   // https://docs.directus.io/blog/implementing-pagination-and-infinite-scrolling-in-next-js.html
 
