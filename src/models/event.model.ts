@@ -45,7 +45,6 @@ export interface EventDocument extends EventInput, Item {
   updatedAt: Date;
 }
 
-
 const eventSchema = new dynamoose.Schema({
   eventId: {
     type: Number,
