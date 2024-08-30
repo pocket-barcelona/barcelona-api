@@ -25,8 +25,8 @@ export function mapCsvToEventInput(record: EventCsvFile): EventInput {
   return {
     eventId: record.id,
     uuid: record.uuid,
-    dateStart: record.date_start,
-    dateEnd: record.date_end,
+    dateStart: new Date(record.date_start),
+    dateEnd: new Date(record.date_end),
     eventType: record.event_type,
     eventRecurs: record.event_recurs.toLowerCase() === "true",
     eventName: record.event_name,

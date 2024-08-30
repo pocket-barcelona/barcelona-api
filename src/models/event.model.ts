@@ -9,9 +9,9 @@ export interface EventInput {
   /** Internal unique UUID for the event from Google Sheets */
   uuid: string;
   /** The official starting date for the event. Like 2024-01-14 */
-  dateStart: string;
+  dateStart: Date;
   /** The official ending date for the event. Like 2024-01-14 */
-  dateEnd: string;
+  dateEnd: Date;
   /** Event type is like: Festa Major or Open Day / Weekend or Music Festival, etc */
   eventType: string;
   /** Enabled/disable events from being shown */
@@ -47,7 +47,7 @@ export interface EventDocument extends EventInput, Item {
 
 const eventSchema = new dynamoose.Schema({
   eventId: {
-    type: Number,
+    type: String,
     required: true,
     hashKey: true,
   },
