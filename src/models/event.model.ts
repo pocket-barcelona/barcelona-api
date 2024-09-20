@@ -4,23 +4,40 @@ import type { ImageAssets } from './imageAssets';
 
 
 export interface EventInput {
-  /** Unique ID number for the event */
-  eventId: number;
-  /** The official starting date for the event */
-  dateStart: number;
-  /** The official ending date for the event */
-  dateEnd: number;
+  /** Internal Unique ID for the event from Google Sheets. Ex: 1, 2, 3 */
+  eventId: string;
+  /** Internal unique UUID for the event from Google Sheets */
+  uuid: string;
+  /** The official starting date for the event. Like 2024-01-14 */
+  dateStart: Date;
+  /** The official ending date for the event. Like 2024-01-14 */
+  dateEnd: Date;
+  /** Event type is like: Festa Major or Open Day / Weekend or Music Festival, etc */
+  eventType: string;
+  /** Enabled/disable events from being shown */
+  eventActive: boolean;
+  /** Whether or not the event recurs, e.g. next year. Note: this isn't accurate to the exact date next year! */
+  eventRecurs: boolean;
+  /** Google Calendar rule. @url https://developers.google.com/calendar/api/v3/reference/events#recurrence */
+  recurrenceRule: string;
   /** The name of the event, in English */
   eventName: string;
+  /** URL friendly pathname, like: `festa-major-de-sant-antoni-2022` */
+  slug: string;
   /** The exact or approximate location of the event */
   location: string;
-  /** Whether or not the event recurs, e.g. next year */
-  recurs: boolean;
+  /** Event lat */
+  lat: number;
+  /** Event lng */
+  lng: number;
+  /** 1 = Location is accurate to LAT/LNG. 2 = Location is accurate to Neighbourhood. 3 = Location is accurate to City */
+  locationAccuracy: 1 | 2 | 3;
+  /** True if is in BCN */
+  isInBarcelona: boolean;
   /** The official website or URL for the event */
   url: string;
   /** Optional notes or remarks about the event */
-  notes: string;
-  images?: ImageAssets[];
+  eventNotes: string;
 }
 
 export interface EventDocument extends EventInput, Item {
@@ -28,12 +45,15 @@ export interface EventDocument extends EventInput, Item {
   updatedAt: Date;
 }
 
-
 const eventSchema = new dynamoose.Schema({
   eventId: {
-    type: Number,
+    type: String,
     required: true,
     hashKey: true,
+  },
+  uuid: {
+    type: String,
+    required: true,
   },
   dateStart: {
     type: Date,
@@ -43,7 +63,27 @@ const eventSchema = new dynamoose.Schema({
     type: Date,
     required: true,
   },
+  eventType: {
+    type: String,
+    required: true,
+  },
+  eventActive: {
+    type: Boolean,
+    required: true,
+  },
+  eventRecurs: {
+    type: Boolean,
+    required: true,
+  },
+  recurrenceRule: {
+    type: String,
+    required: true,
+  },
   eventName: {
+    type: String,
+    required: true,
+  },
+  slug: {
     type: String,
     required: true,
   },
@@ -51,17 +91,28 @@ const eventSchema = new dynamoose.Schema({
     type: String,
     required: true,
   },
-  recurs: {
+  lat: {
+    type: Number,
+    required: true,
+  },
+  lng: {
+    type: Number,
+    required: true,
+  },
+  locationAccuracy: {
+    type: Number,
+    required: true,
+  },
+  isInBarcelona: {
     type: Boolean,
     required: true,
-    default: false,
   },
   url: {
     type: String,
     required: true,
     default: '',
   },
-  notes: {
+  eventNotes: {
     type: String,
     required: true,
     default: '',
@@ -70,7 +121,6 @@ const eventSchema = new dynamoose.Schema({
   timestamps: true,
   saveUnknown: false,
 });
-
 
 export const TABLE_NAME_EVENTS = 'Events';
 const EventModel = dynamoose.model<EventDocument>(TABLE_NAME_EVENTS, eventSchema);
