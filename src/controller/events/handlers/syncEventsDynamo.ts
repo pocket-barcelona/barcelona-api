@@ -59,12 +59,18 @@ export default async function syncEventsDynamo(req: Request, res: Response) {
 
   try {
     const unprocessed: EventInput[] = [];
-    EventModel.batchPut(mappedRecords, (err) => {
-      if (err) {
-        console.log(err);
-        unprocessed.push(err);
-      }
-    });
+    // batch put only supports 20 at a time!
+
+    const chunkSize = 10;
+    for (let i = 0; i < mappedRecords.length; i += chunkSize) {
+      const chunk = mappedRecords.slice(i, i + chunkSize);
+      EventModel.batchPut(chunk, (err) => {
+        if (err) {
+          console.log(err);
+          unprocessed.push(err);
+        }
+      });
+    }
 
     if (unprocessed.length > 0) {
       return res.send(
