@@ -1,6 +1,6 @@
 import logger from "../../../utils/logger";
-import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import PostModel, { PostDocument } from '../../../models/post.model';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import PostModel, { type PostDocument } from '../../../models/post.model';
 
 const sortBlogPosts = (a: PostDocument, b: PostDocument) => {
   const aCreated = new Date(a.createdAt).getTime();

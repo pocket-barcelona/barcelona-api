@@ -1,6 +1,5 @@
-import * as dynamoose from "dynamoose";
-import type { Document } from "dynamoose/dist/Document";
-
+import dynamoose from 'dynamoose';
+import type { Item } from "dynamoose/dist/Item";
 
 export interface BarrioInput {
   /** Unique ID number for the barrio */
@@ -19,7 +18,7 @@ export interface BarrioInput {
   barrioCentrality: number;
 }
 
-export interface BarrioDocument extends BarrioInput, Document {
+export interface BarrioDocument extends BarrioInput, Item {
   createdAt: Date;
   updatedAt: Date;
 }

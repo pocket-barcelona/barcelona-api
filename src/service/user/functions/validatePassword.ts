@@ -1,5 +1,5 @@
-import { UserDocument } from "../../../models/auth/user.model";
-import { SessionInput } from "../../../schema/session/session.schema";
+import type { UserDocument } from "../../../models/auth/user.model";
+import type { SessionInput } from "../../../schema/session/session.schema";
 import lodash from "lodash";
 import { UserUtils } from "../user.utils";
 import { UserService } from "../user.service";

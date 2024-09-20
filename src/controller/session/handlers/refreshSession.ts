@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { config } from "../../../config";
 import { SessionService } from "../../../service/session/session.service";
 import { SessionUtils } from "../../../utils/jwt.utils";
@@ -55,7 +55,8 @@ const { get } = lodash;
     return res
       .status(StatusCodes.FORBIDDEN)
       .send(error("Invalid access token", res.statusCode));
-  } else if (expiredRefresh) {
+  }
+  if (expiredRefresh) {
     return res
       .status(StatusCodes.FORBIDDEN)
       .send(error("Refresh token has expired, please sign in", res.statusCode));

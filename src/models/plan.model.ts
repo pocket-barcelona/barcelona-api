@@ -1,14 +1,8 @@
-import {
-  Document,
-  DocumentObjectFromSchemaSettings,
-} from "dynamoose/dist/Document";
-import { ObjectType } from "dynamoose/dist/General";
-import { SerializerOptions } from "dynamoose/dist/Serializer";
 import type { CategoryDocument, CategoryInput } from "./category.model";
+import type { PriceEnum } from "./enums/price.enum";
 import { CategoryIdEnum } from "./enums/categoryid.enum";
 import { ChildrenEnum } from "./enums/children.enum";
 import { CommitmentEnum } from "./enums/commitment.enum";
-import type { PriceEnum } from "./enums/price.enum";
 import { ProfileTypeEnum } from "./enums/profiletype.enum";
 import { RequiresBookingEnum } from "./enums/requiresbooking.enum";
 import { TeenagerEnum } from "./enums/teenager.enum";

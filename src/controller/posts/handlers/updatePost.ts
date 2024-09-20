@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
-import { UpdatePostInput } from '../../../schema/post/post.schema';
+import type { UpdatePostInput } from '../../../schema/post/post.schema';
+import type { PostDocument } from '../../../models/post.model';
 import { PostsService } from '../../../service/posts/posts.service';
-import { PostDocument } from '../../../models/post.model';
 
 /**
  * Patch a post by updating one or more fields
@@ -11,7 +11,7 @@ import { PostDocument } from '../../../models/post.model';
  * @param res
  */
 export default async function updatePost(
-  req: Request<UpdatePostInput["params"], {}, UpdatePostInput["body"]>,
+  req: Request<UpdatePostInput["params"], unknown, UpdatePostInput["body"]>,
   res: Response
 ) {
   const { postId } = req.params;

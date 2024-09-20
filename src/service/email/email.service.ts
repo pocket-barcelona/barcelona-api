@@ -1,6 +1,7 @@
 import { sendMailHandler } from './functions';
-import { SendGridMessage } from "./functions/sendMail";
+import type { SendGridMessage } from "./functions/sendMail";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class EmailService {
 
   static sendMail = async (

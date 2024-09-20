@@ -1,5 +1,5 @@
-import PostModel, { PostDocument, PostInput } from '../../../models/post.model';
-import { UpdatePostInput } from '../../../schema/post/post.schema';
+import PostModel, { type PostDocument, type PostInput } from '../../../models/post.model';
+import type { UpdatePostInput } from '../../../schema/post/post.schema';
 
 /**
  * Update a blog post

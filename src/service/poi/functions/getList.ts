@@ -1,6 +1,7 @@
-import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import PoiModel, { PoiDocument } from "../../../models/poi.model";
-import { FilterByPoiInput } from "../../../schema/poi/poi.schema";
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import PoiModel, { type PoiDocument } from "../../../models/poi.model";
+import type { FilterByPoiInput } from "../../../schema/poi/poi.schema";
+
 
 /**
  * Get a list of poi's

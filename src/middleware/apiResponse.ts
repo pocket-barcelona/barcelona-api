@@ -28,16 +28,16 @@ export function success<T = any>(data: T, options?: HttpResponseOptions ): any {
   }
   if (options) {
     if (options.error !== undefined) {
-      resp['error'] = options.error
+      resp.error = options.error
     }
     if (options.message !== undefined) {
-      resp['message'] = options.message
+      resp.message = options.message
     }
     if (options.statusCode !== undefined && options.statusCode > -1) {
-      resp['code'] = options.statusCode
+      resp.code = options.statusCode
     }
     if (options.meta !== undefined) {
-      resp['meta'] = options.meta;
+      resp.meta = options.meta;
     }
   }
 

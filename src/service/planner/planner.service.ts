@@ -1,9 +1,8 @@
-import { ScanResponse } from "dynamoose/dist/DocumentRetriever";
-import { PlaceDocument } from "../../models/place.model";
-import { PlanBuilderInput, StructuredPlanResponse } from "../../models/plan.model";
+import type { PlanBuilderInput, StructuredPlanResponse } from "../../models/plan.model";
 import { createRandomPlanHandler, createStructuredPlanHandler } from './functions';
 
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class PlannerService {
 
   static createRandomPlan = async (): Promise<StructuredPlanResponse | null> => createRandomPlanHandler();  

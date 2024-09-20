@@ -1,5 +1,6 @@
 import PlaceModel, { type PlaceInput, type PlaceDocument } from "../../../models/place.model";
-import type { Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+
 const DOCUMENT_SCAN_LIMIT = 1000;
 
 type FilterFields = keyof Pick<PlaceInput, 'active'>;

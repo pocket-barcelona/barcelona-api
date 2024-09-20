@@ -1,4 +1,4 @@
-import type { ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import type { BarrioDocument } from "../../models/barrio.model";
 import { getRegionsListHandler, getListHandler } from './functions';
 import type { ReadBarrioInput } from '../../schema/barrio/barrio.schema';

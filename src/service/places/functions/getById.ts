@@ -1,5 +1,4 @@
 import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
-import { Query, ScanResponse } from "dynamoose/dist/DocumentRetriever";
 
 /**
  * Get a place by ID

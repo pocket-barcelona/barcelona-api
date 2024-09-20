@@ -1,7 +1,7 @@
 import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
 import type { StructuredPlanResponse } from "../../../models/plan.model";
 // import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
-import { Query, type Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import { PlanHelper } from "./createStructuredPlan.helper";
 import { PlanThemeEnum, type StructuredPlanDayProfile } from "../../../models/planThemes";
 import { themesTestData } from "../../../collections/themes/themesTestData";

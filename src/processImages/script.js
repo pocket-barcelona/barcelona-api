@@ -219,6 +219,7 @@ async function exportImage(settings) {
   try {
     await sharp
       .default(inputFile)
+      .rotate() // auto orient image based on EXIF!
       .resize({
         width: width,
         height: height,

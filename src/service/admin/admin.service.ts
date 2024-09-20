@@ -49,6 +49,7 @@ export class AdminService {
     formidableFile: formidable.File;
     fields: formidable.Fields;
   }> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const { files, fields } = await AdminService.parseFile(req as any);
     // const file = fs.createReadStream(formidableFile.filepath);
     // get the file
@@ -119,7 +120,10 @@ export class AdminService {
         imageAlt = "",
         imageTitle = "",
         postId = "",
-      } = fields as { imageAlt: string; imageTitle: string; postId: string };
+      // } = fields as { imageAlt: string; imageTitle: string; postId: string };
+      // @todo - fix this!
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      } = fields as any;
 
       // build file key
       const fileExtension = (originalFilename ?? "").split(".").pop();

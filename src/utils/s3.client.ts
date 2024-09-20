@@ -1,8 +1,7 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import AWS from "aws-sdk";
 import 'dotenv/config';
-import { File } from 'formidable';
-import { PassThrough } from 'node:stream';
+// import { File } from 'formidable';
+// import { PassThrough } from 'node:stream';
 
 /**
  * Support for uploading files to AWS S3 bucket
@@ -11,7 +10,9 @@ import { PassThrough } from 'node:stream';
 export const s3Client = new S3Client({
   region: process.env.AWS_REGION,
   credentials: {
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });

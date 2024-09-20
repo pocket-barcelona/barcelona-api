@@ -1,5 +1,4 @@
-import logger from "../../../utils/logger";
-import PostModel, { PostDocument } from '../../../models/post.model';
+import PostModel, { type PostDocument } from '../../../models/post.model';
 
 /**
  * Get a specific blog post

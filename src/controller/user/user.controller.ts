@@ -1,14 +1,14 @@
-import { Request, Response } from "express";
-import { CheckResetTokenUserInput } from "../../schema/user/check-reset-token.schema";
-import { ForgotPasswordUserInput } from "../../schema/user/forgot-password.schema";
-import {
+import type { Request, Response } from "express";
+import type { CheckResetTokenUserInput } from "../../schema/user/check-reset-token.schema";
+import type { ForgotPasswordUserInput } from "../../schema/user/forgot-password.schema";
+import type {
   CreateUserInput,
   UpdateUserInput,
   DeleteUserInput,
   ReadUserInput,
 } from "../../schema/user/user.schema";
-import { ResetPasswordUserInput } from "../../schema/user/reset-password.schema";
-import { ConfirmEmailAddressUserInput } from "../../schema/user/confirm-email-address";
+import type { ResetPasswordUserInput } from "../../schema/user/reset-password.schema";
+import type { ConfirmEmailAddressUserInput } from "../../schema/user/confirm-email-address";
 import {
   checkResetToken,
   confirmEmailAddress,
@@ -21,32 +21,33 @@ import {
   updateUser,
 } from "./handlers";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class UserController {
   // static getListHandler = (req: Request, res: Response) =>
 
   static checkResetTokenHandler = (
-    req: Request<{}, {}, CheckResetTokenUserInput["body"]>,
+    req: Request<unknown, unknown, CheckResetTokenUserInput["body"]>,
     res: Response
   ) => checkResetToken(req, res);
 
   static confirmEmailAddressHandler = (
-    req: Request<{}, {}, ConfirmEmailAddressUserInput["body"]>,
+    req: Request<unknown, unknown, ConfirmEmailAddressUserInput["body"]>,
     res: Response
   ) => confirmEmailAddress(req, res);
 
   /** Signup */
   static createUserHandler = (
-    req: Request<{}, {}, CreateUserInput["body"]>,
+    req: Request<unknown, unknown, CreateUserInput["body"]>,
     res: Response
   ) => createUser(req, res);
 
   static deleteUserHandler = (
-    req: Request<DeleteUserInput["params"], {}, DeleteUserInput["body"]>,
+    req: Request<DeleteUserInput["params"], unknown, DeleteUserInput["body"]>,
     res: Response
   ) => deleteUser(req, res);
 
   static forgotPasswordHandler = (
-    req: Request<{}, {}, ForgotPasswordUserInput["body"]>,
+    req: Request<unknown, unknown, ForgotPasswordUserInput["body"]>,
     res: Response
   ) => forgotPassword(req, res);
 
@@ -56,12 +57,13 @@ export class UserController {
     getLoggedInUser(req, res);
 
   static resetPasswordHandler = (
-    req: Request<{}, {}, ResetPasswordUserInput["body"]>,
+    req: Request<unknown, unknown, ResetPasswordUserInput["body"]>,
     res: Response
   ) => resetPassword(req, res);
 
   static updateUserHandler = (
-    req: Request<ReadUserInput["params"] | any, {}, UpdateUserInput["body"]>,
+    // @todo - fix
+    req: Request<ReadUserInput["params"] | any, unknown, UpdateUserInput["body"]>,
     res: Response
   ) => updateUser(req, res);
 }

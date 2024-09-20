@@ -1,5 +1,5 @@
-import * as dynamoose from "dynamoose";
-import type { Document } from "dynamoose/dist/Document";
+import dynamoose from "dynamoose";
+import type { Item } from "dynamoose/dist/Item";
 
 
 export interface CategoryInput {
@@ -13,10 +13,11 @@ export interface CategoryInput {
   suitableFor: string;
 }
 
-export interface CategoryDocument extends CategoryInput, Document {
+export interface CategoryDocument extends CategoryInput, Item {
   createdAt: Date;
   updatedAt: Date;
 }
+
 
 const categorySchema = new dynamoose.Schema({
   categoryId: {

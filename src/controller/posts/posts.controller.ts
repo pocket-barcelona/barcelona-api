@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { getList, getById, createPost, updatePost, getAdminList, getAdminById } from "./handlers";
-import { ReadPostInput, UpdatePostInput } from "../../schema/post/post.schema";
+import type { ReadPostInput, UpdatePostInput } from "../../schema/post/post.schema";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class PostsController {
   static getListHandler = (req: Request, res: Response) => getList(req, res);
 
@@ -21,7 +22,7 @@ export class PostsController {
     createPost(req, res);
 
   static updatePostHandler = (
-    req: Request<UpdatePostInput["params"], {}, UpdatePostInput["body"]>,
+    req: Request<UpdatePostInput["params"], unknown, UpdatePostInput["body"]>,
     res: Response
   ) => updatePost(req, res);
 }

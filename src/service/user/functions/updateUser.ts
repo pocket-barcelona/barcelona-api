@@ -1,5 +1,5 @@
-import UserModel, { UserDocument } from "../../../models/auth/user.model";
-import { UpdateUserInput } from "../../../schema/user/user.schema";
+import UserModel, { type UserDocument } from "../../../models/auth/user.model";
+import type { UpdateUserInput } from "../../../schema/user/user.schema";
 import lodash from "lodash";
 const { omit } = lodash;
 

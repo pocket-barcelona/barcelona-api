@@ -1,5 +1,5 @@
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 // import { readFileSync } from "fs";
 import logger from "../utils/logger";
 
@@ -40,6 +40,7 @@ export namespace AppMJMLUtils {
     let finalTemplate = file;
 
     try {
+      // biome-ignore lint/complexity/noForEach: <explanation>
       Object.keys(vars).forEach((key) => {
         const regex = new RegExp(`{${key}}`, "g");
         finalTemplate = finalTemplate.replace(regex, vars[key]);
@@ -79,12 +80,13 @@ export namespace AppMJMLUtils {
       throw new Error('Cannot find template file');
     }
 
-    let tokens = {};
+    const tokens = {};
     
     // inspired by: https://stackoverflow.com/questions/17779744/regular-expression-to-get-a-string-between-parentheses-in-javascript
     const regExp = /\{\{([^}}]+)\}\}/;
     const matches = regExp.exec(file);
     const thetokens: string[] = [];
+    // biome-ignore lint/complexity/noForEach: <explanation>
     matches?.forEach(m => {
       if (m.indexOf('\n') === -1) {
         thetokens.push(m);

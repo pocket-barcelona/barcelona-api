@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { UserService } from "../../../service/user/user.service";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { DeleteUserInput } from "../../../schema/user/user.schema";
+import type { DeleteUserInput } from "../../../schema/user/user.schema";
 import { UserStatusEnum } from "../../../models/auth/user.model";
 
 export default async function deleteUser(
-  req: Request<DeleteUserInput["params"], {}, DeleteUserInput["body"]>,
+  req: Request<DeleteUserInput["params"], unknown, DeleteUserInput["body"]>,
   res: Response
 ) {
   // performHardDelete: boolean = false,

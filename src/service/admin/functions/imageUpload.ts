@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { AdminService, UploadedFile } from '../admin.service';
+import { type Request, Response } from "express";
+import { AdminService, type UploadedFile } from '../admin.service';
 
 export interface MyType {
   file: UploadedFile | null;
@@ -10,7 +10,7 @@ export interface MyType {
  * Upload an image to S3
  * @returns
  */
-export default async function (req: Request<any>, res: any): Promise<MyType | any> {
+export default async function (req: Request<unknown>, res: unknown): Promise<MyType | any> {
 
   // try {
   //   const uploadedResp = await AdminService.handleFileUploads(req);

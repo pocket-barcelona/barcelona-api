@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { BarriosService } from "../../../service/barrios/barrios.service";
-import { ReadBarrioInput } from '../../../schema/barrio/barrio.schema';
+import type { ReadBarrioInput } from '../../../schema/barrio/barrio.schema';
 
 /**
  * Get a list of barrios

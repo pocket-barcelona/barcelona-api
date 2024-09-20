@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
 import { EventsService } from "../../../service/events/events.service";
-import { ReadEventInput } from '../../../schema/event/event.schema';
+import type { ReadEventInput } from '../../../schema/event/event.schema';
 
 /**
  * Get an event by ID
@@ -17,7 +17,7 @@ export default async function getById(req: Request<ReadEventInput['params']>, re
       .send(error("Please provide an event ID", res.statusCode));
   }
 
-  const eventId = Number(req.params.eventId);
+  const eventId = String(req.params.eventId);
   const record = await EventsService.getById(eventId);
 
   if (!record) {

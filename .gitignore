@@ -25,3 +25,6 @@ yarn-error.log*
 
 # Google Takeout data - eventually this will be removed
 src/collections/googleplaces/data.json
+
+token.json
+credentials.json

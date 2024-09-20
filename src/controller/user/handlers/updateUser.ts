@@ -1,14 +1,15 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { UserService } from "../../../service/user/user.service";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { UserDocument } from "../../../models/auth/user.model";
-import {
+import type { UserDocument } from "../../../models/auth/user.model";
+import type {
   ReadUserInput,
   UpdateUserInput,
 } from "../../../schema/user/user.schema";
 
 export default async function updateUser(
+  // @todo - fix
   req: Request<ReadUserInput["params"] | any, {}, UpdateUserInput["body"]>,
   res: Response
 ) {

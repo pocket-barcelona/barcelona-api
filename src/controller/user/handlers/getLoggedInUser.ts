@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { UserService } from "../../../service/user/user.service";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { UserDocument } from "../../../models/auth/user.model";
+import type { UserDocument } from "../../../models/auth/user.model";
 
 export default async function getLoggedInUser(req: Request, res: Response) {
   const email = res.locals.user.email as string;
@@ -14,7 +14,7 @@ export default async function getLoggedInUser(req: Request, res: Response) {
     user = await UserService.getUserByEmail({
       email,
     });
-  } catch (e: any) {
+  } catch (e: unknown) {
     // logger.error(e);
   }
 

@@ -1,9 +1,9 @@
-import {
+import type {
   SessionDocument,
   SessionExpiry,
   SessionTokenModel,
 } from "../../models/auth/session.model";
-import { UserDocument } from "../../models/auth/user.model";
+import type { UserDocument } from "../../models/auth/user.model";
 import {
   createOrUpdateSessionHandler,
   findSessionHandler,
@@ -11,9 +11,10 @@ import {
   getSessionHandler,
   logoutSessionHandler,
   reIssueAccessTokenHandler,
-  ReissueAccessTokenErrorEnum,
+  type ReissueAccessTokenErrorEnum,
 } from "./functions";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class SessionService {
   static createOrUpdateSession = async (
     user: UserDocument,

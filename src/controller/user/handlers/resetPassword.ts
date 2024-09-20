@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { UserService } from "../../../service/user/user.service";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { ResetPasswordUserInput } from "../../../schema/user/reset-password.schema";
-import { CheckResetTokenEnum, UserDocument } from "../../../models/auth/user.model";
+import type { ResetPasswordUserInput } from "../../../schema/user/reset-password.schema";
+import { CheckResetTokenEnum, type UserDocument } from "../../../models/auth/user.model";
 
 export default async function resetPassword(
-  req: Request<{}, {}, ResetPasswordUserInput["body"]>,
+  req: Request<unknown, unknown, ResetPasswordUserInput["body"]>,
   res: Response
 ) {
   // 1. check that the reset token and email address pair exist in the reset password table and are still valid

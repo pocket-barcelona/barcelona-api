@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { UserService } from "../../../service/user/user.service";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { ConfirmEmailAddressUserInput } from "../../../schema/user/confirm-email-address";
+import type { ConfirmEmailAddressUserInput } from "../../../schema/user/confirm-email-address";
 
 
 export default async function confirmEmailAddress(
-  req: Request<{}, {}, ConfirmEmailAddressUserInput["body"]>,
+  req: Request<unknown, unknown, ConfirmEmailAddressUserInput["body"]>,
   res: Response
 ) {
   let confirmed = false;

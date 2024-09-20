@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { SessionService } from "../../../service/session/session.service";
 import logger from "../../../utils/logger";
-import { SessionDocument } from "../../../models/auth/session.model";
+import type { SessionDocument } from "../../../models/auth/session.model";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
 

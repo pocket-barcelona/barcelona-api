@@ -1,7 +1,7 @@
 import logger from "../../../utils/logger";
-import PostModel, { PostDocument, PostInput, PostStatusEnum, PostVisibilityEnum } from '../../../models/post.model';
+import PostModel, { type PostDocument, type PostInput, PostStatusEnum, PostVisibilityEnum } from '../../../models/post.model';
 import { v4 as uuidv4 } from 'uuid';
-import { CreatePostInput } from '../../../schema/post/post.schema';
+import type { CreatePostInput } from '../../../schema/post/post.schema';
 import { createTinyUuid } from '../../../utils/tiny.uuid';
 
 /**
@@ -27,7 +27,7 @@ export default async function (
       // logger.warn(err);
       // timer({ ...metricsLabels, success: "false" });
       // return a validation error if present
-      if (err && err.message) return err.message;
+      if (err?.message) return err.message;
       return null;
     });
 

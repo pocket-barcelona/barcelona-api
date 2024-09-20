@@ -1,4 +1,4 @@
-import UserModel, { UserDocument } from "../../../models/auth/user.model";
+import UserModel, { type UserDocument } from "../../../models/auth/user.model";
 
 /**
  * Get a user by email AND userId
@@ -22,7 +22,7 @@ export default async function getUserByIdAndEmail(
       .eq(userId.toString())
       .limit(1)
       .exec()
-      .catch((err: any) => {
+      .catch((err: unknown) => {
         // logger.warn(err)
         return null;
       });

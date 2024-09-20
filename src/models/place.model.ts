@@ -1,5 +1,5 @@
-import * as dynamoose from "dynamoose";
-import type { Document } from "dynamoose/dist/Document";
+import dynamoose from "dynamoose";
+import type { Item } from "dynamoose/dist/Item";
 import type { ChildrenEnum } from "./enums/children.enum";
 import type { CommitmentEnum } from "./enums/commitment.enum";
 import type { PriceEnum } from "./enums/price.enum";
@@ -128,10 +128,11 @@ export interface PlaceInput {
   // @todo - place status or under moderation?
 }
 
-export interface PlaceDocument extends PlaceInput, Document {
+export interface PlaceDocument extends PlaceInput, Item {
   createdAt: Date;
   updatedAt: Date;
 }
+
 
 const placeSchema = new dynamoose.Schema({
   placeId: {

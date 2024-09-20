@@ -1,4 +1,4 @@
-import { object, number, string, TypeOf, date, array } from "zod";
+import { object, number, string, type TypeOf, date, array } from "zod";
 
 
 /**

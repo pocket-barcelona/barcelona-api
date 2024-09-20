@@ -1,4 +1,4 @@
-import { object, number, string, array, TypeOf, boolean } from "zod";
+import { object, number, string, array, type TypeOf, boolean } from "zod";
 
 // https://github.com/colinhacks/zod
 

@@ -4,8 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { PlacesService } from "../../../service/places/places.service";
 import type { ReadExploreInput } from '../../../schema/explore/explore.schema';
 import { getDistance } from 'geolib';
-import type { PlaceDocument, PlaceInput } from '../../../models/place.model';
-import { ScanResponse } from 'dynamoose/dist/DocumentRetriever';
+import type { PlaceInput } from '../../../models/place.model';
 
 const DEFAULT_PER_PAGE = 10;
 const MAX_PER_PAGE = 100;

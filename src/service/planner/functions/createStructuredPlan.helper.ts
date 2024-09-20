@@ -1,5 +1,4 @@
-import { Condition } from "dynamoose";
-import type { Scan, ScanResponse } from "dynamoose/dist/DocumentRetriever";
+import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import {
   WALKING_DISTANCES,
 } from "../../../collections/themes/themesTestData";

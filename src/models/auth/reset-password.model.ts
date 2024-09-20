@@ -1,14 +1,14 @@
-import * as dynamoose from "dynamoose";
-import { Document } from "dynamoose/dist/Document";
+import dynamoose from "dynamoose";
+import type { Item } from "dynamoose/dist/Item";
 
 
 export interface ResetPasswordInput {
-  email: String;
-  resetToken: String;
-  resetTimestamp: Number;
+  email: string;
+  resetToken: string;
+  resetTimestamp: number;
 }
 
-export interface ResetPasswordDocument extends ResetPasswordInput, Document {
+export interface ResetPasswordDocument extends ResetPasswordInput, Item {
   createdAt: Date;
   updatedAt: Date;
 }

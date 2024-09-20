@@ -1,4 +1,4 @@
-import UserModel, { UserDocument } from "../../../models/auth/user.model";
+import UserModel, { type UserDocument } from "../../../models/auth/user.model";
 import lodash from "lodash";
 const { omit } = lodash;
 
@@ -10,7 +10,7 @@ const { omit } = lodash;
  */
 export default async function getUserByEmail(
   user: Pick<UserDocument, "email">,
-  revealPasswordHash: boolean = false
+  revealPasswordHash = false
 ): Promise<UserDocument | null> {
   // example on here: https://github.com/dynamoose/dynamoose/issues/35
   try {
@@ -30,9 +30,8 @@ export default async function getUserByEmail(
 
     if (revealPasswordHash) {
       return userFound;
-    } else {
-      return omit(userFound, "password") as UserDocument;
     }
+    return omit(userFound, "password") as UserDocument;
     // return user as UserDocument;
   } catch (error) {
     // logger.info({'User not found': error})

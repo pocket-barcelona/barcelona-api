@@ -1,4 +1,4 @@
-import { object, string, TypeOf } from "zod";
+import { object, string, type TypeOf } from "zod";
 import { USER_MAXIMUM_PASSWORD_LENGTH, USER_MINIMUM_PASSWORD_LENGTH } from "./constants";
 
 // /**

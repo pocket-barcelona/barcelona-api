@@ -1,19 +1,19 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { UserService } from "../../../service/user/user.service";
 import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { UserDocument } from "../../../models/auth/user.model";
-import { ForgotPasswordUserInput } from "../../../schema/user/forgot-password.schema";
+import type { UserDocument } from "../../../models/auth/user.model";
+import type { ForgotPasswordUserInput } from "../../../schema/user/forgot-password.schema";
 
 export default async function forgotPassword(
-  req: Request<{}, {}, ForgotPasswordUserInput["body"]>,
+  req: Request<unknown, unknown, ForgotPasswordUserInput["body"]>,
   res: Response
 ) {
   // check if user exists
   let userDocument: UserDocument | null = null;
   try {
     userDocument = await UserService.getUserByEmail(req.body);
-  } catch (e: any) {
+  } catch (e: unknown) {
     // logger.error(e);
   }
   if (!userDocument) {
