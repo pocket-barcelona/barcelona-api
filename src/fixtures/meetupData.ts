@@ -31,9 +31,10 @@ const group: EventGroup = {
 };
 
 const event: EventType = {
-  id: "abc-123",
-  groupId: "parent-group-id",
-  clonedUUID: "abc-1234",
+  id: "abc-123-def-456",
+  shortId: "abc-123",
+  groupId: "abc-parent-group-id",
+  clonedUUID: "ghi-789-jkl-111",
   eventConfig: {
     requiresVerifiedUser: true,
   },

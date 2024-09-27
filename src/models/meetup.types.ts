@@ -1,8 +1,10 @@
 export type EventType = {
-  /** The ID of the group which created this event */
-  groupId: string;
   /** Event ID */
   id: string;
+  /** Auto-generated short UUID for this event */
+  shortId: string;
+  /** The ID of the group which created this event */
+  groupId: string;
   /** The UUID of the event which this event was cloned from, or empty string */
   clonedUUID: string;
   /** Event settings */
@@ -12,7 +14,7 @@ export type EventType = {
   /** 1=location/address public, 2=location only visible to people going, 3=location hidden */
   privacy: EventPrivacy;
   /** The type of response a user can give for the event: Definite=yes/no, Indefinite=yes/no/maybe */
-  rsvpType: 'DEFINITE' | 'INDEFINITE';
+  rsvpType: EventRsvpCertainty;
   /** Main event title */
   eventTitle: string;
   /** Event subtitle */
@@ -62,9 +64,22 @@ export type EventConfig = {
   requiresQRCodeEntry?: boolean;
   requiresVerifiedUser?: boolean;
 };
+type EventRsvpCertainty = 'DEFINITE' | 'INDEFINITE';
 type EventStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 type EventPrivacy = 1 | 2 | 3;
-type EventCategory = "MEETUP" | "GIG" | "DINNER" | "PRIVATE";
+
+export const EVENT_CATEGORIES = {
+  MEETUP: "MEETUP",
+  LIVEMUSIC: "LIVEMUSIC",
+  RESTAURANT: "RESTAURANT",
+  COFFEE: "COFFEE",
+  SPORT: "SPORT",
+  SKILLSWAP: "SKILLSWAP",
+  PRIVATE: "PRIVATE",
+} as const;
+type EventCategory = typeof EVENT_CATEGORIES[keyof typeof EVENT_CATEGORIES];
+
+
 type EventMode = "IN_PERSON" | "ONLINE" | "HYBRID";
 type EventLanguage = "EN" | "CA" | "ES" | "PT" | "IT" | "FR";
 type EventLocation = {
