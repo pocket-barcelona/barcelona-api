@@ -22,20 +22,15 @@ export class MeetupController {
     res: Response
   ) => createMeetup(req, res);
 
-  static deleteMeetupHandler = (
-    req: Request<DeleteMeetupInput["params"], unknown, UpdateMeetupInput["body"]>,
+  static getNotLoggedInMeetupHandler = (
+    req: Request<ReadMeetupByIdInput["params"]>,
     res: Response
-  ) => deleteMeetup(req, res);
+  ) => getMeetupById(req, res, false); // user not logged in!
 
   static getMeetupHandler = (
     req: Request<UpdateMeetupInput["params"]>,
     res: Response
   ) => getMeetupById(req, res); // user logged in!
-
-  static getNotLoggedInMeetupHandler = (
-    req: Request<ReadMeetupByIdInput["params"]>,
-    res: Response
-  ) => getMeetupById(req, res, false); // user not logged in!
 
   static getMeetupByShortIdHandler = (
     req: Request<ReadMeetupByShortIdInput["params"]>,
@@ -46,7 +41,20 @@ export class MeetupController {
     getMeetupsList(req, res);
 
   static updateMeetupHandler = (
-    req: Request<UpdateMeetupInput["params"], unknown, UpdateMeetupInput["body"]>,
+    req: Request<
+      UpdateMeetupInput["params"],
+      unknown,
+      UpdateMeetupInput["body"]
+    >,
     res: Response
   ) => updateMeetup(req, res);
+
+  static deleteMeetupHandler = (
+    req: Request<
+      DeleteMeetupInput["params"],
+      unknown,
+      UpdateMeetupInput["body"]
+    >,
+    res: Response
+  ) => deleteMeetup(req, res);
 }
