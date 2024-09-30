@@ -1,6 +1,6 @@
-import type { EventGroup, EventRsvpResponse, EventType, User } from '../models/meetup.types';
+import type { MeetupGroup, MeetupRsvpResponse, MeetupItem, User } from '../models/meetup.types';
 
-const group: EventGroup = {
+const group: MeetupGroup = {
   groupId: "my-parent-group",
   groupName: "BCN English Speakers",
   apiKey: "123-abc-456-def",
@@ -30,13 +30,16 @@ const group: EventGroup = {
   ],
 };
 
-const event: EventType = {
+const event: MeetupItem = {
   id: "abc-123-def-456",
   shortId: "abc-123",
   groupId: "abc-parent-group-id",
-  clonedUUID: "ghi-789-jkl-111",
+  clonedId: "ghi-789-jkl-111",
   eventConfig: {
     requiresVerifiedUser: true,
+    minAttendees: 0,
+    maxAttendees: 150,
+    eventLanguage: ["EN"],
   },
   status: "DRAFT",
   privacy: 1,
@@ -46,7 +49,7 @@ const event: EventType = {
   eventDesc: `
     <p>Welcome to the greatest meetup in the sky.</p><p>It will be awesome.</p>
     `,
-  howToFindEvent:
+  directions:
     "When you arrive, head downstairs and we will be there. The admins will be wearing yellow armbands. Come say hi!",
   category: "MEETUP",
   subcategory: ["social", "drinks", "karaoke"],
@@ -58,6 +61,7 @@ const event: EventType = {
     address2: "Awesome Neighbourhood",
     town: "Barcelona",
     postcode: "08001",
+    province: 'Barcelona Area',
     country: "Spain",
     notes: "",
     lat: 0,
@@ -67,7 +71,9 @@ const event: EventType = {
   price: {
     priceCents: 0,
     currencyCode: "EUR",
+    locale: 'es-ES',
     canUseCredit: false,
+    paymentScheme: 'NONE',
   },
   promoCodes: [
     {
@@ -79,8 +85,6 @@ const event: EventType = {
     },
   ],
   vouchers: undefined,
-  minAttendees: 0,
-  maxAttendees: 150,
   waitingList: [],
   tags: ["meetup", "bcn_english_speakers", "drinks", "decode"],
   hosts: [],
@@ -94,7 +98,6 @@ const event: EventType = {
       createdTime: "2024-07-25T17:35:48.171Z"
     },
   ],
-  eventLanguage: ["EN"],
 };
 
 const user: User = {
@@ -138,7 +141,7 @@ const user: User = {
   },
 };
 
-const userRsvpResponse: EventRsvpResponse = {
+const userRsvpResponse: MeetupRsvpResponse = {
   responseId: "XXXXXXX",
   userId: "abcd",
   response: 'YES',

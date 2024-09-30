@@ -6,20 +6,23 @@ import {
   boolean,
   enum as enum_,
 } from "zod";
-import { EVENT_CATEGORIES } from "../../models/meetup.types";
+import { MEETUP_CATEGORIES } from "../../models/meetup.types";
 
 const createMeetupPayload = {
   body: object({
     groupId: string(),
-    clonedUUID: string().optional(),
+    clonedId: string().optional(),
     eventConfig: object({
       requiresMobileNumber: boolean().optional(),
       requiresIdentityCard: boolean().optional(),
       requiresEmailAddress: boolean().optional(),
       requiresQRCodeEntry: boolean().optional(),
       requiresVerifiedUser: boolean().optional(),
+      minAttendees: number().optional(),
+      maxAttendees: number().optional(),
+      eventLanguage: string().array().optional(),
     }),
-    status: enum_(["DRAFT", "PUBLISHED", "ARCHIVED"]),
+    status: enum_(["PUBLISHED", "DRAFT", "ARCHIVED", "DELETED"]),
     privacy: enum_(["1", "2", "3"]),
     rsvpType: enum_(["DEFINITE", "INDEFINITE"]),
     eventTitle: string()
@@ -32,19 +35,11 @@ const createMeetupPayload = {
     eventDesc: string()
       .min(20, "Event description must be at least 20 chars")
       .max(4000, "Event description - too long! Max 4000 chars"),
-    howToFindEvent: string()
+    directions: string()
       .min(5, "Event directions must be at least 5 chars")
       .max(500, "Event directions - too long! Max 500 chars")
       .optional(),
-    category: enum_([
-      EVENT_CATEGORIES.MEETUP,
-      EVENT_CATEGORIES.LIVEMUSIC,
-      EVENT_CATEGORIES.RESTAURANT,
-      EVENT_CATEGORIES.COFFEE,
-      EVENT_CATEGORIES.SPORT,
-      EVENT_CATEGORIES.SKILLSWAP,
-      EVENT_CATEGORIES.PRIVATE,
-    ]),
+    category: string(),
     subcategory: string().array(),
     mode: enum_(["IN_PERSON", "ONLINE", "HYBRID"]),
     // startTime: string(),
@@ -58,8 +53,9 @@ const createMeetupPayload = {
     location: object({
       address1: string(),
       address2: string().optional(),
-      town: string(),
       postcode: string(),
+      town: string(),
+      province: string(),
       country: string(),
       notes: string().optional(),
       lat: number(),
@@ -69,12 +65,11 @@ const createMeetupPayload = {
     price: object({
       priceCents: number(),
       currencyCode: string(),
+      locale: string(),
       canUseCredit: boolean(),
     }),
-    minAttendees: number().optional(),
-    maxAttendees: number().optional(),
     tags: string().array(),
-    eventLanguage: string(),
+    
     // @todo - do as patch later
     // promoCodes: ...,
     // vouchers: unknown;

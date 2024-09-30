@@ -1,4 +1,4 @@
-export type EventType = {
+export type MeetupItem = {
   /** Event ID */
   id: string;
   /** Auto-generated short UUID for this event */
@@ -6,15 +6,15 @@ export type EventType = {
   /** The ID of the group which created this event */
   groupId: string;
   /** The UUID of the event which this event was cloned from, or empty string */
-  clonedUUID: string;
+  clonedId: string;
   /** Event settings */
-  eventConfig: EventConfig;
+  eventConfig: MeetupConfig;
   /** Event status and visibility */
-  status: EventStatus;
+  status: MeetupStatus;
   /** 1=location/address public, 2=location only visible to people going, 3=location hidden */
-  privacy: EventPrivacy;
+  privacy: MeetupPrivacy;
   /** The type of response a user can give for the event: Definite=yes/no, Indefinite=yes/no/maybe */
-  rsvpType: EventRsvpCertainty;
+  rsvpType: MeetupRsvpCertainty;
   /** Main event title */
   eventTitle: string;
   /** Event subtitle */
@@ -22,75 +22,98 @@ export type EventType = {
   /** Event description - support HTML */
   eventDesc: string;
   /** Special notes about how to find the event once there */
-  howToFindEvent: string;
+  directions: string;
   /** Main category */
-  category: EventCategory;
+  category: MeetupCategory;
   /** List of tag-like subcategories */
   subcategory: string[];
   /** In-person, Online or Hybrid event */
-  mode: EventMode;
+  mode: MeetupMode;
   /** Full UTC timestamp */
   startTime: string;
   /** Full UTC timestamp */
   endTime: string;
-  /** Event location @type EventLocation */
-  location: EventLocation;
+  /** Event location @type MeetupLocation */
+  location: MeetupLocation;
   /** Price in cents. @todo - entry fee? */
-  price: EventPrice;
+  price: MeetupPrice;
   /** List of event promo codes */
-  promoCodes: EventPromoModifier[];
+  promoCodes: MeetupPromoModifier[];
   /** @todo - give away vouchers during the event? */
   vouchers: unknown;
-  /** 0=any number, 1=min one attendee required for the event to start */
-  minAttendees: number;
-  /** 0=any */
-  maxAttendees: number;
   /** List of user IDs who are on the waiting list */
-  waitingList: EventWaitingList[];
+  waitingList: MeetupWaitingList[];
   /** Topics and event tags */
   tags: string[];
   /** List of event hosts/admins */
   hosts: User[];
   /** List of event photos to promote the event. Featured photo will be one flagged, else first image */
-  photos: MediaItem[];
-  /** List of languages people will be speaking at the event. If empty array, lang will be any language spoken */
-  eventLanguage: EventLanguage[];
+  photos: MeetupMediaItem[];
 };
 
-export type EventConfig = {
+export type MeetupConfig = {
   requiresMobileNumber?: boolean;
   requiresIdentityCard?: boolean;
   requiresEmailAddress?: boolean;
   requiresQRCodeEntry?: boolean;
   requiresVerifiedUser?: boolean;
+  /** 0=any number, 1=min one attendee required for the event to start */
+  minAttendees?: number;
+  /** 0=any */
+  maxAttendees?: number;
+  /** List of languages people will be speaking at the event. If empty array, lang will be any language spoken */
+  eventLanguage?: MeetupLanguage[];
 };
-type EventRsvpCertainty = 'DEFINITE' | 'INDEFINITE';
-type EventStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
-type EventPrivacy = 1 | 2 | 3;
+type MeetupRsvpCertainty = 'DEFINITE' | 'INDEFINITE';
+type MeetupStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+type MeetupPrivacy = 1 | 2 | 3;
 
-export const EVENT_CATEGORIES = {
-  MEETUP: "MEETUP",
-  LIVEMUSIC: "LIVEMUSIC",
-  RESTAURANT: "RESTAURANT",
-  COFFEE: "COFFEE",
-  SPORT: "SPORT",
-  SKILLSWAP: "SKILLSWAP",
-  PRIVATE: "PRIVATE",
+export const MEETUP_CATEGORIES = {
+  MEETUP: "MEETUP", // regular meetup with big group
+  LIVEMUSIC: "LIVEMUSIC", // gigs, karaoke etc
+  ENTERTAINMENT: "ENTERTAINMENT", // standup comedy, talks, film nights
+  RESTAURANT: "RESTAURANT", // go for dinner
+  COFFEE: "COFFEE", // share a coffee with people
+  TRAVEL: "TRAVEL", // travel and outdoor
+  SPORT: "SPORT", // beach volley, running etc
+  LIFESTYLE: "LIFESTYLE", // e.g. yoga, dance
+  ART: "ART", // art gallery, trip to museum, gallery open day etc
+  HOBBIES: "HOBBIES", // photography walks etc
+  HEALTH: "HEALTH", // health and wellbeing
+  CULTURAL: "CULTURAL", // e.g. ICD BCN
+  COMMUNITY: "COMMUNITY", // neighbourhood meetup, civic meetup, etc
+  GAMES: "GAMES", // e.g. boardgame, gaming etc
+  SKILLSWAP: "SKILLSWAP", // sharing skills e.g. language exchange
+  EDUCATION: "EDUCATION", // science, education, learning etc
+  NETWORKING: "NETWORKING", // e.g. job search etc
+  PROFESSIONAL: "PROFESSIONAL", // tech talks etc
+  BUSINESS: "BUSINESS",
+  TECH: "TECH", // tech fair, IT, devs etc
+  OUTDOOR: "OUTDOOR", // hiking etc
+  PRIVATE: "PRIVATE", // private drinks on a terrace, etc
+  OPENDAY: "OPENDAY", // e.g. co-working open days etc
+  FESTIVAL: "FESTIVAL",
+  PARENTAL: "PARENTAL", // parenting and family
+  ANIMALS: "ANIMALS", // pets and animals etc
+  OTHER: "OTHER",
 } as const;
-type EventCategory = typeof EVENT_CATEGORIES[keyof typeof EVENT_CATEGORIES];
+type MeetupCategoryValue = typeof MEETUP_CATEGORIES[keyof typeof MEETUP_CATEGORIES];
+type MeetupCategory = keyof typeof MEETUP_CATEGORIES;
 
 
-type EventMode = "IN_PERSON" | "ONLINE" | "HYBRID";
-type EventLanguage = "EN" | "CA" | "ES" | "PT" | "IT" | "FR";
-type EventLocation = {
+type MeetupMode = "IN_PERSON" | "ONLINE" | "HYBRID";
+type MeetupLanguage = "EN" | "CA" | "ES" | "PT" | "IT" | "FR";
+type MeetupLocation = {
   /** Street address */
   address1: string;
   /** locale address or neighbourhood */
   address2: string;
-  /** town/city */
-  town: string;
   /** postcode */
   postcode: string;
+  /** town/city */
+  town: string;
+  /** Region or province */
+  province: string;
   /** Country */
   country: string;
   /** Ex: Door 1 */
@@ -102,20 +125,26 @@ type EventLocation = {
   /** 1=show exact location,2=show radius,3=show city only,4=hide location */
   locationPrecision: 1 | 2 | 3;
 };
-type EventPrice = {
+type MeetupPrice = {
+  /** Like 1050 = €10,50. 0=Free. -1=TBC */
   priceCents: number;
   /** For INTL, like EUR, GBP, USD etc */
   currencyCode: "EUR" | "GBP";
+  /** Like: es-ES, en-GB, en-US */
+  locale: string;
+  /** Payment before event or when arriving? */
+  paymentScheme: "ON_RSVP" | "ON_ARRIVAL" | "NONE"
+  /** Whether or not user credit can be used to pay for the event */
   canUseCredit: boolean;
 };
-type EventWaitingList = {
+type MeetupWaitingList = {
   /** ID of the user on the list */
   userId: string;
   /** UTC time when the user joined the queue */
   joinedAt: string;
 };
 
-export type MediaItem = {
+export type MeetupMediaItem = {
   id: string;
   url: string;
   alt: string;
@@ -124,13 +153,13 @@ export type MediaItem = {
   createdTime: string;
 };
 
-type EventPromoModifier = {
+type MeetupPromoModifier = {
   code: string;
   /** Ex: "50% off with this code" */
   description: string;
   /** 0.5 would be 50% off */
   modifier?: number;
-  /** Type of action applied to the event when the code is entered by the user */
+  /** @todo - Type of action applied to the event when the code is entered by the user */
   action?: "EARLY_RSVP" | string;
   /** If false, code will be in-active */
   active: boolean;
@@ -138,7 +167,7 @@ type EventPromoModifier = {
   codeExpiryTime?: string;
 };
 
-type EventRsvpResponseType = 'YES' | 'NO' | 'MAYBE';
+type MeetupRsvpResponseType = 'YES' | 'NO' | 'MAYBE';
 type UserRsvpInfo = Pick<
   User,
   "nickname" | "email" | "telegram" | "firstname" | "lastname" | "mobile"
@@ -150,7 +179,7 @@ type RsvpType = {
   /** User UUID who responded */
   userId: User["id"];
   /** The response given by the user - if they are going or not! */
-  response: EventRsvpResponseType;
+  response: MeetupRsvpResponseType;
   /** Timestamp of initial RSVP */
   responseTimestamp: string;
   /** Timestamp of updated RSVP when most recently changed */
@@ -158,8 +187,8 @@ type RsvpType = {
   /** Incremental number of times the user has edited their RSVP */
   changedTimes: number;
 }
-/** Type for people responding to events */
-export type EventRsvpResponse =
+/** Type for people responding to meetup events */
+export type MeetupRsvpResponse =
   /** Even though the user data can be looked up from the userID, this is what they share with the event in question */
   | Partial<UserRsvpInfo>
   /** Internal response mandatory data */
@@ -184,7 +213,7 @@ export type User = {
   lastLogin: string;
   /** For resetting password via email */
   passwordResetToken?: string;
-  /** If the user is a verified user (requires admin to set at an event) */
+  /** If the user is a verified user (requires an admin to set) */
   isVerified?: boolean;
   /** User's firstname */
   firstname: string;
@@ -208,7 +237,7 @@ export type User = {
   /** Allows users to have credit to spend on going to paid events */
   credit: number;
   /** User's role */
-  role: UserRole;
+  role: MeetupUserRole;
   /** Profile info about the user - will be HTML */
   about: string;
   /** User's current location city in Spain. Ex: Barcelona */
@@ -218,7 +247,7 @@ export type User = {
   /** UTC of the time that the user arrived in BCN */
   arrivedInBarcelona: string;
   /** User's profile pic */
-  profilePhoto: MediaItem[];
+  profilePhoto: MeetupMediaItem[];
   /** List of tag-like interests that the user has, like hiking, photography, cycling, food etc */
   interests: string[];
   /** Number of RSVPs that the user has done up to now */
@@ -227,9 +256,9 @@ export type User = {
   followingGroupIds: string[];
 };
 
-export type UserRole = "ADMIN" | "HOST" | "USER";
+export type MeetupUserRole = "ADMIN" | "HOST" | "USER";
 
-export type EventGroup = {
+export type MeetupGroup = {
   /** The UUID group ID */
   groupId: string;
   /** The group display name */
@@ -239,9 +268,9 @@ export type EventGroup = {
   /** If the group has been verified by us as being a real human group */
   isVerified: boolean;
   /** List of event IDs related to this group */
-  eventIds: EventType["id"][];
+  eventIds: MeetupItem["id"][];
   /** Profile photos for the groupd */
-  profilePhoto: MediaItem[];
+  profilePhoto: MeetupMediaItem[];
   /** HTML about the group */
   about: string;
   /** UTC of when user signed up */
