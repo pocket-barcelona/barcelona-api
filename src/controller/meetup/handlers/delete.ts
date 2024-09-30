@@ -45,7 +45,7 @@ export default async function deleteDocument(
   // check the delete-able status of the document
   // can only delete certain types of documents
   switch (theDocument.status) {
-    case MeetupStatusEnum.Active:
+    case MeetupStatusEnum.Published:
     case MeetupStatusEnum.Archived:
     case MeetupStatusEnum.Draft: {
       affectedDocument = await MeetupService.deleteById(
@@ -77,8 +77,7 @@ export default async function deleteDocument(
       );
     }
 
-    case MeetupStatusEnum.SoftDeleted:
-    case MeetupStatusEnum.Deleted: {
+    case MeetupStatusEnum.SoftDeleted: {
       return res
         .status(StatusCodes.NOT_FOUND)
         .send(error("The document has already been deleted", res.statusCode));
