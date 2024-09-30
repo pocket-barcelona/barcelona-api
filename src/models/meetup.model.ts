@@ -12,7 +12,9 @@ export enum MeetupStatusEnum {
   /** Archived events - support for when we need it. Archived events can be un-deleted */
   Archived = 3,
   /** Soft deleted events do not appear in any normal API data feed. They only exist in the database. */
-  SoftDeleted = 4
+  SoftDeleted = 4,
+  /** @todo - Admin hard delete? */
+  Deleted = 5,
 }
 export interface MeetupInput {
   id: string;
