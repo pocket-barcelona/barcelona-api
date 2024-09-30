@@ -3,7 +3,7 @@ import { MeetupController } from "../controller/meetup/meetup.controller";
 import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResource";
 import { createMeetupSchema, updateMeetupSchema,deleteMeetupSchema,getMeetupByIdSchema,getMeetupByShortIdSchema } from "../schema/meetup/meetup.schema";
-import { createResponseSchema, updateResponseSchema } from "../schema/meetup/rsvp.schema";
+import { createRsvpSchema, updateRsvpSchema } from "../schema/meetup/rsvp.schema";
 import requireMeetup from "../middleware/requireMeetup";
 import { RsvpController } from "../controller/meetup/rsvp.controller";
 
@@ -37,11 +37,11 @@ router.delete("/:eventId", [requireUser], MeetupController.deleteMeetupHandler);
 
 // ########### RSVPS ###########
 /** Create a new response to a meetup */
-router.post("/:eventId/responses", [requireMeetup, validateResource(createResponseSchema)], RsvpController.createResponseHandler);
+router.post("/:eventId/responses", [requireMeetup, validateResource(createRsvpSchema)], RsvpController.createRsvpHandler);
 /** Update a response by ID */
-router.patch("/:eventId/responses/:responseId", [requireMeetup, validateResource(updateResponseSchema)], RsvpController.updateResponseHandler);
+router.patch("/:eventId/responses/:responseId", [requireMeetup, validateResource(updateRsvpSchema)], RsvpController.updateRsvpHandler);
 /** Check if user has responded to this meetup yet */
-router.post("/:eventId/has-responded", [requireMeetup], RsvpController.hasRespondedToEventAlreadyHandler);
+router.post("/:eventId/has-responded", [requireMeetup], RsvpController.hasRsvpdToMeetupAlreadyHandler);
 
 // FUTURE:
 // Follow meetup

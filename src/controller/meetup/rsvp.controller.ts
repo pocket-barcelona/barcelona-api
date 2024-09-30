@@ -1,42 +1,42 @@
 import type { Request, Response } from "express";
 import type {
-  CreateResponseInput,
-  UpdateResponseInput,
+  CreateRsvpInput,
+  UpdateRsvpInput,
 } from "../../schema/meetup/rsvp.schema";
 import {
-  createResponse,
-  updateResponse,
-  hasRespondedToEventAlready,
+  createRsvp,
+  updateRsvp,
+  hasRsvpdToMeetupAlready,
 } from "./handlers/rsvp";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class RsvpController {
-  static createResponseHandler = (
+  static createRsvpHandler = (
     req: Request<
-      CreateResponseInput["params"],
+      CreateRsvpInput["params"],
       unknown,
-      CreateResponseInput["body"]
+      CreateRsvpInput["body"]
     >, // the event already exists, so we need the ID from the request
     res: Response
-  ) => createResponse(req, res);
+  ) => createRsvp(req, res);
 
-  static hasRespondedToEventAlreadyHandler = (
+  static hasRsvpdToMeetupAlreadyHandler = (
     req: Request<
-      CreateResponseInput["params"],
+      CreateRsvpInput["params"],
       unknown,
       {
         responseId: string;
       }
     >,
     res: Response
-  ) => hasRespondedToEventAlready(req, res);
+  ) => hasRsvpdToMeetupAlready(req, res);
 
-  static updateResponseHandler = (
+  static updateRsvpHandler = (
     req: Request<
-      UpdateResponseInput["params"],
+      UpdateRsvpInput["params"],
       unknown,
-      CreateResponseInput["body"]
+      CreateRsvpInput["body"]
     >, // the event already exists, so we need the ID from the request
     res: Response
-  ) => updateResponse(req, res);
+  ) => updateRsvp(req, res);
 }

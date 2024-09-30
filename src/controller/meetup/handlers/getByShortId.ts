@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/packag
 import { MeetupService } from "../../../service/meetup/meetup.service";
 
 /**
- * Get a document by ID
+ * Get a document by short ID
  * @param req
  * @param res
  * @param loggedIn If true, returns more information, such as responses list

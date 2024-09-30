@@ -1,8 +1,8 @@
-import type { EventResponseModel } from "../../../models/rsvp.model";
+import type { MeetupRsvpModel } from "../../../models/rsvp.model";
 import type { MeetupDocument } from "../../../models/meetup.model";
-import type { UpdateResponseInput } from "../../../schema/meetup/rsvp.schema";
+import type { UpdateRsvpInput } from "../../../schema/meetup/rsvp.schema";
 
-export default async function updateResponse(theEvent: MeetupDocument, input: UpdateResponseInput, userId: string): Promise<EventResponseModel | null> {
+export default async function updateResponse(theEvent: MeetupDocument, input: UpdateRsvpInput, userId: string): Promise<MeetupRsvpModel | null> {
   // add (or update) the event response into the list
   const theEventJson = theEvent.toJSON() as MeetupDocument
   

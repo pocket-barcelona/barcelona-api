@@ -38,7 +38,7 @@ const eventIdParams = {
   }),
 };
 
-const responseIdParams = {
+const rsvpIdParams = {
   params: object({
     eventId: eventIdParams.params.shape.eventId,
     responseId: string({
@@ -48,25 +48,25 @@ const responseIdParams = {
 };
 
 
-export const createResponseSchema = object({
+export const createRsvpSchema = object({
   ...payload,
   ...eventIdParams
 });
 
-export const updateResponseSchema = object({
+export const updateRsvpSchema = object({
   ...payload,
-  ...responseIdParams,
+  ...rsvpIdParams,
 });
 
-export const deleteResponseSchema = object({
-  ...responseIdParams,
+export const deleteRsvpSchema = object({
+  ...rsvpIdParams,
 });
 
-export const getResponseSchema = object({
-  ...responseIdParams,
+export const getRsvpSchema = object({
+  ...rsvpIdParams,
 });
 
-export type CreateResponseInput = TypeOf<typeof createResponseSchema>;
-export type UpdateResponseInput = TypeOf<typeof updateResponseSchema>;
-export type ReadResponseInput = TypeOf<typeof getResponseSchema>;
-export type DeleteResponseInput = TypeOf<typeof deleteResponseSchema>;
+export type CreateRsvpInput = TypeOf<typeof createRsvpSchema>;
+export type UpdateRsvpInput = TypeOf<typeof updateRsvpSchema>;
+export type ReadRsvpInput = TypeOf<typeof getRsvpSchema>;
+export type DeleteRsvpInput = TypeOf<typeof deleteRsvpSchema>;

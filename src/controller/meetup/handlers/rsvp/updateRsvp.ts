@@ -2,22 +2,22 @@ import type { Request, Response } from "express";
 import { error, success } from "../../../../middleware/apiResponse";
 import { type MeetupDocument, MeetupStatusEnum } from "../../../../models/meetup.model";
 import type {
-  CreateResponseInput,
-  UpdateResponseInput,
+  CreateRsvpInput,
+  UpdateRsvpInput,
 } from "../../../../schema/meetup/rsvp.schema";
 import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
 import type { UserDocument } from "../../../../models/auth/user.model";
-import { ResponseService } from "../../../../service/rsvp/response.service";
-import type { EventResponseModel } from "../../../../models/rsvp.model";
+import { RsvpService } from "../../../../service/rsvp/rsvp.service";
+import type { MeetupRsvpModel } from "../../../../models/rsvp.model";
 
 /**
- * Update an event response
+ * Update a meetup rsvp response
  * @param req
  * @param res
  * @returns
  */
-export default async function updateResponse(
-  req: Request<UpdateResponseInput["params"], never, CreateResponseInput["body"]>, // the event already exists, so we need the ID from the request
+export default async function updateRsvp(
+  req: Request<UpdateRsvpInput["params"], never, CreateRsvpInput["body"]>, // the event already exists, so we need the ID from the request
   res: Response
 ) {
   // 1. check if the event is open to responses, based on status (@todo - also cannot submit response after a certain date?)
@@ -57,7 +57,7 @@ export default async function updateResponse(
   const responseUserId = !userId ? "" : userId.toString();
 
   // add or update the response attendance data
-  const updatedResponse = await ResponseService.updateResponse(
+  const updatedResponse = await RsvpService.updateResponse(
     theEvent,
     req,
     responseUserId
@@ -67,7 +67,7 @@ export default async function updateResponse(
     // for security, do not send back the whole event as it potentially contains a lot of info
 
     return res.send(
-      success<EventResponseModel>(updatedResponse, {
+      success<MeetupRsvpModel>(updatedResponse, {
         statusCode: res.statusCode,
       })
     );

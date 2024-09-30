@@ -1,20 +1,20 @@
 import type { Request, Response } from "express";
 import { error, success } from "../../../../middleware/apiResponse";
 import type { MeetupDocument } from "../../../../models/meetup.model";
-import type { CreateResponseInput } from "../../../../schema/meetup/rsvp.schema";
+import type { CreateRsvpInput } from "../../../../schema/meetup/rsvp.schema";
 import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
 import type { UserDocument } from "../../../../models/auth/user.model";
-import { ResponseService } from "../../../../service/rsvp/response.service";
+import { RsvpService } from "../../../../service/rsvp/rsvp.service";
 
 /**
- * Check if user has responded to this event or not yet
+ * Check if user has responded to this meetup event or not yet
  * Note: User could be logged in or not!
  * @param req
  * @param res
  */
-export default async function hasRespondedToEventAlready(
+export default async function hasRsvpdToMeetupAlready(
   req: Request<
-    CreateResponseInput["params"],
+    CreateRsvpInput["params"],
     never,
     {
       responseId: string;
@@ -38,7 +38,7 @@ export default async function hasRespondedToEventAlready(
     }
   }
 
-  const matchedResponseId = await ResponseService.hasRespondedToEventYet(
+  const matchedResponseId = await RsvpService.hasRsvpdToMeetupYet(
     theEvent,
     userId,
     responseId

@@ -1,4 +1,4 @@
-import type { EventResponseModel } from "../../../models/rsvp.model";
+import type { MeetupRsvpModel } from "../../../models/rsvp.model";
 import type { MeetupDocument } from "../../../models/meetup.model";
 import type { UserDocument } from "../../../models/auth/user.model";
 
@@ -11,11 +11,11 @@ import type { UserDocument } from "../../../models/auth/user.model";
  * @param responseId
  * @returns The response ID if exists, or an empty string
  */
-export default async function hasRespondedToEventYetHandler(
+export default async function hasRsvpdToMeetupYetHandler(
   theEvent: MeetupDocument,
   userId: UserDocument["userId"],
-  responseId: EventResponseModel["responseId"]
-): Promise<EventResponseModel["responseId"]> {
+  responseId: MeetupRsvpModel["responseId"]
+): Promise<MeetupRsvpModel["responseId"]> {
   if (theEvent.responses.length === 0) {
     return "";
   }

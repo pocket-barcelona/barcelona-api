@@ -1,15 +1,15 @@
-import type { EventResponseModel } from "../../../models/rsvp.model";
+import type { MeetupRsvpModel } from "../../../models/rsvp.model";
 import type { MeetupDocument } from "../../../models/meetup.model";
-import type { CreateResponseInput } from "../../../schema/meetup/rsvp.schema";
+import type { CreateRsvpInput } from "../../../schema/meetup/rsvp.schema";
 import { v4 as uuidv4 } from 'uuid';
 
-export default async function createResponse(
+export default async function createRsvp(
   theEvent: MeetupDocument,
-  input: CreateResponseInput,
+  input: CreateRsvpInput,
   userId: string
-): Promise<EventResponseModel | null> {
+): Promise<MeetupRsvpModel | null> {
   const responseId = uuidv4();
-  const newResponse: EventResponseModel = {
+  const newResponse: MeetupRsvpModel = {
     responseId: responseId,
     attendanceStatus: input.body.attendanceStatus,
     attendeeName: input.body.attendeeName,

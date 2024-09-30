@@ -1,9 +1,9 @@
-import createResponse from './createResponse';
-import updateResponse from './updateResponse';
-import hasRespondedToEventAlready from './hasRespondedToEventAlready';
+import createRsvp from './createRsvp';
+import updateRsvp from './updateRsvp';
+import hasRsvpdToMeetupAlready from './hasRsvpdToMeetupAlready';
 
 export {
-  createResponse,
-  hasRespondedToEventAlready,
-  updateResponse,
+  createRsvp,
+  hasRsvpdToMeetupAlready,
+  updateRsvp,
 }

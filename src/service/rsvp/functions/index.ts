@@ -1,11 +1,11 @@
-import createResponseHandler from './createResponse';
-import updateResponseHandler from './updateResponse';
-import hasRespondedToEventYetHandler from './hasRespondedToEventYet';
-import notifyEventHostHandler from './notifyEventHost';
+import createRsvpHandler from './createRsvp';
+import updateRsvpHandler from './updateRsvp';
+import hasRsvpdToMeetupYetHandler from './hasRsvpdToMeetupYet';
+import notifyMeetupHostHandler from './notifyMeetupHost';
 
 export {
-  createResponseHandler,
-  updateResponseHandler,
-  hasRespondedToEventYetHandler,
-  notifyEventHostHandler,
+  createRsvpHandler,
+  updateRsvpHandler,
+  hasRsvpdToMeetupYetHandler,
+  notifyMeetupHostHandler,
 }

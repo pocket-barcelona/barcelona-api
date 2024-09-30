@@ -7,11 +7,8 @@ import { EmailUtils } from "../../email/email.utils";
 
 /**
  * Send an email to the event host when somebody responds to an event invitation
- * @param  {EventDocument} theEvent The event
- * @param  {{name:string;response:string;}} data Response data
- * @returns Promise
  */
-export default async function notifyEventHost(
+export default async function notifyMeetupHost(
   theEvent: MeetupDocument,
   data: { name: string; response: string; comment: string; hostEmail: string }
 ): Promise<{
