@@ -1,7 +1,7 @@
 import type { Query, ScanResponse } from "dynamoose/dist/ItemRetriever";
 import type {
   MeetupDocument,
-  MeetupInput,
+  MeetupItem,
   MeetupStatusEnum,
 } from "../../models/meetup.model";
 import type {
@@ -35,17 +35,17 @@ export class MeetupService {
   ): Promise<ScanResponse<MeetupDocument> | null> => getListHandler(hostId);
 
   static getById = async (
-    input: Pick<MeetupInput, "id"> & { loggedIn?: boolean }
+    input: Pick<MeetupItem, "id"> & { loggedIn?: boolean }
   ): Promise<MeetupDocument | Partial<MeetupDocument> | null> =>
     getByIdHandler(input);
 
   static getByShortId = async (
-    input: Pick<MeetupInput, "shortId">
+    input: Pick<MeetupItem, "shortId">
   ): Promise<MeetupDocument | Partial<MeetupDocument> | null> =>
     getByShortIdHandler(input);
 
   static update = async (
-    eventId: MeetupInput["id"],
+    eventId: MeetupItem["id"],
     input: UpdateMeetupInput["body"]
   ): Promise<MeetupDocument | null> => updateHandler(eventId, input);
 

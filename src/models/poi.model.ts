@@ -75,7 +75,7 @@ export interface PoiInput {
   tags: string;
 }
 
-export interface PoiDocument extends PoiInput, Item {
+export interface PoiDocument extends Item, PoiInput {
   createdAt: Date;
   updatedAt: Date;
 }

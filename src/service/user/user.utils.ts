@@ -20,7 +20,10 @@ export namespace UserUtils {
       .catch((e) => false);
   }
 
-  export const generateResetPasswordUrl = (email: string, token: string): string => {
+  export const generateResetPasswordUrl = (
+    email: string,
+    token: string
+  ): string => {
     // @todo - email link!
     const domainStub = config.DOMAIN || "";
 
@@ -40,5 +43,4 @@ export namespace UserUtils {
     );
     return resetUrl.toString();
   };
-
 }

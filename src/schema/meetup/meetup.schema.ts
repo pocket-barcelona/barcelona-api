@@ -68,7 +68,7 @@ const createMeetupPayload = {
       canUseCredit: boolean(),
     }),
     tags: string().array(),
-    
+
     // @todo - do as patch later
     // promoCodes: ...,
     // vouchers: unknown;
@@ -78,7 +78,17 @@ const createMeetupPayload = {
 
 const updateMeetupPayload = {
   body: object({
-    
+    eventTitle: string()
+      .min(5, "Event title is required and must be at least 5 chars")
+      .max(100, "Event title - too long!"),
+    eventSubtitle: string()
+      .min(5, "Event subtitle must be at least 5 chars")
+      .max(255, "Event subtitle - too long!")
+      .optional(),
+    eventDesc: string()
+      .min(20, "Event description must be at least 20 chars")
+      .max(4000, "Event description - too long! Max 4000 chars"),
+    // @todo - body here!
   }),
   params: object({
     eventId: string({

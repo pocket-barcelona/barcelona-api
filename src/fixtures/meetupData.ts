@@ -1,10 +1,13 @@
-import type { MeetupGroup, MeetupRsvpResponse, MeetupItem, User } from '../models/meetup.types';
+import { UserEmailConfirmedEnum, type UserInput } from '../models/auth/user.model';
+import { MeetupStatusEnum, type MeetupItem } from '../models/meetup.model';
+import type { MeetupGroupDocument, MeetupGroupItem } from '../models/meetupGroup.model';
+import type { MeetupRsvpResponse } from '../models/rsvp.model';
 
-const group: MeetupGroup = {
-  groupId: "my-parent-group",
+const group: Partial<MeetupGroupDocument> = {
+  id: "my-parent-group",
   groupName: "BCN English Speakers",
   apiKey: "123-abc-456-def",
-  eventIds: ["abc-123"],
+  meetupIds: ["abc-123"],
   profilePhoto: [
     {
       id: "123",
@@ -41,7 +44,7 @@ const event: MeetupItem = {
     maxAttendees: 150,
     eventLanguage: ["EN"],
   },
-  status: "DRAFT",
+  status: MeetupStatusEnum.Draft,
   privacy: 1,
   rsvpType: 'DEFINITE',
   eventTitle: "My fantastic meeting",
@@ -98,10 +101,11 @@ const event: MeetupItem = {
       createdTime: "2024-07-25T17:35:48.171Z"
     },
   ],
+  rsvps: [],
 };
 
-const user: User = {
-  id: "abcd",
+const user: UserInput = {
+  userId: "abcd",
   userStatus: 1,
   signupDate: "2024-08-01T17:35:48.171Z",
   lastLogin: "2024-09-05T17:35:48.171Z",
@@ -114,7 +118,7 @@ const user: User = {
   nickname: "Juanita",
   mobile: "",
   credit: 250,
-  role: "USER",
+  // role: "USER",
   about: "I like table tennis, volleyball and cycling.",
   currentLocation: "Spain",
   barrioId: 11,
@@ -132,13 +136,16 @@ const user: User = {
   completedRSVPs: 1,
   followingGroupIds: [],
   interests: ["Hiking", "Cocktails", "Socializing", "Meetups", "Music"],
-  // optionals...
   isVerified: true,
-  passwordResetToken: "",
   identity: {
     documentNumber: "Y123456780A",
     documentType: "TIE",
   },
+  emailConfirmed: UserEmailConfirmedEnum.Unconfirmed,
+  utmSource: '',
+  utmMedium: '',
+  utmCampaign: '',
+  avatarColor: ''
 };
 
 const userRsvpResponse: MeetupRsvpResponse = {

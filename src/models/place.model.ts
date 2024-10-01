@@ -128,7 +128,7 @@ export interface PlaceInput {
   // @todo - place status or under moderation?
 }
 
-export interface PlaceDocument extends PlaceInput, Item {
+export interface PlaceDocument extends Item, PlaceInput {
   createdAt: Date;
   updatedAt: Date;
 }

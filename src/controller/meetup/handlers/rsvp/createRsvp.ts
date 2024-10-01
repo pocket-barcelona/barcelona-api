@@ -70,7 +70,7 @@ export default async function createRsvp(
 
   // logged in host is trying to respond to their own event
   const hostIsRespondingToOwnEvent =
-    userId !== "" && userId === theEvent.hostId;
+    userId !== "" && userId === theEvent.groupId;
 
   // add or update the response attendance data
   const userResponse = await RsvpService.createRsvp(
@@ -88,9 +88,10 @@ export default async function createRsvp(
       // type safety on userId document prop name
       const userIdField: keyof Pick<UserDocument, "userId"> = "userId";
 
+      // @todo - MeetupGroupModel.scan()...
       const hostData = await UserModel.scan()
         .where(userIdField)
-        .eq(theEvent.hostId)
+        .eq(theEvent.groupId)
         .exec()
         .catch((err: unknown) => {
           return null;

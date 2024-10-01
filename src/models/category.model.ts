@@ -13,7 +13,7 @@ export interface CategoryInput {
   suitableFor: string;
 }
 
-export interface CategoryDocument extends CategoryInput, Item {
+export interface CategoryDocument extends Item, CategoryInput {
   createdAt: Date;
   updatedAt: Date;
 }

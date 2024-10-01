@@ -2,11 +2,11 @@ import lodash from "lodash";
 const { pick } = lodash;
 import MeetupModel, {
   type MeetupDocument,
-  type MeetupInput,
+  type MeetupItem,
 } from "../../../models/meetup.model";
 
 export default async function getByShortId(
-  input: Pick<MeetupInput, "shortId">
+  input: Pick<MeetupItem, "shortId">
 ): Promise<MeetupDocument | Partial<MeetupDocument> | null> {
 
   try {
@@ -20,7 +20,7 @@ export default async function getByShortId(
     }
 
     const document = result[0];
-    const documentFields: Array<keyof MeetupDocument> = ['id', 'shortId', 'createdAt', 'updatedAt', 'dateDescription', 'activityDescription', 'startTime', 'endTime', 'hostId', 'location', 'notes', 'status'];
+    const documentFields: Array<keyof MeetupDocument> = ['id', 'shortId', 'createdAt', 'updatedAt', 'startTime', 'endTime', 'eventDesc', 'groupId', 'location', 'status'];
     return pick(document, documentFields);
 
   } catch (e) {

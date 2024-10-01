@@ -39,7 +39,7 @@ export interface EventInput {
   eventNotes: string;
 }
 
-export interface EventDocument extends EventInput, Item {
+export interface EventDocument extends Item, EventInput {
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,17 +1,36 @@
 import dynamoose from "dynamoose";
 import type { Item } from "dynamoose/dist/Item";
 import { UserUtils } from '../../service/user/user.utils';
-import type { GenericMediaItem } from '../imageAssets';
+import { genericMediaAssetSchema, type GenericMediaItem } from '../imageAssets';
 
 /** What the user must provide to create their user account */
 export interface UserInput {
-  
+  /** User's email - UNIQUE / PRIMARY KEY */
+  email: string;
+  /** Newly registered users are 0 (unconfirmed). After clicking email link, become confirmed */
+  emailConfirmed: UserEmailConfirmedEnum;
+  /** An auto-generated uuid for the user */
+  userId: string;
+  /** User active status */
+  userStatus: UserStatusEnum;
+  /** What they used to auth/login with */
+  authMethod: "FB" | "IG" | "GOOGLE" | "EMAIL";
+  /** The external auth token of their auth session */
+  authToken: string;
+  /** UTC of when user signed up */
+  signupDate: string;
+  /** UTC of user's last logged-in time */
+  lastLogin: string;
+  /** If the user is a verified user (requires an admin to set) */
+  isVerified?: boolean;
+  /** Allows users to have credit to spend on going to paid events */
+  credit: number;
+  /** Number of RSVPs that the user has done up to now */
+  completedRSVPs: number;
   /** User's firstname */
   firstname: string;
   /** User's lastname */
   lastname: string;
-  /** User's email */
-  email: string;
   /** Telegram username, without the @ */
   telegram?: string;
   /** User's nickname */
@@ -40,10 +59,11 @@ export interface UserInput {
   /** List of Group IDs that the user is following */
   followingGroupIds: string[];
 
-  utmSource?: string;
-  utmMedium?: string;
-  utmCampaign?: string;
-  avatarColor?: string;
+  /** Where the signup came from - for marketing campaigns */
+  utmSource: string;
+  utmMedium: string;
+  utmCampaign: string;
+  avatarColor: string;
 }
 export enum UserEmailConfirmedEnum {
   Unconfirmed = 0,
@@ -63,43 +83,11 @@ export enum CheckResetTokenEnum {
   TokenValid = 4,
 }
 
-export interface UserDocument extends UserInput, Item {
-  /** Newly registered users are 0 (unconfirmed). After clicking email link, become confirmed */
-  emailConfirmed: UserEmailConfirmedEnum;
-  /** User active status */
-  userStatus: UserStatusEnum;
-
-  /** What they used to auth/login with */
-  authMethod: "FB" | "IG" | "GOOGLE" | "EMAIL";
-  /** The external auth token of their auth session */
-  authToken: string;
-  /** UTC of when user signed up */
-  signupDate: string;
-  /** UTC of user's last logged-in time */
-  lastLogin: string;
+export interface UserDocument extends Item, UserInput {
   /** Encrypted password */
   password: string;
   /** For resetting password via email */
   passwordResetToken?: string;
-  /** If the user is a verified user (requires an admin to set) */
-  isVerified?: boolean;
-
-  /** Allows users to have credit to spend on going to paid events */
-  credit: number;
-  /** User's meetup role - @todo */
-  // role: MeetupUserRole;
-
-  /** Number of RSVPs that the user has done up to now */
-  completedRSVPs: number;
-  
-  /** Where the signup came from - for marketing campaigns */
-  utmSource: string;
-  utmMedium: string;
-  utmCampaign: string;
-  avatarColor: string;
-
-  /** An auto-generated uuid for the user */
-  userId: string;
   /**
    * DynamoDB handles created/updated timestamps. See https://dynamoosejs.com/guide/Schema/#required-boolean
    */
@@ -122,24 +110,117 @@ const userSchema = new dynamoose.Schema({
     hashKey: true,
     // index: true, // this throws an error in getUserById() !
   },
-  userId: {
-    type: String,
-    required: false,
-    
-    // default: uuidv4(),
-    // index: true,
-  },
-  userStatus: {
-    type: Number,
-    required: false,
-    enum: [UserStatusEnum.Active, UserStatusEnum.Disabled, UserStatusEnum.Deleted],
-    default: UserStatusEnum.Active,
-  },
   emailConfirmed: {
     type: Number,
     required: false,
     enum: [UserEmailConfirmedEnum.Unconfirmed, UserEmailConfirmedEnum.Confirmed],
     default: UserEmailConfirmedEnum.Unconfirmed,
+  },
+  userId: {
+    type: String,
+    required: true,
+    // default: uuidv4(),
+    // index: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    set: async (value) => UserUtils.generateHashedPassword(value.toString())
+  },
+  passwordResetToken: {
+    type: String,
+    required: true,
+    default: '',
+  },
+  userStatus: {
+    type: Number,
+    required: true,
+    enum: [UserStatusEnum.Active, UserStatusEnum.ReadOnly, UserStatusEnum.Disabled, UserStatusEnum.Banned, UserStatusEnum.Deleted],
+    default: UserStatusEnum.Active,
+  },
+  authMethod: {
+    type: String,
+    required: true,
+  },
+  authToken: {
+    type: String,
+    required: true,
+  },
+  signupDate: {
+    type: Date,
+    required: true,
+  },
+  lastLogin: {
+    type: Date,
+    required: true,
+  },
+  isVerified: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  credit: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  completedRSVPs: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+
+  firstname: {
+    type: String,
+    required: true
+  },
+  lastname: {
+    type: String,
+    required: true
+  },
+  telegram: {
+    type: String,
+    required: false
+  },
+  mobile: {
+    type: String,
+    required: true
+  },
+  identity: {
+    type: Object,
+    required: false,
+    schema: []
+  },
+  about: {
+    type: String,
+    required: true
+  },
+  currentLocation: {
+    type: String,
+    required: true
+  },
+  barrioId: {
+    type: Number,
+    required: true
+  },
+  arrivedInBarcelona: {
+    type: Date,
+    required: true
+  },
+  profilePhoto: {
+    type: Array,
+    required: true,
+    schema: [genericMediaAssetSchema]
+  },
+  interests: {
+    type: Array,
+    required: true,
+    schema: [String]
+  },
+  followingGroupIds: {
+    type: Array,
+    required: true,
+    schema: [String]
   },
   utmSource: {
     type: String,
@@ -153,19 +234,11 @@ const userSchema = new dynamoose.Schema({
     type: String,
     required: false,
   },
-  name: {
-    type: String,
-    required: true
-  },
-  password: {
-    type: String,
-    required: true,
-    set: async (value) => UserUtils.generateHashedPassword(value.toString())
-  },
   avatarColor: {
     type: String,
     required: false
-  }
+  },
+  
 }, {
   timestamps: true, // https://dynamoosejs.com/guide/Schema/#required-boolean
 });
