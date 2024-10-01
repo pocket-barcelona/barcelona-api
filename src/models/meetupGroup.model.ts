@@ -1,6 +1,6 @@
 import dynamoose from "dynamoose";
 import type { Item } from "dynamoose/dist/Item";
-import { genericMediaAssetSchema, type GenericMediaItem } from "./imageAssets";
+import { genericMediaAssetSchema, type GenericMediaItem } from "./imageAssets.model";
 import type { MeetupItem } from "./meetup.model";
 
 export interface MeetupGroupItem {

@@ -1,7 +1,10 @@
 import dynamoose from "dynamoose";
 import type { Item } from "dynamoose/dist/Item";
-import { UserUtils } from '../../service/user/user.utils';
-import { genericMediaAssetSchema, type GenericMediaItem } from '../imageAssets';
+import { UserUtils } from "../../service/user/user.utils";
+import {
+  genericMediaAssetSchema,
+  type GenericMediaItem,
+} from "../imageAssets.model";
 
 /** What the user must provide to create their user account */
 export interface UserInput {
@@ -41,8 +44,8 @@ export interface UserInput {
   identity?: {
     /** User's DNI or NIE/TIE or Passport number */
     documentNumber: string;
-    /** The type of document for the document number */
-    documentType: "DNI" | "TIE" | "PASSPORT" | "OTHER";
+    /** The type of document for the document number. "DNI" | "TIE" | "PASSPORT" | "OTHER" */
+    documentType: string;
   };
   /** Profile info about the user - will be HTML */
   about: string;
@@ -98,151 +101,178 @@ export interface UserDocument extends Item, UserInput {
   updatedAt: Date;
   /**
    * @todo - attach an accessory method to the document model to handle bcrypt password comparing
-   * @param candidatePassword 
+   * @param candidatePassword
    */
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
-const userSchema = new dynamoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    hashKey: true,
-    // index: true, // this throws an error in getUserById() !
+const identitySchema = new dynamoose.Schema(
+  {
+    documentNumber: {
+      type: String,
+      required: false,
+    },
+    documentType: {
+      type: String,
+      required: false,
+    },
   },
-  emailConfirmed: {
-    type: Number,
-    required: false,
-    enum: [UserEmailConfirmedEnum.Unconfirmed, UserEmailConfirmedEnum.Confirmed],
-    default: UserEmailConfirmedEnum.Unconfirmed,
-  },
-  userId: {
-    type: String,
-    required: true,
-    // default: uuidv4(),
-    // index: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    set: async (value) => UserUtils.generateHashedPassword(value.toString())
-  },
-  passwordResetToken: {
-    type: String,
-    required: true,
-    default: '',
-  },
-  userStatus: {
-    type: Number,
-    required: true,
-    enum: [UserStatusEnum.Active, UserStatusEnum.ReadOnly, UserStatusEnum.Disabled, UserStatusEnum.Banned, UserStatusEnum.Deleted],
-    default: UserStatusEnum.Active,
-  },
-  authMethod: {
-    type: String,
-    required: true,
-  },
-  authToken: {
-    type: String,
-    required: true,
-  },
-  signupDate: {
-    type: Date,
-    required: true,
-  },
-  lastLogin: {
-    type: Date,
-    required: true,
-  },
-  isVerified: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
-  credit: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  completedRSVPs: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
+  {
+    timestamps: false,
+    saveUnknown: false,
+  }
+);
 
-  firstname: {
-    type: String,
-    required: true
-  },
-  lastname: {
-    type: String,
-    required: true
-  },
-  telegram: {
-    type: String,
-    required: false
-  },
-  mobile: {
-    type: String,
-    required: true
-  },
-  identity: {
-    type: Object,
-    required: false,
-    schema: []
-  },
-  about: {
-    type: String,
-    required: true
-  },
-  currentLocation: {
-    type: String,
-    required: true
-  },
-  barrioId: {
-    type: Number,
-    required: true
-  },
-  arrivedInBarcelona: {
-    type: Date,
-    required: true
-  },
-  profilePhoto: {
-    type: Array,
-    required: true,
-    schema: [genericMediaAssetSchema]
-  },
-  interests: {
-    type: Array,
-    required: true,
-    schema: [String]
-  },
-  followingGroupIds: {
-    type: Array,
-    required: true,
-    schema: [String]
-  },
-  utmSource: {
-    type: String,
-    required: false,
-  },
-  utmMedium: {
-    type: String,
-    required: false,
-  },
-  utmCampaign: {
-    type: String,
-    required: false,
-  },
-  avatarColor: {
-    type: String,
-    required: false
-  },
-  
-}, {
-  timestamps: true, // https://dynamoosejs.com/guide/Schema/#required-boolean
-});
+const userSchema = new dynamoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      hashKey: true,
+      // index: true, // this throws an error in getUserById() !
+    },
+    emailConfirmed: {
+      type: Number,
+      required: false,
+      enum: [
+        UserEmailConfirmedEnum.Unconfirmed,
+        UserEmailConfirmedEnum.Confirmed,
+      ],
+      default: UserEmailConfirmedEnum.Unconfirmed,
+    },
+    userId: {
+      type: String,
+      required: true,
+      // default: uuidv4(),
+      // index: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      set: async (value) => UserUtils.generateHashedPassword(value.toString()),
+    },
+    passwordResetToken: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    userStatus: {
+      type: Number,
+      required: true,
+      enum: [
+        UserStatusEnum.Active,
+        UserStatusEnum.ReadOnly,
+        UserStatusEnum.Disabled,
+        UserStatusEnum.Banned,
+        UserStatusEnum.Deleted,
+      ],
+      default: UserStatusEnum.Active,
+    },
+    authMethod: {
+      type: String,
+      required: true,
+    },
+    authToken: {
+      type: String,
+      required: true,
+    },
+    signupDate: {
+      type: Date,
+      required: true,
+    },
+    lastLogin: {
+      type: Date,
+      required: true,
+    },
+    isVerified: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    credit: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    completedRSVPs: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
 
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      required: true,
+    },
+    telegram: {
+      type: String,
+      required: false,
+    },
+    mobile: {
+      type: String,
+      required: true,
+    },
+    identity: {
+      type: Object,
+      required: true,
+      schema: [identitySchema],
+    },
+    about: {
+      type: String,
+      required: true,
+    },
+    currentLocation: {
+      type: String,
+      required: true,
+    },
+    barrioId: {
+      type: Number,
+      required: true,
+    },
+    arrivedInBarcelona: {
+      type: Date,
+      required: true,
+    },
+    profilePhoto: {
+      type: Array,
+      required: true,
+      schema: [genericMediaAssetSchema],
+    },
+    interests: {
+      type: Array,
+      required: true,
+      schema: [String],
+    },
+    followingGroupIds: {
+      type: Array,
+      required: true,
+      schema: [String],
+    },
+    utmSource: {
+      type: String,
+      required: false,
+    },
+    utmMedium: {
+      type: String,
+      required: false,
+    },
+    utmCampaign: {
+      type: String,
+      required: false,
+    },
+    avatarColor: {
+      type: String,
+      required: false,
+    },
+  },
+  {
+    timestamps: true, // https://dynamoosejs.com/guide/Schema/#required-boolean
+  }
+);
 
 // userSchema.pre("save", async function (next) {
 //   let user = this as UserDocument;
@@ -267,7 +297,6 @@ const userSchema = new dynamoose.Schema({
 
 //   return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 // };
-
 
 /**
  * @todo - add a method for comparePassword: https://dynamoosejs.com/guide/Model#modelmethodssetname-function

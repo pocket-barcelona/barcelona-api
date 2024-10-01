@@ -9,7 +9,7 @@ import {
   getPlaceLookupHandler,
 } from "./functions";
 import type { CategoryDocument } from "../../models/category.model";
-import type { ImageAssetsSize } from "../../models/imageAssets";
+import type { ImageAssetsSize } from "../../models/imageAssets.model";
 import type { ReadPlaceInput } from "../../schema/place/place.schema";
 import type { ReadExploreInput } from "../../schema/explore/explore.schema";
 import type { PlaceSearchDocument } from "../../models/placeSearch";

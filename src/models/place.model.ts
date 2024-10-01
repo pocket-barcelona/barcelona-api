@@ -8,7 +8,7 @@ import type { TimeRecommendedEnum } from "./enums/timerecommended.enum";
 import type { TimeOfDayEnum } from "./enums/tod.enum";
 import type { CategoryIdEnum } from "./enums/categoryid.enum";
 import type { TeenagerEnum } from "./enums/teenager.enum";
-import type { ImageAssets } from './imageAssets';
+import type { ImageAssets } from './imageAssets.model';
 
 interface PlaceRating {
   rating: string

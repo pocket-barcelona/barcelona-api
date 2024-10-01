@@ -1,7 +1,7 @@
 import dynamoose from "dynamoose";
 import type { Item } from 'dynamoose/dist/Item';
 import { type MeetupRsvpModel, rsvpSchema } from './rsvp.model';
-import { genericMediaAssetSchema, type GenericMediaItem } from './imageAssets';
+import { genericMediaAssetSchema, type GenericMediaItem } from './imageAssets.model';
 import type { UserDocument } from './auth/user.model';
 // import { questionSchema } from './poll.types';
 // import { EventResponseModel } from "./event-responses.model";

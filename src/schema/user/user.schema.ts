@@ -1,4 +1,4 @@
-import { z, object, string, type TypeOf } from "zod";
+import { z, object, string, number, type TypeOf } from "zod";
 import { USER_MAXIMUM_PASSWORD_LENGTH, USER_MINIMUM_PASSWORD_LENGTH } from "./constants";
 
 const userIdField = {
@@ -20,13 +20,28 @@ const userEditableFields = {
   lastname: string({
     required_error: "Lastname is required",
     invalid_type_error: "Lastname must be a string",
-  })
+  }).optional(),
+  telegram: string().optional(),
+  mobile: string().optional(),
+  identity: object({
+    documentNumber: string(),
+    documentType: string(),
+  }).optional(),
+  about: string().optional(),
+  currentLocation: string(),
+  barrioId: number().optional(),
+  arrivedInBarcelona: string().optional(),
+  interests: string().array().optional(),
+  followingGroupIds: string().array().optional(),
+  utmSource: string().optional(),
+  utmMedium: string().optional(),
+  utmCampaign: string().optional(),
+  avatarColor: string().optional(),
 }
 
 const createPayload = {
   body: object({
     ...userEditableFields,
-
     ...emailField,
 
     // account related
