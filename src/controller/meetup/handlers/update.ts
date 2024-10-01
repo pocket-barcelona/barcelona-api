@@ -15,9 +15,9 @@ export default async function update(
   req: Request<UpdateMeetupInput["params"], unknown, UpdateMeetupInput["body"]>,
   res: Response
 ) {
-  const { eventId } = req.params;
+  const { meetupId } = req.params;
   const documentExists = await MeetupService.getById({
-    id: eventId,
+    meetupId,
   });
 
   if (!documentExists) {
@@ -36,7 +36,7 @@ export default async function update(
       );
   }
 
-  const updatedDocument = await MeetupService.update(eventId, req.body);
+  const updatedDocument = await MeetupService.update(meetupId, req.body);
   if (!updatedDocument) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

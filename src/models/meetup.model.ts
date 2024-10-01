@@ -142,7 +142,7 @@ const promoCodesSchema = new dynamoose.Schema({
 })
 
 const meetupSchema = new dynamoose.Schema({
-  id: {
+  meetupId: {
     type: String,
     required: true,
     hashKey: true,
@@ -385,7 +385,7 @@ export type MeetupPromoModifier = {
 
 export interface MeetupItem {
   /** Meetup ID */
-  id: string;
+  meetupId: string;
   /** Auto-generated short UUID for this meetup */
   shortId: string;
   /** The ID of the group which created this meetup */

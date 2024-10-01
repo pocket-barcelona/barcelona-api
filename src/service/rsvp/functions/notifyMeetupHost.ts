@@ -23,7 +23,7 @@ export default async function notifyMeetupHost(
     // direct link to the event
     // like: http://localhost:3000/dashboard/details/9252be9a-daa0-4539-b532-be94f6e7fd63
     const domainStub = config.DOMAIN || "";
-    const url = `${domainStub}/dashboard/details/${theEvent.id}`;
+    const url = `${domainStub}/dashboard/details/${theEvent.meetupId}`;
 
     if (!EmailTemplates.invitationResponseEmailTemplate) {
       throw new Error("Cannot find email template!");

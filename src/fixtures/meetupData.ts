@@ -34,7 +34,7 @@ const group: Partial<MeetupGroupDocument> = {
 };
 
 const event: MeetupItem = {
-  id: "abc-123-def-456",
+  meetupId: "abc-123-def-456",
   shortId: "abc-123",
   groupId: "abc-parent-group-id",
   clonedId: "ghi-789-jkl-111",

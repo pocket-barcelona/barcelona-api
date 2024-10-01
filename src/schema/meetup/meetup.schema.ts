@@ -91,7 +91,7 @@ const updateMeetupPayload = {
     // @todo - body here!
   }),
   params: object({
-    eventId: string({
+    meetupId: string({
       required_error: "event ID is required",
     }),
   }),
@@ -99,7 +99,7 @@ const updateMeetupPayload = {
 
 const selectByIdParams = {
   params: object({
-    eventId: string({
+    meetupId: string({
       required_error: "event ID is required",
     }),
   }),

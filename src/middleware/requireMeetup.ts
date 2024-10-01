@@ -9,7 +9,7 @@ import { MeetupService } from "../service/meetup/meetup.service";
 const requireMeetup = async (req: Request, res: Response, next: NextFunction) => {
   
   const theDocument = await MeetupService.getById({
-    id: req.params.eventId,
+    meetupId: req.params.eventId,
   });
 
   if (!theDocument) {

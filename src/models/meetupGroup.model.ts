@@ -17,7 +17,7 @@ export interface MeetupGroupItem {
   /** UTC of user's last logged-in time */
   lastLogin: string;
   /** List of meetup IDs related to this group */
-  meetupIds: MeetupItem["id"][];
+  meetupIds: MeetupItem["meetupId"][];
   /** Profile photos for the groupd */
   profilePhoto: GenericMediaItem[];
   /** HTML about the group */

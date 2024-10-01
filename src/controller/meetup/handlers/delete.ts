@@ -22,9 +22,9 @@ export default async function deleteDocument(
   // }
 
   // check if the document exists
-  const documentId = req.params.eventId;
+  const documentId = req.params.meetupId;
   const theDocument = await MeetupService.getById({
-    id: documentId,
+    meetupId: documentId,
   });
 
   if (!theDocument) {

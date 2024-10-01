@@ -3,7 +3,7 @@ import { MeetupService } from "../service/meetup/meetup.service";
 
 const eventExists = async (shortId: string) => {
   const event = await MeetupService.getByShortId({ shortId });
-  if (event?.id) {
+  if (event?.meetupId) {
     return true;
   }
   return false;

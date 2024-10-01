@@ -30,7 +30,7 @@ export default async function create(
       groupId: hostId,
       eventDesc: input.eventDesc,
       status: MeetupStatusEnum.Draft, // this is the status of newly created document
-      id: uuidv4(),
+      meetupId: uuidv4(),
       shortId: await generateShortId(),
       startTime: new Date(input.startTime).toISOString(),
       endTime: new Date(input.endTime).toISOString(),
@@ -49,7 +49,7 @@ export default async function create(
 
     // timer({ ...metricsLabels, success: "true" });
     return result;
-  } catch (err: any) {
+  } catch (err: unknown) {
     // post values were malformed
     // timer({ ...metricsLabels, success: "false" });
     // throw e;

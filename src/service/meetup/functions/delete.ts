@@ -15,7 +15,7 @@ export default async function deleteDocument(
       });
     } catch (error: unknown) {
       // logger.warn(error)
-      if (error?.message) {
+      if (error instanceof Error) {
         return error.message;
       }
       return "Error: Event not deleted!!";

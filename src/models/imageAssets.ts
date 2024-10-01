@@ -5,7 +5,6 @@ export const genericMediaAssetSchema = new dynamoose.Schema(
     id: {
       type: String,
       required: true,
-      index: true,
     },
     url: {
       type: String,

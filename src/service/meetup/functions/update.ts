@@ -1,7 +1,7 @@
 import MeetupModel, { type MeetupDocument, type MeetupItem } from "../../../models/meetup.model";
 import type { UpdateMeetupInput } from "../../../schema/meetup/meetup.schema";
 
-// const getPollQuestions = async (eventId: MeetupItem["id"], input: UpdateMeetupInput["body"]) => {
+// const getPollQuestions = async (eventId: MeetupItem["meetupId"], input: UpdateMeetupInput["body"]) => {
 //   if (input.pollQuestions) {
 //     const event = await MeetupModel.get({
 //       id: eventId
@@ -20,12 +20,12 @@ import type { UpdateMeetupInput } from "../../../schema/meetup/meetup.schema";
  * @param input
  * @returns The updated event
  */
-export default async function updateEven(eventId: MeetupItem["id"], input: UpdateMeetupInput["body"]): Promise<MeetupDocument | null> {
+export default async function updateEven(eventId: MeetupItem["meetupId"], input: UpdateMeetupInput["body"]): Promise<MeetupDocument | null> {
   try {
     const payload: Partial<MeetupDocument> = {
       // ...input, - HERE we need payload to be explicitly defined, or somehow we need to get createdAt and updatedAt out out input parameter.
       // feel free to tweak this part :) but the key is to not be sending timestamps here
-      id: eventId,
+      meetupId: eventId,
       eventTitle: input.eventTitle,
       eventSubtitle: input.eventSubtitle,
       eventDesc: input.eventDesc,

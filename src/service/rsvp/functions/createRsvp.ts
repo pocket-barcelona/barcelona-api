@@ -18,37 +18,37 @@ export default async function createRsvp(
     attendeeUserId: userId,
   };
 
-  theEvent.responses.push(newResponse);
+  theEvent.rsvps.push(newResponse);
   
-  const pollAnswers = input.body.pollAnswers;
-  if (pollAnswers) {
-    theEvent.pollQuestions.map((question, index) => {
-      const answers = input.body.pollAnswers?.find(pollAnswer => pollAnswer.questionId === question.id)?.answers;
-      if (answers) {
-        const possibleAnswers = theEvent.pollQuestions.find(pollQuestion => pollQuestion.id === question.id)?.possibleAnswers;
+  // const pollAnswers = input.body.pollAnswers;
+  // if (pollAnswers) {
+  //   theEvent.pollQuestions.map((question, index) => {
+  //     const answers = input.body.pollAnswers?.find(pollAnswer => pollAnswer.questionId === question.id)?.answers;
+  //     if (answers) {
+  //       const possibleAnswers = theEvent.pollQuestions.find(pollQuestion => pollQuestion.id === question.id)?.possibleAnswers;
 
-        const nonExistingAnswers = answers.filter(answer => !possibleAnswers?.filter(possibleAnswer => possibleAnswer.id === answer)?.length ?? true);
-        const existingAnswers = answers.filter(answer => possibleAnswers?.filter(possibleAnswer => possibleAnswer.id === answer)?.length ?? false);
-        const createdAnswers: string[] = [];
+  //       const nonExistingAnswers = answers.filter(answer => !possibleAnswers?.filter(possibleAnswer => possibleAnswer.id === answer)?.length ?? true);
+  //       const existingAnswers = answers.filter(answer => possibleAnswers?.filter(possibleAnswer => possibleAnswer.id === answer)?.length ?? false);
+  //       const createdAnswers: string[] = [];
 
-        nonExistingAnswers.forEach(nonExistingAnswer => {
-          const newAnswerId = uuidv4();
-          createdAnswers.push(newAnswerId);
-          theEvent.pollQuestions[index].possibleAnswers.push({
-            id: newAnswerId,
-            addedByResponseId: responseId,
-            content: nonExistingAnswer
-          })
-        });
+  //       nonExistingAnswers.forEach(nonExistingAnswer => {
+  //         const newAnswerId = uuidv4();
+  //         createdAnswers.push(newAnswerId);
+  //         theEvent.pollQuestions[index].possibleAnswers.push({
+  //           id: newAnswerId,
+  //           addedByResponseId: responseId,
+  //           content: nonExistingAnswer
+  //         })
+  //       });
 
-        const userAnswers = {
-          responseId: responseId,
-          answers: existingAnswers.concat(createdAnswers)
-        }
-        theEvent.pollQuestions[index].answers.push(userAnswers)
-      }
-    })
-  }
+  //       const userAnswers = {
+  //         responseId: responseId,
+  //         answers: existingAnswers.concat(createdAnswers)
+  //       }
+  //       theEvent.pollQuestions[index].answers.push(userAnswers)
+  //     }
+  //   })
+  // }
 
   let updated = null;
 

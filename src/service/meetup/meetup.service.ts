@@ -35,7 +35,7 @@ export class MeetupService {
   ): Promise<ScanResponse<MeetupDocument> | null> => getListHandler(hostId);
 
   static getById = async (
-    input: Pick<MeetupItem, "id"> & { loggedIn?: boolean }
+    input: Pick<MeetupItem, "meetupId"> & { loggedIn?: boolean }
   ): Promise<MeetupDocument | Partial<MeetupDocument> | null> =>
     getByIdHandler(input);
 
@@ -45,7 +45,7 @@ export class MeetupService {
     getByShortIdHandler(input);
 
   static update = async (
-    eventId: MeetupItem["id"],
+    eventId: MeetupItem["meetupId"],
     input: UpdateMeetupInput["body"]
   ): Promise<MeetupDocument | null> => updateHandler(eventId, input);
 
