@@ -12,6 +12,7 @@ const validate =
         params: req.params,
       });
       next();
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     } catch (e: any) {
       // extract schema validation errors from Zod
       let errorMessage = '';

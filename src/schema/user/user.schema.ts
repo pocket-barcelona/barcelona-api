@@ -28,7 +28,7 @@ const userEditableFields = {
     documentType: string(),
   }).optional(),
   about: string().optional(),
-  currentLocation: string(),
+  currentLocation: string().optional(),
   barrioId: number().optional(),
   arrivedInBarcelona: string().optional(),
   interests: string().array().optional(),
@@ -41,7 +41,6 @@ const userEditableFields = {
 
 const createPayload = {
   body: object({
-    ...userEditableFields,
     ...emailField,
 
     // account related

@@ -62,8 +62,7 @@ export class UserController {
   ) => resetPassword(req, res);
 
   static updateUserHandler = (
-    // @todo - fix
-    req: Request<ReadUserInput["params"] | any, unknown, UpdateUserInput["body"]>,
+    req: Request<ReadUserInput["params"], unknown, UpdateUserInput["body"]>,
     res: Response
   ) => updateUser(req, res);
 }
