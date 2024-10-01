@@ -1,12 +1,45 @@
 import dynamoose from "dynamoose";
 import type { Item } from "dynamoose/dist/Item";
 import { UserUtils } from '../../service/user/user.utils';
+import type { GenericMediaItem } from '../imageAssets';
 
 /** What the user must provide to create their user account */
 export interface UserInput {
+  
+  /** User's firstname */
+  firstname: string;
+  /** User's lastname */
+  lastname: string;
+  /** User's email */
   email: string;
-  name: string;
-  password: string;
+  /** Telegram username, without the @ */
+  telegram?: string;
+  /** User's nickname */
+  nickname?: string;
+  /** User phone number - will also work on WhatsApp */
+  mobile: string;
+  /** User's identity document */
+  identity?: {
+    /** User's DNI or NIE/TIE or Passport number */
+    documentNumber: string;
+    /** The type of document for the document number */
+    documentType: "DNI" | "TIE" | "PASSPORT" | "OTHER";
+  };
+  /** Profile info about the user - will be HTML */
+  about: string;
+  /** User's current location city in Spain. Ex: Barcelona */
+  currentLocation: string;
+  /** ID of the neighbourhood */
+  barrioId: number;
+  /** UTC of the time that the user arrived in BCN */
+  arrivedInBarcelona: string;
+  /** User's profile pic */
+  profilePhoto: GenericMediaItem[];
+  /** List of tag-like interests that the user has, like hiking, photography, cycling, food etc */
+  interests: string[];
+  /** List of Group IDs that the user is following */
+  followingGroupIds: string[];
+
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
@@ -18,8 +51,10 @@ export enum UserEmailConfirmedEnum {
 }
 export enum UserStatusEnum {
   Active = 1,
-  Disabled = 2,
-  Deleted = 3,
+  ReadOnly = 2,
+  Disabled = 3,
+  Banned = 4,
+  Deleted = 5,
 }
 export enum CheckResetTokenEnum {
   NoDocument = 1,
@@ -33,6 +68,29 @@ export interface UserDocument extends UserInput, Item {
   emailConfirmed: UserEmailConfirmedEnum;
   /** User active status */
   userStatus: UserStatusEnum;
+
+  /** What they used to auth/login with */
+  authMethod: "FB" | "IG" | "GOOGLE" | "EMAIL";
+  /** The external auth token of their auth session */
+  authToken: string;
+  /** UTC of when user signed up */
+  signupDate: string;
+  /** UTC of user's last logged-in time */
+  lastLogin: string;
+  /** Encrypted password */
+  password: string;
+  /** For resetting password via email */
+  passwordResetToken?: string;
+  /** If the user is a verified user (requires an admin to set) */
+  isVerified?: boolean;
+
+  /** Allows users to have credit to spend on going to paid events */
+  credit: number;
+  /** User's meetup role - @todo */
+  // role: MeetupUserRole;
+
+  /** Number of RSVPs that the user has done up to now */
+  completedRSVPs: number;
   
   /** Where the signup came from - for marketing campaigns */
   utmSource: string;

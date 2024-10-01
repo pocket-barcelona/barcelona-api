@@ -10,7 +10,7 @@ export default async function createRsvp(
 ): Promise<MeetupRsvpModel | null> {
   const responseId = uuidv4();
   const newResponse: MeetupRsvpModel = {
-    responseId: responseId,
+    rsvpId: responseId,
     attendanceStatus: input.body.attendanceStatus,
     attendeeName: input.body.attendeeName,
     attendeeAvatarColor: input.body.attendeeAvatarColor,

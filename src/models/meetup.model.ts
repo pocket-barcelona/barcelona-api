@@ -1,45 +1,13 @@
 import dynamoose from "dynamoose";
 import type { Item } from 'dynamoose/dist/Item';
 import { questionSchema } from './poll.types';
+import { rsvpSchema } from './rsvp.model';
+import { genericMediaAssetSchema } from './imageAssets';
 // import { EventResponseModel } from "./event-responses.model";
 // import { PollQuestions, PollQuestionsInput, PollResults, questionSchema } from "./types/poll.types";
 
-export enum MeetupStatusEnum {
-  /** Events in draft state are not public */
-  Draft = 1,
-  /** An normal, published event. Users can rsvp */
-  Published = 2,
-  /** Archived events - support for when we need it. Archived events can be un-deleted */
-  Archived = 3,
-  /** Soft deleted events do not appear in any normal API data feed. They only exist in the database. */
-  SoftDeleted = 4,
-  /** @todo - Admin hard delete? */
-  Deleted = 5,
-}
-export interface MeetupInput {
-  id: string;
-  shortId: string;
-  hostId: string;
-  activityDescription: string;
-  dateDescription: string;
-  location: string;
-  notes: string;
-  startTime: Date;
-  endTime: Date;
-  // pollQuestions: PollQuestionsInput;
-}
-export interface MeetupDocument extends MeetupInput, Item {
-  createdAt: Date;
-  updatedAt: Date;
-  status: MeetupStatusEnum
-  // responses: Array<EventResponseModel>;
-  // hostName?: string;
-  // hostAvatarColor?: string;
-  // pollQuestions: PollQuestions;
-  // pollResults?: PollResults
-}
 
-export const meetupConfigSchema = new dynamoose.Schema({
+const meetupConfigSchema = new dynamoose.Schema({
   requiresMobileNumber: {
     type: Boolean,
     required: false,
@@ -75,7 +43,7 @@ export const meetupConfigSchema = new dynamoose.Schema({
   },
 });
 
-export const locationSchema = new dynamoose.Schema({
+const locationSchema = new dynamoose.Schema({
   address1: {
     type: String,
     required: true,
@@ -118,7 +86,7 @@ export const locationSchema = new dynamoose.Schema({
   },
 });
 
-export const priceSchema = new dynamoose.Schema({
+const priceSchema = new dynamoose.Schema({
   priceCents: {
     type: Number,
     required: true,
@@ -141,32 +109,36 @@ export const priceSchema = new dynamoose.Schema({
   },
 });
 
-export const rsvpSchema = new dynamoose.Schema({
-  rsvpId: {
+const promoCodesSchema = new dynamoose.Schema({
+  active: {
+    type: Boolean,
+    required: true,
+  },
+  code: {
     type: String,
     required: true,
   },
-  attendeeUserId: {
+  description: {
     type: String,
     required: true,
   },
-  attendanceStatus: {
+  discountCents: {
     type: Number,
     required: true,
   },
-  attendeeName: {
+  currencyCode: {
     type: String,
     required: true,
   },
-  attendeeAvatarColor: {
+  locale: {
     type: String,
     required: true,
   },
-  comment: {
-    type: String,
+  codeExpiryTime: {
+    type: Date,
     required: true,
   },
-});
+})
 
 const meetupSchema = new dynamoose.Schema({
   id: {
@@ -174,15 +146,15 @@ const meetupSchema = new dynamoose.Schema({
     required: true,
     hashKey: true,
   },
+  shortId: {
+    type: String,
+    required: true,
+  },
   groupId: { // the person/group hosting the event/meetup
     type: String,
     required: true,
   },
   clonedId: {
-    type: String,
-    required: true,
-  },
-  shortId: {
     type: String,
     required: true,
   },
@@ -238,9 +210,11 @@ const meetupSchema = new dynamoose.Schema({
   },
   startTime: {
     type: Date,
+    required: true,
   },
   endTime: {
     type: Date,
+    required: true,
   },
   location: {
     type: Object,
@@ -252,9 +226,35 @@ const meetupSchema = new dynamoose.Schema({
     required: true,
     schema: [priceSchema]
   },
+  promoCodes: {
+    type: Object,
+    required: true,
+    schema: [promoCodesSchema]
+  },
   rsvps: {
     type: Array,
+    required: true,
     schema: [rsvpSchema],
+  },
+  waitingList: {
+    type: Array,
+    required: true,
+    schema: [String],
+  },
+  tags: {
+    type: Array,
+    required: true,
+    schema: [String],
+  },
+  hosts: {
+    type: Array,
+    required: true,
+    schema: [String],
+  },
+  photos: {
+    type: Array,
+    required: true,
+    schema: [genericMediaAssetSchema],
   },
   // pollQuestions: {
   //   type: Array,
@@ -265,6 +265,41 @@ const meetupSchema = new dynamoose.Schema({
   timestamps: true,
   saveUnknown: false,
 });
+
+export enum MeetupStatusEnum {
+  /** Events in draft state are not public */
+  Draft = 1,
+  /** An normal, published event. Users can rsvp */
+  Published = 2,
+  /** Archived events - support for when we need it. Archived events can be un-deleted */
+  Archived = 3,
+  /** Soft deleted events do not appear in any normal API data feed. They only exist in the database. */
+  SoftDeleted = 4,
+  /** @todo - Admin hard delete? */
+  Deleted = 5,
+}
+export interface MeetupInput {
+  id: string;
+  shortId: string;
+  hostId: string;
+  activityDescription: string;
+  dateDescription: string;
+  location: string;
+  notes: string;
+  startTime: Date;
+  endTime: Date;
+  // pollQuestions: PollQuestionsInput;
+}
+export interface MeetupDocument extends MeetupInput, Item {
+  createdAt: Date;
+  updatedAt: Date;
+  status: MeetupStatusEnum
+  // responses: Array<EventResponseModel>;
+  // hostName?: string;
+  // hostAvatarColor?: string;
+  // pollQuestions: PollQuestions;
+  // pollResults?: PollResults
+}
 
 
 

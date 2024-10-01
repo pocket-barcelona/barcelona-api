@@ -29,7 +29,7 @@ export default async function getById(
       : null;
 
     if (result) {
-      result.hostName = userFound ? userFound[0].name : '';
+      result.hostName = userFound ? userFound[0].firstname : '';
       result.hostAvatarColor = userFound ? userFound[0].avatarColor : '';
       
       result.pollResults = result.pollQuestions.map((question) => ({

@@ -14,8 +14,8 @@ import type { UserDocument } from "../../../models/auth/user.model";
 export default async function hasRsvpdToMeetupYetHandler(
   theEvent: MeetupDocument,
   userId: UserDocument["userId"],
-  responseId: MeetupRsvpModel["responseId"]
-): Promise<MeetupRsvpModel["responseId"]> {
+  responseId: MeetupRsvpModel["rsvpId"]
+): Promise<MeetupRsvpModel["rsvpId"]> {
   if (theEvent.responses.length === 0) {
     return "";
   }

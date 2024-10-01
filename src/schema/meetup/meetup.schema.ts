@@ -6,7 +6,6 @@ import {
   boolean,
   enum as enum_,
 } from "zod";
-import { MEETUP_CATEGORIES } from "../../models/meetup.types";
 
 const createMeetupPayload = {
   body: object({

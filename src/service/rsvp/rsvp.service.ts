@@ -31,8 +31,8 @@ export class RsvpService {
   static hasRsvpdToMeetupYet = async (
     theEvent: MeetupDocument,
     userId: UserDocument["userId"],
-    responseId: MeetupRsvpModel["responseId"]
-  ): Promise<MeetupRsvpModel["responseId"]> =>
+    responseId: MeetupRsvpModel["rsvpId"]
+  ): Promise<MeetupRsvpModel["rsvpId"]> =>
     hasRsvpdToMeetupYetHandler(theEvent, userId, responseId);
 
   static notifyMeetupHost = async (

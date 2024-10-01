@@ -1,3 +1,6 @@
+import type { UserDocument } from './auth/user.model';
+import type { GenericMediaItem } from './imageAssets';
+
 export type MeetupItem = {
   /** Event ID */
   id: string;
@@ -46,9 +49,9 @@ export type MeetupItem = {
   /** Topics and event tags */
   tags: string[];
   /** List of event hosts/admins */
-  hosts: User[];
+  hosts: UserDocument[];
   /** List of event photos to promote the event. Featured photo will be one flagged, else first image */
-  photos: MeetupMediaItem[];
+  photos: GenericMediaItem[];
 };
 
 export type MeetupConfig = {
@@ -100,7 +103,6 @@ export const MEETUP_CATEGORIES = {
 type MeetupCategoryValue = typeof MEETUP_CATEGORIES[keyof typeof MEETUP_CATEGORIES];
 type MeetupCategory = keyof typeof MEETUP_CATEGORIES;
 
-
 type MeetupMode = "IN_PERSON" | "ONLINE" | "HYBRID";
 type MeetupLanguage = "EN" | "CA" | "ES" | "PT" | "IT" | "FR";
 type MeetupLocation = {
@@ -144,15 +146,6 @@ type MeetupWaitingList = {
   joinedAt: string;
 };
 
-export type MeetupMediaItem = {
-  id: string;
-  url: string;
-  alt: string;
-  mediaType: "IMAGE" | "VIDEO";
-  featured?: boolean;
-  createdTime: string;
-};
-
 type MeetupPromoModifier = {
   code: string;
   /** Ex: "50% off with this code" */
@@ -167,116 +160,25 @@ type MeetupPromoModifier = {
   codeExpiryTime?: string;
 };
 
-type MeetupRsvpResponseType = 'YES' | 'NO' | 'MAYBE';
-type UserRsvpInfo = Pick<
-  User,
-  "nickname" | "email" | "telegram" | "firstname" | "lastname" | "mobile"
->;
-
-type RsvpType = {
-  /** UUID of the RSVP response */
-  responseId: string;
-  /** User UUID who responded */
-  userId: User["id"];
-  /** The response given by the user - if they are going or not! */
-  response: MeetupRsvpResponseType;
-  /** Timestamp of initial RSVP */
-  responseTimestamp: string;
-  /** Timestamp of updated RSVP when most recently changed */
-  responseTimestampUpdated: string;
-  /** Incremental number of times the user has edited their RSVP */
-  changedTimes: number;
-}
-/** Type for people responding to meetup events */
-export type MeetupRsvpResponse =
-  /** Even though the user data can be looked up from the userID, this is what they share with the event in question */
-  | Partial<UserRsvpInfo>
-  /** Internal response mandatory data */
-  | RsvpType;
-
-export type User = {
-  /** User UUID */
-  id: string;
-  /**
-   * 1=User is active, 2=limited, 3=baned.
-   * If 2: user cannot join an event by RSVP-ing
-   * If 3: user cannot login at all
-   */
-  userStatus: 1 | 2 | 3;
-  /** What they used to auth/login with */
-  authMethod: "FB" | "IG" | "GOOGLE" | "EMAIL";
-  /** The external auth token of their auth session */
-  authToken: string;
-  /** UTC of when user signed up */
-  signupDate: string;
-  /** UTC of user's last logged-in time */
-  lastLogin: string;
-  /** For resetting password via email */
-  passwordResetToken?: string;
-  /** If the user is a verified user (requires an admin to set) */
-  isVerified?: boolean;
-  /** User's firstname */
-  firstname: string;
-  /** User's lastname */
-  lastname: string;
-  /** User's email */
-  email: string;
-  /** Telegram username, without the @ */
-  telegram?: string;
-  /** User's nickname */
-  nickname?: string;
-  /** User phone number - will also work on WhatsApp */
-  mobile: string;
-  /** User's identity document */
-  identity?: {
-    /** User's DNI or NIE/TIE or Passport number */
-    documentNumber: string;
-    /** The type of document for the document number */
-    documentType: "DNI" | "TIE" | "PASSPORT" | "OTHER";
-  };
-  /** Allows users to have credit to spend on going to paid events */
-  credit: number;
-  /** User's role */
-  role: MeetupUserRole;
-  /** Profile info about the user - will be HTML */
-  about: string;
-  /** User's current location city in Spain. Ex: Barcelona */
-  currentLocation: string;
-  /** ID of the neighbourhood */
-  barrioId: number;
-  /** UTC of the time that the user arrived in BCN */
-  arrivedInBarcelona: string;
-  /** User's profile pic */
-  profilePhoto: MeetupMediaItem[];
-  /** List of tag-like interests that the user has, like hiking, photography, cycling, food etc */
-  interests: string[];
-  /** Number of RSVPs that the user has done up to now */
-  completedRSVPs: number;
-  /** List of Group IDs that the user is following */
-  followingGroupIds: string[];
-};
-
-export type MeetupUserRole = "ADMIN" | "HOST" | "USER";
-
-export type MeetupGroup = {
-  /** The UUID group ID */
-  groupId: string;
-  /** The group display name */
-  groupName: string;
-  /** @todo - Unique public API key for the group */
-  apiKey: string;
-  /** If the group has been verified by us as being a real human group */
-  isVerified: boolean;
-  /** List of event IDs related to this group */
-  eventIds: MeetupItem["id"][];
-  /** Profile photos for the groupd */
-  profilePhoto: MeetupMediaItem[];
-  /** HTML about the group */
-  about: string;
-  /** UTC of when user signed up */
-  signupDate: string;
-  /** UTC of user's last logged-in time */
-  lastLogin: string;
-  /** Tag-like list of topics and themes that the group is concerned with, such as: meetups, foreigners in BCN, english speaking, etc */
-  topics: string[];
-};
+// export type MeetupGroup = {
+//   /** The UUID group ID */
+//   groupId: string;
+//   /** The group display name */
+//   groupName: string;
+//   /** @todo - Unique public API key for the group */
+//   apiKey: string;
+//   /** If the group has been verified by us as being a real human group */
+//   isVerified: boolean;
+//   /** List of event IDs related to this group */
+//   eventIds: MeetupItem["id"][];
+//   /** Profile photos for the groupd */
+//   profilePhoto: GenericMediaItem[];
+//   /** HTML about the group */
+//   about: string;
+//   /** UTC of when user signed up */
+//   signupDate: string;
+//   /** UTC of user's last logged-in time */
+//   lastLogin: string;
+//   /** Tag-like list of topics and themes that the group is concerned with, such as: meetups, foreigners in BCN, english speaking, etc */
+//   topics: string[];
+// };

@@ -1,6 +1,5 @@
 import dynamoose from "dynamoose";
 import type { Item } from "dynamoose/dist/Item";
-import type { ImageAssets } from './imageAssets';
 
 
 export interface EventInput {
