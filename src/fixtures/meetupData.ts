@@ -4,7 +4,7 @@ import type { MeetupGroupDocument, MeetupGroupItem } from '../models/meetupGroup
 import type { MeetupRsvpResponse } from '../models/rsvp.model';
 
 const group: Partial<MeetupGroupDocument> = {
-  id: "my-parent-group",
+  groupId: "my-parent-group",
   groupName: "BCN English Speakers",
   apiKey: "123-abc-456-def",
   meetupIds: ["abc-123"],

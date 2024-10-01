@@ -5,7 +5,7 @@ import type { MeetupItem } from "./meetup.model";
 
 export interface MeetupGroupItem {
   /** The group ID */
-  id: string;
+  groupId: string;
   /** The group display name */
   groupName: string;
   /** @todo - Unique public API key for the group */
@@ -32,7 +32,7 @@ export interface MeetupGroupDocument extends Item, MeetupGroupItem {
 
 const meetupGroupSchema = new dynamoose.Schema(
   {
-    id: {
+    groupId: {
       type: String,
       required: true,
       hashKey: true,
