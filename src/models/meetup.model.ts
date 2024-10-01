@@ -384,27 +384,27 @@ export type MeetupPromoModifier = {
 };
 
 export interface MeetupItem {
-  /** Event ID */
+  /** Meetup ID */
   id: string;
-  /** Auto-generated short UUID for this event */
+  /** Auto-generated short UUID for this meetup */
   shortId: string;
-  /** The ID of the group which created this event */
+  /** The ID of the group which created this meetup */
   groupId: string;
-  /** The UUID of the event which this even was cloned from, or empty string */
+  /** The UUID of the meetup which this meetup was cloned from, or empty string */
   clonedId: string;
-  /** Event settings */
+  /** Meetup settings */
   eventConfig: MeetupConfig;
-  /** Event status and visibility */
+  /** Status and visibility */
   status: MeetupStatusEnum;
   /** 1=location/address public, 2=location only visible to people going, 3=location hidden */
   privacy: MeetupPrivacy;
   /** The type of response a user can give for the event: Definite=yes/no, Indefinite=yes/no/maybe */
   rsvpType: MeetupRsvpCertainty;
-  /** Main event title */
+  /** Main title */
   eventTitle: string;
-  /** Event subtitle */
+  /** Main subtitle */
   eventSubtitle: string;
-  /** Event description - support HTML */
+  /** Main description - support HTML */
   eventDesc: string;
   /** Special notes about how to find the event once there */
   directions: string;
@@ -418,7 +418,7 @@ export interface MeetupItem {
   startTime: string;
   /** Full UTC timestamp */
   endTime: string;
-  /** Event location @type MeetupLocation */
+  /** Meetup location @type MeetupLocation */
   location: MeetupLocation;
   /** Price in cents. @todo - entry fee? */
   price: MeetupPrice;
@@ -434,7 +434,7 @@ export interface MeetupItem {
   tags: string[];
   /** List of event hosts/admins */
   hosts: string[];
-  /** List of event photos to promote the event. Featured photo will be one flagged, else first image */
+  /** List of photos to promote the meetup. Featured photo will be one flagged, else first image */
   photos: GenericMediaItem[];
   // responses: Array<EventResponseModel>;
 }

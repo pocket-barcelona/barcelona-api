@@ -58,23 +58,20 @@ export default async function notifyMeetupHost(
           success: true,
           error: "",
         });
-      } else {
-        throw new Error("Error sending email");
       }
-    } else {
-      throw new Error("Email template render issue!");
+      throw new Error("Error sending email");
     }
+    throw new Error("Email template render issue!");
   } catch (error) {
     if (error instanceof Error) {
       return Promise.resolve({
         success: false,
         error: error.message,
       });
-    } else {
-      return Promise.resolve({
-        success: false,
-        error: "An error occurred when trying to notify the user",
-      });
     }
+    return Promise.resolve({
+      success: false,
+      error: "An error occurred when trying to notify the user",
+    });
   }
 }

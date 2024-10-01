@@ -4,7 +4,7 @@ import lodash from 'lodash';
 const { omit } = lodash;
 
 
-export default async function createUser(input: UserInput): Promise<UserDocument | null | string> {
+export default async function createUser(input: Partial<UserInput>): Promise<UserDocument | null | string> {
   try {
     const randomId = uuidv4();
     const userId: keyof UserDocument = 'userId';

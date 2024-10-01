@@ -8,14 +8,18 @@ const userIdField = {
 }
 const emailField = {
   email: string({
-    required_error: "Email is required",
-  }).email("Not a valid email")
+    required_error: "Email address is required",
+  }).email("Invalid email address")
 }
 
 const userEditableFields = {
-  name: string({
-    required_error: "Name is required",
-    invalid_type_error: "Name must be a string",
+  firstname: string({
+    required_error: "Firstname is required",
+    invalid_type_error: "Firstname must be a string",
+  }),
+  lastname: string({
+    required_error: "Lastname is required",
+    invalid_type_error: "Lastname must be a string",
   })
 }
 
@@ -46,11 +50,9 @@ export const createUserSchema = object({
   ...createPayload,
 });
 
-
 const getParams = {
   ...userIdField,
 };
-
 
 export const updateUserSchema = object({
   body: object({
@@ -58,7 +60,6 @@ export const updateUserSchema = object({
     ...emailField,
   }),
 });
-
 
 export const getUserSchema = object({
   params: object({

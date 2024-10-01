@@ -24,6 +24,5 @@ export default async function generateShortId(): Promise<string> {
   while (await eventExists(shortId)) {
     shortId = generateId();
   }
-
   return shortId;
 }

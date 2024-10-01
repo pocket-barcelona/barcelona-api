@@ -14,28 +14,28 @@ export default async function create(
   // const timer = databaseResponseTimeHistogram.startTimer();
   try {
     
-    const pollQuestions = input.pollQuestions?.map((question) => ({
-      id: uuidv4(),
-      content: question.content,
-      description: question.description,
-      customAnswers: question.customAnswers ?? false,
-      possibleAnswers: question.possibleAnswers.map((possibleAnswer) => ({
-        id: uuidv4(),
-        content: possibleAnswer.content
-      })),
-      answers: []
-    }));
+    // const pollQuestions = input.pollQuestions?.map((question) => ({
+    //   id: uuidv4(),
+    //   content: question.content,
+    //   description: question.description,
+    //   customAnswers: question.customAnswers ?? false,
+    //   possibleAnswers: question.possibleAnswers.map((possibleAnswer) => ({
+    //     id: uuidv4(),
+    //     content: possibleAnswer.content
+    //   })),
+    //   answers: []
+    // }));
 
     const userInput: Partial<MeetupDocument> = {
-      hostId,
-      activityDescription: input.activityDescription ?? 'do something',
-      status: MeetupStatusEnum.Published, // this is the status of newly created document
+      groupId: hostId,
+      eventDesc: input.eventDesc,
+      status: MeetupStatusEnum.Draft, // this is the status of newly created document
       id: uuidv4(),
       shortId: await generateShortId(),
-      startTime: input.startTime ? new Date(input.startTime) : undefined,
-      endTime: input.endTime ? new Date(input.endTime) : undefined,
-      responses: [],
-      pollQuestions: pollQuestions ?? []
+      startTime: new Date(input.startTime).toISOString(),
+      endTime: new Date(input.endTime).toISOString(),
+      rsvps: [],
+      //...@todo more
     };
     const newEvent = Object.assign({}, input, userInput);
 

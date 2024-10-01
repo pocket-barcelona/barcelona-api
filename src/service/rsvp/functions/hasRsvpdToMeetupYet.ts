@@ -16,7 +16,7 @@ export default async function hasRsvpdToMeetupYetHandler(
   userId: UserDocument["userId"],
   responseId: MeetupRsvpModel["rsvpId"]
 ): Promise<MeetupRsvpModel["rsvpId"]> {
-  if (theEvent.responses.length === 0) {
+  if (theEvent.rsvps.length === 0) {
     return "";
   }
 
@@ -25,19 +25,17 @@ export default async function hasRsvpdToMeetupYetHandler(
 
   if (userId) {
     // 1 - check for userID
-    const userResponded = theEvent.responses.filter(
+    const userResponded = theEvent.rsvps.filter(
       (r) => r.attendeeUserId !== "" && r.attendeeUserId === userId
     );
     if (userResponded.length > 0) {
       // logged in user has already responded to this event
-      return userResponded[0].responseId;
+      return userResponded[0].rsvpId;
     }
   }
 
   if (responseId) {
-    const userResponded = theEvent.responses.some(
-      (r) => r.responseId === responseId
-    );
+    const userResponded = theEvent.rsvps.some((r) => r.rsvpId === responseId);
     if (userResponded) {
       // logged out user has already responded to this event since they know the response ID
       return responseId;

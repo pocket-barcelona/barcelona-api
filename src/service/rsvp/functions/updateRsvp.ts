@@ -13,8 +13,8 @@ export default async function updateResponse(theEvent: MeetupDocument, input: Up
   }
 
   // find the specific response ID
-  const response = theEventJson.responses.find(r => r.responseId === responseId)
-  const existingResponseIndex = theEventJson.responses.findIndex(r => r.responseId === responseId)
+  const response = theEventJson.rsvps.find(r => r.rsvpId === responseId)
+  const existingResponseIndex = theEventJson.rsvps.findIndex(r => r.rsvpId === responseId)
   const isUpdating = existingResponseIndex > -1;
   
   if (!response || !isUpdating) {
@@ -22,17 +22,17 @@ export default async function updateResponse(theEvent: MeetupDocument, input: Up
     return null;
   }
   
-  const newResponse: MeetupDocument['responses'][0] = {
+  const newResponse: MeetupDocument['rsvps'][0] = {
     attendanceStatus: input.body.attendanceStatus,
     attendeeName: input.body.attendeeName,
     attendeeAvatarColor: response.attendeeAvatarColor,
     comment: input.body.comment,
     attendeeUserId: userId,
-    responseId,
+    rsvpId: responseId,
   }
   
   // update the response
-  theEvent.responses[existingResponseIndex] = newResponse;
+  theEvent.rsvps[existingResponseIndex] = newResponse;
   // upsertedResponse = await EventService.updateEventResponse(theEvent)
   let updated = null;
 

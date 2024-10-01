@@ -4,7 +4,7 @@ import MeetupModel, { type MeetupDocument, MeetupStatusEnum } from "../../../mod
 
 
 export default async function getList(
-  hostId: MeetupDocument["hostId"]
+  groupId: MeetupDocument["groupId"]
 ): Promise<ScanResponse<MeetupDocument> | null> {
   const metricsLabels = {
     operation: "getList",
@@ -13,7 +13,7 @@ export default async function getList(
   // const timer = databaseResponseTimeHistogram.startTimer();
   try {
     const statusField: keyof MeetupDocument = "status";
-    const hostIdField: keyof MeetupDocument = "hostId";
+    const groupIdField: keyof MeetupDocument = "groupId";
     // const result = MeetupModel.query()
     // .where(statusField)
     // .eq(MeetupStatusEnum.Active)
@@ -28,8 +28,8 @@ export default async function getList(
     // timer({ ...metricsLabels, success: "true" });
     const result = MeetupModel.scan()
       // only show my documents
-      .where(hostIdField)
-      .eq(hostId)
+      .where(groupIdField)
+      .eq(groupId)
       .and()
       .where(statusField)
       // .eq(MeetupStatusEnum.Active)

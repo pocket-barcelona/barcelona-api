@@ -27,8 +27,8 @@ export default async function update(
   }
 
   const loggedInUser = (res.locals.user as UserDocument).userId || "";
-  // @todo - allow super users to edit items?
-  if (documentExists.hostId !== loggedInUser) {
+  // @todo - only allow super users or meetup group admins to edit items?
+  if (documentExists.groupId !== loggedInUser) {
     return res
       .status(StatusCodes.FORBIDDEN)
       .send(
