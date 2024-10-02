@@ -1,12 +1,14 @@
 import dynamoose from "dynamoose";
-import type { Item } from 'dynamoose/dist/Item';
-import { type MeetupRsvpModel, rsvpSchema } from './rsvp.model';
-import { genericMediaAssetSchema, type GenericMediaItem } from './imageAssets.model';
-import type { UserDocument } from './auth/user.model';
+import type { Item } from "dynamoose/dist/Item";
+import { type MeetupRsvpModel, rsvpSchema } from "./rsvp.model";
+import {
+  genericMediaAssetSchema,
+  type GenericMediaItem,
+} from "./imageAssets.model";
+import type { UserDocument } from "./auth/user.model";
 // import { questionSchema } from './poll.types';
 // import { EventResponseModel } from "./event-responses.model";
 // import { PollQuestions, PollQuestionsInput, PollResults, questionSchema } from "./types/poll.types";
-
 
 const meetupConfigSchema = new dynamoose.Schema({
   requiresMobileNumber: {
@@ -40,7 +42,11 @@ const meetupConfigSchema = new dynamoose.Schema({
   eventLanguage: {
     type: Array,
     required: false,
-    schema: [String]
+    schema: [
+      {
+        type: String,
+      },
+    ],
   },
 });
 
@@ -139,133 +145,153 @@ const promoCodesSchema = new dynamoose.Schema({
     type: Date,
     required: true,
   },
-})
-
-const meetupSchema = new dynamoose.Schema({
-  meetupId: {
-    type: String,
-    required: true,
-    hashKey: true,
-  },
-  shortId: {
-    type: String,
-    required: true,
-  },
-  groupId: { // the person/group hosting the event/meetup
-    type: String,
-    required: true,
-  },
-  clonedId: {
-    type: String,
-    required: true,
-  },
-  eventConfig: {
-    type: Object,
-    required: true,
-    schema: [meetupConfigSchema]
-  },
-  status: {
-    type: String,
-    required: true,
-  },
-  privacy: {
-    type: Number,
-    required: true,
-  },
-  rsvpType: {
-    type: String,
-    required: true,
-  },
-  eventTitle: {
-    type: String,
-    required: true,
-    default: '',
-  },
-  eventSubtitle: {
-    type: String,
-    required: true,
-    default: '',
-  },
-  eventDesc: {
-    type: String,
-    required: true,
-    default: '',
-  },
-  directions: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  subcategory: {
-    type: Array,
-    schema: [String],
-    required: true,
-  },
-  mode: {
-    type: String,
-    required: true,
-  },
-  startTime: {
-    type: Date,
-    required: true,
-  },
-  endTime: {
-    type: Date,
-    required: true,
-  },
-  location: {
-    type: Object,
-    required: true,
-    schema: [locationSchema],
-  },
-  price: {
-    type: Object,
-    required: true,
-    schema: [priceSchema]
-  },
-  promoCodes: {
-    type: Object,
-    required: true,
-    schema: [promoCodesSchema]
-  },
-  rsvps: {
-    type: Array,
-    required: true,
-    schema: [rsvpSchema],
-  },
-  waitingList: {
-    type: Array,
-    required: true,
-    schema: [String],
-  },
-  tags: {
-    type: Array,
-    required: true,
-    schema: [String],
-  },
-  hosts: {
-    type: Array,
-    required: true,
-    schema: [String],
-  },
-  photos: {
-    type: Array,
-    required: true,
-    schema: [genericMediaAssetSchema],
-  },
-  // pollQuestions: {
-  //   type: Array,
-  //   schema: [questionSchema],
-  //   required: false
-  // }
-}, {
-  timestamps: true,
-  saveUnknown: false,
 });
+
+const meetupSchema = new dynamoose.Schema(
+  {
+    meetupId: {
+      type: String,
+      required: true,
+      hashKey: true,
+    },
+    shortId: {
+      type: String,
+      required: true,
+    },
+    groupId: {
+      // the person/group hosting the event/meetup
+      type: String,
+      required: true,
+    },
+    clonedId: {
+      type: String,
+      required: true,
+    },
+    eventConfig: {
+      type: Object,
+      required: true,
+      schema: [meetupConfigSchema],
+    },
+    status: {
+      type: String,
+      required: true,
+    },
+    privacy: {
+      type: Number,
+      required: true,
+    },
+    rsvpType: {
+      type: String,
+      required: true,
+    },
+    eventTitle: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    eventSubtitle: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    eventDesc: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    directions: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    subcategory: {
+      type: Array,
+      schema: [
+        {
+          type: String,
+        },
+      ],
+      required: true,
+    },
+    mode: {
+      type: String,
+      required: true,
+    },
+    startTime: {
+      type: Date,
+      required: true,
+    },
+    endTime: {
+      type: Date,
+      required: true,
+    },
+    location: {
+      type: Object,
+      required: true,
+      schema: [locationSchema],
+    },
+    price: {
+      type: Object,
+      required: true,
+      schema: [priceSchema],
+    },
+    promoCodes: {
+      type: Object,
+      required: true,
+      schema: [promoCodesSchema],
+    },
+    rsvps: {
+      type: Array,
+      required: true,
+      schema: [rsvpSchema],
+    },
+    waitingList: {
+      type: Array,
+      required: true,
+      schema: [
+        {
+          type: String,
+        },
+      ],
+    },
+    tags: {
+      type: Array,
+      required: true,
+      schema: [
+        {
+          type: String,
+        },
+      ],
+    },
+    hosts: {
+      type: Array,
+      required: true,
+      schema: [
+        {
+          type: String,
+        },
+      ],
+    },
+    photos: {
+      type: Array,
+      required: true,
+      schema: [genericMediaAssetSchema],
+    },
+    // pollQuestions: {
+    //   type: Array,
+    //   schema: [questionSchema],
+    //   required: false
+    // }
+  },
+  {
+    timestamps: true,
+    saveUnknown: false,
+  }
+);
 
 // TYPES...
 
@@ -294,7 +320,7 @@ export type MeetupConfig = {
   /** List of languages people will be speaking at the event. If empty array, lang will be any language spoken */
   eventLanguage?: MeetupLanguage[];
 };
-export type MeetupRsvpCertainty = 'DEFINITE' | 'INDEFINITE';
+export type MeetupRsvpCertainty = "DEFINITE" | "INDEFINITE";
 export type MeetupPrivacy = 1 | 2 | 3;
 export const MEETUP_CATEGORIES = {
   MEETUP: "MEETUP", // regular meetup with big group
@@ -359,7 +385,7 @@ export type MeetupPrice = {
   /** Like: es-ES, en-GB, en-US */
   locale: string;
   /** Payment before event or when arriving? */
-  paymentScheme: "ON_RSVP" | "ON_ARRIVAL" | "NONE"
+  paymentScheme: "ON_RSVP" | "ON_ARRIVAL" | "NONE";
   /** Whether or not user credit can be used to pay for the event */
   canUseCredit: boolean;
 };
@@ -443,8 +469,10 @@ export interface MeetupDocument extends Item, MeetupItem {
   updatedAt: Date;
 }
 
-
-export const MEETUP_TABLE_NAME = 'Meetup';
-const MeetupModel = dynamoose.model<MeetupDocument>(MEETUP_TABLE_NAME, meetupSchema);
+export const MEETUP_TABLE_NAME = "Meetup";
+const MeetupModel = dynamoose.model<MeetupDocument>(
+  MEETUP_TABLE_NAME,
+  meetupSchema
+);
 
 export default MeetupModel;

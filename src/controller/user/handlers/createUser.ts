@@ -22,6 +22,7 @@ export default async function createUser(
     );
   }
 
+  // Build DB user here
   const newUser = await UserService.createUser(req.body);
 
   if (!newUser) {

@@ -58,7 +58,11 @@ const answerSchema = new dynamoose.Schema({
   },
   answers: {
     type: Array,
-    schema: [String],
+    schema: [
+      {
+        type: String,
+      },
+    ],
   },
 });
 

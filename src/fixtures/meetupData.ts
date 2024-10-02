@@ -1,9 +1,9 @@
 import { UserEmailConfirmedEnum, type UserInput } from '../models/auth/user.model';
 import { MeetupStatusEnum, type MeetupItem } from '../models/meetup.model';
-import type { MeetupGroupDocument, MeetupGroupItem } from '../models/meetupGroup.model';
+import type { MeetupGroupItem } from '../models/meetupGroup.model';
 import type { MeetupRsvpResponse } from '../models/rsvp.model';
 
-const group: Partial<MeetupGroupDocument> = {
+const group: Partial<MeetupGroupItem> = {
   groupId: "my-parent-group",
   groupName: "BCN English Speakers",
   apiKey: "123-abc-456-def",
@@ -107,8 +107,8 @@ const event: MeetupItem = {
 const user: UserInput = {
   userId: "abcd",
   userStatus: 1,
-  signupDate: "2024-08-01T17:35:48.171Z",
-  lastLogin: "2024-09-05T17:35:48.171Z",
+  signupDate: new Date(), // "2024-08-01T17:35:48.171Z"
+  lastLogin: new Date(), // "2024-09-05T17:35:48.171Z"
   authMethod: "IG",
   authToken: "XXXX-XXXX-XXXX-XXXX",
   firstname: "Juan",

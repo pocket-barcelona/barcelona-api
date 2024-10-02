@@ -1,6 +1,9 @@
 import dynamoose from "dynamoose";
 import type { Item } from "dynamoose/dist/Item";
-import { genericMediaAssetSchema, type GenericMediaItem } from "./imageAssets.model";
+import {
+  genericMediaAssetSchema,
+  type GenericMediaItem,
+} from "./imageAssets.model";
 import type { MeetupItem } from "./meetup.model";
 
 export interface MeetupGroupItem {
@@ -61,7 +64,11 @@ const meetupGroupSchema = new dynamoose.Schema(
     meetupIds: {
       type: Array,
       required: true,
-      schema: [String],
+      schema: [
+        {
+          type: String,
+        },
+      ],
     },
     profilePhoto: {
       type: Array,
@@ -75,7 +82,11 @@ const meetupGroupSchema = new dynamoose.Schema(
     topics: {
       type: Array,
       required: true,
-      schema: [String],
+      schema: [
+        {
+          type: String,
+        },
+      ],
     },
   },
   {

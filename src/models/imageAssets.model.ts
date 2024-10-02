@@ -22,10 +22,6 @@ export const genericMediaAssetSchema = new dynamoose.Schema(
       type: Boolean,
       required: false,
     },
-  },
-  {
-    timestamps: true,
-    saveUnknown: false,
   }
 );
 export type GenericMediaItem = {

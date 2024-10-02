@@ -21,9 +21,9 @@ export interface UserInput {
   /** The external auth token of their auth session */
   authToken: string;
   /** UTC of when user signed up */
-  signupDate: string;
+  signupDate: Date;
   /** UTC of user's last logged-in time */
-  lastLogin: string;
+  lastLogin: Date;
   /** If the user is a verified user (requires an admin to set) */
   isVerified?: boolean;
   /** Allows users to have credit to spend on going to paid events */
@@ -110,11 +110,9 @@ const identitySchema = new dynamoose.Schema(
   {
     documentNumber: {
       type: String,
-      required: false,
     },
     documentType: {
       type: String,
-      required: false,
     },
   },
   {
@@ -133,7 +131,7 @@ const userSchema = new dynamoose.Schema(
     },
     emailConfirmed: {
       type: Number,
-      required: false,
+      required: true,
       enum: [
         UserEmailConfirmedEnum.Unconfirmed,
         UserEmailConfirmedEnum.Confirmed,
@@ -153,7 +151,6 @@ const userSchema = new dynamoose.Schema(
     },
     passwordResetToken: {
       type: String,
-      required: true,
       default: "",
     },
     userStatus: {
@@ -174,32 +171,24 @@ const userSchema = new dynamoose.Schema(
     },
     authToken: {
       type: String,
-      required: true,
     },
     signupDate: {
       type: Date,
-      required: true,
     },
     lastLogin: {
       type: Date,
-      required: true,
     },
     isVerified: {
       type: Boolean,
       required: true,
-      default: false,
     },
     credit: {
       type: Number,
       required: true,
-      default: 0,
     },
     completedRSVPs: {
       type: Number,
-      required: true,
-      default: 0,
     },
-
     firstname: {
       type: String,
       required: true,
@@ -208,69 +197,67 @@ const userSchema = new dynamoose.Schema(
       type: String,
       required: true,
     },
+    nickname: {
+      type: String,
+    },
     telegram: {
       type: String,
-      required: false,
     },
     mobile: {
       type: String,
-      required: true,
     },
     identity: {
       type: Object,
-      required: true,
       schema: [identitySchema],
     },
     about: {
       type: String,
-      required: true,
     },
     currentLocation: {
       type: String,
-      required: true,
     },
     barrioId: {
       type: Number,
-      required: true,
     },
     arrivedInBarcelona: {
       type: Date,
-      required: true,
     },
     profilePhoto: {
       type: Array,
-      required: true,
       schema: [genericMediaAssetSchema],
     },
     interests: {
       type: Array,
-      required: true,
-      schema: [String],
+      schema: [
+        {
+          type: String,
+        },
+      ],
     },
     followingGroupIds: {
       type: Array,
-      required: true,
-      schema: [String],
+      schema: [
+        {
+          type: String,
+        },
+      ],
     },
     utmSource: {
       type: String,
-      required: false,
     },
     utmMedium: {
       type: String,
-      required: false,
     },
     utmCampaign: {
       type: String,
-      required: false,
     },
     avatarColor: {
       type: String,
-      required: false,
     },
   },
   {
-    timestamps: true, // https://dynamoosejs.com/guide/Schema/#required-boolean
+    timestamps: true,
+    saveUnknown: false,
   }
 );
 

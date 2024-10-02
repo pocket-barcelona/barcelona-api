@@ -1,43 +1,60 @@
-import UserModel, { type UserDocument, UserEmailConfirmedEnum, type UserInput, UserStatusEnum } from "../../../models/auth/user.model";
-import { v4 as uuidv4 } from 'uuid';
-import lodash from 'lodash';
-const { omit } = lodash;
+import UserModel, {
+  type UserDocument,
+  UserEmailConfirmedEnum,
+  type UserInput,
+  UserStatusEnum,
+} from "../../../models/auth/user.model";
+import { v4 as uuidv4 } from "uuid";
+import lodash from "lodash";
+const { omit, pick } = lodash;
 
-
-export default async function createUser(input: Partial<UserInput>): Promise<UserDocument | null | string> {
+export default async function createUser(
+  input: Partial<UserInput>
+): Promise<UserDocument | null | string> {
   try {
-    const randomId = uuidv4();
-    const userId: keyof UserDocument = 'userId';
-    
-    // set initial user document defaults
-    const initialUserData: Pick<UserDocument, 'emailConfirmed' | 'userStatus' | 'utmSource' | 'utmMedium' | 'utmCampaign' | 'avatarColor'> = {
+    const newUUID = uuidv4();
+
+    const initialUserData: Partial<UserDocument> = {
       emailConfirmed: UserEmailConfirmedEnum.Unconfirmed,
       userStatus: UserStatusEnum.Active,
-      utmSource: input.utmSource || 'organic',
-      utmMedium: input.utmMedium || 'none',
-      utmCampaign: input.utmCampaign || 'none',
-      avatarColor: input.avatarColor || '#ffffff'
+      userId: newUUID,
+      authMethod: "EMAIL",
+      signupDate: new Date(),
+      lastLogin: new Date(),
+      isVerified: false,
+      credit: 0,
+      firstname: input.firstname || "",
+      lastname: input.lastname || "",
+      // utmSource: input.utmSource || 'organic',
+      // utmMedium: input.utmMedium || 'none',
+      // utmCampaign: input.utmCampaign || 'none',
+      // avatarColor: input.avatarColor || '#ffffff'
     };
-    // build user doc
+
+    // build user document
     const newUserBody: Partial<UserDocument> = {
       ...input,
       ...initialUserData,
-      ...{
-        [userId]: randomId,
-      },
     };
 
     const user = await UserModel.create(newUserBody);
 
-    // only return certain field from the document
-    return omit(user.toJSON(), "password") as UserDocument;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  } catch (e: any) {
+    const pickedFields: Array<keyof UserDocument> = [
+      "email",
+      "firstname",
+      "lastname",
+      "userStatus",
+      "userId",
+    ];
+    // only return certain fields from the document
+    return pick(user.toJSON(), ...pickedFields) as UserDocument;
+
+    
+  } catch (e: unknown) {
     // throw new Error(e);
-    if (e?.message) {
-      return e.message
+    if (e instanceof Error) {
+      return e.message;
     }
     return null
   }
-  
 }
