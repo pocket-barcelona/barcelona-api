@@ -1,14 +1,9 @@
 import MeetupModel, { type MeetupDocument, type MeetupItem } from "../../../models/meetup.model";
-import MeetupGroupModel, { type MeetupGroupItem } from '../../../models/meetupGroup.model';
 
 export default async function getById(
   input: Pick<MeetupItem, "meetupId"> & { loggedIn?: boolean; }
 ): Promise<MeetupDocument | Partial<MeetupDocument> | null> {
-  const metricsLabels = {
-    operation: "getById",
-  };
-
-  // const timer = databaseResponseTimeHistogram.startTimer();
+  
   try {
     const result = await MeetupModel.get({
       id: input.meetupId.toString(),

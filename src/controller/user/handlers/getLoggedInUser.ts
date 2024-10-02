@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import type { UserDocument } from "../../../models/auth/user.model";
 
 export default async function getLoggedInUser(req: Request, res: Response) {
-  const email = res.locals.user.email as string;
+  const email = (res.locals.user as UserDocument).email as string;
   // return user by email
 
   // get user

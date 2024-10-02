@@ -1,4 +1,4 @@
-import { UserEmailConfirmedEnum, type UserInput } from '../models/auth/user.model';
+import { UserEmailConfirmedEnum, UserRoleEnum, type UserInput } from '../models/auth/user.model';
 import { MeetupStatusEnum, type MeetupItem } from '../models/meetup.model';
 import type { MeetupGroupItem } from '../models/meetupGroup.model';
 import type { MeetupRsvpResponse } from '../models/rsvp.model';
@@ -20,8 +20,8 @@ const group: Partial<MeetupGroupItem> = {
   ],
   about:
     "<h2>BCN English Speakers heading here</h2><p>We are a group doing meetups every month blah...</p>",
-  signupDate: "2024-07-25T17:35:48.171Z",
-  lastLogin: "2024-09-23T17:35:48.171Z",
+  signupDate: new Date("2024-07-25T17:35:48.171Z"),
+  lastLogin: new Date("2024-09-23T17:35:48.171Z"),
   isVerified: true,
   topics: [
     "new_in_town",
@@ -106,6 +106,7 @@ const event: MeetupItem = {
 
 const user: UserInput = {
   userId: "abcd",
+  role: UserRoleEnum.Admin,
   userStatus: 1,
   signupDate: new Date(), // "2024-08-01T17:35:48.171Z"
   lastLogin: new Date(), // "2024-09-05T17:35:48.171Z"

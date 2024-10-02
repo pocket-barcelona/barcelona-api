@@ -16,11 +16,11 @@ import type { UpdateMeetupInput } from "../../../schema/meetup/meetup.schema";
 // }
 
 /**
- * Update an event
+ * Update a meetup
  * @param input
- * @returns The updated event
+ * @returns The updated meetup
  */
-export default async function updateEven(eventId: MeetupItem["meetupId"], input: UpdateMeetupInput["body"]): Promise<MeetupDocument | null> {
+export default async function updateMeetup(eventId: MeetupItem["meetupId"], input: UpdateMeetupInput["body"]): Promise<MeetupDocument | null> {
   try {
     const payload: Partial<MeetupDocument> = {
       // ...input, - HERE we need payload to be explicitly defined, or somehow we need to get createdAt and updatedAt out out input parameter.

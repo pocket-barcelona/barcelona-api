@@ -4,6 +4,7 @@ import barriosRoutes from "./barrios";
 import placesRoutes from "./places";
 import eventsRoutes from "./events";
 import meetupRoutes from "./meetup";
+import meetupGroupRoutes from "./meetupGroup";
 import plannerRoutes from "./planner";
 import poiRoutes from "./poi";
 import postsRoutes from "./posts";
@@ -20,6 +21,7 @@ function routes(app: Express) {
   app.use("/api/poi", poiRoutes);
   app.use("/api/events", eventsRoutes);
   app.use("/api/meetup", meetupRoutes);
+  app.use("/api/meetupGroup", meetupGroupRoutes);
   app.use("/api/planner", plannerRoutes);
   app.use("/api/posts", postsRoutes);
   // USER LOGIN/AUTH

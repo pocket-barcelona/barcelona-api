@@ -2,6 +2,7 @@ import UserModel, {
   type UserDocument,
   UserEmailConfirmedEnum,
   type UserInput,
+  UserRoleEnum,
   UserStatusEnum,
 } from "../../../models/auth/user.model";
 import { v4 as uuidv4 } from "uuid";
@@ -22,6 +23,7 @@ export default async function createUser(
       signupDate: new Date(),
       lastLogin: new Date(),
       isVerified: false,
+      role: UserRoleEnum.User,
       credit: 0,
       firstname: input.firstname || "",
       lastname: input.lastname || "",

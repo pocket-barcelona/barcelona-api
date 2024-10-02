@@ -14,6 +14,8 @@ export interface UserInput {
   emailConfirmed: UserEmailConfirmedEnum;
   /** An auto-generated uuid for the user */
   userId: string;
+  /** The user's role */
+  role: UserRoleEnum;
   /** User active status */
   userStatus: UserStatusEnum;
   /** What they used to auth/login with */
@@ -78,6 +80,13 @@ export enum UserStatusEnum {
   Disabled = 3,
   Banned = 4,
   Deleted = 5,
+}
+export enum UserRoleEnum {
+  Admin = 1, // super admin of system
+  Owner = 2, // admin of e.g a meetup group
+  User = 3, // normal user
+  Guest = 4, // guest
+  Demo = 5, // not implement yet
 }
 export enum CheckResetTokenEnum {
   NoDocument = 1,
@@ -152,6 +161,10 @@ const userSchema = new dynamoose.Schema(
     passwordResetToken: {
       type: String,
       default: "",
+    },
+    role: {
+      type: Number,
+      required: true,
     },
     userStatus: {
       type: Number,

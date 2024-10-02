@@ -1,4 +1,4 @@
-import EventModel, { type MeetupDocument, MeetupStatusEnum } from "../../../models/meetup.model";
+import MeetupModel, { type MeetupDocument, MeetupStatusEnum } from "../../../models/meetup.model";
 import type { CreateMeetupInput } from "../../../schema/meetup/meetup.schema";
 import { v4 as uuidv4 } from 'uuid';
 import generateShortId from "../../../utils/generateMeetupShortId";
@@ -39,7 +39,7 @@ export default async function create(
     };
     const newEvent = Object.assign({}, input, userInput);
 
-    const result = await EventModel.create(newEvent).catch((err) => {
+    const result = await MeetupModel.create(newEvent).catch((err) => {
       // logger.warn(err);
       // timer({ ...metricsLabels, success: "false" });
       // return a validation error if present

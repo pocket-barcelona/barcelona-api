@@ -9,6 +9,8 @@ import type { MeetupItem } from "./meetup.model";
 export interface MeetupGroupItem {
   /** The group ID */
   groupId: string;
+  /** The user ID of the group creator */
+  ownerId: string;
   /** The group display name */
   groupName: string;
   /** @todo - Unique public API key for the group */
@@ -16,9 +18,9 @@ export interface MeetupGroupItem {
   /** If the group has been verified by us as being a real human group */
   isVerified: boolean;
   /** UTC of when user signed up */
-  signupDate: string;
+  signupDate: Date;
   /** UTC of user's last logged-in time */
-  lastLogin: string;
+  lastLogin: Date;
   /** List of meetup IDs related to this group */
   meetupIds: MeetupItem["meetupId"][];
   /** Profile photos for the groupd */
@@ -39,6 +41,10 @@ const meetupGroupSchema = new dynamoose.Schema(
       type: String,
       required: true,
       hashKey: true,
+    },
+    ownerId: {
+      type: String,
+      required: true,
     },
     groupName: {
       type: String,
