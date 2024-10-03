@@ -19,14 +19,14 @@ const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
     );
   }
 
-  if (user.role !== UserRoleEnum.Admin) {
-    return res.status(StatusCodes.UNAUTHORIZED).send(
-      error(
-        'You are not authorized to perform this action',
-        res.statusCode,
-      )
-    );
-  }
+  // if (user.role !== UserRoleEnum.Admin) {
+  //   return res.status(StatusCodes.UNAUTHORIZED).send(
+  //     error(
+  //       'You are not authorized to perform this action',
+  //       res.statusCode,
+  //     )
+  //   );
+  // }
 
   return next();
 };

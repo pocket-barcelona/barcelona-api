@@ -13,6 +13,8 @@ export interface MeetupGroupItem {
   ownerId: string;
   /** The group display name */
   groupName: string;
+  /** Will be like Spain, Barcelona or Poblenou, depending on what the group wants to show */
+  groupLocation: string;
   /** @todo - Unique public API key for the group */
   apiKey: string;
   /** If the group has been verified by us as being a real human group */
@@ -47,6 +49,10 @@ const meetupGroupSchema = new dynamoose.Schema(
       required: true,
     },
     groupName: {
+      type: String,
+      required: true,
+    },
+    groupLocation: {
       type: String,
       required: true,
     },

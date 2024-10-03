@@ -9,13 +9,15 @@ import {
 
 const createMeetupGroupPayload = {
   body: object({
-    groupId: string(),
     groupName: string()
       .min(5, "Group name is required and must be at least 5 chars")
-      .max(100, "Group name - too long!"),
+      .max(64, "Group name is too long"),
+    groupLocation: string()
+      .min(2, "Group location is required and must be at least 2 chars")
+      .max(100, "Group location is too long"),
     about: string()
       .min(20, "About description must be at least 20 chars")
-      .max(4000, "About description - too long! Max 4000 chars"),
+      .max(4000, "About description is too long. Max 4000 chars"),
     // topics: string().array().optional(),
   }),
 };
@@ -24,10 +26,13 @@ const updateMeetupGroupPayload = {
   body: object({
     groupName: string()
       .min(5, "Group name is required and must be at least 5 chars")
-      .max(100, "Group name - too long!"),
+      .max(64, "Group name is too long"),
+    groupLocation: string()
+      .min(2, "Group location is required and must be at least 2 chars")
+      .max(100, "Group location is too long"),
     about: string()
       .min(20, "About description must be at least 20 chars")
-      .max(4000, "About description - too long! Max 4000 chars"),
+      .max(4000, "About description is too long. Max 4000 chars"),
   }),
   params: object({
     groupId: string({

@@ -8,15 +8,16 @@ export default async function create(
   hostId: string
 ): Promise<MeetupGroupDocument | null | string> {
   
-  const { about, groupName } = input;
+  const { about, groupName, groupLocation } = input;
   try {
     
     const newGroup: MeetupGroupItem = {
       about,
       groupName,
+      groupLocation,
       ownerId: hostId,
-      groupId: uuidv4(),
-      apiKey: uuidv4(),
+      groupId: uuidv4(), // auto-generate for the group
+      apiKey: uuidv4(), // auto-generate for the group
       isVerified: false,
       meetupIds: [],
       profilePhoto: [],
@@ -26,19 +27,13 @@ export default async function create(
     }
     
     const result = await MeetupGroupModel.create(newGroup).catch((err) => {
-      // logger.warn(err);
-      // timer({ ...metricsLabels, success: "false" });
-      // return a validation error if present
       if (err?.message) return err.message;
       return null;
     });
 
-    // timer({ ...metricsLabels, success: "true" });
     return result;
   } catch (err: unknown) {
     // post values were malformed
-    // timer({ ...metricsLabels, success: "false" });
-    // throw e;
     return null;
   }
 }
