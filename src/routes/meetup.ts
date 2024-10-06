@@ -35,47 +35,47 @@ router.post(
 );
 /** Get meetup by ID: requires user to be logged in */
 router.get(
-  "/:eventId",
+  "/:meetupId",
   [requireUser, validateResource(getMeetupByIdSchema)],
   MeetupController.getMeetupHandler
 );
 /** Get public info about the meetup (user doesn't need to be logged in or have an account) */
 router.get(
-  "/:eventId/public",
+  "/:meetupId/public",
   [validateResource(getMeetupByIdSchema)],
   MeetupController.getNotLoggedInMeetupHandler
 );
 /** Get public info about the meetup (user doesn't need to be logged in or have an account) */
 router.get(
-  "/:eventShortId/short",
+  "/:meetupShortId/short",
   [validateResource(getMeetupByShortIdSchema)],
   MeetupController.getMeetupByShortIdHandler
 );
 /** Update meetup by ID */
 router.patch(
-  "/:eventId",
+  "/:meetupId",
   [requireUser, validateResource(updateMeetupSchema)],
   MeetupController.updateMeetupHandler
 );
 /** Delete meetup by ID */
-router.delete("/:eventId", [requireUser], MeetupController.deleteMeetupHandler);
+router.delete("/:meetupId", [requireUser], MeetupController.deleteMeetupHandler);
 
 // ########### RSVPS ###########
 /** Create a new response to a meetup */
 router.post(
-  "/:eventId/responses",
+  "/:meetupId/responses",
   [requireMeetup, validateResource(createRsvpSchema)],
   RsvpController.createRsvpHandler
 );
 /** Update a response by ID */
 router.patch(
-  "/:eventId/responses/:responseId",
+  "/:meetupId/responses/:responseId",
   [requireMeetup, validateResource(updateRsvpSchema)],
   RsvpController.updateRsvpHandler
 );
 /** Check if user has responded to this meetup yet */
 router.post(
-  "/:eventId/has-responded",
+  "/:meetupId/has-responded",
   [requireMeetup],
   RsvpController.hasRsvpdToMeetupAlreadyHandler
 );

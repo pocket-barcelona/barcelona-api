@@ -26,9 +26,9 @@ export default async function updateMeetup(eventId: MeetupItem["meetupId"], inpu
       // ...input, - HERE we need payload to be explicitly defined, or somehow we need to get createdAt and updatedAt out out input parameter.
       // feel free to tweak this part :) but the key is to not be sending timestamps here
       meetupId: eventId,
-      eventTitle: input.eventTitle,
-      eventSubtitle: input.eventSubtitle,
-      eventDesc: input.eventDesc,
+      title: input.title,
+      subtitle: input.subtitle,
+      description: input.description,
       // startTime: input.startTime ? new Date(input.startTime) : new Date(0),
       // endTime: input.endTime ? new Date(input.endTime) : new Date(0),
       // pollQuestions: input.pollQuestions ? await getPollQuestions(eventId, input) : undefined,

@@ -22,16 +22,16 @@ const createMeetupPayload = {
       eventLanguage: string().array().optional(),
     }),
     status: enum_(["PUBLISHED", "DRAFT", "ARCHIVED", "DELETED"]),
-    privacy: enum_(["1", "2", "3"]),
+    privacy: number(),
     rsvpType: enum_(["DEFINITE", "INDEFINITE"]),
-    eventTitle: string()
+    title: string()
       .min(5, "Event title is required and must be at least 5 chars")
       .max(100, "Event title - too long!"),
-    eventSubtitle: string()
+    subtitle: string()
       .min(5, "Event subtitle must be at least 5 chars")
       .max(255, "Event subtitle - too long!")
       .optional(),
-    eventDesc: string()
+    description: string()
       .min(20, "Event description must be at least 20 chars")
       .max(4000, "Event description - too long! Max 4000 chars"),
     directions: string()
@@ -51,12 +51,12 @@ const createMeetupPayload = {
     }).min(Date.now(), "Event can't be in the past"),
     location: object({
       address1: string(),
-      address2: string().optional(),
+      address2: string(),
       postcode: string(),
       town: string(),
       province: string(),
       country: string(),
-      notes: string().optional(),
+      notes: string(),
       lat: number(),
       lng: number(),
       locationPrecision: number(),
@@ -65,8 +65,14 @@ const createMeetupPayload = {
       priceCents: number(),
       currencyCode: string(),
       locale: string(),
+      paymentScheme: string(),
       canUseCredit: boolean(),
     }),
+    hosts: object({
+      userId: string(),
+      hostRole: string(),
+      isOrganiser: boolean().optional()
+    }).array(),
     tags: string().array(),
 
     // @todo - do as patch later
@@ -78,21 +84,21 @@ const createMeetupPayload = {
 
 const updateMeetupPayload = {
   body: object({
-    eventTitle: string()
+    title: string()
       .min(5, "Event title is required and must be at least 5 chars")
       .max(100, "Event title - too long!"),
-    eventSubtitle: string()
+    subtitle: string()
       .min(5, "Event subtitle must be at least 5 chars")
       .max(255, "Event subtitle - too long!")
       .optional(),
-    eventDesc: string()
+    description: string()
       .min(20, "Event description must be at least 20 chars")
       .max(4000, "Event description - too long! Max 4000 chars"),
     // @todo - body here!
   }),
   params: object({
     meetupId: string({
-      required_error: "event ID is required",
+      required_error: "meetup ID is required",
     }),
   }),
 };
@@ -100,7 +106,7 @@ const updateMeetupPayload = {
 const selectByIdParams = {
   params: object({
     meetupId: string({
-      required_error: "event ID is required",
+      required_error: "meetup ID is required",
     }),
   }),
 };

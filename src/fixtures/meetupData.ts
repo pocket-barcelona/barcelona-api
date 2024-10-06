@@ -47,9 +47,9 @@ const event: MeetupItem = {
   status: MeetupStatusEnum.Draft,
   privacy: 1,
   rsvpType: 'DEFINITE',
-  eventTitle: "My fantastic meeting",
-  eventSubtitle: "Doing meetups since 1999!",
-  eventDesc: `
+  title: "My fantastic meeting",
+  subtitle: "Doing meetups since 1999!",
+  description: `
     <p>Welcome to the greatest meetup in the sky.</p><p>It will be awesome.</p>
     `,
   directions:
@@ -57,8 +57,8 @@ const event: MeetupItem = {
   category: "MEETUP",
   subcategory: ["social", "drinks", "karaoke"],
   mode: "IN_PERSON",
-  startTime: "2024-09-25T17:35:48.171Z",
-  endTime: "2024-09-26T17:35:48.171Z",
+  startTime: new Date("2024-09-25T17:35:48.171Z"),
+  endTime: new Date("2024-09-26T17:35:48.171Z"),
   location: {
     address1: "123 Memory Lane",
     address2: "Awesome Neighbourhood",

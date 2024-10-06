@@ -13,35 +13,27 @@ import type { UserDocument } from "./auth/user.model";
 const meetupConfigSchema = new dynamoose.Schema({
   requiresMobileNumber: {
     type: Boolean,
-    required: false,
   },
   requiresIdentityCard: {
     type: Boolean,
-    required: false,
   },
   requiresEmailAddress: {
     type: Boolean,
-    required: false,
   },
   requiresQRCodeEntry: {
     type: Boolean,
-    required: false,
   },
   requiresVerifiedUser: {
     type: Boolean,
-    required: false,
   },
   minAttendees: {
     type: Number,
-    required: false,
   },
   maxAttendees: {
     type: Number,
-    required: false,
   },
   eventLanguage: {
     type: Array,
-    required: false,
     schema: [
       {
         type: String,
@@ -147,6 +139,20 @@ const promoCodesSchema = new dynamoose.Schema({
   },
 });
 
+const meetupHostsSchema = new dynamoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+  },
+  hostRole: {
+    type: String,
+    required: true,
+  },
+  isOrganiser: {
+    type: Boolean,
+  }
+});
+
 const meetupSchema = new dynamoose.Schema(
   {
     meetupId: {
@@ -164,8 +170,7 @@ const meetupSchema = new dynamoose.Schema(
       required: true,
     },
     clonedId: {
-      type: String,
-      required: true,
+      type: String
     },
     eventConfig: {
       type: Object,
@@ -173,7 +178,7 @@ const meetupSchema = new dynamoose.Schema(
       schema: [meetupConfigSchema],
     },
     status: {
-      type: String,
+      type: Number,
       required: true,
     },
     privacy: {
@@ -184,17 +189,17 @@ const meetupSchema = new dynamoose.Schema(
       type: String,
       required: true,
     },
-    eventTitle: {
+    title: {
       type: String,
       required: true,
       default: "",
     },
-    eventSubtitle: {
+    subtitle: {
       type: String,
       required: true,
       default: "",
     },
-    eventDesc: {
+    description: {
       type: String,
       required: true,
       default: "",
@@ -240,7 +245,7 @@ const meetupSchema = new dynamoose.Schema(
       schema: [priceSchema],
     },
     promoCodes: {
-      type: Object,
+      type: Array,
       required: true,
       schema: [promoCodesSchema],
     },
@@ -251,7 +256,6 @@ const meetupSchema = new dynamoose.Schema(
     },
     waitingList: {
       type: Array,
-      required: true,
       schema: [
         {
           type: String,
@@ -270,11 +274,7 @@ const meetupSchema = new dynamoose.Schema(
     hosts: {
       type: Array,
       required: true,
-      schema: [
-        {
-          type: String,
-        },
-      ],
+      schema: [meetupHostsSchema],
     },
     photos: {
       type: Array,
@@ -318,7 +318,7 @@ export type MeetupConfig = {
   /** 0=any */
   maxAttendees?: number;
   /** List of languages people will be speaking at the event. If empty array, lang will be any language spoken */
-  eventLanguage?: MeetupLanguage[];
+  eventLanguage?: string[];
 };
 export type MeetupRsvpCertainty = "DEFINITE" | "INDEFINITE";
 export type MeetupPrivacy = 1 | 2 | 3;
@@ -354,7 +354,7 @@ export const MEETUP_CATEGORIES = {
 // type MeetupCategoryValue = typeof MEETUP_CATEGORIES[keyof typeof MEETUP_CATEGORIES];
 export type MeetupCategoryName = keyof typeof MEETUP_CATEGORIES;
 export type MeetupMode = "IN_PERSON" | "ONLINE" | "HYBRID";
-export type MeetupLanguage = "EN" | "CA" | "ES" | "PT" | "IT" | "FR";
+// export type MeetupLanguage = "EN" | "CA" | "ES" | "PT" | "IT" | "FR";
 export type MeetupLocation = {
   /** Street address */
   address1: string;
@@ -375,7 +375,7 @@ export type MeetupLocation = {
   /** Full longitude, from Google */
   lng: number;
   /** 1=show exact location,2=show radius,3=show city only,4=hide location */
-  locationPrecision: 1 | 2 | 3;
+  locationPrecision: 1 | 2 | 3 | number;
 };
 export type MeetupPrice = {
   /** Like 1050 = €10,50. 0=Free. -1=TBC */
@@ -409,6 +409,15 @@ export type MeetupPromoModifier = {
   codeExpiryTime?: string;
 };
 
+type HostRoleType = 'ORGANISER' | 'CO_ORGANISER' | 'COMMUNITY_MANAGER';
+export type MeetupHostList = {
+  /** ID of the user on the list */
+  userId: string;
+  /** The role that this person has for the event */
+  hostRole: HostRoleType | string;
+  isOrganiser?: boolean;
+}
+
 export interface MeetupItem {
   /** Meetup ID */
   meetupId: string;
@@ -417,7 +426,7 @@ export interface MeetupItem {
   /** The ID of the group which created this meetup */
   groupId: string;
   /** The UUID of the meetup which this meetup was cloned from, or empty string */
-  clonedId: string;
+  clonedId?: string;
   /** Meetup settings */
   eventConfig: MeetupConfig;
   /** Status and visibility */
@@ -427,11 +436,11 @@ export interface MeetupItem {
   /** The type of response a user can give for the event: Definite=yes/no, Indefinite=yes/no/maybe */
   rsvpType: MeetupRsvpCertainty;
   /** Main title */
-  eventTitle: string;
+  title: string;
   /** Main subtitle */
-  eventSubtitle: string;
-  /** Main description - support HTML */
-  eventDesc: string;
+  subtitle: string;
+  /** Main description - supports HTML */
+  description: string;
   /** Special notes about how to find the event once there */
   directions: string;
   /** Main category */
@@ -441,9 +450,9 @@ export interface MeetupItem {
   /** In-person, Online or Hybrid event */
   mode: MeetupMode;
   /** Full UTC timestamp */
-  startTime: string;
+  startTime: Date;
   /** Full UTC timestamp */
-  endTime: string;
+  endTime: Date;
   /** Meetup location @type MeetupLocation */
   location: MeetupLocation;
   /** Price in cents. @todo - entry fee? */
@@ -455,11 +464,11 @@ export interface MeetupItem {
   /** People who have rsvp'd to this meetup */
   rsvps: MeetupRsvpModel[];
   /** List of user IDs who are on the waiting list */
-  waitingList: MeetupWaitingList[];
+  waitingList?: MeetupWaitingList[];
   /** Topics and event tags */
   tags: string[];
   /** List of event hosts/admins */
-  hosts: string[];
+  hosts: MeetupHostList[];
   /** List of photos to promote the meetup. Featured photo will be one flagged, else first image */
   photos: GenericMediaItem[];
   // responses: Array<EventResponseModel>;

@@ -20,7 +20,7 @@ export default async function getByShortId(
     }
 
     const document = result[0];
-    const documentFields: Array<keyof MeetupDocument> = ['meetupId', 'shortId', 'createdAt', 'updatedAt', 'startTime', 'endTime', 'eventDesc', 'groupId', 'location', 'status'];
+    const documentFields: Array<keyof MeetupDocument> = ['meetupId', 'shortId', 'createdAt', 'updatedAt', 'startTime', 'endTime', 'title', 'subcategory', 'description', 'groupId', 'location', 'status'];
     return pick(document, documentFields);
 
   } catch (e) {

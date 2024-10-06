@@ -3,11 +3,9 @@ import MeetupModel, { type MeetupDocument, type MeetupItem } from "../../../mode
 export default async function getById(
   input: Pick<MeetupItem, "meetupId"> & { loggedIn?: boolean; }
 ): Promise<MeetupDocument | Partial<MeetupDocument> | null> {
-  
+  const id = input.meetupId.toString()
   try {
-    const result = await MeetupModel.get({
-      id: input.meetupId.toString(),
-    }).catch((err) => {
+    const result = await MeetupModel.get(id).catch((err) => {
       // logger.warn(err);
       return null;
     });
