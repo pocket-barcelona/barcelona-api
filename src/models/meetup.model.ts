@@ -5,12 +5,19 @@ import {
   genericMediaAssetSchema,
   type GenericMediaItem,
 } from "./imageAssets.model";
-import type { UserDocument } from "./auth/user.model";
 // import { questionSchema } from './poll.types';
 // import { EventResponseModel } from "./event-responses.model";
 // import { PollQuestions, PollQuestionsInput, PollResults, questionSchema } from "./types/poll.types";
 
 const meetupConfigSchema = new dynamoose.Schema({
+  minAttendees: {
+    type: Number,
+    required: true,
+  },
+  maxAttendees: {
+    type: Number,
+    required: true,
+  },
   requiresMobileNumber: {
     type: Boolean,
   },
@@ -26,12 +33,6 @@ const meetupConfigSchema = new dynamoose.Schema({
   requiresVerifiedUser: {
     type: Boolean,
   },
-  minAttendees: {
-    type: Number,
-  },
-  maxAttendees: {
-    type: Number,
-  },
   eventLanguage: {
     type: Array,
     schema: [
@@ -40,6 +41,8 @@ const meetupConfigSchema = new dynamoose.Schema({
       },
     ],
   },
+}, {
+  saveUnknown: true,
 });
 
 const locationSchema = new dynamoose.Schema({
@@ -175,10 +178,11 @@ const meetupSchema = new dynamoose.Schema(
     eventConfig: {
       type: Object,
       required: true,
-      schema: [meetupConfigSchema],
+      // @todo - this doesn't seem to work for some reason!
+      // schema: [meetupConfigSchema],
     },
     status: {
-      type: Number,
+      type: String,
       required: true,
     },
     privacy: {
@@ -289,7 +293,13 @@ const meetupSchema = new dynamoose.Schema(
   },
   {
     timestamps: true,
-    saveUnknown: false,
+    saveUnknown: [
+      "eventConfig.*",
+    ],
+    // validate: (newItem) => {
+    //   console.log(newItem)
+    //   return true;
+    // }
   }
 );
 
@@ -297,26 +307,26 @@ const meetupSchema = new dynamoose.Schema(
 
 export enum MeetupStatusEnum {
   /** Events in draft state are not public */
-  Draft = 1,
+  Draft = 'DRAFT',
   /** An normal, published event. Users can rsvp */
-  Published = 2,
+  Published = 'PUBLISHED',
   /** Archived events - support for when we need it. Archived events can be un-deleted */
-  Archived = 3,
+  Archived = 'ARCHIVED',
   /** Soft deleted events do not appear in any normal API data feed. They only exist in the database. */
-  SoftDeleted = 4,
+  SoftDeleted = 'SOFTDELETED',
   /** @todo - Admin hard delete? */
-  Deleted = 5,
+  Deleted = 'DELETED',
 }
 export type MeetupConfig = {
+  /** 0=any number, 1=min one attendee required for the event to start */
+  minAttendees: number;
+  /** 0=any */
+  maxAttendees: number;
   requiresMobileNumber?: boolean;
   requiresIdentityCard?: boolean;
   requiresEmailAddress?: boolean;
   requiresQRCodeEntry?: boolean;
   requiresVerifiedUser?: boolean;
-  /** 0=any number, 1=min one attendee required for the event to start */
-  minAttendees?: number;
-  /** 0=any */
-  maxAttendees?: number;
   /** List of languages people will be speaking at the event. If empty array, lang will be any language spoken */
   eventLanguage?: string[];
 };

@@ -11,12 +11,14 @@ export default async function updateMeetup(meetupId: MeetupItem["meetupId"], inp
     const payload = {
       input,
       meetupId,
-    } as unknown as MeetupDocument;
-    return await MeetupModel.update(payload).catch((err) => {
+    };
+    const updatedDocument = await MeetupModel.update(payload).catch((err) => {
       console.log(err);
       return null;
     });
+    return updatedDocument;
   } catch (error) {
+    console.log({error});
     return null;
   }
 }

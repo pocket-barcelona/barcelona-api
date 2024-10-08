@@ -1,4 +1,5 @@
 import MeetupModel, { type MeetupDocument, type MeetupItem } from "../../../models/meetup.model";
+import logger from '../../../utils/logger';
 
 export default async function getById(
   input: Pick<MeetupItem, "meetupId"> & { loggedIn?: boolean; }
@@ -6,7 +7,7 @@ export default async function getById(
   const id = input.meetupId.toString()
   try {
     const result = await MeetupModel.get(id).catch((err) => {
-      // logger.warn(err);
+      logger.warn(err);
       return null;
     });
 

@@ -58,7 +58,7 @@ export default async function create(
       hosts: input.hosts ?? [],
       eventConfig,
     };
-
+    
     const result = await MeetupModel.create(newItem).catch((err) => {
       if (err?.message) return err.message;
       return null;
@@ -71,7 +71,7 @@ export default async function create(
 }
 
 function getMeetupConfig(input: CreateMeetupInput["body"]): MeetupConfig {
-  const { eventConfig = {} } = input;
+  const { eventConfig } = input;
   const {
     minAttendees = 0,
     maxAttendees = 0,

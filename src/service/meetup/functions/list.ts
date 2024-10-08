@@ -6,11 +6,6 @@ import MeetupModel, { type MeetupDocument, MeetupStatusEnum } from "../../../mod
 export default async function getList(
   groupId: MeetupDocument["groupId"]
 ): Promise<ScanResponse<MeetupDocument> | null> {
-  const metricsLabels = {
-    operation: "getList",
-  };
-
-  // const timer = databaseResponseTimeHistogram.startTimer();
   try {
     const statusField: keyof MeetupDocument = "status";
     const groupIdField: keyof MeetupDocument = "groupId";
@@ -28,20 +23,20 @@ export default async function getList(
     // timer({ ...metricsLabels, success: "true" });
     const result = MeetupModel.scan()
       // only show my documents
-      .where(groupIdField)
-      .eq(groupId)
-      .and()
+      // .where(groupIdField)
+      // .eq(groupId)
+      // .and()
       .where(statusField)
-      // .eq(MeetupStatusEnum.Active)
+      // // .eq(MeetupStatusEnum.Active)
       .in([MeetupStatusEnum.Published, MeetupStatusEnum.Draft])
 
       .exec(); // this will scan every record!
     return await result.catch((err) => {
-      // logger.warn(err);
+      console.log(err);
       return null;
     });
   } catch (e) {
-    // timer({ ...metricsLabels, success: "false" });
+    
     return null;
   }
 }
