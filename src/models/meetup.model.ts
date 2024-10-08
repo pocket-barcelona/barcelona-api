@@ -86,6 +86,8 @@ const locationSchema = new dynamoose.Schema({
     type: Number,
     required: true,
   },
+}, {
+  saveUnknown: true,
 });
 
 const priceSchema = new dynamoose.Schema({
@@ -241,12 +243,12 @@ const meetupSchema = new dynamoose.Schema(
     location: {
       type: Object,
       required: true,
-      schema: [locationSchema],
+      // schema: [locationSchema],
     },
     price: {
       type: Object,
       required: true,
-      schema: [priceSchema],
+      // schema: [priceSchema],
     },
     promoCodes: {
       type: Array,
@@ -295,6 +297,8 @@ const meetupSchema = new dynamoose.Schema(
     timestamps: true,
     saveUnknown: [
       "eventConfig.*",
+      "location.*",
+      "price.*",
     ],
     // validate: (newItem) => {
     //   console.log(newItem)

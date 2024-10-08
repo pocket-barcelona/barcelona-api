@@ -10,7 +10,6 @@ import {
 const createMeetupPayload = {
   body: object({
     groupId: string(),
-    clonedId: string().optional(),
     eventConfig: object({
       minAttendees: number(),
       maxAttendees: number(),
@@ -21,9 +20,8 @@ const createMeetupPayload = {
       requiresVerifiedUser: boolean().optional(),
       eventLanguage: string().array().optional(),
     }),
-    status: enum_(["PUBLISHED", "DRAFT", "ARCHIVED", "SOFTDELETED", "DELETED"]),
     privacy: number(),
-    rsvpType: enum_(["DEFINITE", "INDEFINITE"]),
+    rsvpType: string(),
     title: string()
       .min(5, "Event title is required and must be at least 5 chars")
       .max(100, "Event title - too long!"),
@@ -40,9 +38,7 @@ const createMeetupPayload = {
       .optional(),
     category: string(),
     subcategory: string().array(),
-    mode: enum_(["IN_PERSON", "ONLINE", "HYBRID"]),
-    // startTime: string(),
-    // endTime: string(),
+    mode: string(), // "IN_PERSON", "ONLINE", "HYBRID"
     startTime: number({
       invalid_type_error: "Event start time must be a number",
     }).min(Date.now(), "Event can't be in the past"),
@@ -84,7 +80,8 @@ const createMeetupPayload = {
 
 const updateMeetupPayload = {
   body: object({
-    ...createMeetupPayload.body.shape
+    ...createMeetupPayload.body.shape,
+    status: string(), // "PUBLISHED", "DRAFT", "ARCHIVED", "SOFTDELETED", "DELETED"
   }),
   params: object({
     meetupId: string({
@@ -111,6 +108,7 @@ const selectByShortIdParams = {
 
 export const createMeetupSchema = object({
   ...createMeetupPayload,
+  clonedId: string().optional(),  
 });
 
 export const updateMeetupSchema = object({

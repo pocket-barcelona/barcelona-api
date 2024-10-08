@@ -3,7 +3,10 @@ import MeetupModel, {
   type MeetupConfig,
   type MeetupDocument,
   type MeetupItem,
+  type MeetupMode,
   type MeetupPrice,
+  type MeetupPrivacy,
+  type MeetupRsvpCertainty,
   MeetupStatusEnum,
 } from "../../../models/meetup.model";
 import type { CreateMeetupInput } from "../../../schema/meetup/meetup.schema";
@@ -32,8 +35,8 @@ export default async function create(
       groupId: hostId,
       description: input.description,
       status: MeetupStatusEnum.Draft, // this is the status of newly created document
-      privacy: 1,
-      rsvpType: input.rsvpType,
+      privacy: 1 as MeetupPrivacy,
+      rsvpType: input.rsvpType as MeetupRsvpCertainty,
       meetupId: uuidv4(),
       shortId: await generateShortId(),
       startTime: new Date(input.startTime),
@@ -46,7 +49,7 @@ export default async function create(
       directions: input.directions ?? "",
       category: input.category as MeetupCategoryName,
       subcategory: input.subcategory ?? [],
-      mode: input.mode,
+      mode: input.mode as MeetupMode,
       rsvps: [],
       promoCodes: [],
       photos: [],
