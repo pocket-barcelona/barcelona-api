@@ -33,6 +33,7 @@ const updateMeetupGroupPayload = {
     about: string()
       .min(20, "About description must be at least 20 chars")
       .max(4000, "About description is too long. Max 4000 chars"),
+    topics: string().array().optional(),
   }),
   params: object({
     groupId: string({
@@ -40,6 +41,24 @@ const updateMeetupGroupPayload = {
     }),
   }),
 };
+
+const updateProfilePhotoPayload = object({
+  body: object({
+    profilePhoto: object({
+      id: string(),
+      url: string(),
+      alt: string(),
+      mediaType: string(),
+      featured: boolean().optional(),
+      createdTime: number()
+    }),
+  }),
+  params: object({
+    groupId: string({
+      required_error: "group ID is required",
+    }),
+  }),
+})
 
 const selectByIdParams = {
   params: object({
@@ -69,5 +88,6 @@ export const getMeetupGroupByIdSchema = object({
 
 export type CreateMeetupGroupInput = TypeOf<typeof createMeetupGroupSchema>;
 export type UpdateMeetupGroupInput = TypeOf<typeof updateMeetupGroupSchema>;
+export type UpdateMeetupGroupPhotosInput = TypeOf<typeof updateProfilePhotoPayload>;
 export type ReadMeetupGroupByIdInput = TypeOf<typeof getMeetupGroupByIdSchema>;
 export type DeleteMeetupGroupInput = TypeOf<typeof deleteMeetupGroupSchema>;

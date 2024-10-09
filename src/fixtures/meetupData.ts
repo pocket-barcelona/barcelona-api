@@ -14,7 +14,7 @@ const group: Partial<MeetupGroupItem> = {
       url: "my-photo.avif",
       alt: "Juan cara",
       mediaType: "IMAGE",
-      createdTime: "2024-07-25T17:35:48.171Z",
+      createdTime: new Date("2024-07-25T17:35:48.171Z"),
       featured: true,
     },
   ],
@@ -98,7 +98,7 @@ const event: MeetupItem = {
       alt: "Group shot",
       featured: true,
       url: "https://placehold.it/320/320",
-      createdTime: "2024-07-25T17:35:48.171Z"
+      createdTime: new Date("2024-07-25T17:35:48.171Z")
     },
   ],
   rsvps: [],
@@ -131,7 +131,7 @@ const user: UserInput = {
       alt: "Juan cara",
       mediaType: "IMAGE",
       featured: true,
-      createdTime: "2024-07-25T17:35:48.171Z"
+      createdTime: new Date("2024-07-25T17:35:48.171Z")
     },
   ],
   completedRSVPs: 1,

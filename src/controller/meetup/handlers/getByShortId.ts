@@ -15,8 +15,7 @@ export default async function getByShortId(
   req: Request<ReadMeetupByShortIdInput["params"]>,
   res: Response,
 ) {
-  console.log('params', req.params);
-  const { eventShortId: shortId } = req.params;
+  const { meetupShortId: shortId } = req.params;
   const document = await MeetupService.getByShortId({ shortId });
 
   if (!document) {

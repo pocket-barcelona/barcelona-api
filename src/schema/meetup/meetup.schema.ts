@@ -100,7 +100,7 @@ const selectByIdParams = {
 
 const selectByShortIdParams = {
   params: object({
-    eventShortId: string({
+    meetupShortId: string({
       required_error: "short ID is required",
     }),
   }),

@@ -30,7 +30,7 @@ export type GenericMediaItem = {
   alt: string;
   mediaType: "IMAGE" | "VIDEO";
   featured?: boolean;
-  createdTime: string;
+  createdTime: Date;
 };
 
 // Additional types...
