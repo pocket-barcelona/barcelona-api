@@ -16,11 +16,11 @@ const router = express.Router();
 // ########### MEETUPS GROUPS ###########
 
 // @todo - ADMIN
-// router.get(
-//   "/",
-//   [requireUser, requireAdmin],
-//   MeetupGroupController.getMeetupsListHandler
-// );
+router.get(
+  "/",
+  [requireUser, requireAdmin],
+  MeetupGroupController.getMeetupGroupListHandler
+);
 
 // @todo - ADMIN - generate QR code for meetup
 // @todo - ADMIN - validate QR code for this meetup (checks if user has rsvp'd as GOING etc)

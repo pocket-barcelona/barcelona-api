@@ -5,7 +5,7 @@ import MeetupGroupModel from '../../../models/meetupGroup.model';
 
 export default async function create(
   input: CreateMeetupGroupInput["body"],
-  hostId: string
+  ownerId: string
 ): Promise<MeetupGroupDocument | null | string> {
   
   const { about, groupName, groupLocation } = input;
@@ -15,7 +15,7 @@ export default async function create(
       about,
       groupName,
       groupLocation,
-      ownerId: hostId,
+      ownerId,
       groupId: uuidv4(), // auto-generate for the group
       apiKey: uuidv4(), // auto-generate for the group
       isVerified: false,

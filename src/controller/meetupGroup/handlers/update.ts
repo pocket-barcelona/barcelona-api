@@ -26,15 +26,15 @@ export default async function update(
       .send(error("Item not found", res.statusCode));
   }
 
-  const loggedInUser = (res.locals.user as UserDocument).userId || "";
-  // @todo - only allow super users or meetup group admins to edit items?
-  if (documentExists.groupId !== loggedInUser) {
-    return res
-      .status(StatusCodes.FORBIDDEN)
-      .send(
-        error("You do not have permission to edit this item", res.statusCode)
-      );
-  }
+  // const loggedInUser = (res.locals.user as UserDocument).userId || "";
+  // // @todo - only allow super users or meetup group admins to edit items?
+  // if (documentExists.groupId !== loggedInUser) {
+  //   return res
+  //     .status(StatusCodes.FORBIDDEN)
+  //     .send(
+  //       error("You do not have permission to edit this item", res.statusCode)
+  //     );
+  // }
 
   const updatedDocument = await MeetupGroupService.update(groupId, req.body);
   if (!updatedDocument) {

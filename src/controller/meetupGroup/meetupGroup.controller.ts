@@ -3,7 +3,7 @@ import {
   createMeetupGroup,
   // deleteMeetupGroup,
   getMeetupGroupById,
-  // getMeetupGroupList,
+  getMeetupGroupsList,
   updateMeetupGroup,
 } from "./handlers";
 import type { CreateMeetupGroupInput, DeleteMeetupGroupInput, UpdateMeetupGroupInput } from '../../schema/meetupGroup/meetupGroup.schema';
@@ -20,8 +20,8 @@ export class MeetupGroupController {
     res: Response
   ) => getMeetupGroupById(req, res); // user logged in!
 
-  // static getMeetupGroupListHandler = (req: Request, res: Response) =>
-  //   getMeetupGroupList(req, res);
+  static getMeetupGroupListHandler = (req: Request, res: Response) =>
+    getMeetupGroupsList(req, res);
 
   static updateMeetupGroupHandler = (
     req: Request<

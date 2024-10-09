@@ -20,12 +20,12 @@ export class MeetupGroupService {
 
   static create = async (
     input: CreateMeetupGroupInput["body"],
-    hostId: string
-  ): Promise<MeetupGroupDocument | null | string> => createHandler(input, hostId);
+    ownerId: string
+  ): Promise<MeetupGroupDocument | null | string> => createHandler(input, ownerId);
 
   static getMeetupGroups = async (
-    hostId: MeetupGroupDocument["groupId"]
-  ): Promise<ScanResponse<MeetupGroupDocument> | null> => getListHandler(hostId);
+    ownerId?: MeetupGroupDocument["ownerId"]
+  ): Promise<ScanResponse<MeetupGroupDocument> | null> => getListHandler(ownerId);
 
   static getById = async (
     input: Pick<MeetupGroupItem, "groupId"> & { loggedIn?: boolean }
@@ -33,9 +33,9 @@ export class MeetupGroupService {
     getByIdHandler(input);
 
   static update = async (
-    eventId: MeetupGroupItem["groupId"],
+    groupId: MeetupGroupItem["groupId"],
     input: UpdateMeetupGroupInput["body"]
-  ): Promise<MeetupGroupDocument | null> => updateHandler(eventId, input);
+  ): Promise<MeetupGroupDocument | null> => updateHandler(groupId, input);
 
   // static deleteById = async (
   //   theEvent: MeetupGroupDocument,
