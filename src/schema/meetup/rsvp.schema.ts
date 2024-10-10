@@ -5,8 +5,8 @@ import { object, number, string, type TypeOf } from "zod";
 
 const payload = {
   body: object({
-    // eventId: string({
-    //   required_error: "Event ID is required", // we need to know which response this event is for
+    // meetupId: string({
+    //   required_error: "Meetup ID is required", // we need to know which response this event is for
     // }),
     // attendeeUserId: string({
     //   required_error: "An attendeeUserId is required for this response",
@@ -30,19 +30,19 @@ const payload = {
   }),
 };
 
-const eventIdParams = {
+const meetupIdParams = {
   params: object({
-    eventId: string({
-      required_error: "event ID is required",
+    meetupId: string({
+      required_error: "meetup ID is required",
     }),
   }),
 };
 
 const rsvpIdParams = {
   params: object({
-    eventId: eventIdParams.params.shape.eventId,
-    responseId: string({
-      required_error: "response ID is required",
+    meetupId: meetupIdParams.params.shape.meetupId,
+    rsvpId: string({
+      required_error: "rsvp ID is required",
     }),
   }),
 };
@@ -50,7 +50,7 @@ const rsvpIdParams = {
 
 export const createRsvpSchema = object({
   ...payload,
-  ...eventIdParams
+  ...meetupIdParams
 });
 
 export const updateRsvpSchema = object({

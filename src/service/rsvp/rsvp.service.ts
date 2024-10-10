@@ -15,31 +15,31 @@ import {
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class RsvpService {
   static createRsvp = async (
-    theEvent: MeetupDocument,
+    theMeetup: MeetupDocument,
     input: CreateRsvpInput,
     userId: string
   ): Promise<MeetupRsvpModel | null> =>
-    createRsvpHandler(theEvent, input, userId);
+    createRsvpHandler(theMeetup, input, userId);
 
   static updateResponse = async (
-    theEvent: MeetupDocument,
+    theMeetup: MeetupDocument,
     input: UpdateRsvpInput,
     userId: string
   ): Promise<MeetupRsvpModel | null> =>
-    updateRsvpHandler(theEvent, input, userId);
+    updateRsvpHandler(theMeetup, input, userId);
 
   static hasRsvpdToMeetupYet = async (
-    theEvent: MeetupDocument,
+    theMeetup: MeetupDocument,
     userId: UserDocument["userId"],
-    responseId: MeetupRsvpModel["rsvpId"]
+    rsvpId: MeetupRsvpModel["rsvpId"]
   ): Promise<MeetupRsvpModel["rsvpId"]> =>
-    hasRsvpdToMeetupYetHandler(theEvent, userId, responseId);
+    hasRsvpdToMeetupYetHandler(theMeetup, userId, rsvpId);
 
   static notifyMeetupHost = async (
-    theEvent: MeetupDocument,
+    theMeetup: MeetupDocument,
     data: { name: string; response: string; comment: string; hostEmail: string }
   ): Promise<{
     success: boolean;
     error: string;
-  }> => notifyMeetupHostHandler(theEvent, data);
+  }> => notifyMeetupHostHandler(theMeetup, data);
 }

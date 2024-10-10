@@ -63,19 +63,19 @@ router.delete("/:meetupId", [requireUser], MeetupController.deleteMeetupHandler)
 // ########### RSVPS ###########
 /** Create a new response to a meetup */
 router.post(
-  "/:meetupId/responses",
+  "/:meetupId/rsvp",
   [requireMeetup, validateResource(createRsvpSchema)],
   RsvpController.createRsvpHandler
 );
-/** Update a response by ID */
+/** Update an rsvp by ID */
 router.patch(
-  "/:meetupId/responses/:responseId",
+  "/:meetupId/rsvp/:rsvpId",
   [requireMeetup, validateResource(updateRsvpSchema)],
   RsvpController.updateRsvpHandler
 );
 /** Check if user has responded to this meetup yet */
 router.post(
-  "/:meetupId/has-responded",
+  "/:meetupId/has-rsvpd",
   [requireMeetup],
   RsvpController.hasRsvpdToMeetupAlreadyHandler
 );

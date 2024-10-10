@@ -17,7 +17,7 @@ export default async function hasRsvpdToMeetupAlready(
     CreateRsvpInput["params"],
     never,
     {
-      responseId: string;
+      rsvpId: string;
     }
   >,
   res: Response
@@ -25,7 +25,7 @@ export default async function hasRsvpdToMeetupAlready(
   // get event from middleware locals
   const theEvent = res.locals.event as MeetupDocument;
 
-  const { responseId } = req.body;
+  const { rsvpId } = req.body;
 
   // check if the user is logged in, manually
   // responses can be from not-logged in users, so allow user ID to not exist
@@ -41,7 +41,7 @@ export default async function hasRsvpdToMeetupAlready(
   const matchedResponseId = await RsvpService.hasRsvpdToMeetupYet(
     theEvent,
     userId,
-    responseId
+    rsvpId
   );
 
   return res.send(

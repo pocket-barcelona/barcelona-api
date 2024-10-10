@@ -25,7 +25,7 @@ export class RsvpController {
       CreateRsvpInput["params"],
       unknown,
       {
-        responseId: string;
+        rsvpId: string;
       }
     >,
     res: Response
