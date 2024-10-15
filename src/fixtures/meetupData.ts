@@ -3,9 +3,11 @@ import { MeetupStatusEnum, type MeetupItem } from '../models/meetup.model';
 import type { MeetupGroupItem } from '../models/meetupGroup.model';
 import type { MeetupRsvpResponse } from '../models/rsvp.model';
 
-const group: Partial<MeetupGroupItem> = {
+const group: MeetupGroupItem = {
+  ownerId: 'test',
   groupId: "my-parent-group",
   groupName: "BCN English Speakers",
+  groupLocation: 'Barcelona',
   apiKey: "123-abc-456-def",
   meetupIds: ["abc-123"],
   profilePhoto: [
@@ -18,11 +20,11 @@ const group: Partial<MeetupGroupItem> = {
       featured: true,
     },
   ],
-  about:
-    "<h2>BCN English Speakers heading here</h2><p>We are a group doing meetups every month blah...</p>",
+  about: "<h2>BCN English Speakers heading here</h2><p>We are a group doing meetups every month blah...</p>",
   signupDate: new Date("2024-07-25T17:35:48.171Z"),
   lastLogin: new Date("2024-09-23T17:35:48.171Z"),
   isVerified: true,
+  isPublic: true,
   topics: [
     "new_in_town",
     "make_new_friends",
@@ -31,8 +33,21 @@ const group: Partial<MeetupGroupItem> = {
     "practice_english",
     "expat_meetups",
   ],
+  slug: 'bcn-eng-speakers',
+  refundPolicy: '',
+  social: {
+    facebook: '',
+    instagram: '',
+    whatsapp: '',
+    telegram: '',
+    linkedin: '',
+    tiktok: '',
+    twitter: '',
+    website: '',
+    youtube: ''
+  },
+  timezone: 'Europe/Madrid'
 };
-
 const event: MeetupItem = {
   meetupId: "abc-123-def-456",
   shortId: "abc-123",
@@ -47,6 +62,7 @@ const event: MeetupItem = {
   status: MeetupStatusEnum.Draft,
   privacy: 1,
   rsvpType: 'DEFINITE',
+  maxTicketsPerPerson: 1,
   title: "My fantastic meeting",
   subtitle: "Doing meetups since 1999!",
   description: `
@@ -59,6 +75,8 @@ const event: MeetupItem = {
   mode: "IN_PERSON",
   startTime: new Date("2024-09-25T17:35:48.171Z"),
   endTime: new Date("2024-09-26T17:35:48.171Z"),
+  rsvpOpensAt: new Date("2024-08-03T17:00:00.171Z"), // just before the event start
+  rsvpClosesAt: new Date("2024-09-25T17:00:00.171Z"), // just before the event start
   location: {
     address1: "123 Memory Lane",
     address2: "Awesome Neighbourhood",
@@ -71,6 +89,7 @@ const event: MeetupItem = {
     lng: 0,
     locationPrecision: 1,
   },
+  locationDisclosureAt: new Date("2024-09-20T09:00:00.000Z"),
   price: {
     priceCents: 0,
     currencyCode: "EUR",
@@ -88,6 +107,7 @@ const event: MeetupItem = {
     },
   ],
   vouchers: undefined,
+  requiresUserCheckin: true,
   waitingList: [],
   tags: ["meetup", "bcn_english_speakers", "drinks", "decode"],
   hosts: [],

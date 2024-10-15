@@ -18,7 +18,6 @@ const createMeetupGroupPayload = {
     about: string()
       .min(20, "About description must be at least 20 chars")
       .max(4000, "About description is too long. Max 4000 chars"),
-    // topics: string().array().optional(),
   }),
 };
 
@@ -33,7 +32,22 @@ const updateMeetupGroupPayload = {
     about: string()
       .min(20, "About description must be at least 20 chars")
       .max(4000, "About description is too long. Max 4000 chars"),
-    topics: string().array().optional(),
+    topics: string().array(),
+    refundPolicy: string()
+      .min(20, "Refund policy must be at least 20 chars")
+      .max(4000, "Refund policy is too long. Max 4000 chars"),
+    social: object({
+      facebook: string(),
+      instagram: string(),
+      linkedin: string(),
+      telegram: string(),
+      tiktok: string(),
+      twitter: string(),
+      website: string(),
+      whatsapp: string(),
+      youtube: string(),
+    }),
+    // topics: string().array().optional(),
   }),
   params: object({
     groupId: string({

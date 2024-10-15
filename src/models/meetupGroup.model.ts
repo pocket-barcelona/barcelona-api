@@ -9,6 +9,8 @@ import type { MeetupItem } from "./meetup.model";
 export interface MeetupGroupItem {
   /** The group ID */
   groupId: string;
+  /** Unique slug for the group, like my-amazing-meetup */
+  slug: string;
   /** The user ID of the group creator */
   ownerId: string;
   /** The group display name */
@@ -19,18 +21,38 @@ export interface MeetupGroupItem {
   apiKey: string;
   /** If the group has been verified by us as being a real human group */
   isVerified: boolean;
+  /** Show/hide the group in a public listing */
+  isPublic: boolean;
   /** UTC of when user signed up */
   signupDate: Date;
   /** UTC of user's last logged-in time */
   lastLogin: Date;
   /** List of meetup IDs related to this group */
   meetupIds: MeetupItem["meetupId"][];
-  /** Profile photos for the groupd */
+  /** Profile photos for the group */
   profilePhoto: GenericMediaItem[];
   /** HTML about the group */
   about: string;
+  /** If paid event refund link visited, a block of HTML about how it works for this group */
+  refundPolicy: string;
+  /** Social media info for the group */
+  social: {
+    facebook: string;
+    instagram: string;
+    linkedin: string;
+    telegram: string;
+    tiktok: string;
+    twitter: string;
+    website: string;
+    whatsapp: string;
+    youtube: string;
+  };
+  /** Like Europe/Madrid */
+  timezone: string;
   /** Tag-like list of topics and themes that the group is concerned with, such as: meetups, foreigners in BCN, english speaking, etc */
   topics: string[];
+  /** @todo */
+  // eventsHostedCount: number;
 }
 export interface MeetupGroupDocument extends Item, MeetupGroupItem {
   createdAt: Date;
@@ -43,6 +65,10 @@ const meetupGroupSchema = new dynamoose.Schema(
       type: String,
       required: true,
       hashKey: true,
+    },
+    slug: {
+      type: String,
+      required: true,
     },
     ownerId: {
       type: String,
@@ -64,6 +90,10 @@ const meetupGroupSchema = new dynamoose.Schema(
       type: Boolean,
       required: true,
       default: false,
+    },
+    isPublic: {
+      type: Boolean,
+      required: true,
     },
     signupDate: {
       type: Date,
@@ -91,6 +121,47 @@ const meetupGroupSchema = new dynamoose.Schema(
       type: String,
       required: true,
     },
+    refundPolicy: {
+      type: String,
+      required: true,
+    },
+    social: {
+      type: Object,
+      required: true,
+      schema: {
+        facebook: {
+          type: String,
+        },
+        instagram: {
+          type: String,
+        },
+        whatsapp: {
+          type: String,
+        },
+        telegram: {
+          type: String,
+        },
+        linkedin: {
+          type: String,
+        },
+        tiktok: {
+          type: String,
+        },
+        twitter: {
+          type: String,
+        },
+        website: {
+          type: String,
+        },
+        youtube: {
+          type: String,
+        },
+      },
+    },
+    timezone: {
+      type: String,
+      required: true,
+    },
     topics: {
       type: Array,
       required: true,
@@ -103,7 +174,9 @@ const meetupGroupSchema = new dynamoose.Schema(
   },
   {
     timestamps: true,
-    saveUnknown: false,
+    saveUnknown: [
+      "social.*",
+    ],
   }
 );
 

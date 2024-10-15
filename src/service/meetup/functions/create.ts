@@ -37,13 +37,17 @@ export default async function create(
       status: MeetupStatusEnum.Draft, // this is the status of newly created document
       privacy: 1 as MeetupPrivacy,
       rsvpType: input.rsvpType as MeetupRsvpCertainty,
+      maxTicketsPerPerson: 1,
       meetupId: uuidv4(),
       shortId: await generateShortId(),
       startTime: new Date(input.startTime),
       endTime: new Date(input.endTime),
+      rsvpOpensAt: new Date(),
+      rsvpClosesAt: new Date(input.endTime),
       location: {
         ...input.location,
       },
+      locationDisclosureAt: new Date(),
       title: input.title ?? "",
       subtitle: input.subtitle ?? "",
       directions: input.directions ?? "",
@@ -54,11 +58,13 @@ export default async function create(
       promoCodes: [],
       photos: [],
       vouchers: [],
+      requiresUserCheckin: false,
       price: {
         ...input.price,
       } as MeetupPrice,
       tags: input.tags ?? [],
       hosts: input.hosts ?? [],
+      waitingList: [],
       eventConfig,
     };
     

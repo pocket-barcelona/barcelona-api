@@ -6,15 +6,15 @@ export default async function updateResponse(theEvent: MeetupDocument, input: Up
   // add (or update) the event response into the list
   const theEventJson = theEvent.toJSON() as MeetupDocument
   
-  const { responseId, eventId } = input.params;
+  const { rsvpId, meetupId } = input.params;
 
-  if (!responseId || !eventId) {
+  if (!rsvpId || !meetupId) {
     return null;
   }
 
   // find the specific response ID
-  const response = theEventJson.rsvps.find(r => r.rsvpId === responseId)
-  const existingResponseIndex = theEventJson.rsvps.findIndex(r => r.rsvpId === responseId)
+  const response = theEventJson.rsvps.find(r => r.rsvpId === rsvpId)
+  const existingResponseIndex = theEventJson.rsvps.findIndex(r => r.rsvpId === rsvpId)
   const isUpdating = existingResponseIndex > -1;
   
   if (!response || !isUpdating) {
@@ -28,7 +28,7 @@ export default async function updateResponse(theEvent: MeetupDocument, input: Up
     attendeeAvatarColor: response.attendeeAvatarColor,
     comment: input.body.comment,
     attendeeUserId: userId,
-    rsvpId: responseId,
+    rsvpId: rsvpId,
   }
   
   // update the response

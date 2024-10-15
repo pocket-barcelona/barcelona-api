@@ -21,7 +21,7 @@ export default async function createRsvp(
   // 2. check if the user has already posted a response? (requires userId in POST)
   // 3. add the response to the document and return the whole event doc
 
-  const { eventId } = req.params;
+  const { meetupId } = req.params;
 
   // user may or may not be logged in
 

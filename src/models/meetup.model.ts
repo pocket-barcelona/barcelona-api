@@ -449,6 +449,7 @@ export interface MeetupItem {
   privacy: MeetupPrivacy;
   /** The type of response a user can give for the event: Definite=yes/no, Indefinite=yes/no/maybe */
   rsvpType: MeetupRsvpCertainty;
+  maxTicketsPerPerson: number;
   /** Main title */
   title: string;
   /** Main subtitle */
@@ -467,14 +468,23 @@ export interface MeetupItem {
   startTime: Date;
   /** Full UTC timestamp */
   endTime: Date;
+  /** Before this date, RSVP-ing to the event will not be permitted */
+  rsvpOpensAt?: Date;
+  /** After this date, RSVP-ing to the event will not be permitted */
+  rsvpClosesAt?: Date;
   /** Meetup location @type MeetupLocation */
   location: MeetupLocation;
+  /** The datetime from which the meetup location will be disclosed to the user */
+  locationDisclosureAt: Date;
   /** Price in cents. @todo - entry fee? */
   price: MeetupPrice;
   /** List of event promo codes */
   promoCodes: MeetupPromoModifier[];
   /** @todo - give away vouchers during the event? */
   vouchers: unknown;
+
+  /** If true, the person who RSVP'd will need to re-confirm their attendance */
+  requiresUserCheckin: boolean;
   /** People who have rsvp'd to this meetup */
   rsvps: MeetupRsvpModel[];
   /** List of user IDs who are on the waiting list */
