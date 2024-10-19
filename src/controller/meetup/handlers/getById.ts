@@ -16,8 +16,8 @@ export default async function getById(
   res: Response,
   loggedIn = true,
 ) {
-  const { meetupId: id } = req.params;
-  const document = await MeetupService.getById({ meetupId: id, loggedIn });
+  const { meetupId } = req.params;
+  const document = await MeetupService.getById({ meetupId, loggedIn });
 
   if (!document) {
     return res

@@ -6,9 +6,9 @@
   
   ```ts
   # waiting for watch command
-  pnpm run build
+  yarn run build
   # runs app locally
-  pnpm start
+  yarn start
 
   ```
 

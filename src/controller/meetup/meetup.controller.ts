@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import type {
   CreateMeetupInput,
   DeleteMeetupInput,
+  GetMeetupsInput,
   ReadMeetupByIdInput,
   ReadMeetupByShortIdInput,
   UpdateMeetupInput,
@@ -37,7 +38,7 @@ export class MeetupController {
     res: Response
   ) => getMeetupByShortId(req, res);
 
-  static getMeetupsListHandler = (req: Request, res: Response) =>
+  static getMeetupsListHandler = (req: Request<GetMeetupsInput['params']>, res: Response) =>
     getMeetupsList(req, res);
 
   static updateMeetupHandler = (

@@ -23,13 +23,12 @@ export default async function getList(
     // timer({ ...metricsLabels, success: "true" });
     const result = MeetupModel.scan()
       // only show my documents
-      // .where(groupIdField)
-      // .eq(groupId)
-      // .and()
+      .where(groupIdField)
+      .eq(groupId)
+      .and()
       .where(statusField)
       // // .eq(MeetupStatusEnum.Active)
       .in([MeetupStatusEnum.Published, MeetupStatusEnum.Draft])
-
       .exec(); // this will scan every record!
     return await result.catch((err) => {
       console.log(err);

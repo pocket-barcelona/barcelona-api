@@ -4,6 +4,7 @@ import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResource";
 import {
   createMeetupSchema,
+  getMeetupsByGroupIdSchema,
   updateMeetupSchema,
   deleteMeetupSchema,
   getMeetupByIdSchema,
@@ -22,8 +23,9 @@ const router = express.Router();
 // ########### MEETUPS & RSVPs ###########
 
 router.get(
-  "/",
-  [requireAdmin, requireUser],
+  "/list/:groupId",
+  // [requireAdmin, requireUser, validateResource(getMeetupsByGroupIdSchema)],
+  [requireUser, validateResource(getMeetupsByGroupIdSchema)],
   MeetupController.getMeetupsListHandler
 );
 

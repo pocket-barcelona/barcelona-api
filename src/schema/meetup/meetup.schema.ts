@@ -90,6 +90,14 @@ const updateMeetupPayload = {
   }),
 };
 
+const getByGroupIdParams = {
+  params: object({
+    groupId: string({
+      required_error: "group ID is required",
+    }),
+  }),
+};
+
 const selectByIdParams = {
   params: object({
     meetupId: string({
@@ -127,6 +135,12 @@ export const getMeetupByShortIdSchema = object({
   ...selectByShortIdParams,
 });
 
+/** For fetching all meetups for a specific group */
+export const getMeetupsByGroupIdSchema = object({
+  ...getByGroupIdParams
+})
+
+export type GetMeetupsInput = TypeOf<typeof getMeetupsByGroupIdSchema>;
 export type CreateMeetupInput = TypeOf<typeof createMeetupSchema>;
 export type UpdateMeetupInput = TypeOf<typeof updateMeetupSchema>;
 export type ReadMeetupByIdInput = TypeOf<typeof getMeetupByIdSchema>;
