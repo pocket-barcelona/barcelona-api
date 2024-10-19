@@ -41,6 +41,9 @@ const meetupConfigSchema = new dynamoose.Schema({
       },
     ],
   },
+  rsvpButtonCtaType: {
+    type: String,
+  },
 }, {
   saveUnknown: true,
 });
@@ -86,6 +89,10 @@ const locationSchema = new dynamoose.Schema({
     type: Number,
     required: true,
   },
+  mapsLink: {
+    type: String,
+    required: true,
+  }
 }, {
   saveUnknown: true,
 });
@@ -287,6 +294,7 @@ const meetupSchema = new dynamoose.Schema(
       required: true,
       schema: [genericMediaAssetSchema],
     },
+    // @todo - answer some questions when you join the meetup...
     // pollQuestions: {
     //   type: Array,
     //   schema: [questionSchema],
@@ -333,7 +341,23 @@ export type MeetupConfig = {
   requiresVerifiedUser?: boolean;
   /** List of languages people will be speaking at the event. If empty array, lang will be any language spoken */
   eventLanguage?: string[];
+  /** Allow meetup organisers to customise the RSVP join button when users join the event */
+  rsvpButtonCtaType?: RsvpButtonCtaTypes;
 };
+// export const RsvpButtonCtas = {
+//   JOIN: 'Join',
+//   RSVP: 'RSVP',
+//   GET_TICKET: 'Get Ticket',
+//   COMING: 'Coming',
+//   REPLY: 'Reply',
+//   CONNECT: 'Connect',
+//   ATTEND: 'Attend',
+//   GOING: 'Going',
+//   CONFIRM: 'Confirm',
+//   REGISTER: 'Register'
+// };
+export type RsvpButtonCtaTypes = "RSVP" | "JOIN" | "GET_TICKET" | "COMING" | "REPLY" | "CONNECT" | "ATTEND" | "GOING" | "CONFIRM" | "REGISTER";
+export const RsvpButtonCtaDefault = 'ATTEND' satisfies RsvpButtonCtaTypes;
 export type MeetupRsvpCertainty = "DEFINITE" | "INDEFINITE";
 export type MeetupPrivacy = 1 | 2 | 3;
 export const MEETUP_CATEGORIES = {
@@ -390,6 +414,8 @@ export type MeetupLocation = {
   lng: number;
   /** 1=show exact location,2=show radius,3=show city only,4=hide location */
   locationPrecision: 1 | 2 | 3 | number;
+  /** Ex: a google maps URL to the meetup location */
+  mapsLink: string;
 };
 export type MeetupPrice = {
   /** Like 1050 = €10,50. 0=Free. -1=TBC */
@@ -449,6 +475,7 @@ export interface MeetupItem {
   privacy: MeetupPrivacy;
   /** The type of response a user can give for the event: Definite=yes/no, Indefinite=yes/no/maybe */
   rsvpType: MeetupRsvpCertainty;
+  /** Sets a limit on the number of tickets a person can obtain (per their user) */
   maxTicketsPerPerson: number;
   /** Main title */
   title: string;
@@ -496,6 +523,7 @@ export interface MeetupItem {
   /** List of photos to promote the meetup. Featured photo will be one flagged, else first image */
   photos: GenericMediaItem[];
   // responses: Array<EventResponseModel>;
+  // @todo - requires bizum before arrival?
 }
 export interface MeetupDocument extends Item, MeetupItem {
   createdAt: Date;

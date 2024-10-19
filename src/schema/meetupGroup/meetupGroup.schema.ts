@@ -46,6 +46,7 @@ const updateMeetupGroupPayload = {
       website: string(),
       whatsapp: string(),
       youtube: string(),
+      bizum: string(),
     }),
     // topics: string().array().optional(),
   }),
@@ -55,6 +56,8 @@ const updateMeetupGroupPayload = {
     }),
   }),
 };
+
+// @todo - updateLogoPayload...
 
 const updateProfilePhotoPayload = object({
   body: object({

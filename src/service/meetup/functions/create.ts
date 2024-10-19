@@ -8,6 +8,8 @@ import MeetupModel, {
   type MeetupPrivacy,
   type MeetupRsvpCertainty,
   MeetupStatusEnum,
+  RsvpButtonCtaDefault,
+  type RsvpButtonCtaTypes,
 } from "../../../models/meetup.model";
 import type { CreateMeetupInput } from "../../../schema/meetup/meetup.schema";
 import { v4 as uuidv4 } from "uuid";
@@ -90,6 +92,7 @@ function getMeetupConfig(input: CreateMeetupInput["body"]): MeetupConfig {
     requiresMobileNumber = false,
     requiresQRCodeEntry = false,
     requiresVerifiedUser = false,
+    rsvpButtonCtaType = RsvpButtonCtaDefault,
   } = eventConfig;
   const config: MeetupConfig = {
     minAttendees,
@@ -100,6 +103,7 @@ function getMeetupConfig(input: CreateMeetupInput["body"]): MeetupConfig {
     requiresMobileNumber,
     requiresQRCodeEntry,
     requiresVerifiedUser,
+    rsvpButtonCtaType: rsvpButtonCtaType as RsvpButtonCtaTypes,
   };
   return config;
 }

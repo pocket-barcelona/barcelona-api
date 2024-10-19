@@ -28,6 +28,7 @@ export default async function create(
       isVerified: false,
       isPublic: true,
       meetupIds: [],
+      logo: [],
       profilePhoto: [],
       topics: [],
       signupDate: new Date(),
@@ -43,6 +44,7 @@ export default async function create(
         website: "",
         whatsapp: "",
         youtube: "",
+        bizum: "",
       },
     };
 

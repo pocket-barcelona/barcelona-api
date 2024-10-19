@@ -10,6 +10,16 @@ const group: MeetupGroupItem = {
   groupLocation: 'Barcelona',
   apiKey: "123-abc-456-def",
   meetupIds: ["abc-123"],
+  logo: [
+    {
+      id: "1234",
+      url: "my-logo.png",
+      alt: "My logo",
+      mediaType: "IMAGE",
+      createdTime: new Date("2024-07-25T17:35:48.171Z"),
+      featured: true,
+    },
+  ],
   profilePhoto: [
     {
       id: "123",
@@ -44,7 +54,8 @@ const group: MeetupGroupItem = {
     tiktok: '',
     twitter: '',
     website: '',
-    youtube: ''
+    youtube: '',
+    bizum: '',
   },
   timezone: 'Europe/Madrid'
 };
@@ -88,6 +99,7 @@ const event: MeetupItem = {
     lat: 0,
     lng: 0,
     locationPrecision: 1,
+    mapsLink: '',
   },
   locationDisclosureAt: new Date("2024-09-20T09:00:00.000Z"),
   price: {

@@ -19,6 +19,7 @@ const createMeetupPayload = {
       requiresQRCodeEntry: boolean().optional(),
       requiresVerifiedUser: boolean().optional(),
       eventLanguage: string().array().optional(),
+      rsvpButtonCtaType: string().optional(),
     }),
     privacy: number(),
     rsvpType: string(),
@@ -56,6 +57,7 @@ const createMeetupPayload = {
       lat: number(),
       lng: number(),
       locationPrecision: number(),
+      mapsLink: string(),
     }),
     price: object({
       priceCents: number(),

@@ -29,6 +29,8 @@ export interface MeetupGroupItem {
   lastLogin: Date;
   /** List of meetup IDs related to this group */
   meetupIds: MeetupItem["meetupId"][];
+  /** Logo for the meetup group - main logo will be featured=true */
+  logo: GenericMediaItem[];
   /** Profile photos for the group */
   profilePhoto: GenericMediaItem[];
   /** HTML about the group */
@@ -46,6 +48,7 @@ export interface MeetupGroupItem {
     website: string;
     whatsapp: string;
     youtube: string;
+    bizum: string;
   };
   /** Like Europe/Madrid */
   timezone: string;
@@ -154,6 +157,9 @@ const meetupGroupSchema = new dynamoose.Schema(
           type: String,
         },
         youtube: {
+          type: String,
+        },
+        bizum: {
           type: String,
         },
       },
