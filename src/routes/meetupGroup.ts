@@ -40,7 +40,7 @@ router.post(
 /** Get group by ID: requires user to be logged in */
 router.get(
   "/:groupId",
-  [requireUser, validateResource(getMeetupGroupByIdSchema)],
+  [validateResource(getMeetupGroupByIdSchema)],
   MeetupGroupController.getMeetupGroupHandler
 );
 

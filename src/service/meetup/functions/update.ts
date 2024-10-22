@@ -8,8 +8,11 @@ import type { UpdateMeetupInput } from "../../../schema/meetup/meetup.schema";
  */
 export default async function updateMeetup(meetupId: MeetupItem["meetupId"], input: UpdateMeetupInput["body"]): Promise<MeetupDocument | null> {
   try {
+    // remove groupId from input
+    const { groupId, ...restInput } = input;
+
     const payload = {
-      input,
+      input: restInput,
       meetupId,
     };
     const updatedDocument = await MeetupModel.update(payload).catch((err) => {

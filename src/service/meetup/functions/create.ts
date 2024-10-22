@@ -17,7 +17,7 @@ import generateShortId from "../../../utils/generateMeetupShortId";
 
 export default async function create(
   input: CreateMeetupInput["body"],
-  hostId: string
+  userId: string
 ): Promise<MeetupDocument | null | string> {
   try {
     // const pollQuestions = input.pollQuestions?.map((question) => ({
@@ -34,7 +34,8 @@ export default async function create(
 
     const eventConfig = getMeetupConfig(input);
     const newItem: MeetupItem = {
-      groupId: hostId,
+      // @todo - creator user ID?
+      groupId: input.groupId,
       description: input.description,
       status: MeetupStatusEnum.Draft, // this is the status of newly created document
       privacy: 1 as MeetupPrivacy,

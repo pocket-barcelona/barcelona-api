@@ -16,9 +16,9 @@ export default async function create(
   res: Response
 ) {
   // host ID is the user logged in - for now
-  const hostId = (res.locals.user as UserDocument).userId;
+  const userId = (res.locals.user as UserDocument).userId;
 
-  const newDocument = await MeetupService.create(req.body, hostId.toString());
+  const newDocument = await MeetupService.create(req.body, userId.toString());
 
   // send a useful data validation message
   if (typeof newDocument === "string") {

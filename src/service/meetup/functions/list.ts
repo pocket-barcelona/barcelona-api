@@ -1,7 +1,6 @@
-
 import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import MeetupModel, { type MeetupDocument, MeetupStatusEnum } from "../../../models/meetup.model";
-
+import logger from '../../../utils/logger';
 
 export default async function getList(
   groupId: MeetupDocument["groupId"]
@@ -19,7 +18,7 @@ export default async function getList(
     // })
 
     // return await result
-
+    
     // timer({ ...metricsLabels, success: "true" });
     const result = MeetupModel.scan()
       // only show my documents
@@ -29,6 +28,7 @@ export default async function getList(
       .where(statusField)
       // // .eq(MeetupStatusEnum.Active)
       .in([MeetupStatusEnum.Published, MeetupStatusEnum.Draft])
+      .limit(500)
       .exec(); // this will scan every record!
     return await result.catch((err) => {
       console.log(err);

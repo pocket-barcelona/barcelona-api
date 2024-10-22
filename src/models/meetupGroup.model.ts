@@ -13,6 +13,7 @@ export interface MeetupGroupItem {
   slug: string;
   /** The user ID of the group creator */
   ownerId: string;
+  /** @todo - we need a list of meetup group owners - separate table? */
   /** The group display name */
   groupName: string;
   /** Will be like Spain, Barcelona or Poblenou, depending on what the group wants to show */

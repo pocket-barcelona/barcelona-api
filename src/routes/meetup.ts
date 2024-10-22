@@ -25,7 +25,7 @@ const router = express.Router();
 router.get(
   "/list/:groupId",
   // [requireAdmin, requireUser, validateResource(getMeetupsByGroupIdSchema)],
-  [requireUser, validateResource(getMeetupsByGroupIdSchema)],
+  [validateResource(getMeetupsByGroupIdSchema)],
   MeetupController.getMeetupsListHandler
 );
 

@@ -23,16 +23,16 @@ export class MeetupService {
 
   static create = async (
     input: CreateMeetupInput["body"],
-    hostId: string
-  ): Promise<MeetupDocument | null | string> => createHandler(input, hostId);
+    userId: string
+  ): Promise<MeetupDocument | null | string> => createHandler(input, userId);
 
   static search = async (
     query: Query<MeetupDocument>
   ): Promise<Query<MeetupDocument>> => searchHandler(query);
 
   static getMeetups = async (
-    hostId: MeetupDocument["groupId"]
-  ): Promise<ScanResponse<MeetupDocument> | null> => getListHandler(hostId);
+    groupId: MeetupDocument["groupId"]
+  ): Promise<ScanResponse<MeetupDocument> | null> => getListHandler(groupId);
 
   static getById = async (
     input: Pick<MeetupItem, "meetupId"> & { loggedIn?: boolean }
