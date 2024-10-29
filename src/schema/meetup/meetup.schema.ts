@@ -47,6 +47,7 @@ const createMeetupPayload = {
       invalid_type_error: "Event end time must be a number",
     }).min(Date.now(), "Event can't be in the past"),
     location: object({
+      locationName: string(),
       address1: string(),
       address2: string(),
       postcode: string(),

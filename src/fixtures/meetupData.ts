@@ -89,6 +89,7 @@ const event: MeetupItem = {
   rsvpOpensAt: new Date("2024-08-03T17:00:00.171Z"), // just before the event start
   rsvpClosesAt: new Date("2024-09-25T17:00:00.171Z"), // just before the event start
   location: {
+    locationName: "Cool location name",
     address1: "123 Memory Lane",
     address2: "Awesome Neighbourhood",
     town: "Barcelona",

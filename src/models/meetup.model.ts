@@ -49,6 +49,10 @@ const meetupConfigSchema = new dynamoose.Schema({
 });
 
 const locationSchema = new dynamoose.Schema({
+  locationName: {
+    type: String,
+    required: true,
+  },
   address1: {
     type: String,
     required: true,
@@ -394,6 +398,8 @@ export type MeetupCategoryName = keyof typeof MEETUP_CATEGORIES;
 export type MeetupMode = "IN_PERSON" | "ONLINE" | "HYBRID";
 // export type MeetupLanguage = "EN" | "CA" | "ES" | "PT" | "IT" | "FR";
 export type MeetupLocation = {
+  /** The name of the location */
+  locationName: string;
   /** Street address */
   address1: string;
   /** locale address or neighbourhood */
