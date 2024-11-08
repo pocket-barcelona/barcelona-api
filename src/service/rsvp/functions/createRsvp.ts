@@ -1,4 +1,4 @@
-import type { MeetupRsvpModel } from "../../../models/rsvp.model";
+import { TicketTypeEnum, type MeetupRsvpModel } from "../../../models/rsvp.model";
 import type { MeetupDocument } from "../../../models/meetup.model";
 import type { CreateRsvpInput } from "../../../schema/meetup/rsvp.schema";
 import { v4 as uuidv4 } from 'uuid';
@@ -16,6 +16,8 @@ export default async function createRsvp(
     attendeeAvatarColor: input.body.attendeeAvatarColor,
     comment: input.body.comment,
     attendeeUserId: userId,
+    rsvpTimestamp: Date.now(),
+    rsvpType: TicketTypeEnum.Standard
   };
 
   theEvent.rsvps.push(newResponse);

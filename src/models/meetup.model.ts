@@ -360,7 +360,7 @@ export type MeetupConfig = {
 //   CONFIRM: 'Confirm',
 //   REGISTER: 'Register'
 // };
-export type RsvpButtonCtaTypes = "RSVP" | "JOIN" | "GET_TICKET" | "COMING" | "REPLY" | "CONNECT" | "ATTEND" | "GOING" | "CONFIRM" | "REGISTER";
+export type RsvpButtonCtaTypes = "RSVP" | "JOIN" | "GET_TICKET" | "COMING" | "REPLY" | "CONNECT" | "ATTEND" | "GOING" | "CONFIRM" | "REGISTER" | "RESPOND";
 export const RsvpButtonCtaDefault = 'ATTEND' satisfies RsvpButtonCtaTypes;
 export type MeetupRsvpCertainty = "DEFINITE" | "INDEFINITE";
 export type MeetupPrivacy = 1 | 2 | 3;

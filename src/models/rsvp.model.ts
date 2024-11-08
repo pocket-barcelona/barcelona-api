@@ -68,7 +68,29 @@ export interface MeetupRsvpModel {
   attendeeAvatarColor: string;
   /** Their chosen avatar color in css format, eg. #ffee00 */
   comment: string;
+  /** The timestamp of the RSVP - for ordering signups */
+  rsvpTimestamp: number;
+  /** The timestamp of the earlybird signup, for ordering people */
+  rsvpType: TicketTypeEnum;
 }
+
+/** Note: Needs to support Bitwise, so binary values
+ * More types: https://www.eventbrite.com/blog/types-event-tickets-ds00/
+ */
+export enum TicketTypeEnum {
+  WaitingList = 1,
+  PreSale = 2,
+  SuperEarlyBird = 4,
+  EarlyBird = 8,
+  Standard = 16, // general admission
+  VIP = 32,
+  SingleDayPass = 64,
+  MultiDayPass = 128,
+  GroupPass = 256,
+  MemberOnlyTickets = 512,
+  EntranceOnly = 1024,
+}
+
 
 export const rsvpSchema = new dynamoose.Schema({
   rsvpId: {
