@@ -27,7 +27,7 @@ export default async function getList(
       .and()
       .where(statusField)
       // // .eq(MeetupStatusEnum.Active)
-      .in([MeetupStatusEnum.Published, MeetupStatusEnum.Draft])
+      .in([MeetupStatusEnum.Published, MeetupStatusEnum.Provisional])
       .limit(500)
       .exec(); // this will scan every record!
     return await result.catch((err) => {

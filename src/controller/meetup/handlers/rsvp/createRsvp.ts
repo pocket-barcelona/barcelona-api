@@ -66,32 +66,32 @@ export default async function createRsvp(
   }
 
   // only send an email if it's not the host
-  if (!groupOwnerIsRespondingToOwnEvent) {
-    // type safety on userId document prop name
-    const userIdField: keyof Pick<UserDocument, "userId"> = "userId";
+  // if (!groupOwnerIsRespondingToOwnEvent) {
+  //   // type safety on userId document prop name
+  //   const userIdField: keyof Pick<UserDocument, "userId"> = "userId";
 
-    // @todo - MeetupGroupModel.scan()...
-    const hostData = await UserModel.scan()
-      .where(userIdField)
-      .eq(meetup.groupId)
-      .exec()
-      .catch((err: unknown) => {
-        return null;
-      });
+  //   // @todo - MeetupGroupModel.scan()...
+  //   const hostData = await UserModel.scan()
+  //     .where(userIdField)
+  //     .eq(meetup.groupId)
+  //     .exec()
+  //     .catch((err: unknown) => {
+  //       return null;
+  //     });
 
-    const host: UserDocument | null =
-      hostData && hostData?.length > 0 ? hostData[0] : null;
-    if (host) {
-      await RsvpService.notifyMeetupHost(meetup, {
-        name: createdRsvp.name,
-        response: getAttendanceStatusHumanMessage(
-          createdRsvp.response
-        ),
-        comment: createdRsvp.comment || "",
-        hostEmail: host.email,
-      });
-    }
-  }
+  //   const host: UserDocument | null =
+  //     hostData && hostData?.length > 0 ? hostData[0] : null;
+  //   if (host) {
+  //     await RsvpService.notifyMeetupHost(meetup, {
+  //       name: createdRsvp.name,
+  //       response: getAttendanceStatusHumanMessage(
+  //         createdRsvp.response
+  //       ),
+  //       comment: createdRsvp.comment || "",
+  //       hostEmail: host.email,
+  //     });
+  //   }
+  // }
 
   // for security, do not send back the whole event as it potentially contains a lot of info
   // user response is just a copy of what they posted

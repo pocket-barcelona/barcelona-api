@@ -75,10 +75,10 @@ export interface MeetupRsvpModel {
   lastname: string;
   /** Their chosen avatar */
   avatar: string;
-  /** Personal message from the guest, if provided */
-  comment: string;
   /** Guest mobile number - if provided */
   mobile: string;
+  /** Personal message from the guest, if provided */
+  comment: string;
 }
 
 
@@ -87,19 +87,40 @@ export const rsvpSchema = new dynamoose.Schema({
     type: String,
     required: true,
   },
-  attendeeUserId: {
+  userId: {
     type: String,
     required: true,
   },
-  attendanceStatus: {
+  response: {
     type: Number,
     required: true,
   },
-  attendeeName: {
+  rsvpTimestampInitial: {
+    type: Number,
+    required: true,
+  },
+  rsvpTimestampUpdated: {
+    type: Number,
+    required: true,
+  },
+  changedTimes: {
+    type: Number,
+    required: true,
+  },
+
+  name: {
     type: String,
     required: true,
   },
-  attendeeAvatarColor: {
+  lastname: {
+    type: String,
+    required: true,
+  },
+  avatar: {
+    type: String,
+    required: true,
+  },
+  mobile: {
     type: String,
     required: true,
   },
