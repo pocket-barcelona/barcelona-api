@@ -23,33 +23,33 @@ export const getAttendanceStatusHumanMessage = (
 };
 
 // RSVP-ING
-type UserRsvpInfo = Pick<
-  UserDocument,
-  "nickname" | "email" | "telegram" | "firstname" | "lastname" | "mobile"
->;
+// type UserRsvpInfo = Pick<
+//   UserDocument,
+//   "nickname" | "email" | "telegram" | "firstname" | "lastname" | "mobile"
+// >;
 
-type MeetupRsvpResponseType = 'YES' | 'NO' | 'MAYBE';
+// type MeetupRsvpResponseType = 'YES' | 'NO' | 'MAYBE';
 
-type RsvpType = {
-  /** UUID of the RSVP response */
-  responseId: string;
-  /** User UUID who responded */
-  userId: UserDocument["userId"];
-  /** The response given by the user - if they are going or not! */
-  response: MeetupRsvpResponseType;
-  /** Timestamp of initial RSVP */
-  responseTimestamp: string;
-  /** Timestamp of updated RSVP when most recently changed */
-  responseTimestampUpdated: string;
-  /** Incremental number of times the user has edited their RSVP */
-  changedTimes: number;
-}
+// type RsvpType = {
+//   /** UUID of the RSVP response */
+//   responseId: string;
+//   /** User UUID who responded */
+//   userId: UserDocument["userId"];
+//   /** The response given by the user - if they are going or not! */
+//   response: MeetupRsvpResponseType;
+//   /** Timestamp of initial RSVP */
+//   responseTimestamp: string;
+//   /** Timestamp of updated RSVP when most recently changed */
+//   responseTimestampUpdated: string;
+//   /** Incremental number of times the user has edited their RSVP */
+//   changedTimes: number;
+// }
 /** Type for people responding to meetup events */
-export type MeetupRsvpResponse =
-  /** Even though the user data can be looked up from the userID, this is what they share with the event in question */
-  | Partial<UserRsvpInfo>
-  /** Internal response mandatory data */
-  | RsvpType;
+// export type MeetupRsvpResponse =
+//   /** Even though the user data can be looked up from the userID, this is what they share with the event in question */
+//   | Partial<UserRsvpInfo>
+//   /** Internal response mandatory data */
+//   | RsvpType;
 
 export type MeetupUserRole = "ADMIN" | "HOST" | "COHOST" | "USER";
 

@@ -1,8 +1,7 @@
-import express, { Express, Request, Response } from "express";
+import express from "express";
 import { MeetupGroupController } from "../controller/meetupGroup/meetupGroup.controller";
 import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResource";
-import requireMeetup from "../middleware/requireMeetup";
 import requireAdmin from "../middleware/requireAdmin";
 import {
   createMeetupGroupSchema,

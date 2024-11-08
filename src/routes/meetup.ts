@@ -17,6 +17,7 @@ import {
 import requireMeetup from "../middleware/requireMeetup";
 import { RsvpController } from "../controller/meetup/rsvp.controller";
 import requireAdmin from "../middleware/requireAdmin";
+import requireCanRsvp from '../middleware/requireCanRsvp';
 
 const router = express.Router();
 
@@ -63,16 +64,16 @@ router.patch(
 router.delete("/:meetupId", [requireUser], MeetupController.deleteMeetupHandler);
 
 // ########### RSVPS ###########
-/** Create a new response to a meetup */
+/** Create a new rsvp response to a meetup */
 router.post(
   "/:meetupId/rsvp",
-  [requireMeetup, validateResource(createRsvpSchema)],
+  [validateResource(createRsvpSchema), requireMeetup, requireCanRsvp],
   RsvpController.createRsvpHandler
 );
 /** Update an rsvp by ID */
 router.patch(
   "/:meetupId/rsvp/:rsvpId",
-  [requireMeetup, validateResource(updateRsvpSchema)],
+  [validateResource(updateRsvpSchema), requireMeetup],
   RsvpController.updateRsvpHandler
 );
 /** Check if user has responded to this meetup yet */

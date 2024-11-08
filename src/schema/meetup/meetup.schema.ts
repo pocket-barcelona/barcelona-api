@@ -20,6 +20,7 @@ const createMeetupPayload = {
       requiresVerifiedUser: boolean().optional(),
       eventLanguage: string().array().optional(),
       rsvpButtonCtaType: string().optional(),
+      enableWaitingList: boolean().optional(),
     }),
     privacy: number(),
     rsvpType: string(),

@@ -44,6 +44,9 @@ const meetupConfigSchema = new dynamoose.Schema({
   rsvpButtonCtaType: {
     type: String,
   },
+  enableWaitingList: {
+    type: Boolean,
+  }
 }, {
   saveUnknown: true,
 });
@@ -319,14 +322,29 @@ const meetupSchema = new dynamoose.Schema(
   }
 );
 
-// TYPES...
 
+
+/**
+ * Status flow:
+ * 
+ * Draft -> Archived/Deleted (never went live)
+ * Draft -> Provisional -> Published
+ * @todo. Draft -> Published -> Ended (system will either set ended or infer the status)
+ * Draft -> Published -> Cancelled
+ * Draft -> Published -> Cancelled -> SoftDeleted
+ */
 export enum MeetupStatusEnum {
-  /** Events in draft state are not public */
+  /** Meetup is in draft state. Not public or visible yet */
   Draft = 'DRAFT',
-  /** An normal, published event. Users can rsvp */
+  /** Meetup is accepting RSVPs but not fully confirmed yet. */
+  Provisional = 'PROVISIONAL',
+  /** Meetup is confirmed and published. People can rsvp */
   Published = 'PUBLISHED',
-  /** Archived events - support for when we need it. Archived events can be un-deleted */
+  /** @todo. Explicitly set to ended. */
+  Ended = 'ENDED',
+  /** Meetup has been either provisional or published, but is now cancelled. */
+  Cancelled = 'CANCELLED',
+  /** Support for when we need it. Archived events can be un-deleted */
   Archived = 'ARCHIVED',
   /** Soft deleted events do not appear in any normal API data feed. They only exist in the database. */
   SoftDeleted = 'SOFTDELETED',
@@ -342,11 +360,14 @@ export type MeetupConfig = {
   requiresIdentityCard?: boolean;
   requiresEmailAddress?: boolean;
   requiresQRCodeEntry?: boolean;
+  /** Requires a user to be registered and email confirmed */
   requiresVerifiedUser?: boolean;
   /** List of languages people will be speaking at the event. If empty array, lang will be any language spoken */
   eventLanguage?: string[];
   /** Allow meetup organisers to customise the RSVP join button when users join the event */
   rsvpButtonCtaType?: RsvpButtonCtaTypes;
+  /** If true, people will be able to RSVP as coming, but will be put on the waiting list if the event is full already */
+  enableWaitingList?: boolean;
 };
 // export const RsvpButtonCtas = {
 //   JOIN: 'Join',
