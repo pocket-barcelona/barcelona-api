@@ -1,7 +1,7 @@
 import { UserEmailConfirmedEnum, UserRoleEnum, type UserInput } from '../models/auth/user.model';
-import { MeetupStatusEnum, type MeetupItem } from '../models/meetup.model';
+import { MeetupStatusEnum, TicketTypeEnum, type MeetupItem } from '../models/meetup.model';
 import type { MeetupGroupItem } from '../models/meetupGroup.model';
-import type { MeetupRsvpResponse } from '../models/rsvp.model';
+// import type { MeetupRsvpResponse } from '../models/rsvp.model';
 
 const group: MeetupGroupItem = {
   ownerId: 'test',
@@ -59,6 +59,7 @@ const group: MeetupGroupItem = {
   },
   timezone: 'Europe/Madrid'
 };
+
 const event: MeetupItem = {
   meetupId: "abc-123-def-456",
   shortId: "abc-123",
@@ -73,6 +74,7 @@ const event: MeetupItem = {
   status: MeetupStatusEnum.Draft,
   privacy: 1,
   rsvpType: 'DEFINITE',
+  ticketTypes: TicketTypeEnum.Standard,
   maxTicketsPerPerson: 1,
   title: "My fantastic meeting",
   subtitle: "Doing meetups since 1999!",
@@ -182,11 +184,11 @@ const user: UserInput = {
   avatarColor: ''
 };
 
-const userRsvpResponse: MeetupRsvpResponse = {
-  responseId: "XXXXXXX",
-  userId: "abcd",
-  response: 'YES',
-  responseTimestamp: "2024-09-01T17:35:48.171Z",
-  responseTimestampUpdated: "",
-  mobile: '+34 612 345 678',
-};
+// const userRsvpResponse: MeetupRsvpResponse = {
+//   responseId: "XXXXXXX",
+//   userId: "abcd",
+//   response: 'YES',
+//   responseTimestamp: "2024-09-01T17:35:48.171Z",
+//   responseTimestampUpdated: "",
+//   mobile: '+34 612 345 678',
+// };

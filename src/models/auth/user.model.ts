@@ -82,7 +82,7 @@ export enum UserStatusEnum {
   Deleted = 5,
 }
 export enum UserRoleEnum {
-  Admin = 1, // super admin of system
+  Admin = 1, // super admin of the system
   Owner = 2, // admin of e.g a meetup group
   User = 3, // normal user
   Guest = 4, // guest

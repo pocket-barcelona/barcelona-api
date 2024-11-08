@@ -26,7 +26,7 @@ export default async function hasRsvpdToMeetupYetHandler(
   if (userId) {
     // 1 - check for userID
     const userResponded = theEvent.rsvps.filter(
-      (r) => r.attendeeUserId !== "" && r.attendeeUserId === userId
+      (r) => r.userId !== "" && r.userId === userId
     );
     if (userResponded.length > 0) {
       // logged in user has already responded to this event

@@ -323,6 +323,22 @@ const meetupSchema = new dynamoose.Schema(
 );
 
 
+/** Note: Needs to support Bitwise, so binary values
+ * More types: https://www.eventbrite.com/blog/types-event-tickets-ds00/
+ */
+export enum TicketTypeEnum {
+  WaitingList = 1,
+  PreSale = 2,
+  SuperEarlyBird = 4,
+  EarlyBird = 8,
+  Standard = 16, // general admission
+  VIP = 32,
+  SingleDayPass = 64,
+  MultiDayPass = 128,
+  GroupPass = 256,
+  MemberOnlyTickets = 512,
+  EntranceOnly = 1024,
+}
 
 /**
  * Status flow:
@@ -502,6 +518,8 @@ export interface MeetupItem {
   privacy: MeetupPrivacy;
   /** The type of response a user can give for the event: Definite=yes/no, Indefinite=yes/no/maybe */
   rsvpType: MeetupRsvpCertainty;
+  /** @bitwise Which tickets the event is offering to people. Note: uses Bitwise for multiple choice */
+  ticketTypes: TicketTypeEnum;
   /** Sets a limit on the number of tickets a person can obtain (per their user) */
   maxTicketsPerPerson: number;
   /** Main title */

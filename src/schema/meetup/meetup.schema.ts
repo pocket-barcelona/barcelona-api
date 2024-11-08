@@ -85,7 +85,8 @@ const createMeetupPayload = {
 const updateMeetupPayload = {
   body: object({
     ...createMeetupPayload.body.shape,
-    status: string(), // "PUBLISHED", "DRAFT", "ARCHIVED", "SOFTDELETED", "DELETED"
+    // @todo - remove this and make it atomic - needs to do more logic checks
+    status: string(), // "PUBLISHED", "DRAFT", "ARCHIVED", "SOFTDELETED", "DELETED" etc
   }),
   params: object({
     meetupId: string({

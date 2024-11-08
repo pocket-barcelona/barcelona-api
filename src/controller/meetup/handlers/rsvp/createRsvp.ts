@@ -83,9 +83,9 @@ export default async function createRsvp(
       hostData && hostData?.length > 0 ? hostData[0] : null;
     if (host) {
       await RsvpService.notifyMeetupHost(meetup, {
-        name: createdRsvp.attendeeName,
+        name: createdRsvp.name,
         response: getAttendanceStatusHumanMessage(
-          createdRsvp.attendanceStatus
+          createdRsvp.response
         ),
         comment: createdRsvp.comment || "",
         hostEmail: host.email,

@@ -19,7 +19,7 @@ const requireCanRsvp = async (
     meetup: MeetupDocument;
     user: UserDocument | undefined;
   };
-  const { eventConfig, rsvps = [], rsvpType, price } = meetup;
+  const { eventConfig, rsvps = [], rsvpType, price, ticketTypes } = meetup;
   const { maxAttendees, requiresEmailAddress, requiresMobileNumber, requiresVerifiedUser } = eventConfig ?? {};
   const now = Date.now();
 
@@ -44,6 +44,8 @@ const requireCanRsvp = async (
       );
   }
 
+  // @todo V2 - make sure ticket type is valid compared to what the event is accepting
+
   // make sure the host is not rsvping to their own event
   // Note: the group organiser CAN rsvp to their event
   const hostIsRespondingToOwnEvent = user?.userId && (meetup.hosts ?? []).some(h => h.userId === user.userId);
@@ -52,7 +54,7 @@ const requireCanRsvp = async (
       .status(StatusCodes.FORBIDDEN)
       .send(
         error(
-          "It is not possible to respond to your own event.",
+          "It is not possible to RSVP to your own event.",
           res.statusCode
         )
       );
@@ -106,7 +108,7 @@ const requireCanRsvp = async (
   // make sure rsvps.length is ok with maxAttendees
   if (maxAttendees !== undefined && maxAttendees !== 0) {
     // @todo - give users priority over anonymous users
-    const confirmedGuests = rsvps.filter(r => r.attendanceStatus === MeetupRsvpAttendanceStatusEnum.Coming);
+    const confirmedGuests = rsvps.filter(r => r.response === MeetupRsvpAttendanceStatusEnum.Coming);
     // const maybeGuests = rsvps.filter(r => r.attendanceStatus === MeetupRsvpAttendanceStatusEnum.Maybe);
     if (confirmedGuests.length >= maxAttendees) {
       return res

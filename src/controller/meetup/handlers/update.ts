@@ -3,7 +3,7 @@ import type { UpdateMeetupInput } from "../../../schema/meetup/meetup.schema";
 import { error, success } from "../../../middleware/apiResponse";
 import type { MeetupDocument } from "../../../models/meetup.model";
 import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
-import type { UserDocument } from "../../../models/auth/user.model";
+import { UserRoleEnum, type UserDocument } from "../../../models/auth/user.model";
 import { MeetupService } from "../../../service/meetup/meetup.service";
 
 /**
@@ -26,9 +26,10 @@ export default async function update(
       .send(error("Item not found", res.statusCode));
   }
 
-  const loggedInUser = (res.locals.user as UserDocument).userId || "";
+  const loggedInUser = (res.locals.user as UserDocument);
+  const loggedInUserId = loggedInUser ? loggedInUser.userId : "";
   // @todo - only allow super users or meetup group admins to edit items?
-  if (documentExists.groupId !== loggedInUser) {
+  if (documentExists.groupId !== loggedInUserId && loggedInUser.role !== UserRoleEnum.Admin) {
     return res
       .status(StatusCodes.FORBIDDEN)
       .send(

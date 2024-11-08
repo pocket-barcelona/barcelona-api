@@ -10,6 +10,7 @@ import MeetupModel, {
   MeetupStatusEnum,
   RsvpButtonCtaDefault,
   type RsvpButtonCtaTypes,
+  TicketTypeEnum,
 } from "../../../models/meetup.model";
 import type { CreateMeetupInput } from "../../../schema/meetup/meetup.schema";
 import { v4 as uuidv4 } from "uuid";
@@ -40,6 +41,7 @@ export default async function create(
       status: MeetupStatusEnum.Draft, // this is the status of newly created document
       privacy: 1 as MeetupPrivacy,
       rsvpType: input.rsvpType as MeetupRsvpCertainty,
+      ticketTypes: TicketTypeEnum.Standard,
       maxTicketsPerPerson: 1,
       meetupId: uuidv4(),
       shortId: await generateShortId(),

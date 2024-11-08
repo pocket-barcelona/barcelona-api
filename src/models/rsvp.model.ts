@@ -1,5 +1,6 @@
 import dynamoose from "dynamoose";
 import type { UserDocument } from './auth/user.model';
+import type { TicketTypeEnum } from './meetup.model';
 
 export enum MeetupRsvpAttendanceStatusEnum {
   Coming = 1,
@@ -59,36 +60,25 @@ export interface MeetupRsvpModel {
   /** The rsvp ID - needed for updating */
   rsvpId: string;
   /** The attendee user ID, or empty string. If empty string, the response is considered anonymous */
-  attendeeUserId: string;
+  userId: string;
   /** The response (coming, maybe, not) given by the attendee */
-  attendanceStatus: MeetupRsvpAttendanceStatusEnum;
+  response: MeetupRsvpAttendanceStatusEnum;
+  /** The timestamp of the initial RSVP - for ordering signups */
+  rsvpTimestampInitial: number;
+  /** Timestamp of when the RSVP was updated - the most recent change */
+  rsvpTimestampUpdated: number;
+  /** Incremental number of times the user has edited their RSVP */
+  changedTimes: number;
   /** This can be used if given as the name, instead of the user's name */
-  attendeeName: string;
-  /** Their personal message, comment or request */
-  attendeeAvatarColor: string;
-  /** Their chosen avatar color in css format, eg. #ffee00 */
+  name: string;
+  /** Last name, if provided in payload, not from the user */
+  lastname: string;
+  /** Their chosen avatar */
+  avatar: string;
+  /** Personal message from the guest, if provided */
   comment: string;
-  /** The timestamp of the RSVP - for ordering signups */
-  rsvpTimestamp: number;
-  /** The timestamp of the earlybird signup, for ordering people */
-  rsvpType: TicketTypeEnum;
-}
-
-/** Note: Needs to support Bitwise, so binary values
- * More types: https://www.eventbrite.com/blog/types-event-tickets-ds00/
- */
-export enum TicketTypeEnum {
-  WaitingList = 1,
-  PreSale = 2,
-  SuperEarlyBird = 4,
-  EarlyBird = 8,
-  Standard = 16, // general admission
-  VIP = 32,
-  SingleDayPass = 64,
-  MultiDayPass = 128,
-  GroupPass = 256,
-  MemberOnlyTickets = 512,
-  EntranceOnly = 1024,
+  /** Guest mobile number - if provided */
+  mobile: string;
 }
 
 

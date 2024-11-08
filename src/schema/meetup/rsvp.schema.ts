@@ -6,6 +6,9 @@ const payload = {
     response: number({ // coming or not
       required_error: "Response status is required",
     }),
+    // ticketType: number({
+    //   required_error: "Ticket type is required",
+    // }),
     guests: object({
       isMainGuest: boolean({
         required_error: "isMainGuest is required",
