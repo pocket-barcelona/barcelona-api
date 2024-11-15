@@ -343,11 +343,15 @@ export enum TicketTypeEnum {
 /**
  * Status flow:
  * 
- * Draft -> Archived/Deleted (never went live)
- * Draft -> Provisional -> Published
- * @todo. Draft -> Published -> Ended (system will either set ended or infer the status)
- * Draft -> Published -> Cancelled
- * Draft -> Published -> Cancelled -> SoftDeleted
+ * `Draft -> Archived/Deleted (never went live)`
+ *
+ * `Draft -> Provisional -> Published`
+ * 
+ * `@todo: Draft -> Published -> Ended` (system will either set ended or infer the status)
+ * 
+ * `Draft -> Published -> Cancelled`
+ * 
+ * `Draft -> Published -> Cancelled -> SoftDeleted`
  */
 export enum MeetupStatusEnum {
   /** Meetup is in draft state. Not public or visible yet */
@@ -372,10 +376,14 @@ export type MeetupConfig = {
   minAttendees: number;
   /** 0=any */
   maxAttendees: number;
+  /** Require mobile number on signing up for the event */
   requiresMobileNumber?: boolean;
-  requiresIdentityCard?: boolean;
+  /** Require email address on signing up for the event */
   requiresEmailAddress?: boolean;
+  /** Require QR code when physically entering the event */
   requiresQRCodeEntry?: boolean;
+  /** Require identity card when physically entering the event */
+  requiresIdentityCard?: boolean;
   /** Requires a user to be registered and email confirmed */
   requiresVerifiedUser?: boolean;
   /** List of languages people will be speaking at the event. If empty array, lang will be any language spoken */
@@ -397,7 +405,7 @@ export type MeetupConfig = {
 //   CONFIRM: 'Confirm',
 //   REGISTER: 'Register'
 // };
-export type RsvpButtonCtaTypes = "RSVP" | "JOIN" | "GET_TICKET" | "COMING" | "REPLY" | "CONNECT" | "ATTEND" | "GOING" | "CONFIRM" | "REGISTER" | "RESPOND";
+export type RsvpButtonCtaTypes = "RSVP" | "JOIN" | "GET_TICKET" | "COMING" | "REPLY" | "CONNECT" | "ATTEND" | "GOING" | "CONFIRM" | "REGISTER" | "RESPOND" | "SIGNUP";
 export const RsvpButtonCtaDefault = 'ATTEND' satisfies RsvpButtonCtaTypes;
 export type MeetupRsvpCertainty = "DEFINITE" | "INDEFINITE";
 export type MeetupPrivacy = 1 | 2 | 3;
@@ -485,7 +493,7 @@ export type MeetupPromoModifier = {
   /** 0.5 would be 50% off */
   modifier?: number;
   /** @todo - Type of action applied to the event when the code is entered by the user */
-  action?: "EARLY_RSVP" | string;
+  action?: "EARLY_RSVP" | "PRIVATE_RSVP" | "PRICE_DISCOUNT" | string;
   /** If false, code will be in-active */
   active: boolean;
   /** Optional UTC timestamp of when the code expires */
@@ -512,6 +520,10 @@ export interface MeetupItem {
   clonedId?: string;
   /** Meetup settings */
   eventConfig: MeetupConfig;
+  /** Event Main category */
+  category: MeetupCategoryName;
+  /** List of tag-like subcategories */
+  subcategory: string[];
   /** Status and visibility */
   status: MeetupStatusEnum;
   /** 1=location/address public, 2=location only visible to people going, 3=location hidden */
@@ -530,10 +542,6 @@ export interface MeetupItem {
   description: string;
   /** Special notes about how to find the event once there */
   directions: string;
-  /** Main category */
-  category: MeetupCategoryName;
-  /** List of tag-like subcategories */
-  subcategory: string[];
   /** In-person, Online or Hybrid event */
   mode: MeetupMode;
   /** Full UTC timestamp */
@@ -550,13 +558,15 @@ export interface MeetupItem {
   locationDisclosureAt: Date;
   /** Price in cents. @todo - entry fee? */
   price: MeetupPrice;
-  /** List of event promo codes */
+  /** @todo - check relationship with TicketTypeEnum above.
+   * List of event promo codes */
   promoCodes: MeetupPromoModifier[];
   /** @todo - give away vouchers during the event? */
   vouchers: unknown;
 
-  /** If true, the person who RSVP'd will need to re-confirm their attendance */
+  /** @todo - move to config? If true, the person who RSVP'd will need to re-confirm their attendance */
   requiresUserCheckin: boolean;
+
   /** People who have rsvp'd to this meetup */
   rsvps: MeetupRsvpModel[];
   /** List of user IDs who are on the waiting list */
