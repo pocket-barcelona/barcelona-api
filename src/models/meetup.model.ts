@@ -338,7 +338,72 @@ export enum TicketTypeEnum {
   GroupPass = 256,
   MemberOnlyTickets = 512,
   EntranceOnly = 1024,
+  AccessAllAreas = 2048,
 }
+export const TICKET_TYPES: Record<TicketTypeEnum, {
+  label: string;
+  description: string;
+  notes?: string;
+}> = {
+  [TicketTypeEnum.WaitingList]: {
+    label: "Waiting List",
+    description: "People will be still be able to get tickets once the event is sold-out, but will be added to the waiting list",
+    notes: "Requires the Waiting List to be enabled. Their ticket type will be explicitly labelled with Waiting List"
+  },
+  [TicketTypeEnum.PreSale]: {
+    label: "Pre Sale",
+    description: "People will be able to buy tickets before the event is confirmed",
+  },
+  [TicketTypeEnum.SuperEarlyBird]: {
+    label: "Super Early Bird",
+    description: "People will be able to buy tickets before the event starts, in group 1",
+    notes: "Requires Super Early Bird to be enabled"
+  },
+  [TicketTypeEnum.EarlyBird]: {
+    label: "Early Bird",
+    description: "People will be able to buy tickets before the event starts, in group 2",
+    notes: "Requires Early Bird to be enabled"
+  },
+  [TicketTypeEnum.Standard]: {
+    label: "Standard Entry",
+    description: "The normal ticket type for all events"
+  },
+  [TicketTypeEnum.VIP]: {
+    label: "VIP",
+    description: "VIP tickets distinguish guests from standard entry tickets",
+    notes: "Only offer this ticket type if the event has a VIP offering"
+  },
+  [TicketTypeEnum.SingleDayPass]: {
+    label: "Single Day Pass",
+    description: "People will be able to buy tickets for a single day only",
+    notes: "Enable this ticket type if the event is a day event where people can come and go"
+  },
+  [TicketTypeEnum.MultiDayPass]: {
+    label: "Multi Day Pass",
+    description: "People will be able to buy tickets for multiple days",
+    notes: "Enable this ticket type if the event is a multi-day event where people can come and go"
+  },
+  [TicketTypeEnum.GroupPass]: {
+    label: "Group Pass",
+    description: "People will be able to buy tickets for a group of people",
+    notes: "Enable this ticket type if the event is a flexible event where people can have 1 ticket for a whole group of people"
+  },
+  [TicketTypeEnum.MemberOnlyTickets]: {
+    label: "Member Only Tickets",
+    description: "People will be able to buy tickets if they are a member of the group/community",
+    notes: "Enable this ticket type if the event is a member-only event where people can only buy tickets if they are a member of the group/community. This can be controlled by only sharing the link with people directly"
+  },
+  [TicketTypeEnum.EntranceOnly]: {
+    label: "Entrance Only",
+    description: "Entrance only tickets offer entrance to the event but no other benefits",
+    notes: "Enable this ticket type if the event has paid entrance to other areas or spaces, once inside the main event."
+  },
+  [TicketTypeEnum.AccessAllAreas]: {
+    label: "Access All Areas",
+    description: "People will be able to buy tickets for access to all areas of the event",
+    notes: "Enable this ticket type if the event has paid access to other areas or spaces, once inside the main event."
+  },
+} as const;
 
 /**
  * Status flow:
@@ -374,7 +439,7 @@ export enum MeetupStatusEnum {
 export type MeetupConfig = {
   /** 0=any number, 1=min one attendee required for the event to start */
   minAttendees: number;
-  /** 0=any */
+  /** 0=any. Max number of attendees before new signups go on the waiting list */
   maxAttendees: number;
   /** Require mobile number on signing up for the event */
   requiresMobileNumber?: boolean;
@@ -411,7 +476,7 @@ export type MeetupRsvpCertainty = "DEFINITE" | "INDEFINITE";
 export type MeetupPrivacy = 1 | 2 | 3;
 export const MEETUP_CATEGORIES = {
   MEETUP: "MEETUP", // regular meetup with big group
-  LIVEMUSIC: "LIVEMUSIC", // gigs, karaoke etc
+  LIVEMUSIC: "LIVE_MUSIC", // gigs, karaoke etc
   ENTERTAINMENT: "ENTERTAINMENT", // standup comedy, talks, film nights
   RESTAURANT: "RESTAURANT", // go for dinner
   COFFEE: "COFFEE", // share a coffee with people
