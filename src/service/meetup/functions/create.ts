@@ -97,6 +97,7 @@ function getMeetupConfig(input: CreateMeetupInput["body"]): MeetupConfig {
     requiresVerifiedUser = false,
     rsvpButtonCtaType = RsvpButtonCtaDefault,
     enableWaitingList = false,
+    maxWaitingListGuests = 0,
   } = eventConfig;
   const config: MeetupConfig = {
     minAttendees,
@@ -109,6 +110,7 @@ function getMeetupConfig(input: CreateMeetupInput["body"]): MeetupConfig {
     requiresVerifiedUser,
     rsvpButtonCtaType: rsvpButtonCtaType as RsvpButtonCtaTypes,
     enableWaitingList,
+    maxWaitingListGuests,
   };
   return config;
 }

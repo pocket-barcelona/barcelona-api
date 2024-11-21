@@ -21,6 +21,7 @@ const createMeetupPayload = {
       eventLanguage: string().array().optional(),
       rsvpButtonCtaType: string().optional(),
       enableWaitingList: boolean().optional(),
+      maxWaitingListGuests: number().optional(),
     }),
     privacy: number(),
     rsvpType: string(),
@@ -60,6 +61,8 @@ const createMeetupPayload = {
       lng: number(),
       locationPrecision: number(),
       mapsLink: string(),
+      locationIsHidden: boolean(),
+      locationAvailableFrom: string(),
     }),
     price: object({
       priceCents: number(),

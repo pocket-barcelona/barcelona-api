@@ -46,6 +46,9 @@ const meetupConfigSchema = new dynamoose.Schema({
   },
   enableWaitingList: {
     type: Boolean,
+  },
+  maxWaitingListGuests: {
+    type: Number
   }
 }, {
   saveUnknown: true,
@@ -99,7 +102,15 @@ const locationSchema = new dynamoose.Schema({
   mapsLink: {
     type: String,
     required: true,
-  }
+  },
+  locationIsHidden: {
+    type: Boolean,
+    required: true,
+  },
+  locationAvailableFrom: {
+    type: String,
+    required: true,
+  },
 }, {
   saveUnknown: true,
 });
@@ -327,32 +338,38 @@ const meetupSchema = new dynamoose.Schema(
  * More types: https://www.eventbrite.com/blog/types-event-tickets-ds00/
  */
 export enum TicketTypeEnum {
-  WaitingList = 1,
+  // time-based
+  VIPPresale = 1,
   PreSale = 2,
   SuperEarlyBird = 4,
   EarlyBird = 8,
+  // admission-based
   Standard = 16, // general admission
   VIP = 32,
-  SingleDayPass = 64,
-  MultiDayPass = 128,
-  GroupPass = 256,
-  MemberOnlyTickets = 512,
-  EntranceOnly = 1024,
-  AccessAllAreas = 2048,
+  Influencer = 64,
+  // space/group/other based
+  PrivateEntry = 128,
+  SingleDayPass = 256,
+  MultiDayPass = 512,
+  GroupPass = 1024,
+  MemberOnlyTickets = 2048,
+  EntranceOnly = 4096,
+  AccessAllAreas = 8192,
 }
 export const TICKET_TYPES: Record<TicketTypeEnum, {
   label: string;
   description: string;
   notes?: string;
 }> = {
-  [TicketTypeEnum.WaitingList]: {
-    label: "Waiting List",
-    description: "People will be still be able to get tickets once the event is sold-out, but will be added to the waiting list",
-    notes: "Requires the Waiting List to be enabled. Their ticket type will be explicitly labelled with Waiting List"
+  [TicketTypeEnum.VIPPresale]: {
+    label: "VIP Pre-sale",
+    description: "Exclusive offering to VIP's for pre-sale of tickets. People will be able to buy tickets before the event is confirmed",
+    notes: "You must manage the publicity of these tickets yourself"
   },
   [TicketTypeEnum.PreSale]: {
     label: "Pre Sale",
     description: "People will be able to buy tickets before the event is confirmed",
+    notes: "You must manage the publicity of these tickets yourself"
   },
   [TicketTypeEnum.SuperEarlyBird]: {
     label: "Super Early Bird",
@@ -366,12 +383,23 @@ export const TICKET_TYPES: Record<TicketTypeEnum, {
   },
   [TicketTypeEnum.Standard]: {
     label: "Standard Entry",
-    description: "The normal ticket type for all events"
+    description: "The normal ticket type for all events",
+    notes: "If you just want a simple event, just enable this ticket type only"
   },
   [TicketTypeEnum.VIP]: {
     label: "VIP",
     description: "VIP tickets distinguish guests from standard entry tickets",
     notes: "Only offer this ticket type if the event has a VIP offering"
+  },
+  [TicketTypeEnum.Influencer]: {
+    label: "Influencer",
+    description: "Influencer tickets distinguish guests from standard and VIP entry tickets",
+    notes: "Only offer this ticket type if the event has an influencer offering"
+  },
+  [TicketTypeEnum.PrivateEntry]: {
+    label: "Private Entry",
+    description: "Private Entry tickets distinguish guests from standard and VIP entry tickets",
+    notes: "Only offer this ticket type if the event has a private entry offering"
   },
   [TicketTypeEnum.SingleDayPass]: {
     label: "Single Day Pass",
@@ -457,6 +485,8 @@ export type MeetupConfig = {
   rsvpButtonCtaType?: RsvpButtonCtaTypes;
   /** If true, people will be able to RSVP as coming, but will be put on the waiting list if the event is full already */
   enableWaitingList?: boolean;
+  /** If waiting list is enabled, the max number of guests which can be in waiting */
+  maxWaitingListGuests?: number;
 };
 // export const RsvpButtonCtas = {
 //   JOIN: 'Join',
@@ -532,6 +562,10 @@ export type MeetupLocation = {
   locationPrecision: 1 | 2 | 3 | number;
   /** Ex: a google maps URL to the meetup location */
   mapsLink: string;
+  /** If set, the location of the event will be hidden completely */
+  locationIsHidden: boolean;
+  /** @type Date string. If set, the location will only be visible after this point in time */
+  locationAvailableFrom: string;
 };
 export type MeetupPrice = {
   /** Like 1050 = €10,50. 0=Free. -1=TBC */

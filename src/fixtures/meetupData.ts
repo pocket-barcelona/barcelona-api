@@ -103,6 +103,8 @@ const event: MeetupItem = {
     lng: 0,
     locationPrecision: 1,
     mapsLink: '',
+    locationIsHidden: false,
+    locationAvailableFrom: '',
   },
   locationDisclosureAt: new Date("2024-09-20T09:00:00.000Z"),
   price: {
