@@ -37,6 +37,7 @@ const updateMeetupGroupPayload = {
       .min(20, "Refund policy must be at least 20 chars")
       .max(4000, "Refund policy is too long. Max 4000 chars"),
     social: object({
+      bizum: string(),
       facebook: string(),
       instagram: string(),
       linkedin: string(),
@@ -46,7 +47,6 @@ const updateMeetupGroupPayload = {
       website: string(),
       whatsapp: string(),
       youtube: string(),
-      bizum: string(),
     }),
     // topics: string().array().optional(),
   }),
