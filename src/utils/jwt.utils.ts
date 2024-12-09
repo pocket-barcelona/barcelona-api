@@ -1,6 +1,8 @@
-import jwt, { type JwtPayload } from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken"; // todo - move to JOSE
 import { config } from "../config";
 import logger from "./logger";
+import { SignJWT } from "jose";
+import { nanoid } from 'nanoid';
 
 export namespace SessionUtils {
 
@@ -12,25 +14,35 @@ export namespace SessionUtils {
    * @param options 
    * @returns 
    */
-  export function signJwt(
+  export async function signJwt(
     object: object,
     keyName: "accessTokenPrivateKey" | "refreshTokenPrivateKey",
-    options?: jwt.SignOptions | undefined
-  ): string | undefined {
+    // options?: jwt.SignOptions | undefined
+  ): Promise<string | undefined> {
     let privateKey: string;
     if (keyName === 'refreshTokenPrivateKey') {
-      privateKey = config.refreshTokenPrivateKey;
+      privateKey = `${config.refreshTokenPrivateKey}`;
     } else {
-      privateKey = config.accessTokenPrivateKey;
+      privateKey = `${config.accessTokenPrivateKey}`;
     }
-    const signingKey = Buffer.from(
-      privateKey,
-      "base64"
-    ).toString("ascii");
+    // const signingKey = Buffer.from(
+    //   privateKey,
+    //   "base64"
+    // ).toString("ascii");
+    const signingKey = new TextEncoder().encode(privateKey);
     
     try {
       // return jwt.sign(object, signingKey, options);
-      return jwt.sign(object, signingKey);
+      // return jwt.sign(object, signingKey);
+      const token = await new SignJWT({
+				...object,
+			})
+				.setProtectedHeader({ alg: "HS256" })
+				.setJti(nanoid())
+				.setIssuedAt()
+				.setExpirationTime("6h")
+				.sign(signingKey);
+      return token;
       
     } catch (error) {
       logger.error(error)

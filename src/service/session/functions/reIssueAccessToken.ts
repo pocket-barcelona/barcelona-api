@@ -72,7 +72,7 @@ export enum ReissueAccessTokenErrorEnum {
      * Note: must be same as!
      * @link {SessionController.createUserSessionHandler}
      */
-    const accessToken = SessionUtils.signJwt(
+    const accessToken = await SessionUtils.signJwt(
       { ...user, ...sessionExpiry, session: session },
       "accessTokenPrivateKey",
       // { expiresIn: `${config.accessTokenTtl}m` } // e.g. "30m" (30 minutes)
@@ -80,7 +80,7 @@ export enum ReissueAccessTokenErrorEnum {
 
     if (!accessToken) return ReissueAccessTokenErrorEnum.AuthServerError; // error signing new jwt token
   
-    return accessToken;
+    return accessToken ?? '';
 
   } catch (error) {
     return ReissueAccessTokenErrorEnum.AuthServerError;
