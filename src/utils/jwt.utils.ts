@@ -1,14 +1,16 @@
-import jwt, { type JwtPayload } from "jsonwebtoken"; // todo - move to JOSE
+import { createSecretKey } from 'node:crypto';
+import 'dotenv/config';
 import { config } from "../config";
 import logger from "./logger";
-import { SignJWT } from "jose";
+import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 import { nanoid } from 'nanoid';
 
+// const secretKey = createSecretKey(config.JWT_SECRET, 'utf-8');
 export namespace SessionUtils {
 
   /**
    * Sign the JWT with a private key
-   * @link https://youtu.be/BWUi6BS9T5Y?t=3845
+   * @link - OLD using jwt: https://youtu.be/BWUi6BS9T5Y?t=3845
    * @param object 
    * @param keyName 
    * @param options 
@@ -17,7 +19,6 @@ export namespace SessionUtils {
   export async function signJwt(
     object: object,
     keyName: "accessTokenPrivateKey" | "refreshTokenPrivateKey",
-    // options?: jwt.SignOptions | undefined
   ): Promise<string | undefined> {
     let privateKey: string;
     if (keyName === 'refreshTokenPrivateKey') {
@@ -25,21 +26,19 @@ export namespace SessionUtils {
     } else {
       privateKey = `${config.accessTokenPrivateKey}`;
     }
-    // const signingKey = Buffer.from(
-    //   privateKey,
-    //   "base64"
-    // ).toString("ascii");
-    const signingKey = new TextEncoder().encode(privateKey);
+    // const signingKey = new TextEncoder().encode(privateKey);
+    const signingKey = createSecretKey(privateKey, 'utf-8');
     
     try {
-      // return jwt.sign(object, signingKey, options);
-      // return jwt.sign(object, signingKey);
+
       const token = await new SignJWT({
 				...object,
 			})
 				.setProtectedHeader({ alg: "HS256" })
 				.setJti(nanoid())
 				.setIssuedAt()
+        // .setIssuer(process.env.JWT_ISSUER ?? '') // issuer
+        // .setAudience(process.env.JWT_AUDIENCE ?? '') // audience
 				.setExpirationTime("6h")
 				.sign(signingKey);
       return token;
@@ -53,42 +52,52 @@ export namespace SessionUtils {
   export interface JWTTokenValidity {
     valid: boolean;
     expired: boolean;
-    decoded: string | JwtPayload | null
+    decoded: string | JWTPayload | null
   }
   
   /**
    * Verify the JWT with a public key. Compare the user's token to see if it was
    * signed by one of the private server keys -- either the refresh or access secrets
-   * @link https://youtu.be/BWUi6BS9T5Y?t=3845
-   * @param token 
+   * @link OLD using jwt: https://youtu.be/BWUi6BS9T5Y?t=3845
+   * @param token The token should not contain "Bearer ".
    * @param keyName 
    * @returns 
    */
-  export function verifyJwt(
+  export async function verifyJwt(
     token: string,
-    keyName: "accessTokenPublicKey" | "refreshTokenPublicKey"
+    keyName: "accessTokenPublicKey" | "refreshTokenPublicKey" // @todo - PrivateKey?
   ) {
-    let publicKey = '';
-    
+    let privateKey: string;
     if (keyName === 'refreshTokenPublicKey') {
-      publicKey = Buffer.from(config.refreshTokenPrivateKey, "base64").toString(
-        "ascii"
-      );
+      privateKey = `${config.refreshTokenPrivateKey}`;
     } else {
-      publicKey = Buffer.from(config.accessTokenPrivateKey, "base64").toString(
-        "ascii"
-      );
+      privateKey = `${config.accessTokenPrivateKey}`;
     }
+    
+    // const signingKey = new TextEncoder().encode(privateKey);
+    const signingKey = createSecretKey(privateKey, 'utf-8');
+    // let publicKey = '';
+    
+    // if (keyName === 'refreshTokenPublicKey') {
+    //   publicKey = Buffer.from(config.refreshTokenPrivateKey, "base64").toString(
+    //     "ascii"
+    //   );
+    // } else {
+    //   publicKey = Buffer.from(config.accessTokenPrivateKey, "base64").toString(
+    //     "ascii"
+    //   );
+    // }
     let validity: JWTTokenValidity;
   
     try {
-      const decoded = jwt.verify(token, publicKey) as JwtPayload;
-      const { exp } = decoded;
-      const expired = new Date().getTime() > (exp || 0);
+      const decoded = await jwtVerify(token, signingKey);
+      const { payload } = decoded;
+      const { exp } = payload;
+      const expired = new Date().getTime() > ((exp || 0) * 1000);
       validity = {
         valid: true,
         expired: expired,
-        decoded,
+        decoded: payload,
       };
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     } catch (e: any) {

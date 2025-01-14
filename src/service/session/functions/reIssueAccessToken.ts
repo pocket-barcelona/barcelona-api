@@ -26,7 +26,7 @@ export enum ReissueAccessTokenErrorEnum {
  export default async function reIssueAccessToken({ refreshToken }: Pick<SessionTokenModel, 'refreshToken'>): Promise<string | ReissueAccessTokenErrorEnum> {
     
   // decode token
-  const { decoded, valid, expired } = SessionUtils.verifyJwt(refreshToken, "refreshTokenPublicKey");
+  const { decoded, valid, expired } = await SessionUtils.verifyJwt(refreshToken, "refreshTokenPublicKey");
   
   // refresh token is not valid or has expired
   if (valid === false) return ReissueAccessTokenErrorEnum.InvalidRefreshToken;

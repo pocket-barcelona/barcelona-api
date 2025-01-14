@@ -9,7 +9,6 @@ import type { UserDocument } from '../models/auth/user.model';
 const requireUser = (req: Request, res: Response, next: NextFunction) => {
   
   const user = (res.locals.user as UserDocument);
-
   if (!user) {
     return res.status(StatusCodes.UNAUTHORIZED).send(
       error(

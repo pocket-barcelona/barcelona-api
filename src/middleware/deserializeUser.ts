@@ -30,7 +30,7 @@ const deserializeUser = async (
     return next();
   }
 
-  const { decoded, expired } = SessionUtils.verifyJwt(accessToken, "accessTokenPublicKey");
+  const { decoded, expired } = await SessionUtils.verifyJwt(accessToken, "accessTokenPublicKey");
 
   if (decoded && !expired) {
     // session token valid and not expired yet
