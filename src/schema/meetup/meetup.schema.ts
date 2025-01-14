@@ -62,7 +62,9 @@ const createMeetupPayload = {
       locationPrecision: number(),
       mapsLink: string(),
       locationIsHidden: boolean(),
-      locationAvailableFrom: string(),
+      locationAvailableFrom: number({
+        invalid_type_error: "locationAvailableFrom must be a number",
+      }).min(Date.now(), "locationAvailableFrom can't be in the past"),
     }),
     price: object({
       priceCents: number(),
