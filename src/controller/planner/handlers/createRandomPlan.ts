@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
+import { error, success } from "../../../middleware/apiResponse";
 import { PlannerService } from "../../../service/planner/planner.service";
 
 /**
@@ -9,16 +9,15 @@ import { PlannerService } from "../../../service/planner/planner.service";
  * @param res
  * @returns
  */
-export default async function createRandomPlan(req: Request, res: Response) {
-  
-  const data = await PlannerService.createRandomPlan();
-  
-  // @todo
-  if (!data) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send(error("Error getting item", res.statusCode));
-  }
+export default async function createRandomPlan(_req: Request, res: Response) {
+	const data = await PlannerService.createRandomPlan();
 
-  return res.send(success(data));
+	// @todo
+	if (!data) {
+		return res
+			.status(StatusCodes.NOT_FOUND)
+			.send(error("Error getting item", res.statusCode));
+	}
+
+	return res.send(success(data));
 }

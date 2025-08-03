@@ -17,7 +17,7 @@ export default async function getSession(
     });
 
     return hasSession || false;
-  } catch (error) {
+  } catch (_error) {
     // logger.warn(error);
     // throw new Error();
     return false;

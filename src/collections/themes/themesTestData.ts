@@ -1,12 +1,12 @@
-import { StructuredPlanDayProfile } from "../../models/planThemes";
+import type { StructuredPlanDayProfile } from "../../models/planThemes";
 import {
-  ThemesBestOf,
-  ThemesCategory,
-  ThemesFoodAndDrink,
-  ThemesLocation,
-  ThemesNightsOut,
-  ThemesRoute,
-  ThemesTrips,
+	ThemesBestOf,
+	ThemesCategory,
+	ThemesFoodAndDrink,
+	ThemesLocation,
+	ThemesNightsOut,
+	ThemesRoute,
+	ThemesTrips,
 } from "./all";
 
 // Parallel metro!
@@ -15,11 +15,11 @@ import {
 // 41.37518964719392, 2.1625463009432675
 const fiveMinsWalk = Math.abs(2.1625463009432675 - 2.1681203940848635);
 export const WALKING_DISTANCES = {
-  // todo
-  small: fiveMinsWalk / 2,
-  // 5 mins walk
-  medium: fiveMinsWalk,
-  large: fiveMinsWalk * 1.5,
+	// todo
+	small: fiveMinsWalk / 2,
+	// 5 mins walk
+	medium: fiveMinsWalk,
+	large: fiveMinsWalk * 1.5,
 };
 
 // Near Balius Bar:
@@ -34,13 +34,13 @@ export const WALKING_DISTANCES = {
 // 0,004079759957
 
 export const themesTestData: StructuredPlanDayProfile[] = [
-  ...ThemesBestOf,
-  ...ThemesCategory,
-  ...ThemesFoodAndDrink,
-  ...ThemesLocation,
-  ...ThemesNightsOut,
-  ...ThemesRoute,
-  ...ThemesTrips,
+	...ThemesBestOf,
+	...ThemesCategory,
+	...ThemesFoodAndDrink,
+	...ThemesLocation,
+	...ThemesNightsOut,
+	...ThemesRoute,
+	...ThemesTrips,
 ];
 
 // ------

@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
-import { PostsService } from "../../../service/posts/posts.service";
+import { error, success } from "../../../middleware/apiResponse";
 import type { ReadPostInput } from "../../../schema/post/post.schema";
+import { PostsService } from "../../../service/posts/posts.service";
 
 /**
  * Get a blog post by ID - for CMS, regardless of status
@@ -11,22 +11,22 @@ import type { ReadPostInput } from "../../../schema/post/post.schema";
  * @returns
  */
 export default async function getAdminById(
-  req: Request<ReadPostInput["params"]>,
-  res: Response
+	req: Request<ReadPostInput["params"]>,
+	res: Response,
 ) {
-  const postId = req.params.postId;
-  if (!postId) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send(error("Please provide a post ID", res.statusCode));
-  }
+	const postId = req.params.postId;
+	if (!postId) {
+		return res
+			.status(StatusCodes.BAD_REQUEST)
+			.send(error("Please provide a post ID", res.statusCode));
+	}
 
-  const record = await PostsService.getById(postId);
+	const record = await PostsService.getById(postId);
 
-  if (!record) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send(error("Error getting item", res.statusCode));
-  }
-  return res.send(success(record));
+	if (!record) {
+		return res
+			.status(StatusCodes.NOT_FOUND)
+			.send(error("Error getting item", res.statusCode));
+	}
+	return res.send(success(record));
 }

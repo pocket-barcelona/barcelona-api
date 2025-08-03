@@ -1,57 +1,63 @@
-import { object, number, string, type TypeOf, date, optional } from "zod";
+import { number, object, optional, string, type TypeOf } from "zod";
 
 const payload = {
-  body: object({
-    //
-  }),
+	body: object({
+		//
+	}),
 };
 
 /** Filter the poi's by location etc */
 const filterByParams = {
-  body: object({
-    lat: optional(number({
-      required_error: "lat is required",
-      // invalid_type_error
-    })),
-    lng: optional(number({
-      required_error: "lng is required",
-      // invalid_type_error
-    })),
-    price: optional(number({
-      required_error: "price is required",
-    })),
-  }),
+	body: object({
+		lat: optional(
+			number({
+				required_error: "lat is required",
+				// invalid_type_error
+			}),
+		),
+		lng: optional(
+			number({
+				required_error: "lng is required",
+				// invalid_type_error
+			}),
+		),
+		price: optional(
+			number({
+				required_error: "price is required",
+			}),
+		),
+	}),
 };
 
 const params = {
-  params: object({
-    poiId: string({
-      required_error: "ID is required",
-      // invalid_type_error
-    }),
-  }),
+	params: object({
+		poiId: string({
+			required_error: "ID is required",
+			// invalid_type_error
+		}),
+	}),
 };
 
 export const filterByPoiSchema = object({
-  ...filterByParams,
+	...filterByParams,
 });
 
 export const createPoiSchema = object({
-  ...payload,
+	...payload,
 });
 
 export const readPoiSchema = object({
-  ...params,
+	...params,
 });
 
 // @todo
 export const updatePoiSchema = object({
-  ...payload,
-  ...params,
+	...payload,
+	...params,
 });
 
 export const deletePoiSchema = object({
-  ...params,
+	...params,
 });
 
 export type FilterByPoiInput = TypeOf<typeof filterByPoiSchema>;

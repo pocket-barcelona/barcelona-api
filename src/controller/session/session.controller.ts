@@ -7,7 +7,7 @@ import {
   refreshSession,
 } from "./handlers";
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: N/A
 export class SessionController {
   static createSessionHandler = (
     req: Request<unknown, unknown, SessionInput["body"]>,

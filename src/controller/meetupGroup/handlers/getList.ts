@@ -1,7 +1,6 @@
 import type { Request, Response } from "express";
-import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
-import type { UserDocument } from "../../../models/auth/user.model";
+import { error, success } from "../../../middleware/apiResponse";
 import { MeetupGroupService } from "../../../service/meetupGroup/meetupGroup.service";
 
 /**
@@ -10,14 +9,14 @@ import { MeetupGroupService } from "../../../service/meetupGroup/meetupGroup.ser
  * @param res
  * @returns
  */
-export default async function getList(req: Request, res: Response) {
-  const documents = await MeetupGroupService.getMeetupGroups();
+export default async function getList(_req: Request, res: Response) {
+	const documents = await MeetupGroupService.getMeetupGroups();
 
-  if (!documents) {
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(error("Error getting list", res.statusCode));
-  }
+	if (!documents) {
+		return res
+			.status(StatusCodes.INTERNAL_SERVER_ERROR)
+			.send(error("Error getting list", res.statusCode));
+	}
 
-  return res.send(success(documents));
+	return res.send(success(documents));
 }

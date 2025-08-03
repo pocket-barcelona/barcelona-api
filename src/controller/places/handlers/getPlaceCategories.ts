@@ -1,8 +1,7 @@
 import type { Request, Response } from "express";
-import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
+import { error, success } from "../../../middleware/apiResponse";
 import { PlacesService } from "../../../service/places/places.service";
-import { ReadPlaceInput } from "../../../schema/place/place.schema";
 
 /**
  * Get a list of categories
@@ -10,15 +9,14 @@ import { ReadPlaceInput } from "../../../schema/place/place.schema";
  * @param res
  * @returns
  */
-export default async function getPlaceCategories(req: Request, res: Response) {
-  
-  const records = await PlacesService.getPlaceCategories();
-  
-  if (!records) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send(error("Error getting list", res.statusCode));
-  }
+export default async function getPlaceCategories(_req: Request, res: Response) {
+	const records = await PlacesService.getPlaceCategories();
 
-  return res.send(success(records));
+	if (!records) {
+		return res
+			.status(StatusCodes.NOT_FOUND)
+			.send(error("Error getting list", res.statusCode));
+	}
+
+	return res.send(success(records));
 }

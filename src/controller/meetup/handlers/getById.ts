@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import type { ReadMeetupByIdInput } from "../../../schema/meetup/meetup.schema";
-import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
+import { error, success } from "../../../middleware/apiResponse";
+import type { ReadMeetupByIdInput } from "../../../schema/meetup/meetup.schema";
 import { MeetupService } from "../../../service/meetup/meetup.service";
 
 /**
@@ -12,18 +12,18 @@ import { MeetupService } from "../../../service/meetup/meetup.service";
  * @returns
  */
 export default async function getById(
-  req: Request<ReadMeetupByIdInput["params"]>,
-  res: Response,
-  loggedIn = true,
+	req: Request<ReadMeetupByIdInput["params"]>,
+	res: Response,
+	loggedIn = true,
 ) {
-  const { meetupId } = req.params;
-  const document = await MeetupService.getById({ meetupId, loggedIn });
+	const { meetupId } = req.params;
+	const document = await MeetupService.getById({ meetupId, loggedIn });
 
-  if (!document) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send(error("Item not found", res.statusCode));
-  }
+	if (!document) {
+		return res
+			.status(StatusCodes.NOT_FOUND)
+			.send(error("Item not found", res.statusCode));
+	}
 
-  return res.send(success(document));
+	return res.send(success(document));
 }

@@ -14,7 +14,7 @@ export default async function logoutSession(
     return SessionModel.update(existingSessionData, {
       ...logoutSessionData,
     });
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 }

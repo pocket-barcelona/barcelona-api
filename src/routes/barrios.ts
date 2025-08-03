@@ -1,7 +1,7 @@
-import express, { Express, Request, Response } from "express";
+import express from "express";
 import { BarriosController } from "../controller/barrios/barrios.controller";
-const router = express.Router()
 
+const router = express.Router();
 
 // ########### BARRIOS ###########
 router.get("/regions", [], BarriosController.getRegionsListHandler);

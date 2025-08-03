@@ -1,7 +1,6 @@
 import dynamoose from "dynamoose";
 import type { Item } from "dynamoose/dist/Item";
 
-
 export interface ResetPasswordInput {
   email: string;
   resetToken: string;

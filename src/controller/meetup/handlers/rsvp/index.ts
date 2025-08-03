@@ -1,9 +1,5 @@
-import createRsvp from './createRsvp';
-import updateRsvp from './updateRsvp';
-import hasRsvpdToMeetupAlready from './hasRsvpdToMeetupAlready';
+import createRsvp from "./createRsvp";
+import hasRsvpdToMeetupAlready from "./hasRsvpdToMeetupAlready";
+import updateRsvp from "./updateRsvp";
 
-export {
-  createRsvp,
-  hasRsvpdToMeetupAlready,
-  updateRsvp,
-}
+export { createRsvp, hasRsvpdToMeetupAlready, updateRsvp };

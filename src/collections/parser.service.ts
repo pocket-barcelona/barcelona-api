@@ -1,6 +1,5 @@
 import { parse } from 'csv-parse/sync';
 
-
 export function parserService<T>(fileContent: string, csvHeaders: string[]) {
   // init output
   let records: T[] = [];

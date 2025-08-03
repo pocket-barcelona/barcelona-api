@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
 import { error, success } from "../../../../middleware/apiResponse";
+import type { UserDocument } from "../../../../models/auth/user.model";
 import type { MeetupDocument } from "../../../../models/meetup.model";
 import type { CreateRsvpInput } from "../../../../schema/meetup/rsvp.schema";
-import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
-import type { UserDocument } from "../../../../models/auth/user.model";
 import { RsvpService } from "../../../../service/rsvp/rsvp.service";
 
 /**
@@ -13,47 +13,47 @@ import { RsvpService } from "../../../../service/rsvp/rsvp.service";
  * @param res
  */
 export default async function hasRsvpdToMeetupAlready(
-  req: Request<
-    CreateRsvpInput["params"],
-    never,
-    {
-      rsvpId: string;
-    }
-  >,
-  res: Response
+	req: Request<
+		CreateRsvpInput["params"],
+		never,
+		{
+			rsvpId: string;
+		}
+	>,
+	res: Response,
 ) {
-  // get event from middleware locals
-  const theEvent = res.locals.event as MeetupDocument;
+	// get event from middleware locals
+	const theEvent = res.locals.event as MeetupDocument;
 
-  const { rsvpId } = req.body;
+	const { rsvpId } = req.body;
 
-  // check if the user is logged in, manually
-  // responses can be from not-logged in users, so allow user ID to not exist
-  // @todo - make a middleware for this if needed again?
-  let userId = "";
-  if (res.locals?.user?.userId) {
-    const theUserId = (res.locals.user as UserDocument).userId.toString();
-    if (theUserId) {
-      userId = theUserId;
-    }
-  }
+	// check if the user is logged in, manually
+	// responses can be from not-logged in users, so allow user ID to not exist
+	// @todo - make a middleware for this if needed again?
+	let userId = "";
+	if (res.locals?.user?.userId) {
+		const theUserId = (res.locals.user as UserDocument).userId.toString();
+		if (theUserId) {
+			userId = theUserId;
+		}
+	}
 
-  const matchedResponseId = await RsvpService.hasRsvpdToMeetupYet(
-    theEvent,
-    userId,
-    rsvpId
-  );
+	const matchedResponseId = await RsvpService.hasRsvpdToMeetupYet(
+		theEvent,
+		userId,
+		rsvpId,
+	);
 
-  return res.send(
-    success<{
-      responseId: string | null;
-    }>(
-      {
-        responseId: matchedResponseId ? matchedResponseId : null,
-      },
-      {
-        statusCode: res.statusCode,
-      }
-    )
-  );
+	return res.send(
+		success<{
+			responseId: string | null;
+		}>(
+			{
+				responseId: matchedResponseId ? matchedResponseId : null,
+			},
+			{
+				statusCode: res.statusCode,
+			},
+		),
+	);
 }

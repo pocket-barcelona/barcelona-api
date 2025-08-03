@@ -4,7 +4,7 @@ import { TimeRecommendedEnum } from '../../../models/enums/timerecommended.enum'
 import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
 import {
   PlanThemeEnum,
-  StructuredPlanDayProfile,
+  type StructuredPlanDayProfile,
 } from "../../../models/planThemes";
 import { CENTRAL_BARRIO_IDS } from './theme-category';
 

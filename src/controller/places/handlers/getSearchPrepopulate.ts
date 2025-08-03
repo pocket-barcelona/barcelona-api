@@ -1,9 +1,8 @@
 import type { Request, Response } from "express";
-import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
+import { error, success } from "../../../middleware/apiResponse";
+import type { PlaceDocument } from "../../../models/place.model";
 import { PlacesService } from "../../../service/places/places.service";
-import { ReadPlaceInput } from "../../../schema/place/place.schema";
-import type { PlaceDocument } from '../../../models/place.model';
 
 /**
  * Get a list of place Ids for searching
@@ -11,17 +10,21 @@ import type { PlaceDocument } from '../../../models/place.model';
  * @param res
  * @returns
  */
-export default async function getSearchPrepopulate(req: Request, res: Response) {
-  
-  const scanResp = await PlacesService.getSearchPrepopulate();
-  const records: PlaceDocument[] = scanResp ? scanResp.toJSON() as PlaceDocument[] : [];
-  
-  if (!records) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send(error("Error getting items", res.statusCode));
-  }
-  const mappedRecords = PlacesService.getMappedSearchPlace(records);
+export default async function getSearchPrepopulate(
+	_req: Request,
+	res: Response,
+) {
+	const scanResp = await PlacesService.getSearchPrepopulate();
+	const records: PlaceDocument[] = scanResp
+		? (scanResp.toJSON() as PlaceDocument[])
+		: [];
 
-  return res.send(success(mappedRecords));
+	if (!records) {
+		return res
+			.status(StatusCodes.NOT_FOUND)
+			.send(error("Error getting items", res.statusCode));
+	}
+	const mappedRecords = PlacesService.getMappedSearchPlace(records);
+
+	return res.send(success(mappedRecords));
 }

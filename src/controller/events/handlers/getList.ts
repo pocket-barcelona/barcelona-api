@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { error, success } from "../../../middleware/apiResponse";
 import { StatusCodes } from "http-status-codes";
+import { error, success } from "../../../middleware/apiResponse";
 import { EventsService } from "../../../service/events/events.service";
 
 /**
@@ -10,14 +10,13 @@ import { EventsService } from "../../../service/events/events.service";
  * @returns
  */
 export default async function getList(req: Request, res: Response) {
-  
-  const data = await EventsService.getList();
+	const data = await EventsService.getList();
 
-  if (!data) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send(error("Error getting list", res.statusCode));
-  }
+	if (!data) {
+		return res
+			.status(StatusCodes.NOT_FOUND)
+			.send(error("Error getting list", res.statusCode));
+	}
 
-  return res.send(success(data));
+	return res.send(success(data));
 }

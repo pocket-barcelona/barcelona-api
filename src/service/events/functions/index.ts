@@ -1,7 +1,4 @@
-import getListHandler from './getList';
-import getByIdHandler from './getById';
+import getByIdHandler from "./getById";
+import getListHandler from "./getList";
 
-export {
-  getListHandler,
-  getByIdHandler
- };
+export { getListHandler, getByIdHandler };

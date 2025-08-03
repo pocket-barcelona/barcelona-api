@@ -7,8 +7,9 @@ import { TeenagerEnum } from "../models/enums/teenager.enum";
 import { TimeRecommendedEnum } from "../models/enums/timerecommended.enum";
 import { TimeOfDayEnum } from "../models/enums/tod.enum";
 import type { PlaceInput } from "../models/place.model";
+// biome-ignore lint/correctness/noUnusedImports: TODO
 import { type PlanBuilderInput, StructuredPlanResponse } from "../models/plan.model";
-import { PlanThemeEnum } from "../models/planThemes";
+// import { PlanThemeEnum } from "../models/planThemes";
 
 /** A Fake input for creating a structured plan */
 export const TEST_INPUT_PLAN_1: PlanBuilderInput = {
