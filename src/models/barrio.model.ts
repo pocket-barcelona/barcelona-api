@@ -18,7 +18,7 @@ export interface BarrioInput {
   barrioCentrality: number;
 }
 
-export interface BarrioDocument extends BarrioInput, Item {
+export interface BarrioDocument extends Item, BarrioInput {
   createdAt: Date;
   updatedAt: Date;
 }

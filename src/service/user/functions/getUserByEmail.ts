@@ -3,7 +3,7 @@ import lodash from "lodash";
 const { omit } = lodash;
 
 /**
- * Check if a user exists in the database, matching the given email
+ * Return user if exists in the database, matching the given email
  * @param user
  * @param revealPasswordHash If true, the password hash string will be included in the returned document
  * @returns

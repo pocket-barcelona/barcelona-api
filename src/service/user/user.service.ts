@@ -37,7 +37,7 @@ export class UserService {
   ): Promise<boolean> => confirmEmailAddressHandler(input);
 
   static createUser = async (
-    input: UserInput
+    input: Partial<UserInput>
   ): Promise<UserDocument | null | string> => createUserHandler(input);
 
   static forgotPassword = (

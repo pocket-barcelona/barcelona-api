@@ -8,7 +8,7 @@ export interface ResetPasswordInput {
   resetTimestamp: number;
 }
 
-export interface ResetPasswordDocument extends ResetPasswordInput, Item {
+export interface ResetPasswordDocument extends Item, ResetPasswordInput {
   createdAt: Date;
   updatedAt: Date;
 }

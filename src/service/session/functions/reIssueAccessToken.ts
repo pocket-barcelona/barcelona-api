@@ -26,7 +26,7 @@ export enum ReissueAccessTokenErrorEnum {
  export default async function reIssueAccessToken({ refreshToken }: Pick<SessionTokenModel, 'refreshToken'>): Promise<string | ReissueAccessTokenErrorEnum> {
     
   // decode token
-  const { decoded, valid, expired } = SessionUtils.verifyJwt(refreshToken, "refreshTokenPublicKey");
+  const { decoded, valid, expired } = await SessionUtils.verifyJwt(refreshToken, "refreshTokenPublicKey");
   
   // refresh token is not valid or has expired
   if (valid === false) return ReissueAccessTokenErrorEnum.InvalidRefreshToken;
@@ -72,7 +72,7 @@ export enum ReissueAccessTokenErrorEnum {
      * Note: must be same as!
      * @link {SessionController.createUserSessionHandler}
      */
-    const accessToken = SessionUtils.signJwt(
+    const accessToken = await SessionUtils.signJwt(
       { ...user, ...sessionExpiry, session: session },
       "accessTokenPrivateKey",
       // { expiresIn: `${config.accessTokenTtl}m` } // e.g. "30m" (30 minutes)
@@ -80,7 +80,7 @@ export enum ReissueAccessTokenErrorEnum {
 
     if (!accessToken) return ReissueAccessTokenErrorEnum.AuthServerError; // error signing new jwt token
   
-    return accessToken;
+    return accessToken ?? '';
 
   } catch (error) {
     return ReissueAccessTokenErrorEnum.AuthServerError;

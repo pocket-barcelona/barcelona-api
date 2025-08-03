@@ -1,6 +1,20 @@
 # Barcelona API - NodeJS/Express, DynamoDB, Dynamoose, Zod and Typescript
 
 <details>
+  <summary>Quick Start</summary>
+
+  
+  ```ts
+  # waiting for watch command
+  yarn run build
+  # runs app locally
+  yarn start
+
+  ```
+
+</details>
+
+<details>
   <summary>Codebase Intro</summary>
   
   ---

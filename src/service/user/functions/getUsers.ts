@@ -1,11 +1,12 @@
 import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import UserModel, { type UserDocument } from "../../../models/auth/user.model";
 
-type UserListAttributesType = keyof Pick<UserDocument, 'name' | 'email' | 'createdAt'>;
+type UserListAttributesType = keyof Pick<UserDocument, 'firstname' | 'lastname' | 'email' | 'createdAt'>;
 
 export default async function getUsers(): Promise<ScanResponse<UserDocument> | null> {
   const scanAttributes: UserListAttributesType[] = [
-    "name",
+    "firstname",
+    "lastname",
     "email",
     "createdAt",
   ];

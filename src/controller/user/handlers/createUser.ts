@@ -22,6 +22,7 @@ export default async function createUser(
     );
   }
 
+  // Build DB user here
   const newUser = await UserService.createUser(req.body);
 
   if (!newUser) {
@@ -35,8 +36,9 @@ export default async function createUser(
       .json(error(newUser, res.statusCode));
   }
 
-  // send the user a welcome email
-  const sentEmail = await UserService.sendWelcomeEmail(newUser);
+  // send the user a welcome email...
+  // @requires send grid
+  // const sentEmail = await UserService.sendWelcomeEmail(newUser);
   // ignore success of sending the email - could fail in theory
 
   return res.send(

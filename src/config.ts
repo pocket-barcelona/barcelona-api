@@ -36,6 +36,8 @@ refreshTokenPublicKey: `-----BEGIN PUBLIC KEY-----
 [AWS CONFIG VAR]MIGfM
 QIDAQAB
 -----END PUBLIC KEY-----`,
+  JWT_ISSUER: 'urn:example:issuer',
+  JWT_AUDIENCE: 'urn:example:audience',
   /** The name of the header which holds the Bearer access token */
   HEADER_AUTHORIZATION: 'Authorization',
   /** The name of the header which holds the refresh token */

@@ -1,6 +1,5 @@
 import dynamoose from "dynamoose";
 import type { Item } from "dynamoose/dist/Item";
-import type { ImageAssets } from './imageAssets';
 
 
 export interface EventInput {
@@ -40,7 +39,7 @@ export interface EventInput {
   eventNotes: string;
 }
 
-export interface EventDocument extends EventInput, Item {
+export interface EventDocument extends Item, EventInput {
   createdAt: Date;
   updatedAt: Date;
 }

@@ -62,18 +62,18 @@ export default async function createSession(
   };
 
   // create a signed access token
-  const accessToken = SessionUtils.signJwt(
+  const accessToken = await SessionUtils.signJwt(
     accessTokenData,
     "accessTokenPrivateKey"
     // { expiresIn: `${config.accessTokenTtl}m` } // e.g. "30m" (30 minutes)
-  );
+  ) ?? '';
 
   // create a signed refresh token
-  const refreshToken = SessionUtils.signJwt(
+  const refreshToken = await SessionUtils.signJwt(
     refreshTokenData,
     "refreshTokenPrivateKey"
     // { expiresIn: `${config.refreshTokenTtl}m` } // e.g. 1 year
-  );
+  ) ?? '';
 
   if (!accessToken || !refreshToken) {
     return res

@@ -100,7 +100,7 @@ export interface PostInput {
   ogImage: string;
 }
 
-export interface PostDocument extends PostInput, Item {
+export interface PostDocument extends Item, PostInput {
   createdAt: Date;
   updatedAt: Date;
 }

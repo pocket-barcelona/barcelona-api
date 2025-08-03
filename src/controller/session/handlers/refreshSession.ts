@@ -29,7 +29,7 @@ const { get } = lodash;
       .send(error("Invalid or no access token supplied", res.statusCode));
   }
   
-  const { decoded, expired, valid } = SessionUtils.verifyJwt(accessToken, "accessTokenPublicKey");
+  const { decoded, expired, valid } = await SessionUtils.verifyJwt(accessToken, "accessTokenPublicKey");
 
   if (!valid) {
     return res
@@ -49,7 +49,7 @@ const { get } = lodash;
       .send(error("Invalid or no refresh token supplied", res.statusCode));
   }
 
-  const { expired: expiredRefresh, valid: validRefresh } = SessionUtils.verifyJwt(refreshToken, "refreshTokenPublicKey");
+  const { expired: expiredRefresh, valid: validRefresh } = await SessionUtils.verifyJwt(refreshToken, "refreshTokenPublicKey");
 
   if (!validRefresh) {
     return res
