@@ -7,12 +7,12 @@
 import dynamoose from "dynamoose";
 import type { Item } from "dynamoose/dist/Item";
 import type { CategoryIdEnum } from "./enums/categoryid.enum";
-import { ChildrenEnum } from "./enums/children.enum";
-import { CommitmentEnum } from "./enums/commitment.enum";
-import { PriceEnum } from "./enums/price.enum";
+// import { ChildrenEnum } from "./enums/children.enum";
+// import { CommitmentEnum } from "./enums/commitment.enum";
+// import { PriceEnum } from "./enums/price.enum";
 import type { RequiresBookingEnum } from "./enums/requiresbooking.enum";
-import { TeenagerEnum } from "./enums/teenager.enum";
-import { TimeRecommendedEnum } from "./enums/timerecommended.enum";
+// import { TeenagerEnum } from "./enums/teenager.enum";
+// import { TimeRecommendedEnum } from "./enums/timerecommended.enum";
 import type { TimeOfDayEnum } from "./enums/tod.enum";
 
 export interface PoiInput {

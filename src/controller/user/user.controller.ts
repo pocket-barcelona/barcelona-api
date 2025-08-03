@@ -21,7 +21,7 @@ import {
 	updateUser,
 } from "./handlers";
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: TODO
 export class UserController {
 	// static getListHandler = (req: Request, res: Response) =>
 
