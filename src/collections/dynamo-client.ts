@@ -25,7 +25,7 @@
 //     TableName: string;
 //     Item: TRecord;
 //   }, theRecord: TRecord, callback?: (err: ServiceException, data: any) => any) {
-    
+
 //     docClient.put(params, (err, data) => {
 //       if (err) {
 //         console.error(

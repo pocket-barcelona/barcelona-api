@@ -1,24 +1,26 @@
-import { PostDocument, PostInput } from '../../models/post.model';
-import { CreatePostInput, UpdatePostInput } from "../../schema/post/post.schema";
-import { getListHandler, getByIdHandler, createPostHandler, updatePostHandler, getAdminListHandler, getAdminByIdHandler } from "./functions";
+import type { PostDocument, PostInput } from '../../models/post.model.js';
+import type { CreatePostInput, UpdatePostInput } from '../../schema/post/post.schema.js';
+import {
+	createPostHandler,
+	getAdminByIdHandler,
+	getAdminListHandler,
+	getByIdHandler,
+	getListHandler,
+	updatePostHandler,
+} from './functions/index.js';
 
 export class PostsService {
-  static getList = async () => getListHandler();
-  static getAdminList = async () => getAdminListHandler();
-  
-  static getById = async (
-    postId: PostDocument["postId"]
-  ) => getByIdHandler(postId);
+	static getList = async () => getListHandler();
+	static getAdminList = async () => getAdminListHandler();
 
-  static getAdminById = async (
-    postId: PostDocument["postId"]
-  ) => getAdminByIdHandler(postId);
+	static getById = async (postId: PostDocument['postId']) => getByIdHandler(postId);
 
-  static createPost = async (input: CreatePostInput["body"]) =>
-    createPostHandler(input);
-  
-  static updatePost = async (
-    postId: PostInput["postId"],
-    input: UpdatePostInput["body"]
-  ): Promise<PostDocument | null> => updatePostHandler(postId, input);
+	static getAdminById = async (postId: PostDocument['postId']) => getAdminByIdHandler(postId);
+
+	static createPost = async (input: CreatePostInput['body']) => createPostHandler(input);
+
+	static updatePost = async (
+		postId: PostInput['postId'],
+		input: UpdatePostInput['body']
+	): Promise<PostDocument | null> => updatePostHandler(postId, input);
 }

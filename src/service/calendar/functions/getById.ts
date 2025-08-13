@@ -1,17 +1,15 @@
-import { config } from "../../../config";
+import { config } from '../../../config.js';
 import {
 	type CalendarEvent,
 	type CalendarEventDirectus,
 	type DirectusResponse,
 	mapHeadlessCalendarItem,
-} from "../../../models/calendar.type";
+} from '../../../models/calendar.type.js';
 
 /**
  * Get a calendar event by ID from Headless CMS
  */
-export default async function (
-	id: CalendarEvent["id"],
-): Promise<CalendarEvent | null> {
+export default async function (id: CalendarEvent['id']): Promise<CalendarEvent | null> {
 	try {
 		// fetch from Directus
 		const endpoint = `${config.HEADLESS_STUB}/items/events/${id}`;

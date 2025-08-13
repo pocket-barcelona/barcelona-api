@@ -1,39 +1,32 @@
-import type { Request, Response } from "express";
+import type { Request, Response } from 'express';
 import type {
 	CreateMeetupGroupInput,
 	// DeleteMeetupGroupInput,
 	UpdateMeetupGroupInput,
-} from "../../schema/meetupGroup/meetupGroup.schema";
+} from '../../schema/meetupGroup/meetupGroup.schema.js';
 import {
 	createMeetupGroup,
 	// deleteMeetupGroup,
 	getMeetupGroupById,
 	getMeetupGroupsList,
 	updateMeetupGroup,
-} from "./handlers";
+} from './handlers/index.js';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: N/A
 export class MeetupGroupController {
 	static createMeetupGroupHandler = (
-		req: Request<unknown, unknown, CreateMeetupGroupInput["body"]>,
-		res: Response,
+		req: Request<unknown, unknown, CreateMeetupGroupInput['body']>,
+		res: Response
 	) => createMeetupGroup(req, res);
 
-	static getMeetupGroupHandler = (
-		req: Request<UpdateMeetupGroupInput["params"]>,
-		res: Response,
-	) => getMeetupGroupById(req, res); // user logged in!
+	static getMeetupGroupHandler = (req: Request<UpdateMeetupGroupInput['params']>, res: Response) =>
+		getMeetupGroupById(req, res); // user logged in!
 
-	static getMeetupGroupListHandler = (req: Request, res: Response) =>
-		getMeetupGroupsList(req, res);
+	static getMeetupGroupListHandler = (req: Request, res: Response) => getMeetupGroupsList(req, res);
 
 	static updateMeetupGroupHandler = (
-		req: Request<
-			UpdateMeetupGroupInput["params"],
-			unknown,
-			UpdateMeetupGroupInput["body"]
-		>,
-		res: Response,
+		req: Request<UpdateMeetupGroupInput['params'], unknown, UpdateMeetupGroupInput['body']>,
+		res: Response
 	) => updateMeetupGroup(req, res);
 
 	// static deleteMeetupGroupHandler = (

@@ -19,7 +19,6 @@
 //   blog_author_avatar: string;
 //   blog_author_nickname: string;
 
-
 //   constructor(data?: any) {
 //     if (data.blog_published) {
 //       this.blog_published_datetime = new Date(data.blog_published);

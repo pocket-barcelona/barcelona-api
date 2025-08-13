@@ -1,16 +1,13 @@
-import { v4 as uuidv4 } from "uuid";
-import {
-	type MeetupDocument,
-	TicketTypeEnum,
-} from "../../../models/meetup.model";
-import { type MeetupRsvpModel, rsvpSchema } from "../../../models/rsvp.model";
-import type { CreateRsvpInput } from "../../../schema/meetup/rsvp.schema";
-import logger from "../../../utils/logger";
+import { v4 as uuidv4 } from 'uuid';
+import { type MeetupDocument, TicketTypeEnum } from '../../../models/meetup.model.js';
+import { type MeetupRsvpModel, rsvpSchema } from '../../../models/rsvp.model.js';
+import type { CreateRsvpInput } from '../../../schema/meetup/rsvp.schema.js';
+import logger from '../../../utils/logger.js';
 
 export default async function createRsvp(
 	theEvent: MeetupDocument,
 	input: CreateRsvpInput,
-	userId: string,
+	userId: string
 ): Promise<MeetupRsvpModel | null> {
 	const rsvpId = uuidv4();
 
@@ -21,10 +18,10 @@ export default async function createRsvp(
 		rsvpId,
 		response: input.body.response, // all guest share the same rsvp status
 		name: theGuest.name,
-		lastname: theGuest.lastname ?? "",
-		mobile: theGuest.mobile ?? "",
+		lastname: theGuest.lastname ?? '',
+		mobile: theGuest.mobile ?? '',
 		avatar: theGuest.avatar,
-		comment: theGuest.comment ?? "",
+		comment: theGuest.comment ?? '',
 		userId: userId,
 		rsvpTimestampInitial: Date.now(),
 		rsvpTimestampUpdated: Date.now(),

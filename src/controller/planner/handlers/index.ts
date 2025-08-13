@@ -1,7 +1,4 @@
-import createRandomPlan from './createRandomPlan';
-import createStructuredPlan from './createStructuredPlan';
+import createRandomPlan from './createRandomPlan.js';
+import createStructuredPlan from './createStructuredPlan.js';
 
-export {
-  createRandomPlan,
-  createStructuredPlan,
-}
+export { createRandomPlan, createStructuredPlan };

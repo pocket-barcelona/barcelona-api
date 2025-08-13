@@ -1,7 +1,7 @@
-import { readdir, mkdir } from "node:fs/promises";
-import { statSync } from "node:fs";
-import * as path from "node:path";
-import * as sharp from "sharp";
+import { statSync } from 'node:fs';
+import { mkdir, readdir } from 'node:fs/promises';
+import * as path from 'node:path';
+import * as sharp from 'sharp';
 
 // RUN like:
 // node ./src/processImages/script.js
@@ -54,113 +54,109 @@ import * as sharp from "sharp";
  * - XLarge: 1200 x 1200 px
  */
 
-
 // if true, no processing will happen, only console logging
 const DRY_RUN = false;
 // the list of files to be processed - for logging only
 const DRY_RUN_FILE_LIST = [];
-const ignoreFiles = [".DS_Store"];
+const ignoreFiles = ['.DS_Store'];
 // const srcFolder = "./../Pictures/PocketBarcelona/app_images_dont_rename/";
 const SOURCE_FOLDER =
-  "/Volumes/DAZZLE_FILES/BCN Website Photos/Barcelona_Barrios_And_Places/Places/";
+	'/Volumes/DAZZLE_FILES/BCN Website Photos/Barcelona_Barrios_And_Places/Places/';
 const DESTINATION_FOLDER =
-  "/Volumes/DAZZLE_FILES/BCN Website Photos/Barcelona_Barrios_And_Places/PlacesConverted/";
+	'/Volumes/DAZZLE_FILES/BCN Website Photos/Barcelona_Barrios_And_Places/PlacesConverted/';
 
 const SKIPPED_FOLDERS = []; // folders which don't have a _poster.jpg in them
 const RESIZE_FOLDERS = [
-  {
-    name: "thumb",
-    width: 64,
-    height: 64
-  },
-  {
-    name: "small",
-    width: 128,
-    height: 128
-  },
-  {
-    name: "medium",
-    width: 400,
-    height: 400
-  },
-  {
-    name: "large",
-    width: 720,
-    height: 720
-  },
-  // {
-  //   name: "xlarge",
-  //   width: 1200,
-  //   height: 1200
-  // }
+	{
+		name: 'thumb',
+		width: 64,
+		height: 64,
+	},
+	{
+		name: 'small',
+		width: 128,
+		height: 128,
+	},
+	{
+		name: 'medium',
+		width: 400,
+		height: 400,
+	},
+	{
+		name: 'large',
+		width: 720,
+		height: 720,
+	},
+	// {
+	//   name: "xlarge",
+	//   width: 1200,
+	//   height: 1200
+	// }
 ];
 
 if (DRY_RUN) {
-  console.warn('DRY RUN. Will process the following files:');
+	console.warn('DRY RUN. Will process the following files:');
 }
 
-
 const folders = await readdir(SOURCE_FOLDER);
-
 
 // let counter = 0;
 
 for (const folder of folders) {
-  if (ignoreFiles.indexOf(folder) > -1) {
-    continue;
-  }
-  const name = path.join(SOURCE_FOLDER, folder);
-  if (statSync(name).isDirectory()) {
-    processFolder(folder);
-    // break; // do only 1!
-  }
-  
-  // testing
-  // counter += 1;
-  // if (counter > 5) {
-  //   break;
-  // }
+	if (ignoreFiles.indexOf(folder) > -1) {
+		continue;
+	}
+	const name = path.join(SOURCE_FOLDER, folder);
+	if (statSync(name).isDirectory()) {
+		processFolder(folder);
+		// break; // do only 1!
+	}
+
+	// testing
+	// counter += 1;
+	// if (counter > 5) {
+	//   break;
+	// }
 }
 
 if (DRY_RUN_FILE_LIST.length > 0) {
-  console.warn(`DRY RUN: ${DRY_RUN_FILE_LIST.map(f => `In: ${f.in}. Out: ${f.out}`).join("\n")}`);
-  console.warn(`DRY RUN TOTAL: ${DRY_RUN_FILE_LIST.length} files`);
-  console.log('--------------------------------------');
+	console.warn(`DRY RUN: ${DRY_RUN_FILE_LIST.map((f) => `In: ${f.in}. Out: ${f.out}`).join('\n')}`);
+	console.warn(`DRY RUN TOTAL: ${DRY_RUN_FILE_LIST.length} files`);
+	console.log('--------------------------------------');
 }
 if (SKIPPED_FOLDERS.length > 0) {
-  console.warn(`Skipped folders: ${SKIPPED_FOLDERS.join("\n")}`);
-  console.warn(`Skipped folders total: ${SKIPPED_FOLDERS.length} folders`);
+	console.warn(`Skipped folders: ${SKIPPED_FOLDERS.join('\n')}`);
+	console.warn(`Skipped folders total: ${SKIPPED_FOLDERS.length} folders`);
 }
 
 async function processFolder(folderName) {
-  
-  const srcFolderName = path.join(SOURCE_FOLDER, folderName);
-  if (!(statSync(srcFolderName).isDirectory())) {
-    return;
-  }
-  
-  // 1. go in this folder
-  // 2. find _poster.jpg
-  // 3. output 1_poster.avif
-  const file = path.join(srcFolderName, "_poster.jpg");
-  let posterExists = false;
-  try {
-    posterExists = statSync(file).isFile();
-  } catch (error) {
-    SKIPPED_FOLDERS.push(srcFolderName);
-  }
-  if (!posterExists) {
-    console.warn(`Poster image does not exist for: ${file}`);
-    return;
-  }
+	const srcFolderName = path.join(SOURCE_FOLDER, folderName);
+	if (!statSync(srcFolderName).isDirectory()) {
+		return;
+	}
 
-  // get ID from the folder name, which is like: "1_badalona_beach"
-  const id = folderName.split("_")[0];
-  if (!Number.isInteger(Number(id))) {
-    console.warn(`ID is not numeric: ${folderName}, ${id}. Stopping`);
-    return;
-  }
-  processImages(Number(id), file, srcFolderName, "_poster.jpg", "_poster");
+	// 1. go in this folder
+	// 2. find _poster.jpg
+	// 3. output 1_poster.avif
+	const file = path.join(srcFolderName, '_poster.jpg');
+	let posterExists = false;
+	try {
+		posterExists = statSync(file).isFile();
+	} catch (error) {
+		SKIPPED_FOLDERS.push(srcFolderName);
+	}
+	if (!posterExists) {
+		console.warn(`Poster image does not exist for: ${file}`);
+		return;
+	}
+
+	// get ID from the folder name, which is like: "1_badalona_beach"
+	const id = folderName.split('_')[0];
+	if (!Number.isInteger(Number(id))) {
+		console.warn(`ID is not numeric: ${folderName}, ${id}. Stopping`);
+		return;
+	}
+	processImages(Number(id), file, srcFolderName, '_poster.jpg', '_poster');
 }
 
 /**
@@ -172,66 +168,58 @@ async function processFolder(folderName) {
  * @param {string} newFilenameWithoutExtension _poster
  */
 async function processImages(
-  id,
-  file,
-  sourceFolder,
-  originalFilename,
-  newFilenameWithoutExtension
+	id,
+	file,
+	sourceFolder,
+	originalFilename,
+	newFilenameWithoutExtension
 ) {
+	//   const metaData = await sharp.default(file).metadata();
+	//   console.log(metaData);
 
-  //   const metaData = await sharp.default(file).metadata();
-  //   console.log(metaData);
+	for (const rule of RESIZE_FOLDERS) {
+		const destinationFolder = path.join(DESTINATION_FOLDER, rule.name);
 
-  for (const rule of RESIZE_FOLDERS) {
-    
-    const destinationFolder = path.join(
-      DESTINATION_FOLDER,
-      rule.name
-    );
+		// @todo - make folder if not exists
 
-    // @todo - make folder if not exists
+		// await mkdir(folder, { recursive: true });
 
-    // await mkdir(folder, { recursive: true });
-
-    exportImage({
-      width: rule.width,
-      height: rule.height,
-      inputFile: file,
-      outputFilePath: destinationFolder,
-      outputFileName: `${id}_poster.avif`
-    })
-  }
+		exportImage({
+			width: rule.width,
+			height: rule.height,
+			inputFile: file,
+			outputFilePath: destinationFolder,
+			outputFileName: `${id}_poster.avif`,
+		});
+	}
 }
 
 async function exportImage(settings) {
-  const { width, height, inputFile, outputFilePath, outputFileName } = settings;
-  
-  const outputFile = path.join(
-    outputFilePath,
-    outputFileName
-  );
-  
-  if (DRY_RUN) {
-    DRY_RUN_FILE_LIST.push({ in: inputFile, out: outputFile });
-    return;
-  }
+	const { width, height, inputFile, outputFilePath, outputFileName } = settings;
 
-  try {
-    await sharp
-      .default(inputFile)
-      .rotate() // auto orient image based on EXIF!
-      .resize({
-        width: width,
-        height: height,
-      })
-      .avif({
-        // quality: 60
-        effort: 7
-      })
-      .toFile(outputFile);
+	const outputFile = path.join(outputFilePath, outputFileName);
 
-      console.log(`Processed: ${outputFile}`);
-  } catch (error) {
-    console.log(error);
-  }
+	if (DRY_RUN) {
+		DRY_RUN_FILE_LIST.push({ in: inputFile, out: outputFile });
+		return;
+	}
+
+	try {
+		await sharp
+			.default(inputFile)
+			.rotate() // auto orient image based on EXIF!
+			.resize({
+				width: width,
+				height: height,
+			})
+			.avif({
+				// quality: 60
+				effort: 7,
+			})
+			.toFile(outputFile);
+
+		console.log(`Processed: ${outputFile}`);
+	} catch (error) {
+		console.log(error);
+	}
 }

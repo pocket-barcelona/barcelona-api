@@ -1,21 +1,18 @@
-import { CategoryIdEnum } from "../../../models/enums/categoryid.enum";
+import { CategoryIdEnum } from '../../../models/enums/categoryid.enum.js';
 import {
 	DrinkCategoryEnum,
 	FoodCategoryEnum,
 	FoodCuisinesEnum,
-} from "../../../models/enums/foodcategory.enum";
-import { TimeOfDayEnum } from "../../../models/enums/tod.enum";
-import {
-	PlanThemeEnum,
-	type StructuredPlanDayProfile,
-} from "../../../models/planThemes";
+} from '../../../models/enums/foodcategory.enum.js';
+import { TimeOfDayEnum } from '../../../models/enums/tod.enum.js';
+import { PlanThemeEnum, type StructuredPlanDayProfile } from '../../../models/planThemes.js';
 
 const themes: StructuredPlanDayProfile[] = [
 	{
 		id: 601,
 		theme: PlanThemeEnum.FoodAndDrink,
 		themeTod: TimeOfDayEnum.Day,
-		name: "Brunch and the Beach",
+		name: 'Brunch and the Beach',
 		// [Poblenou/Born/Gothic/Raval]
 		barrioIds: [79, 13, 12, 11], //@todo - no results sometimes as waiting for restaurants
 		barrioIdsChooseAmount: 1,
@@ -43,7 +40,7 @@ const themes: StructuredPlanDayProfile[] = [
 		id: 603,
 		theme: PlanThemeEnum.FoodAndDrink,
 		themeTod: TimeOfDayEnum.Night,
-		name: "Enjoy Wine & Tapas in Central Barcelona",
+		name: 'Enjoy Wine & Tapas in Central Barcelona',
 		bestTod: TimeOfDayEnum.Night,
 		drinkCategories: [
 			DrinkCategoryEnum.CraftBeer,

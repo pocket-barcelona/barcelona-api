@@ -1,55 +1,55 @@
-import MeetupModel, { type MeetupDocument, type MeetupItem } from "../../../models/meetup.model";
-import logger from '../../../utils/logger';
+import MeetupModel, { type MeetupDocument, type MeetupItem } from '../../../models/meetup.model.js';
+import logger from '../../../utils/logger.js';
 
 export default async function getById(
-  input: Pick<MeetupItem, "meetupId"> & { loggedIn?: boolean; }
+	input: Pick<MeetupItem, 'meetupId'> & { loggedIn?: boolean }
 ): Promise<MeetupDocument | Partial<MeetupDocument> | null> {
-  const id = input.meetupId.toString()
-  try {
-    const result = await MeetupModel.get(id).catch((err) => {
-      logger.warn(err);
-      return null;
-    });
+	const id = input.meetupId.toString();
+	try {
+		const result = await MeetupModel.get(id).catch((err) => {
+			logger.warn(err);
+			return null;
+		});
 
-    // const idField: keyof MeetupGroupItem = 'id';
-    // const groupFound = result
-    //   ? await MeetupGroupModel.scan()
-    //       .where(idField)
-    //       .eq(result.groupId)
-    //       .exec()
-    //       .catch((err: unknown) => {
-    //         // logger.warn(err);
-    //         return null;
-    //       })
-    //   : null;
+		// const idField: keyof MeetupGroupItem = 'id';
+		// const groupFound = result
+		//   ? await MeetupGroupModel.scan()
+		//       .where(idField)
+		//       .eq(result.groupId)
+		//       .exec()
+		//       .catch((err: unknown) => {
+		//         // logger.warn(err);
+		//         return null;
+		//       })
+		//   : null;
 
-    // if (result) {
-    //   result.hostName = groupFound ? groupFound[0].firstname : '';
-    //   result.hostAvatarColor = groupFound ? groupFound[0].avatarColor : '';
-      
-    //   result.pollResults = result.pollQuestions.map((question) => ({
-    //     questionContent: question.content,
-    //     answers: question.possibleAnswers.map((possibleAnswer) => ({
-    //       answerContent: possibleAnswer.content,
-    //       answerCreatedBy: result.responses.find(response => response.responseId === possibleAnswer.addedByResponseId)?.attendeeName ?? undefined,
-    //       votes: question.answers
-    //         .filter((answer) => (answer.answers.includes(possibleAnswer.id)))
-    //         .map(answer => result.responses.find(response => response.responseId === answer.responseId))
-    //         .map((response) => ({
-    //           name: response?.attendeeName ?? '',
-    //           avatarColor: response?.attendeeAvatarColor
-    //         }))
-    //     }))
-    //   }));      
-    // } 
+		// if (result) {
+		//   result.hostName = groupFound ? groupFound[0].firstname : '';
+		//   result.hostAvatarColor = groupFound ? groupFound[0].avatarColor : '';
 
-    // timer({ ...metricsLabels, success: "true" });
+		//   result.pollResults = result.pollQuestions.map((question) => ({
+		//     questionContent: question.content,
+		//     answers: question.possibleAnswers.map((possibleAnswer) => ({
+		//       answerContent: possibleAnswer.content,
+		//       answerCreatedBy: result.responses.find(response => response.responseId === possibleAnswer.addedByResponseId)?.attendeeName ?? undefined,
+		//       votes: question.answers
+		//         .filter((answer) => (answer.answers.includes(possibleAnswer.id)))
+		//         .map(answer => result.responses.find(response => response.responseId === answer.responseId))
+		//         .map((response) => ({
+		//           name: response?.attendeeName ?? '',
+		//           avatarColor: response?.attendeeAvatarColor
+		//         }))
+		//     }))
+		//   }));
+		// }
 
-    // @todo - pick fields, like src/service/meetup/functions/getByShortId.ts
-    return result;
-  } catch (e) {
-    // timer({ ...metricsLabels, success: "false" });
-    // throw e;
-    return null;
-  }
+		// timer({ ...metricsLabels, success: "true" });
+
+		// @todo - pick fields, like src/service/meetup/functions/getByShortId.ts
+		return result;
+	} catch (e) {
+		// timer({ ...metricsLabels, success: "false" });
+		// throw e;
+		return null;
+	}
 }

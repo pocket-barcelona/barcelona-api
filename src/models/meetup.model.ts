@@ -1,12 +1,9 @@
-import dynamoose from "dynamoose";
-import type { Item } from "dynamoose/dist/Item";
-import {
-	type GenericMediaItem,
-	genericMediaAssetSchema,
-} from "./imageAssets.model";
-import { type MeetupRsvpModel, rsvpSchema } from "./rsvp.model";
+import dynamoose from 'dynamoose';
+import type { Item } from 'dynamoose/dist/Item';
+import { type GenericMediaItem, genericMediaAssetSchema } from './imageAssets.model.js';
+import { type MeetupRsvpModel, rsvpSchema } from './rsvp.model.js';
 
-// import { questionSchema } from './poll.types';
+// import { questionSchema } from './poll.types.js';
 // import { EventResponseModel } from "./event-responses.model";
 // import { PollQuestions, PollQuestionsInput, PollResults, questionSchema } from "./types/poll.types";
 
@@ -55,7 +52,7 @@ const meetupConfigSchema = new dynamoose.Schema(
 	},
 	{
 		saveUnknown: true,
-	},
+	}
 );
 
 const locationSchema = new dynamoose.Schema(
@@ -119,7 +116,7 @@ const locationSchema = new dynamoose.Schema(
 	},
 	{
 		saveUnknown: true,
-	},
+	}
 );
 
 const priceSchema = new dynamoose.Schema({
@@ -230,22 +227,22 @@ const meetupSchema = new dynamoose.Schema(
 		title: {
 			type: String,
 			required: true,
-			default: "",
+			default: '',
 		},
 		subtitle: {
 			type: String,
 			required: true,
-			default: "",
+			default: '',
 		},
 		description: {
 			type: String,
 			required: true,
-			default: "",
+			default: '',
 		},
 		directions: {
 			type: String,
 			required: false,
-			default: "",
+			default: '',
 		},
 		category: {
 			type: String,
@@ -328,12 +325,12 @@ const meetupSchema = new dynamoose.Schema(
 	},
 	{
 		timestamps: true,
-		saveUnknown: ["eventConfig.*", "location.*", "price.*"],
+		saveUnknown: ['eventConfig.*', 'location.*', 'price.*'],
 		// validate: (newItem) => {
 		//   console.log(newItem)
 		//   return true;
 		// }
-	},
+	}
 );
 
 /** Note: Needs to support Bitwise, so binary values
@@ -367,91 +364,79 @@ export const TICKET_TYPES: Record<
 	}
 > = {
 	[TicketTypeEnum.VIPPresale]: {
-		label: "VIP Pre-sale",
+		label: 'VIP Pre-sale',
 		description:
 			"Exclusive offering to VIP's for pre-sale of tickets. People will be able to buy tickets before the event is confirmed",
-		notes: "You must manage the publicity of these tickets yourself",
+		notes: 'You must manage the publicity of these tickets yourself',
 	},
 	[TicketTypeEnum.PreSale]: {
-		label: "Pre Sale",
-		description:
-			"People will be able to buy tickets before the event is confirmed",
-		notes: "You must manage the publicity of these tickets yourself",
+		label: 'Pre Sale',
+		description: 'People will be able to buy tickets before the event is confirmed',
+		notes: 'You must manage the publicity of these tickets yourself',
 	},
 	[TicketTypeEnum.SuperEarlyBird]: {
-		label: "Super Early Bird",
-		description:
-			"People will be able to buy tickets before the event starts, in group 1",
-		notes: "Requires Super Early Bird to be enabled",
+		label: 'Super Early Bird',
+		description: 'People will be able to buy tickets before the event starts, in group 1',
+		notes: 'Requires Super Early Bird to be enabled',
 	},
 	[TicketTypeEnum.EarlyBird]: {
-		label: "Early Bird",
-		description:
-			"People will be able to buy tickets before the event starts, in group 2",
-		notes: "Requires Early Bird to be enabled",
+		label: 'Early Bird',
+		description: 'People will be able to buy tickets before the event starts, in group 2',
+		notes: 'Requires Early Bird to be enabled',
 	},
 	[TicketTypeEnum.Standard]: {
-		label: "Standard Entry",
-		description: "The normal ticket type for all events",
-		notes: "If you just want a simple event, just enable this ticket type only",
+		label: 'Standard Entry',
+		description: 'The normal ticket type for all events',
+		notes: 'If you just want a simple event, just enable this ticket type only',
 	},
 	[TicketTypeEnum.VIP]: {
-		label: "VIP",
-		description: "VIP tickets distinguish guests from standard entry tickets",
-		notes: "Only offer this ticket type if the event has a VIP offering",
+		label: 'VIP',
+		description: 'VIP tickets distinguish guests from standard entry tickets',
+		notes: 'Only offer this ticket type if the event has a VIP offering',
 	},
 	[TicketTypeEnum.Influencer]: {
-		label: "Influencer",
-		description:
-			"Influencer tickets distinguish guests from standard and VIP entry tickets",
-		notes:
-			"Only offer this ticket type if the event has an influencer offering",
+		label: 'Influencer',
+		description: 'Influencer tickets distinguish guests from standard and VIP entry tickets',
+		notes: 'Only offer this ticket type if the event has an influencer offering',
 	},
 	[TicketTypeEnum.PrivateEntry]: {
-		label: "Private Entry",
-		description:
-			"Private Entry tickets distinguish guests from standard and VIP entry tickets",
-		notes:
-			"Only offer this ticket type if the event has a private entry offering",
+		label: 'Private Entry',
+		description: 'Private Entry tickets distinguish guests from standard and VIP entry tickets',
+		notes: 'Only offer this ticket type if the event has a private entry offering',
 	},
 	[TicketTypeEnum.SingleDayPass]: {
-		label: "Single Day Pass",
-		description: "People will be able to buy tickets for a single day only",
-		notes:
-			"Enable this ticket type if the event is a day event where people can come and go",
+		label: 'Single Day Pass',
+		description: 'People will be able to buy tickets for a single day only',
+		notes: 'Enable this ticket type if the event is a day event where people can come and go',
 	},
 	[TicketTypeEnum.MultiDayPass]: {
-		label: "Multi Day Pass",
-		description: "People will be able to buy tickets for multiple days",
-		notes:
-			"Enable this ticket type if the event is a multi-day event where people can come and go",
+		label: 'Multi Day Pass',
+		description: 'People will be able to buy tickets for multiple days',
+		notes: 'Enable this ticket type if the event is a multi-day event where people can come and go',
 	},
 	[TicketTypeEnum.GroupPass]: {
-		label: "Group Pass",
-		description: "People will be able to buy tickets for a group of people",
+		label: 'Group Pass',
+		description: 'People will be able to buy tickets for a group of people',
 		notes:
-			"Enable this ticket type if the event is a flexible event where people can have 1 ticket for a whole group of people",
+			'Enable this ticket type if the event is a flexible event where people can have 1 ticket for a whole group of people',
 	},
 	[TicketTypeEnum.MemberOnlyTickets]: {
-		label: "Member Only Tickets",
-		description:
-			"People will be able to buy tickets if they are a member of the group/community",
+		label: 'Member Only Tickets',
+		description: 'People will be able to buy tickets if they are a member of the group/community',
 		notes:
-			"Enable this ticket type if the event is a member-only event where people can only buy tickets if they are a member of the group/community. This can be controlled by only sharing the link with people directly",
+			'Enable this ticket type if the event is a member-only event where people can only buy tickets if they are a member of the group/community. This can be controlled by only sharing the link with people directly',
 	},
 	[TicketTypeEnum.EntranceOnly]: {
-		label: "Entrance Only",
-		description:
-			"Entrance only tickets offer entrance to the event but no other benefits",
+		label: 'Entrance Only',
+		description: 'Entrance only tickets offer entrance to the event but no other benefits',
 		notes:
-			"Enable this ticket type if the event has paid entrance to other areas or spaces, once inside the main event.",
+			'Enable this ticket type if the event has paid entrance to other areas or spaces, once inside the main event.',
 	},
 	[TicketTypeEnum.AccessAllAreas]: {
-		label: "Access All Areas",
-		description:
-			"People will be able to buy tickets for access to all areas of the event",
+		label: 'Access All Areas',
+		description: 'People will be able to buy tickets for access to all areas of the event',
 		notes:
-			"Enable this ticket type if the event has paid access to other areas or spaces, once inside the main event.",
+			'Enable this ticket type if the event has paid access to other areas or spaces, once inside the main event.',
 	},
 } as const;
 
@@ -470,21 +455,21 @@ export const TICKET_TYPES: Record<
  */
 export enum MeetupStatusEnum {
 	/** Meetup is in draft state. Not public or visible yet */
-	Draft = "DRAFT",
+	Draft = 'DRAFT',
 	/** Meetup is accepting RSVPs but not fully confirmed yet. */
-	Provisional = "PROVISIONAL",
+	Provisional = 'PROVISIONAL',
 	/** Meetup is confirmed and published. People can rsvp */
-	Published = "PUBLISHED",
+	Published = 'PUBLISHED',
 	/** @todo. Explicitly set to ended. */
-	Ended = "ENDED",
+	Ended = 'ENDED',
 	/** Meetup has been either provisional or published, but is now cancelled. */
-	Cancelled = "CANCELLED",
+	Cancelled = 'CANCELLED',
 	/** Support for when we need it. Archived events can be un-deleted */
-	Archived = "ARCHIVED",
+	Archived = 'ARCHIVED',
 	/** Soft deleted events do not appear in any normal API data feed. They only exist in the database. */
-	SoftDeleted = "SOFTDELETED",
+	SoftDeleted = 'SOFTDELETED',
 	/** @todo - Admin hard delete? */
-	Deleted = "DELETED",
+	Deleted = 'DELETED',
 }
 export type MeetupConfig = {
 	/** 0=any number, 1=min one attendee required for the event to start */
@@ -523,53 +508,53 @@ export type MeetupConfig = {
 //   REGISTER: 'Register'
 // };
 export type RsvpButtonCtaTypes =
-	| "RSVP"
-	| "JOIN"
-	| "GET_TICKET"
-	| "COMING"
-	| "REPLY"
-	| "CONNECT"
-	| "ATTEND"
-	| "GOING"
-	| "CONFIRM"
-	| "REGISTER"
-	| "RESPOND"
-	| "SIGNUP";
-export const RsvpButtonCtaDefault = "ATTEND" satisfies RsvpButtonCtaTypes;
-export type MeetupRsvpCertainty = "DEFINITE" | "INDEFINITE";
+	| 'RSVP'
+	| 'JOIN'
+	| 'GET_TICKET'
+	| 'COMING'
+	| 'REPLY'
+	| 'CONNECT'
+	| 'ATTEND'
+	| 'GOING'
+	| 'CONFIRM'
+	| 'REGISTER'
+	| 'RESPOND'
+	| 'SIGNUP';
+export const RsvpButtonCtaDefault = 'ATTEND' satisfies RsvpButtonCtaTypes;
+export type MeetupRsvpCertainty = 'DEFINITE' | 'INDEFINITE';
 export type MeetupPrivacy = 1 | 2 | 3;
 export const MEETUP_CATEGORIES = {
-	MEETUP: "MEETUP", // regular meetup with big group
-	LIVEMUSIC: "LIVE_MUSIC", // gigs, karaoke etc
-	ENTERTAINMENT: "ENTERTAINMENT", // standup comedy, talks, film nights
-	RESTAURANT: "RESTAURANT", // go for dinner
-	COFFEE: "COFFEE", // share a coffee with people
-	TRAVEL: "TRAVEL", // travel and outdoor
-	SPORT: "SPORT", // beach volley, running etc
-	LIFESTYLE: "LIFESTYLE", // e.g. yoga, dance
-	ART: "ART", // art gallery, trip to museum, gallery open day etc
-	HOBBIES: "HOBBIES", // photography walks etc
-	HEALTH: "HEALTH", // health and wellbeing
-	CULTURAL: "CULTURAL", // e.g. ICD BCN
-	COMMUNITY: "COMMUNITY", // neighbourhood meetup, civic meetup, etc
-	GAMES: "GAMES", // e.g. boardgame, gaming etc
-	SKILLSWAP: "SKILLSWAP", // sharing skills e.g. language exchange
-	EDUCATION: "EDUCATION", // science, education, learning etc
-	NETWORKING: "NETWORKING", // e.g. job search etc
-	PROFESSIONAL: "PROFESSIONAL", // tech talks etc
-	BUSINESS: "BUSINESS",
-	TECH: "TECH", // tech fair, IT, devs etc
-	OUTDOOR: "OUTDOOR", // hiking etc
-	PRIVATE: "PRIVATE", // private drinks on a terrace, etc
-	OPENDAY: "OPENDAY", // e.g. co-working open days etc
-	FESTIVAL: "FESTIVAL",
-	PARENTAL: "PARENTAL", // parenting and family
-	ANIMALS: "ANIMALS", // pets and animals etc
-	OTHER: "OTHER",
+	MEETUP: 'MEETUP', // regular meetup with big group
+	LIVEMUSIC: 'LIVE_MUSIC', // gigs, karaoke etc
+	ENTERTAINMENT: 'ENTERTAINMENT', // standup comedy, talks, film nights
+	RESTAURANT: 'RESTAURANT', // go for dinner
+	COFFEE: 'COFFEE', // share a coffee with people
+	TRAVEL: 'TRAVEL', // travel and outdoor
+	SPORT: 'SPORT', // beach volley, running etc
+	LIFESTYLE: 'LIFESTYLE', // e.g. yoga, dance
+	ART: 'ART', // art gallery, trip to museum, gallery open day etc
+	HOBBIES: 'HOBBIES', // photography walks etc
+	HEALTH: 'HEALTH', // health and wellbeing
+	CULTURAL: 'CULTURAL', // e.g. ICD BCN
+	COMMUNITY: 'COMMUNITY', // neighbourhood meetup, civic meetup, etc
+	GAMES: 'GAMES', // e.g. boardgame, gaming etc
+	SKILLSWAP: 'SKILLSWAP', // sharing skills e.g. language exchange
+	EDUCATION: 'EDUCATION', // science, education, learning etc
+	NETWORKING: 'NETWORKING', // e.g. job search etc
+	PROFESSIONAL: 'PROFESSIONAL', // tech talks etc
+	BUSINESS: 'BUSINESS',
+	TECH: 'TECH', // tech fair, IT, devs etc
+	OUTDOOR: 'OUTDOOR', // hiking etc
+	PRIVATE: 'PRIVATE', // private drinks on a terrace, etc
+	OPENDAY: 'OPENDAY', // e.g. co-working open days etc
+	FESTIVAL: 'FESTIVAL',
+	PARENTAL: 'PARENTAL', // parenting and family
+	ANIMALS: 'ANIMALS', // pets and animals etc
+	OTHER: 'OTHER',
 } as const;
 // type MeetupCategoryValue = typeof MEETUP_CATEGORIES[keyof typeof MEETUP_CATEGORIES];
 export type MeetupCategoryName = keyof typeof MEETUP_CATEGORIES;
-export type MeetupMode = "IN_PERSON" | "ONLINE" | "HYBRID";
+export type MeetupMode = 'IN_PERSON' | 'ONLINE' | 'HYBRID';
 // export type MeetupLanguage = "EN" | "CA" | "ES" | "PT" | "IT" | "FR";
 export type MeetupLocation = {
 	/** The name of the location */
@@ -605,11 +590,11 @@ export type MeetupPrice = {
 	/** Like 1050 = €10,50. 0=Free. -1=TBC */
 	priceCents: number;
 	/** For INTL, like EUR, GBP, USD etc */
-	currencyCode: "EUR" | "GBP";
+	currencyCode: 'EUR' | 'GBP';
 	/** Like: es-ES, en-GB, en-US */
 	locale: string;
 	/** Payment before event or when arriving? */
-	paymentScheme: "ON_RSVP" | "ON_ARRIVAL" | "NONE";
+	paymentScheme: 'ON_RSVP' | 'ON_ARRIVAL' | 'NONE';
 	/** Whether or not user credit can be used to pay for the event */
 	canUseCredit: boolean;
 };
@@ -626,14 +611,14 @@ export type MeetupPromoModifier = {
 	/** 0.5 would be 50% off */
 	modifier?: number;
 	/** @todo - Type of action applied to the event when the code is entered by the user */
-	action?: "EARLY_RSVP" | "PRIVATE_RSVP" | "PRICE_DISCOUNT" | string;
+	action?: 'EARLY_RSVP' | 'PRIVATE_RSVP' | 'PRICE_DISCOUNT' | string;
 	/** If false, code will be in-active */
 	active: boolean;
 	/** Optional UTC timestamp of when the code expires */
 	codeExpiryTime?: string;
 };
 
-type HostRoleType = "ORGANISER" | "CO_ORGANISER" | "COMMUNITY_MANAGER";
+type HostRoleType = 'ORGANISER' | 'CO_ORGANISER' | 'COMMUNITY_MANAGER';
 export type MeetupHostList = {
 	/** ID of the user on the list */
 	userId: string;
@@ -718,10 +703,7 @@ export interface MeetupDocument extends Item, MeetupItem {
 	updatedAt: Date;
 }
 
-export const MEETUP_TABLE_NAME = "Meetup";
-const MeetupModel = dynamoose.model<MeetupDocument>(
-	MEETUP_TABLE_NAME,
-	meetupSchema,
-);
+export const MEETUP_TABLE_NAME = 'Meetup';
+const MeetupModel = dynamoose.model<MeetupDocument>(MEETUP_TABLE_NAME, meetupSchema);
 
 export default MeetupModel;

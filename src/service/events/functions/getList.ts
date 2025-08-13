@@ -1,5 +1,5 @@
-import EventModel, { type EventDocument } from "../../../models/event.model";
-import logger from "../../../utils/logger";
+import EventModel, { type EventDocument } from '../../../models/event.model.js';
+import logger from '../../../utils/logger.js';
 
 /**
  * Get a list of current events
@@ -11,7 +11,7 @@ export default async function (): Promise<EventDocument[] | null> {
 	// ignore eventd which are hidden
 
 	try {
-		const activeField: keyof EventDocument = "eventActive";
+		const activeField: keyof EventDocument = 'eventActive';
 
 		const query = EventModel.scan().where(activeField).eq(true);
 		// result.where(start).gt(yesterdayIsh);

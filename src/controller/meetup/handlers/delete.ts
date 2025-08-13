@@ -1,19 +1,13 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
-import { error, success } from "../../../middleware/apiResponse";
-import {
-	type MeetupDocument,
-	MeetupStatusEnum,
-} from "../../../models/meetup.model";
-import type {
-	DeleteMeetupInput,
-	UpdateMeetupInput,
-} from "../../../schema/meetup/meetup.schema";
-import { MeetupService } from "../../../service/meetup/meetup.service";
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
+import { error, success } from '../../../middleware/apiResponse.js';
+import { type MeetupDocument, MeetupStatusEnum } from '../../../models/meetup.model.js';
+import type { DeleteMeetupInput, UpdateMeetupInput } from '../../../schema/meetup/meetup.schema.js';
+import { MeetupService } from '../../../service/meetup/meetup.service.js';
 
 export default async function deleteDocument(
-	req: Request<DeleteMeetupInput["params"], unknown, UpdateMeetupInput["body"]>,
-	res: Response,
+	req: Request<DeleteMeetupInput['params'], unknown, UpdateMeetupInput['body']>,
+	res: Response
 ) {
 	// performHardDelete: boolean = false,
 	// if (performHardDelete) {
@@ -30,12 +24,7 @@ export default async function deleteDocument(
 	if (!theDocument) {
 		return res
 			.status(StatusCodes.NOT_FOUND)
-			.send(
-				error(
-					"The document cannot be deleted because it doesn't exist",
-					res.statusCode,
-				),
-			);
+			.send(error("The document cannot be deleted because it doesn't exist", res.statusCode));
 	}
 
 	// @todo - make sure only the host can delete the document and not everybody
@@ -50,40 +39,30 @@ export default async function deleteDocument(
 		case MeetupStatusEnum.Draft: {
 			affectedDocument = await MeetupService.deleteById(
 				theDocument as MeetupDocument,
-				MeetupStatusEnum.SoftDeleted,
+				MeetupStatusEnum.SoftDeleted
 			);
 
-			if (typeof affectedDocument === "string") {
+			if (typeof affectedDocument === 'string') {
 				return res
 					.status(StatusCodes.NOT_FOUND)
-					.send(
-						error(
-							"The document cannot be deleted because it doesn't exist",
-							res.statusCode,
-						),
-					);
+					.send(error("The document cannot be deleted because it doesn't exist", res.statusCode));
 			}
 			if (affectedDocument === null) {
 				return res
 					.status(StatusCodes.BAD_REQUEST)
-					.send(
-						error(
-							"An error occurred while deleting the document",
-							res.statusCode,
-						),
-					);
+					.send(error('An error occurred while deleting the document', res.statusCode));
 			}
 			return res.send(
 				success<boolean>(true, {
 					statusCode: res.statusCode,
-				}),
+				})
 			);
 		}
 
 		case MeetupStatusEnum.SoftDeleted: {
 			return res
 				.status(StatusCodes.NOT_FOUND)
-				.send(error("The document has already been deleted", res.statusCode));
+				.send(error('The document has already been deleted', res.statusCode));
 		}
 
 		default: {
@@ -91,7 +70,7 @@ export default async function deleteDocument(
 
 			return res
 				.status(StatusCodes.NOT_FOUND)
-				.send(error("The document does not exist", res.statusCode));
+				.send(error('The document does not exist', res.statusCode));
 		}
 	}
 }

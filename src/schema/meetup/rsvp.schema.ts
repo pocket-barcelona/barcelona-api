@@ -1,27 +1,27 @@
-import { boolean, number, object, string, type TypeOf } from "zod";
+import { boolean, number, object, string, type TypeOf } from 'zod';
 
 const payload = {
 	body: object({
 		response: number({
 			// coming or not
-			required_error: "Response status is required",
+			required_error: 'Response status is required',
 		}),
 		// ticketType: number({
 		//   required_error: "Ticket type is required",
 		// }),
 		guests: object({
 			isMainGuest: boolean({
-				required_error: "isMainGuest is required",
+				required_error: 'isMainGuest is required',
 			}),
 			name: string({
-				required_error: "Attendee Name is required",
+				required_error: 'Attendee Name is required',
 			}),
 			avatar: string({
-				required_error: "Attendee avatar color is required",
+				required_error: 'Attendee avatar color is required',
 			}),
 			lastname: string().optional(),
 			mobile: string().optional(),
-			comment: string().max(512, "Comment is too long.").optional(),
+			comment: string().max(512, 'Comment is too long.').optional(),
 		}).array(),
 		// pollAnswers: object({
 		//   questionId: string(),
@@ -33,7 +33,7 @@ const payload = {
 const meetupIdParams = {
 	params: object({
 		meetupId: string({
-			required_error: "Meetup ID is required",
+			required_error: 'Meetup ID is required',
 		}),
 	}),
 };
@@ -42,7 +42,7 @@ const rsvpIdParams = {
 	params: object({
 		meetupId: meetupIdParams.params.shape.meetupId,
 		rsvpId: string({
-			required_error: "RSVP ID is required",
+			required_error: 'RSVP ID is required',
 		}),
 	}),
 };

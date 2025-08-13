@@ -1,9 +1,9 @@
-import bcrypt from "bcrypt";
-import { config } from "../../config";
-import { AppMJMLUtils } from "../../utils/mjml-utils";
+import bcrypt from 'bcrypt';
+import { config } from '../../config.js';
+import { AppMJMLUtils } from '../../utils/mjml-utils.js';
 
 export namespace EmailUtils {
-	export function signData<T>(anyObject: T, optionalSaltyString = ""): string {
+	export function signData<T>(anyObject: T, optionalSaltyString = ''): string {
 		const str = JSON.stringify(anyObject);
 		// use same work factor as passwords
 		const salt = bcrypt.genSaltSync(config.saltWorkFactor);
@@ -12,16 +12,12 @@ export namespace EmailUtils {
 
 	export async function compareSignature(
 		userDatabasePassword: string,
-		candidatePassword: string,
+		candidatePassword: string
 	): Promise<boolean> {
-		return bcrypt
-			.compare(candidatePassword, userDatabasePassword)
-			.catch((_e) => false);
+		return bcrypt.compare(candidatePassword, userDatabasePassword).catch((_e) => false);
 	}
 
-	export function getTemplateTokens(
-		emailTemplate: string,
-	): Record<string, string> {
+	export function getTemplateTokens(emailTemplate: string): Record<string, string> {
 		let tokens: Record<string, string> = {};
 
 		try {
@@ -38,18 +34,17 @@ export namespace EmailUtils {
 
 	export function getRenderedEmailTemplateHtml<T = string>(
 		emailTemplate: string,
-		variables?: Record<T extends string ? T : string, string>,
+		variables?: Record<T extends string ? T : string, string>
 	): RenderedEmailTemplate {
-		let renderedHtml = "";
+		let renderedHtml = '';
 		try {
 			renderedHtml = AppMJMLUtils.inject(emailTemplate, variables || {});
 		} catch (error) {
 			return {
-				renderedHtml: "",
+				renderedHtml: '',
 				error:
 					// biome-ignore lint/suspicious/noExplicitAny: TODO
-					(error as any).message ||
-					"An error occurred injecting html template values",
+					(error as any).message || 'An error occurred injecting html template values',
 			};
 		}
 

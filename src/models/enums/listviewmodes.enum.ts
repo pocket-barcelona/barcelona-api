@@ -1,4 +1,4 @@
 export enum ListViewModesEnum {
-  Grid = 'grid',
-  Map = 'map',
+	Grid = 'grid',
+	Map = 'map',
 }

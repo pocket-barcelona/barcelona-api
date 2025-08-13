@@ -1,20 +1,15 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
-import { error, success } from "../../../../middleware/apiResponse";
-import type {
-	UserDocument,
-} from "../../../../models/auth/user.model";
-import {
-	type MeetupDocument,
-	MeetupStatusEnum,
-} from "../../../../models/meetup.model";
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
+import { error, success } from '../../../../middleware/apiResponse.js';
+import type { UserDocument } from '../../../../models/auth/user.model.js';
+import { type MeetupDocument, MeetupStatusEnum } from '../../../../models/meetup.model.js';
 import {
 	getAttendanceStatusHumanMessage,
 	type MeetupRsvpModel,
-} from "../../../../models/rsvp.model";
-import type { CreateRsvpInput } from "../../../../schema/meetup/rsvp.schema";
-import { MeetupService } from "../../../../service/meetup/meetup.service";
-import { RsvpService } from "../../../../service/rsvp/rsvp.service";
+} from '../../../../models/rsvp.model.js';
+import type { CreateRsvpInput } from '../../../../schema/meetup/rsvp.schema.js';
+import { MeetupService } from '../../../../service/meetup/meetup.service.js';
+import { RsvpService } from '../../../../service/rsvp/rsvp.service.js';
 
 /**
  * Create a new rsvp response to the meetup event
@@ -23,8 +18,8 @@ import { RsvpService } from "../../../../service/rsvp/rsvp.service";
  * @returns
  */
 export default async function createRsvp(
-	req: Request<CreateRsvpInput["params"], unknown, CreateRsvpInput["body"]>, // the event already exists, so we need the ID from the request
-	res: Response,
+	req: Request<CreateRsvpInput['params'], unknown, CreateRsvpInput['body']>, // the event already exists, so we need the ID from the request
+	res: Response
 ) {
 	const { meetup } = res.locals as {
 		meetup: MeetupDocument;
@@ -56,7 +51,7 @@ export default async function createRsvp(
 	const createdRsvp = await RsvpService.createRsvp(
 		meetup,
 		req,
-		"",
+		''
 		// responseUserId
 		// we don't handle "logged in users responses" yet,
 		// every response is handled as anonymus in terms of our users (hosts)
@@ -67,9 +62,9 @@ export default async function createRsvp(
 			.status(StatusCodes.BAD_REQUEST)
 			.send(
 				error(
-					"Error creating your RSVP data for the event, please try again later.",
-					res.statusCode,
-				),
+					'Error creating your RSVP data for the event, please try again later.',
+					res.statusCode
+				)
 			);
 	}
 
@@ -106,6 +101,6 @@ export default async function createRsvp(
 	return res.send(
 		success<MeetupRsvpModel>(createdRsvp, {
 			statusCode: res.statusCode,
-		}),
+		})
 	);
 }

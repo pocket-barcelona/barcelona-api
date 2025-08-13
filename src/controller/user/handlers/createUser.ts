@@ -1,14 +1,14 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { error, success } from "../../../middleware/apiResponse";
-import type { UserDocument } from "../../../models/auth/user.model";
-import type { CreateUserInput } from "../../../schema/user/user.schema";
-import { UserService } from "../../../service/user/user.service";
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { error, success } from '../../../middleware/apiResponse.js';
+import type { UserDocument } from '../../../models/auth/user.model.js';
+import type { CreateUserInput } from '../../../schema/user/user.schema.js';
+import { UserService } from '../../../service/user/user.service.js';
 
 /** Signup */
 export default async function createUser(
-	req: Request<unknown, unknown, CreateUserInput["body"]>,
-	res: Response,
+	req: Request<unknown, unknown, CreateUserInput['body']>,
+	res: Response
 ) {
 	// check if user already exists
 	const userExists = await UserService.getUserByEmail(req.body);
@@ -16,9 +16,9 @@ export default async function createUser(
 	if (userExists) {
 		return res.status(StatusCodes.FORBIDDEN).json(
 			error(
-				"The user already exists or the account is invalid", // or some other error...
-				res.statusCode,
-			),
+				'The user already exists or the account is invalid', // or some other error...
+				res.statusCode
+			)
 		);
 	}
 
@@ -28,12 +28,10 @@ export default async function createUser(
 	if (!newUser) {
 		return res
 			.status(StatusCodes.INTERNAL_SERVER_ERROR)
-			.json(error("Error, the user was not created", res.statusCode));
+			.json(error('Error, the user was not created', res.statusCode));
 	}
-	if (typeof newUser === "string") {
-		return res
-			.status(StatusCodes.INTERNAL_SERVER_ERROR)
-			.json(error(newUser, res.statusCode));
+	if (typeof newUser === 'string') {
+		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error(newUser, res.statusCode));
 	}
 
 	// send the user a welcome email...
@@ -44,6 +42,6 @@ export default async function createUser(
 	return res.send(
 		success<Partial<UserDocument>>(newUser, {
 			statusCode: res.statusCode,
-		}),
+		})
 	);
 }

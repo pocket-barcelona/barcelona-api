@@ -1,25 +1,21 @@
-import express from "express";
-import { MeetupGroupController } from "../controller/meetupGroup/meetupGroup.controller";
-import requireAdmin from "../middleware/requireAdmin";
-import requireUser from "../middleware/requireUser";
-import validateResource from "../middleware/validateResource";
+import express from 'express';
+import { MeetupGroupController } from '../controller/meetupGroup/meetupGroup.controller.js';
+import requireAdmin from '../middleware/requireAdmin.js';
+import requireUser from '../middleware/requireUser.js';
+import validateResource from '../middleware/validateResource.js';
 import {
 	createMeetupGroupSchema,
 	deleteMeetupGroupSchema,
 	getMeetupGroupByIdSchema,
 	updateMeetupGroupSchema,
-} from "../schema/meetupGroup/meetupGroup.schema";
+} from '../schema/meetupGroup/meetupGroup.schema.js';
 
 const router = express.Router();
 
 // ########### MEETUPS GROUPS ###########
 
 // @todo - ADMIN
-router.get(
-	"/",
-	[requireUser, requireAdmin],
-	MeetupGroupController.getMeetupGroupListHandler,
-);
+router.get('/', [requireUser, requireAdmin], MeetupGroupController.getMeetupGroupListHandler);
 
 // @todo - ADMIN - generate QR code for meetup
 // @todo - ADMIN - validate QR code for this meetup (checks if user has rsvp'd as GOING etc)
@@ -31,16 +27,16 @@ router.get(
 /** Create a new group */
 
 router.post(
-	"/",
+	'/',
 	[requireUser, requireAdmin, validateResource(createMeetupGroupSchema)],
-	MeetupGroupController.createMeetupGroupHandler,
+	MeetupGroupController.createMeetupGroupHandler
 );
 
 /** Get group by ID: requires user to be logged in */
 router.get(
-	"/:groupId",
+	'/:groupId',
 	[validateResource(getMeetupGroupByIdSchema)],
-	MeetupGroupController.getMeetupGroupHandler,
+	MeetupGroupController.getMeetupGroupHandler
 );
 
 // /** Get public info about the group (user doesn't need to be logged in or have an account) */
@@ -52,9 +48,9 @@ router.get(
 
 /** Update group by ID */
 router.patch(
-	"/:groupId",
+	'/:groupId',
 	[requireUser, validateResource(updateMeetupGroupSchema)],
-	MeetupGroupController.updateMeetupGroupHandler,
+	MeetupGroupController.updateMeetupGroupHandler
 );
 
 // /** Delete meetup by ID */

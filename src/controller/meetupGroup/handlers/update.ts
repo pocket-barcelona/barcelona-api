@@ -1,9 +1,9 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
-import { error, success } from "../../../middleware/apiResponse";
-import type { MeetupGroupDocument } from "../../../models/meetupGroup.model";
-import type { UpdateMeetupGroupInput } from "../../../schema/meetupGroup/meetupGroup.schema";
-import { MeetupGroupService } from "../../../service/meetupGroup/meetupGroup.service";
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
+import { error, success } from '../../../middleware/apiResponse.js';
+import type { MeetupGroupDocument } from '../../../models/meetupGroup.model.js';
+import type { UpdateMeetupGroupInput } from '../../../schema/meetupGroup/meetupGroup.schema.js';
+import { MeetupGroupService } from '../../../service/meetupGroup/meetupGroup.service.js';
 
 /**
  * Patch a document by updating one or more fields
@@ -11,12 +11,8 @@ import { MeetupGroupService } from "../../../service/meetupGroup/meetupGroup.ser
  * @param res
  */
 export default async function update(
-	req: Request<
-		UpdateMeetupGroupInput["params"],
-		unknown,
-		UpdateMeetupGroupInput["body"]
-	>,
-	res: Response,
+	req: Request<UpdateMeetupGroupInput['params'], unknown, UpdateMeetupGroupInput['body']>,
+	res: Response
 ) {
 	const { groupId } = req.params;
 	const documentExists = await MeetupGroupService.getById({
@@ -24,9 +20,7 @@ export default async function update(
 	});
 
 	if (!documentExists) {
-		return res
-			.status(StatusCodes.NOT_FOUND)
-			.send(error("Item not found", res.statusCode));
+		return res.status(StatusCodes.NOT_FOUND).send(error('Item not found', res.statusCode));
 	}
 
 	// const loggedInUser = (res.locals.user as UserDocument).userId || "";
@@ -43,17 +37,12 @@ export default async function update(
 	if (!updatedDocument) {
 		return res
 			.status(StatusCodes.INTERNAL_SERVER_ERROR)
-			.send(
-				error(
-					"The item could not be updated. Please try again later",
-					res.statusCode,
-				),
-			);
+			.send(error('The item could not be updated. Please try again later', res.statusCode));
 	}
 
 	return res.send(
 		success<MeetupGroupDocument>(updatedDocument, {
 			statusCode: res.statusCode,
-		}),
+		})
 	);
 }

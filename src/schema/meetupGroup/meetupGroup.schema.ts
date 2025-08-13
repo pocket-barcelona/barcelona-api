@@ -5,37 +5,37 @@ import {
 	object,
 	string,
 	type TypeOf,
-} from "zod";
+} from 'zod';
 
 const createMeetupGroupPayload = {
 	body: object({
 		groupName: string()
-			.min(5, "Group name is required and must be at least 5 chars")
-			.max(64, "Group name is too long"),
+			.min(5, 'Group name is required and must be at least 5 chars')
+			.max(64, 'Group name is too long'),
 		groupLocation: string()
-			.min(2, "Group location is required and must be at least 2 chars")
-			.max(100, "Group location is too long"),
+			.min(2, 'Group location is required and must be at least 2 chars')
+			.max(100, 'Group location is too long'),
 		about: string()
-			.min(20, "About description must be at least 20 chars")
-			.max(4000, "About description is too long. Max 4000 chars"),
+			.min(20, 'About description must be at least 20 chars')
+			.max(4000, 'About description is too long. Max 4000 chars'),
 	}),
 };
 
 const updateMeetupGroupPayload = {
 	body: object({
 		groupName: string()
-			.min(5, "Group name is required and must be at least 5 chars")
-			.max(64, "Group name is too long"),
+			.min(5, 'Group name is required and must be at least 5 chars')
+			.max(64, 'Group name is too long'),
 		groupLocation: string()
-			.min(2, "Group location is required and must be at least 2 chars")
-			.max(100, "Group location is too long"),
+			.min(2, 'Group location is required and must be at least 2 chars')
+			.max(100, 'Group location is too long'),
 		about: string()
-			.min(20, "About description must be at least 20 chars")
-			.max(4000, "About description is too long. Max 4000 chars"),
+			.min(20, 'About description must be at least 20 chars')
+			.max(4000, 'About description is too long. Max 4000 chars'),
 		topics: string().array(),
 		refundPolicy: string()
-			.min(20, "Refund policy must be at least 20 chars")
-			.max(4000, "Refund policy is too long. Max 4000 chars"),
+			.min(20, 'Refund policy must be at least 20 chars')
+			.max(4000, 'Refund policy is too long. Max 4000 chars'),
 		social: object({
 			bizum: string(),
 			facebook: string(),
@@ -52,7 +52,7 @@ const updateMeetupGroupPayload = {
 	}),
 	params: object({
 		groupId: string({
-			required_error: "group ID is required",
+			required_error: 'group ID is required',
 		}),
 	}),
 };
@@ -72,7 +72,7 @@ const updateProfilePhotoPayload = object({
 	}),
 	params: object({
 		groupId: string({
-			required_error: "group ID is required",
+			required_error: 'group ID is required',
 		}),
 	}),
 });
@@ -80,7 +80,7 @@ const updateProfilePhotoPayload = object({
 const selectByIdParams = {
 	params: object({
 		groupId: string({
-			required_error: "group ID is required",
+			required_error: 'group ID is required',
 		}),
 	}),
 };
@@ -103,8 +103,6 @@ export const getMeetupGroupByIdSchema = object({
 
 export type CreateMeetupGroupInput = TypeOf<typeof createMeetupGroupSchema>;
 export type UpdateMeetupGroupInput = TypeOf<typeof updateMeetupGroupSchema>;
-export type UpdateMeetupGroupPhotosInput = TypeOf<
-	typeof updateProfilePhotoPayload
->;
+export type UpdateMeetupGroupPhotosInput = TypeOf<typeof updateProfilePhotoPayload>;
 export type ReadMeetupGroupByIdInput = TypeOf<typeof getMeetupGroupByIdSchema>;
 export type DeleteMeetupGroupInput = TypeOf<typeof deleteMeetupGroupSchema>;

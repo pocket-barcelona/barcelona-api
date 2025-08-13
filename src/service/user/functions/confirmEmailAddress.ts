@@ -1,7 +1,10 @@
-import UserModel, { UserEmailConfirmedEnum, UserStatusEnum } from "../../../models/auth/user.model";
-import type { ConfirmEmail } from "../../../models/auth/confirm-email.model";
-import { EmailUtils } from "../../email/email.utils";
-import type { ConfirmEmailAddressUserInput } from "../../../schema/user/confirm-email-address";
+import type { ConfirmEmail } from '../../../models/auth/confirm-email.model.js';
+import UserModel, {
+	UserEmailConfirmedEnum,
+	UserStatusEnum,
+} from '../../../models/auth/user.model.js';
+import type { ConfirmEmailAddressUserInput } from '../../../schema/user/confirm-email-address.js';
+import { EmailUtils } from '../../email/email.utils.js';
 
 /**
  * Handle confirm email address action
@@ -9,66 +12,60 @@ import type { ConfirmEmailAddressUserInput } from "../../../schema/user/confirm-
  * 2. get user document
  * 3. if user is confirmed, return true
  * 4. else, set emailConfirmed to true
- * 
+ *
  * Scenarios. Already confirmed, cannot confirm (user is not allowed or not active), user does not exist, bad code, other error
  * @param  {ConfirmEmailAddressUserInput} input
  * @returns Promise<boolean>
  */
-export default async function confirmEmailAddress(input: ConfirmEmailAddressUserInput): Promise<boolean> {
-  
-  const emailDataObject: ConfirmEmail = {
-    email: input.body.email,
-  };
+export default async function confirmEmailAddress(
+	input: ConfirmEmailAddressUserInput
+): Promise<boolean> {
+	const emailDataObject: ConfirmEmail = {
+		email: input.body.email,
+	};
 
-  // check signature token to make sure it was signed by this server...
+	// check signature token to make sure it was signed by this server...
 
-  // decode posted token back to the original signature
-  const decodedSignature = Buffer.from(
-    input.body.token,
-    'base64'
-  ).toString("ascii");
-  
-  const stringified = JSON.stringify(emailDataObject);
-  const matches = await EmailUtils.compareSignature(decodedSignature, stringified);
+	// decode posted token back to the original signature
+	const decodedSignature = Buffer.from(input.body.token, 'base64').toString('ascii');
 
-  if (!matches) {
-    // bad token, do not confirm user account
-    return Promise.resolve(false);
-  }
-  
-  try {
-    
-    const user = await UserModel.get(input.body.email);
+	const stringified = JSON.stringify(emailDataObject);
+	const matches = await EmailUtils.compareSignature(decodedSignature, stringified);
 
-    if (user.emailConfirmed === UserEmailConfirmedEnum.Unconfirmed) {
+	if (!matches) {
+		// bad token, do not confirm user account
+		return Promise.resolve(false);
+	}
 
-      // make sure user is enabled
-      if (user.userStatus !== UserStatusEnum.Active) {
-        // throw new Error('User is not enabled. Cannot update user document');
-        return Promise.resolve(false);
-      }
-      
-      // update record and save document
-      user.emailConfirmed = UserEmailConfirmedEnum.Confirmed;
-      const updatedUser = await user.save();
+	try {
+		const user = await UserModel.get(input.body.email);
 
-      if (updatedUser) {
-        // confirmed, success
-        return Promise.resolve(true);
-      }
-      // throw new Error('Error saving user document');
-      return Promise.resolve(false);
-      
-    }
-  } catch (e) {
-    // if (e instanceof Error) {
-    //   return Promise.resolve(false);
-    // } else {
-    //   return Promise.resolve(false);
-    //   // return Promise.reject("An error occurred when trying to notify the user");
-    // }
-  }
-  
-  return Promise.resolve(false);
-  
+		if (user.emailConfirmed === UserEmailConfirmedEnum.Unconfirmed) {
+			// make sure user is enabled
+			if (user.userStatus !== UserStatusEnum.Active) {
+				// throw new Error('User is not enabled. Cannot update user document');
+				return Promise.resolve(false);
+			}
+
+			// update record and save document
+			user.emailConfirmed = UserEmailConfirmedEnum.Confirmed;
+			const updatedUser = await user.save();
+
+			if (updatedUser) {
+				// confirmed, success
+				return Promise.resolve(true);
+			}
+			// throw new Error('Error saving user document');
+			return Promise.resolve(false);
+		}
+	} catch (e) {
+		// if (e instanceof Error) {
+		//   return Promise.resolve(false);
+		// } else {
+		//   return Promise.resolve(false);
+		//   // return Promise.reject("An error occurred when trying to notify the user");
+		// }
+	}
+
+	return Promise.resolve(false);
 }

@@ -1,4 +1,4 @@
-import { number, object, string, type TypeOf } from "zod";
+import { number, object, string, type TypeOf } from 'zod';
 
 /**
  * @todo - these schemas need revising.
@@ -8,16 +8,16 @@ import { number, object, string, type TypeOf } from "zod";
 const payload = {
 	body: object({
 		profileType: number({
-			required_error: "Profile type is required",
-			invalid_type_error: "Must be a number",
+			required_error: 'Profile type is required',
+			invalid_type_error: 'Must be a number',
 		}),
 		numberOfDays: number({
-			required_error: "Number of days is required",
-			invalid_type_error: "Must be a number",
+			required_error: 'Number of days is required',
+			invalid_type_error: 'Must be a number',
 		}),
 		budget: number({
-			required_error: "Budget is required",
-			invalid_type_error: "Must be a number",
+			required_error: 'Budget is required',
+			invalid_type_error: 'Must be a number',
 		}),
 		// categoryIds: array({
 		//   required_error: 'Budget is required',
@@ -29,7 +29,7 @@ const payload = {
 const params = {
 	params: object({
 		planId: string({
-			required_error: "ID is required",
+			required_error: 'ID is required',
 			// invalid_type_error
 		}),
 	}),

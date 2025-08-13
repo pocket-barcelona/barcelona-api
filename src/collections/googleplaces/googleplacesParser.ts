@@ -5,7 +5,7 @@
 
 // import * as fs from "node:fs";
 // import * as path from "node:path";
-// import type { GooglePlacesJsonType } from "./googleplacesJson.type";
+// import type { GooglePlacesJsonType } from "./googleplacesJson.type.js";
 // import { fileURLToPath } from 'node:url';
 // import 'dotenv/config'; // support for dotenv injecting into the process env
 // import AWS from "aws-sdk";
@@ -13,11 +13,11 @@
 // import { DynamoDBDocument, PutCommandInput } from '@aws-sdk/lib-dynamodb';
 // import { DynamoDB } from '@aws-sdk/client-dynamodb';
 // import type { AWSError } from 'dynamoose/dist/aws/sdk';
-// import { type PoiInput, TABLE_NAME_POI } from "../../models/poi.model";
-// // import { CategoryIdEnum } from "../../models/enums/categoryid.enum";
-// // import { RequiresBookingEnum } from "./../../models/enums/requiresbooking.enum";
+// import { type PoiInput, TABLE_NAME_POI } from "../../models/poi.model.js";
+// // import { CategoryIdEnum } from "../../models/enums/categoryid.enum.js";
+// // import { RequiresBookingEnum } from "./../../models/enums/requiresbooking.enum.js";
 // import urlSlug from 'url-slug'
-// import type { TimeOfDayEnum } from '../../models/enums/tod.enum';
+// import type { TimeOfDayEnum } from '../../models/enums/tod.enum.js';
 
 // // set AWS config for client
 // // JS SDK v3 does not support global configuration.
@@ -32,14 +32,13 @@
 // });
 // const docClient = DynamoDBDocument.from(new DynamoDB());
 
-
 // class CustomDynamoService {
 
 //   public putRecord<TRecord extends PutCommandInput = any>(params: {
 //     TableName: string;
 //     Item: TRecord;
 //   }, theRecord: TRecord, callback?: (err: ServiceException, data: any) => any) {
-    
+
 //     docClient.put(params, (err, data) => {
 //       if (err) {
 //         console.error(
@@ -66,8 +65,6 @@
 // const jsonFilePath = path.resolve(jsonFile);
 // // read file
 // const fileContent = fs.readFileSync(jsonFilePath, { encoding: 'utf-8' });
-
-
 
 // let rawData: GooglePlacesJsonType | undefined;
 // try {
@@ -143,12 +140,9 @@
 // //   throw new Error('Errors occurred');
 // // }
 
-
-
 // const DRYRUN = false;
 // const STAGGER = true;
 // const STAGGER_DURATION = 300;
-
 
 // // perform PUT operation for each document
 // // Warning: running this multiple times will overwrite existing items by ID!
@@ -172,19 +166,19 @@
 // filteredRecords.forEach((theRecord, i) => {
 
 //   setTimeout(() => {
-    
+
 //     if (DRYRUN) {
 //       // console.log('The record: ', theRecord.nameOfficial);
 //       console.log('The record: ', theRecord);
 //     } else {
-  
+
 //       const params = {
 //         TableName: TABLE_NAME_POI,
 //         Item: {
 //           ...theRecord
 //         } as any,
 //       };
-    
+
 //       const dynamoService = new CustomDynamoService();
 //       dynamoService.putRecord(params, theRecord);
 //     }

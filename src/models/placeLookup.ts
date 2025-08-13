@@ -1,7 +1,3 @@
-import type { PlaceDocument } from "./place.model";
+import type { PlaceDocument } from './place.model.js';
 
-export type PlaceLookupDocument = Pick<
-  PlaceDocument,
-  | "labelCat"
-  | "placeId"
->;
+export type PlaceLookupDocument = Pick<PlaceDocument, 'labelCat' | 'placeId'>;

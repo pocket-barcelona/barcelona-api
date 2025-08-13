@@ -6,6 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
  * "2a568ac7-b09a-46e2-aeca-f61d05ac721a"
  * Becomes
  * "2a568ac7"
- * @returns 
+ * @returns
  */
 export const createTinyUuid = (): string => uuidv4().split('-')[0];

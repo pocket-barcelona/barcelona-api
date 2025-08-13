@@ -1,10 +1,10 @@
-import type { Request, Response } from "express";
-import { getDistance } from "geolib";
-import { StatusCodes } from "http-status-codes";
-import { error, success } from "../../../middleware/apiResponse";
-import type { PlaceInput } from "../../../models/place.model";
-import type { ReadExploreInput } from "../../../schema/explore/explore.schema";
-import { PlacesService } from "../../../service/places/places.service";
+import type { Request, Response } from 'express';
+import { getDistance } from 'geolib';
+import { StatusCodes } from 'http-status-codes';
+import { error, success } from '../../../middleware/apiResponse.js';
+import type { PlaceInput } from '../../../models/place.model.js';
+import type { ReadExploreInput } from '../../../schema/explore/explore.schema.js';
+import { PlacesService } from '../../../service/places/places.service.js';
 
 const DEFAULT_PER_PAGE = 10;
 const MAX_PER_PAGE = 100;
@@ -52,24 +52,22 @@ function orderByDistanceClosest(from: LatLng, records: PlaceInput[]) {
  * @returns
  */
 export default async function getList(
-	req: Request<any, any, any, ReadExploreInput["body"]>,
-	res: Response,
+	req: Request<any, any, any, ReadExploreInput['body']>,
+	res: Response
 ) {
 	let records = await PlacesService.getList(req.body);
 
 	if (!records) {
-		return res
-			.status(StatusCodes.NOT_FOUND)
-			.send(error("Error getting list", res.statusCode));
+		return res.status(StatusCodes.NOT_FOUND).send(error('Error getting list', res.statusCode));
 	}
 
 	// support for filter by tags
 	if (req.body.tags && req.body.tags.length > 0) {
 		// @todo - support for more than 1 tag?
-		const tag = (req.body.tags[0] ?? "").toString().toLowerCase();
+		const tag = (req.body.tags[0] ?? '').toString().toLowerCase();
 		records = records.filter((d) => {
 			if (!d.tags) return false;
-			const tagsList = d.tags.split(",").filter((t) => t);
+			const tagsList = d.tags.split(',').filter((t) => t);
 			if (!tagsList.includes(tag)) return false;
 			return true;
 		}) as any;
@@ -81,7 +79,7 @@ export default async function getList(
 	// do ordering here...
 	if (req.body?.poi) {
 		// if there is a POI then order by distance closest
-		const fromPairs = (req.body.poi as string).trim().split(",");
+		const fromPairs = (req.body.poi as string).trim().split(',');
 		if (fromPairs.length === 2) {
 			const lat = Number.parseFloat(fromPairs[0]);
 			const lng = Number.parseFloat(fromPairs[1]);
@@ -127,7 +125,7 @@ export default async function getList(
 					page,
 					pageSize: perPage,
 				},
-			},
-		),
+			}
+		)
 	);
 }

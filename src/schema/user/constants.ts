@@ -1,3 +1,3 @@
 export const USER_MINIMUM_PASSWORD_LENGTH = 8;
 export const USER_MAXIMUM_PASSWORD_LENGTH = 32;
-export const USER_RESET_PASSWORD_LINK_EXPIRY = (60 * 60 * 24 * 1000); // a day
+export const USER_RESET_PASSWORD_LINK_EXPIRY = 60 * 60 * 24 * 1000; // a day

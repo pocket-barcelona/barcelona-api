@@ -1,14 +1,13 @@
-import express from "express";
-import { PlannerController } from "../controller/planner/planner.controller";
-import validateResource from "../middleware/validateResource";
-// import requireUser from "../middleware/requireUser";
-import { readPlaceSchema } from "../schema/place/place.schema";
+import express from 'express';
+import { PlannerController } from '../controller/planner/planner.controller.js';
+import validateResource from '../middleware/validateResource.js';
+// import requireUser from "../middleware/requireUser.js";
+import { readPlaceSchema } from '../schema/place/place.schema.js';
 
-const router = express.Router()
-
+const router = express.Router();
 
 // ########### PLANNER ###########
-router.post("/random", [], PlannerController.createRandomPlanHandler);
-router.post("/build", [], PlannerController.createStructuredPlanHandler);
+router.post('/random', [], PlannerController.createRandomPlanHandler);
+router.post('/build', [], PlannerController.createStructuredPlanHandler);
 
 export default router;

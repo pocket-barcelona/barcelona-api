@@ -1,6 +1,6 @@
-import dynamoose from "dynamoose";
-import type { Item } from "dynamoose/dist/Item";
-import type { UserDocument } from "./user.model";
+import dynamoose from 'dynamoose';
+import type { Item } from 'dynamoose/dist/Item';
+import type { UserDocument } from './user.model.js';
 
 export interface SessionTokenModel {
 	accessToken: string;
@@ -14,7 +14,7 @@ export interface SessionExpiry {
 }
 
 export interface SessionDocument extends Item {
-	user: UserDocument["email"];
+	user: UserDocument['email'];
 	valid: boolean;
 	userAgent: string;
 	createdAt: Date;
@@ -42,6 +42,6 @@ const sessionSchema = new dynamoose.Schema({
 	},
 });
 
-const SessionModel = dynamoose.model<SessionDocument>("Session", sessionSchema);
+const SessionModel = dynamoose.model<SessionDocument>('Session', sessionSchema);
 
 export default SessionModel;

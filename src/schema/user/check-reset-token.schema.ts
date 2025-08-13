@@ -1,4 +1,4 @@
-import { object, string, type TypeOf } from "zod";
+import { object, string, type TypeOf } from 'zod';
 
 /**
  * @openapi
@@ -23,14 +23,14 @@ import { object, string, type TypeOf } from "zod";
  *          type: string
  */
 export const checkResetTokenUserSchema = object({
-  body: object({
-    email: string({
-      required_error: "Email is required",
-    }),
-    token: string({
-      required_error: "Token is required",
-    }),
-  })
+	body: object({
+		email: string({
+			required_error: 'Email is required',
+		}),
+		token: string({
+			required_error: 'Token is required',
+		}),
+	}),
 });
 
 export type CheckResetTokenUserInput = TypeOf<typeof checkResetTokenUserSchema>;

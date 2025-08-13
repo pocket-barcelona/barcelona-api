@@ -1,16 +1,13 @@
-import { DrinkCategoryEnum } from "../../../models/enums/foodcategory.enum";
-import { TimeOfDayEnum } from "../../../models/enums/tod.enum";
-import {
-	PlanThemeEnum,
-	type StructuredPlanDayProfile,
-} from "../../../models/planThemes";
+import { DrinkCategoryEnum } from '../../../models/enums/foodcategory.enum.js';
+import { TimeOfDayEnum } from '../../../models/enums/tod.enum.js';
+import { PlanThemeEnum, type StructuredPlanDayProfile } from '../../../models/planThemes.js';
 
 const themes: StructuredPlanDayProfile[] = [
 	{
 		id: 501,
 		theme: PlanThemeEnum.NightsOut,
 		themeTod: TimeOfDayEnum.Night,
-		name: "Best of Craft Beer in Barcelona",
+		name: 'Best of Craft Beer in Barcelona',
 		drinkCategories: [DrinkCategoryEnum.CraftBeer],
 		internal: 0,
 	},
@@ -28,7 +25,7 @@ const themes: StructuredPlanDayProfile[] = [
 		id: 503,
 		theme: PlanThemeEnum.NightsOut,
 		themeTod: TimeOfDayEnum.Night,
-		name: "Pub Crawl, El Born",
+		name: 'Pub Crawl, El Born',
 		bestTod: TimeOfDayEnum.Night,
 		drinkCategories: [
 			DrinkCategoryEnum.CraftBeer,

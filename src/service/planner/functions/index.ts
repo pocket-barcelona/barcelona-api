@@ -1,7 +1,4 @@
-import createRandomPlanHandler from './createRandomPlan';
-import createStructuredPlanHandler from './createStructuredPlan';
+import createRandomPlanHandler from './createRandomPlan.js';
+import createStructuredPlanHandler from './createStructuredPlan.js';
 
-export {
-    createRandomPlanHandler,
-    createStructuredPlanHandler,
-};
+export { createRandomPlanHandler, createStructuredPlanHandler };

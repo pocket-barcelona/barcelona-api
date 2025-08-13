@@ -1,13 +1,13 @@
-import getByIdHeadless from "../../events/handlers/getByIdHeadless";
-import getGoogleCalendarEventByIcalUid from "../../events/handlers/getGoogleCalendarEventByIcalUid";
-import getGoogleCalendarEventById from "../../events/handlers/getGoogleCalendarEventById";
-import getGoogleCalendarEventInstances from "../../events/handlers/getGoogleCalendarEventInstances";
-import getGoogleCalendarEventsList from "../../events/handlers/getGoogleCalendarEventsList";
-import getListHeadless from "../../events/handlers/getListHeadless";
-import getById from "./getById";
-import getList from "./getList";
-import syncEventsDynamo from "./syncEventsDynamo";
-import syncEventsGoogle from "./syncEventsGoogle";
+import getByIdHeadless from '../../events/handlers/getByIdHeadless.js';
+import getGoogleCalendarEventByIcalUid from '../../events/handlers/getGoogleCalendarEventByIcalUid.js';
+import getGoogleCalendarEventById from '../../events/handlers/getGoogleCalendarEventById.js';
+import getGoogleCalendarEventInstances from '../../events/handlers/getGoogleCalendarEventInstances.js';
+import getGoogleCalendarEventsList from '../../events/handlers/getGoogleCalendarEventsList.js';
+import getListHeadless from '../../events/handlers/getListHeadless.js';
+import getById from './getById.js';
+import getList from './getList.js';
+import syncEventsDynamo from './syncEventsDynamo.js';
+import syncEventsGoogle from './syncEventsGoogle.js';
 
 export {
 	getList,

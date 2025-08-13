@@ -1,6 +1,6 @@
-import type { UserDocument } from "../../../models/auth/user.model";
-import type { MeetupDocument } from "../../../models/meetup.model";
-import type { MeetupRsvpModel } from "../../../models/rsvp.model";
+import type { UserDocument } from '../../../models/auth/user.model.js';
+import type { MeetupDocument } from '../../../models/meetup.model.js';
+import type { MeetupRsvpModel } from '../../../models/rsvp.model.js';
 
 /**
  * Checks to see if the logged-in or anonymous user has already responded to this event yet.
@@ -13,11 +13,11 @@ import type { MeetupRsvpModel } from "../../../models/rsvp.model";
  */
 export default async function hasRsvpdToMeetupYetHandler(
 	theEvent: MeetupDocument,
-	userId: UserDocument["userId"],
-	responseId: MeetupRsvpModel["rsvpId"],
-): Promise<MeetupRsvpModel["rsvpId"]> {
+	userId: UserDocument['userId'],
+	responseId: MeetupRsvpModel['rsvpId']
+): Promise<MeetupRsvpModel['rsvpId']> {
 	if (theEvent.rsvps.length === 0) {
-		return "";
+		return '';
 	}
 
 	// 1. if user ID, check event for user ID in event responses (even if response ID exists or not)
@@ -25,9 +25,7 @@ export default async function hasRsvpdToMeetupYetHandler(
 
 	if (userId) {
 		// 1 - check for userID
-		const userResponded = theEvent.rsvps.filter(
-			(r) => r.userId !== "" && r.userId === userId,
-		);
+		const userResponded = theEvent.rsvps.filter((r) => r.userId !== '' && r.userId === userId);
 		if (userResponded.length > 0) {
 			// logged in user has already responded to this event
 			return userResponded[0].rsvpId;
@@ -42,5 +40,5 @@ export default async function hasRsvpdToMeetupYetHandler(
 		}
 	}
 
-	return "";
+	return '';
 }

@@ -1,19 +1,15 @@
-import type { NextFunction, Request, Response } from "express";
-import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
-// import { SessionService } from "../service/session/session.service";
-import lodash from "lodash";
-import { config } from "../config";
-import { SessionUtils } from "../utils/jwt.utils";
-import { error } from "./apiResponse";
+import type { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
+// import { SessionService } from "../service/session/session.service.js";
+import lodash from 'lodash';
+import { config } from '../config.js';
+import { SessionUtils } from '../utils/jwt.utils.js';
+import { error } from './apiResponse.js';
 
 const { get } = lodash;
 
 /** Curry middleware function - check that the user is logged in */
-const requireRefreshToken = async (
-	req: Request,
-	res: Response,
-	next: NextFunction,
-) => {
+const requireRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
 	// const accessToken = get(req, `headers.${config.HEADER_AUTHORIZATION.toLowerCase()}`, "").replace(
 	//   /^Bearer\s/,
 	//   ""

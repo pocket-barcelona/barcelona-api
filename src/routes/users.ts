@@ -1,16 +1,16 @@
-import express from "express";
-import { UserController } from "../controller/user/user.controller";
-import requireUser from "../middleware/requireUser";
-import validateResource from "../middleware/validateResource";
-import { checkResetTokenUserSchema } from "../schema/user/check-reset-token.schema";
-import { confirmEmailAddressSchema } from "../schema/user/confirm-email-address";
-import { forgotPasswordUserSchema } from "../schema/user/forgot-password.schema";
-import { resetPasswordUserSchema } from "../schema/user/reset-password.schema";
+import express from 'express';
+import { UserController } from '../controller/user/user.controller.js';
+import requireUser from '../middleware/requireUser.js';
+import validateResource from '../middleware/validateResource.js';
+import { checkResetTokenUserSchema } from '../schema/user/check-reset-token.schema.js';
+import { confirmEmailAddressSchema } from '../schema/user/confirm-email-address.js';
+import { forgotPasswordUserSchema } from '../schema/user/forgot-password.schema.js';
+import { resetPasswordUserSchema } from '../schema/user/reset-password.schema.js';
 import {
 	createUserSchema,
 	deleteUserSchema,
 	updateUserSchema,
-} from "../schema/user/user.schema";
+} from '../schema/user/user.schema.js';
 
 const router = express.Router();
 
@@ -19,35 +19,27 @@ const router = express.Router();
 // THIS IS ONLY FOR LOCAL TEST!
 // router.get("/api/users", [requireUser], UserController.getListHandler);
 
-router.post(
-	"/",
-	[validateResource(createUserSchema)],
-	UserController.createUserHandler,
-);
+router.post('/', [validateResource(createUserSchema)], UserController.createUserHandler);
 
 // update user details
 router.patch(
-	"/:userId",
+	'/:userId',
 	[requireUser, validateResource(updateUserSchema)],
-	UserController.updateUserHandler,
+	UserController.updateUserHandler
 );
 
 router.delete(
-	"/:userId",
+	'/:userId',
 	[requireUser, validateResource(deleteUserSchema)],
-	UserController.deleteUserHandler,
+	UserController.deleteUserHandler
 );
 // get logged in user
-router.get(
-	"/current-user",
-	[requireUser],
-	UserController.getLoggedInUserHandler,
-);
+router.get('/current-user', [requireUser], UserController.getLoggedInUserHandler);
 
 router.post(
-	"/confirm-email",
+	'/confirm-email',
 	[validateResource(confirmEmailAddressSchema)],
-	UserController.confirmEmailAddressHandler,
+	UserController.confirmEmailAddressHandler
 );
 
 // ########### RESETTING PASSWORD ###########
@@ -55,25 +47,25 @@ router.post(
 // forgot password
 // requires: email address
 router.post(
-	"/forgot-password",
+	'/forgot-password',
 	[validateResource(forgotPasswordUserSchema)],
-	UserController.forgotPasswordHandler,
+	UserController.forgotPasswordHandler
 );
 
 // check reset password token
 // requires: email address, reset token
 router.post(
-	"/check-reset-token",
+	'/check-reset-token',
 	[validateResource(checkResetTokenUserSchema)],
-	UserController.checkResetTokenHandler,
+	UserController.checkResetTokenHandler
 );
 
 // reset the user's password
 // requires: email address, token, new password, new password again
 router.post(
-	"/reset-password",
+	'/reset-password',
 	[validateResource(resetPasswordUserSchema)],
-	UserController.resetPasswordHandler,
+	UserController.resetPasswordHandler
 );
 
 export default router;

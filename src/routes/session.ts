@@ -1,30 +1,22 @@
-import express from "express";
-import { SessionController } from "../controller/session/session.controller";
-import requireRefreshToken from "../middleware/requireRefreshToken";
-import requireUser from "../middleware/requireUser";
-import validateResource from "../middleware/validateResource";
-import { createSessionSchema } from "../schema/session/session.schema";
+import express from 'express';
+import { SessionController } from '../controller/session/session.controller.js';
+import requireRefreshToken from '../middleware/requireRefreshToken.js';
+import requireUser from '../middleware/requireUser.js';
+import validateResource from '../middleware/validateResource.js';
+import { createSessionSchema } from '../schema/session/session.schema.js';
 
 const router = express.Router();
 
 // ########### SESSIONS ###########
 
 /** Create a new session (Login the user). Accepts {{email}} and {{password}} POST fields */
-router.post(
-	"/",
-	[validateResource(createSessionSchema)],
-	SessionController.createSessionHandler,
-);
+router.post('/', [validateResource(createSessionSchema)], SessionController.createSessionHandler);
 /** Get active user session/s */
-router.get("/", [requireUser], SessionController.getSessionsHandler);
+router.get('/', [requireUser], SessionController.getSessionsHandler);
 /** Refresh the user session */
-router.post(
-	"/refresh",
-	[requireRefreshToken],
-	SessionController.refreshSessionHandler,
-);
+router.post('/refresh', [requireRefreshToken], SessionController.refreshSessionHandler);
 /** Logout the user */
-router.delete("/delete", [requireUser], SessionController.deleteSessionHandler);
+router.delete('/delete', [requireUser], SessionController.deleteSessionHandler);
 
 export default router;
 // module.exports = router;

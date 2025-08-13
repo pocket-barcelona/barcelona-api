@@ -1,46 +1,43 @@
-import type { SetOptional } from "type-fest";
-import type BarrioModel from "./barrio.model";
-import type CategoryModel from "./category.model";
+import type { SetOptional } from 'type-fest';
+import type BarrioModel from './barrio.model.js';
+import type CategoryModel from './category.model.js';
 import type {
 	DrinkCategoryEnum,
 	FoodCategoryEnum,
 	FoodCuisinesEnum,
-} from "./enums/foodcategory.enum";
-import type { RequiresBookingEnum } from "./enums/requiresbooking.enum";
-import type { TimeRecommendedEnum } from "./enums/timerecommended.enum";
-import type { TimeOfDayEnum } from "./enums/tod.enum";
-import type PlaceModel from "./place.model";
-import type { PlaceInput } from "./place.model";
+} from './enums/foodcategory.enum.js';
+import type { RequiresBookingEnum } from './enums/requiresbooking.enum.js';
+import type { TimeRecommendedEnum } from './enums/timerecommended.enum.js';
+import type { TimeOfDayEnum } from './enums/tod.enum.js';
+import type PlaceModel from './place.model.js';
+import type { PlaceInput } from './place.model.js';
 
 // the keys from the place model
 type PlaceKeys = keyof Pick<
 	PlaceInput,
-	| "annualOnly"
-	| "bestTod"
-	| "commitmentRequired"
-	| "childrenSuitability"
-	| "daytrip"
-	| "freeToVisit"
-	| "lat"
-	| "lng"
-	| "metroZone"
-	| "isLandmark"
-	| "placeId"
-	| "popular"
-	| "provinceId"
-	| "relatedPlaceId"
-	| "seasonal"
-	| "teenagerSuitability"
-	| "tags"
+	| 'annualOnly'
+	| 'bestTod'
+	| 'commitmentRequired'
+	| 'childrenSuitability'
+	| 'daytrip'
+	| 'freeToVisit'
+	| 'lat'
+	| 'lng'
+	| 'metroZone'
+	| 'isLandmark'
+	| 'placeId'
+	| 'popular'
+	| 'provinceId'
+	| 'relatedPlaceId'
+	| 'seasonal'
+	| 'teenagerSuitability'
+	| 'tags'
 >;
 
 // the picked props from the place model
 type PlaceAttributes = Pick<PlaceInput, PlaceKeys>;
 
-export type StructuredPlanDayProfile = SetOptional<
-	PlaceAttributes,
-	PlaceKeys
-> & {
+export type StructuredPlanDayProfile = SetOptional<PlaceAttributes, PlaceKeys> & {
 	/** The theme profile ID, so we can choose it specifically */
 	id: number;
 	/** The style/theme of the plan */
@@ -50,7 +47,7 @@ export type StructuredPlanDayProfile = SetOptional<
 	/** The name of the themed day profile */
 	name: string | string[];
 	/** @todo - Travelling mode for the itinerary. Use "VARIOUS" if multiple */
-	mode?: "BY_FOOT" | "BY_CAR" | "BY_BOAT" | "VARIOUS";
+	mode?: 'BY_FOOT' | 'BY_CAR' | 'BY_BOAT' | 'VARIOUS';
 	/** A list of actions to take, e.g. Take a walk around [Parc de la Ciutadella] */
 	verbs?: string[];
 	/** The number of places to limit to, for this day - if not included, other params will dictate the results */
@@ -58,21 +55,21 @@ export type StructuredPlanDayProfile = SetOptional<
 	/** A key word to find in the tags */
 	keyword?: string;
 	/** A list of category IDs */
-	categoryIds?: Array<(typeof CategoryModel)["categoryId"]>;
+	categoryIds?: Array<(typeof CategoryModel)['categoryId']>;
 	/** If given, this number of category IDs will be chosen from categoryIds array at random */
 	categoryIdsChooseAmount?: number;
 	/** A list of barrio IDs */
-	barrioIds?: Array<(typeof BarrioModel)["barrioId"]>;
+	barrioIds?: Array<(typeof BarrioModel)['barrioId']>;
 	/** If given, this number of barrio IDs will be chosen from barrioIds array at random */
 	barrioIdsChooseAmount?: number;
 	/** A list of place IDs as a pool of IDs (in addition to e.g. categories, barrios etc...) */
-	placeIds?: Array<(typeof PlaceModel)["placeId"]>;
+	placeIds?: Array<(typeof PlaceModel)['placeId']>;
 	/** A list of place IDs to exclude from the result set */
-	placeIdsExclude?: Array<(typeof PlaceModel)["placeId"]>;
+	placeIdsExclude?: Array<(typeof PlaceModel)['placeId']>;
 	/** A list of place IDs to always include from the list of place IDs above */
-	placeIdsAlwaysInclude?: Array<(typeof PlaceModel)["placeId"]>;
+	placeIdsAlwaysInclude?: Array<(typeof PlaceModel)['placeId']>;
 	/** If you have the time, go here to? */
-	placeIdsOptional?: Array<(typeof PlaceModel)["placeId"]>;
+	placeIdsOptional?: Array<(typeof PlaceModel)['placeId']>;
 	/** If true, the place IDs order is respected */
 	placeIdsAreOrdered?: boolean;
 	/** If given, this number of place IDs will be chosen from placeIds array at random */
@@ -99,8 +96,8 @@ export type StructuredPlanDayProfile = SetOptional<
 	orderBy?: {
 		/** Key must be in place model */
 		key: PlaceKeys;
-		direction: "ASC" | "DESC" | "RANDOM";
-		valueType?: "BOOLEAN" | "STRING" | "NUMBER";
+		direction: 'ASC' | 'DESC' | 'RANDOM';
+		valueType?: 'BOOLEAN' | 'STRING' | 'NUMBER';
 	}[];
 
 	dateStart?: number;
@@ -111,13 +108,13 @@ export type StructuredPlanDayProfile = SetOptional<
  * The list of plans for a day. A day (could) be defined to be like this
  */
 export type PlanThemes =
-	| "location"
-	| "category"
-	| "trips"
-	| "bestof"
-	| "nightsout"
-	| "fooddrink"
-	| "route";
+	| 'location'
+	| 'category'
+	| 'trips'
+	| 'bestof'
+	| 'nightsout'
+	| 'fooddrink'
+	| 'route';
 export enum PlanThemeEnum {
 	Custom = 0,
 	/** A filter by barrio IDs, then filtered by params */

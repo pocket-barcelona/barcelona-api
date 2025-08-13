@@ -1,9 +1,9 @@
-import getById from "./getById";
-import getList from "./getList";
-import getPlaceCategories from "./getPlaceCategories";
-import getPlaceLookup from "./getPlaceLookup";
-import getRelatedPlaces from "./getRelatedPlaces";
-import getSearchPrepopulate from "./getSearchPrepopulate";
+import getById from './getById.js';
+import getList from './getList.js';
+import getPlaceCategories from './getPlaceCategories.js';
+import getPlaceLookup from './getPlaceLookup.js';
+import getRelatedPlaces from './getRelatedPlaces.js';
+import getSearchPrepopulate from './getSearchPrepopulate.js';
 
 export {
 	getList,

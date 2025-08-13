@@ -1,5 +1,5 @@
-import PlaceModel, { type PlaceInput, type PlaceDocument } from "../../../models/place.model";
 import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import PlaceModel, { type PlaceDocument, type PlaceInput } from '../../../models/place.model.js';
 
 const DOCUMENT_SCAN_LIMIT = 1000;
 
@@ -7,7 +7,7 @@ type FilterFields = keyof Pick<PlaceInput, 'active'>;
 type FilterFieldsType = keyof Pick<PlaceDocument, FilterFields>;
 
 const fields: Record<FilterFieldsType, FilterFieldsType> = {
-  active: "active",
+	active: 'active',
 };
 
 /**
@@ -15,19 +15,17 @@ const fields: Record<FilterFieldsType, FilterFieldsType> = {
  * @returns
  */
 export default async function (): Promise<ScanResponse<PlaceDocument> | null> {
-  try {
-    const documents = PlaceModel.scan()
-      .where(fields.active)
-      .eq(true);
+	try {
+		const documents = PlaceModel.scan().where(fields.active).eq(true);
 
-    return await documents
-      .limit(DOCUMENT_SCAN_LIMIT)
-      .exec()
-      .catch(() => {
-        // logger.warn(err)
-        return null;
-      });
-  } catch (e) {
-    return null;
-  }
+		return await documents
+			.limit(DOCUMENT_SCAN_LIMIT)
+			.exec()
+			.catch(() => {
+				// logger.warn(err)
+				return null;
+			});
+	} catch (e) {
+		return null;
+	}
 }

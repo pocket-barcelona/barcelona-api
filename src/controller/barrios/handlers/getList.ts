@@ -1,8 +1,8 @@
-import type { Request, Response } from "express";
-import { error, success } from "../../../middleware/apiResponse";
-import { StatusCodes } from "http-status-codes";
-import { BarriosService } from "../../../service/barrios/barrios.service";
-import type { ReadBarrioInput } from '../../../schema/barrio/barrio.schema';
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { error, success } from '../../../middleware/apiResponse.js';
+import type { ReadBarrioInput } from '../../../schema/barrio/barrio.schema.js';
+import { BarriosService } from '../../../service/barrios/barrios.service.js';
 
 /**
  * Get a list of barrios
@@ -11,16 +11,11 @@ import type { ReadBarrioInput } from '../../../schema/barrio/barrio.schema';
  * @returns
  */
 export default async function getList(req: Request<ReadBarrioInput>, res: Response) {
-  
-  const data = await BarriosService.getList(req.query);
+	const data = await BarriosService.getList(req.query);
 
-  if (!data) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .send(error("Error getting list", res.statusCode));
-  }
+	if (!data) {
+		return res.status(StatusCodes.NOT_FOUND).send(error('Error getting list', res.statusCode));
+	}
 
-  return res.send(
-    success(data)
-  );
+	return res.send(success(data));
 }

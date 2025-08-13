@@ -1,7 +1,7 @@
-import createRsvpHandler from "./createRsvp";
-import hasRsvpdToMeetupYetHandler from "./hasRsvpdToMeetupYet";
-import notifyMeetupHostHandler from "./notifyMeetupHost";
-import updateRsvpHandler from "./updateRsvp";
+import createRsvpHandler from './createRsvp.js';
+import hasRsvpdToMeetupYetHandler from './hasRsvpdToMeetupYet.js';
+import notifyMeetupHostHandler from './notifyMeetupHost.js';
+import updateRsvpHandler from './updateRsvp.js';
 
 export {
 	createRsvpHandler,

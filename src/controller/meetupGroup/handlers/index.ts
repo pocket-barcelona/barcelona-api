@@ -1,13 +1,13 @@
-import createMeetupGroup from "./create";
+import createMeetupGroup from './create.js';
 // import deleteMeetupGroup from "./delete";
-import getMeetupGroupById from "./getById";
-import getMeetupGroupsList from "./getList";
-import updateMeetupGroup from "./update";
+import getMeetupGroupById from './getById.js';
+import getMeetupGroupsList from './getList.js';
+import updateMeetupGroup from './update.js';
 
 export {
-  createMeetupGroup,
-  // deleteMeetupGroup,
-  getMeetupGroupById,
-  getMeetupGroupsList,
-  updateMeetupGroup,
+	createMeetupGroup,
+	// deleteMeetupGroup,
+	getMeetupGroupById,
+	getMeetupGroupsList,
+	updateMeetupGroup,
 };

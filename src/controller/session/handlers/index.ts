@@ -1,11 +1,6 @@
-import createSession from "./createSession";
-import deleteSession from "./deleteSession";
-import getSessions from "./getSessions";
-import refreshSession from "./refreshSession";
+import createSession from './createSession.js';
+import deleteSession from './deleteSession.js';
+import getSessions from './getSessions.js';
+import refreshSession from './refreshSession.js';
 
-export {
-  createSession,
-  deleteSession,
-  getSessions,
-  refreshSession,
-};
+export { createSession, deleteSession, getSessions, refreshSession };

@@ -1,10 +1,10 @@
-import { config } from "../../../config";
+import { config } from '../../../config.js';
 import {
 	type CalendarEvent,
 	type CalendarEventDirectus,
 	type DirectusResponse,
 	mapHeadlessCalendarItem,
-} from "../../../models/calendar.type";
+} from '../../../models/calendar.type.js';
 
 /**
  * Get a list of active calendar events from Headless CMS
@@ -16,9 +16,7 @@ export default async function (): Promise<CalendarEvent[] | null> {
 		const resp = await fetch(endpoint);
 		const data: DirectusResponse<CalendarEventDirectus[]> = await resp.json();
 		if (data?.data) {
-			return data.data
-				.filter((e) => e.event_active)
-				.map((i) => mapHeadlessCalendarItem(i));
+			return data.data.filter((e) => e.event_active).map((i) => mapHeadlessCalendarItem(i));
 		}
 		return null;
 	} catch (_e) {

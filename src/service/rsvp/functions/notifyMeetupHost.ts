@@ -1,16 +1,16 @@
-// import logger from "../../../utils/logger";
-import { config } from "../../../config";
-import { EmailTemplates } from "../../../emails/mjml";
-import type { MeetupDocument } from "../../../models/meetup.model";
-import { EmailService } from "../../email/email.service";
-import { EmailUtils } from "../../email/email.utils";
+// import logger from "../../../utils/logger.js";
+import { config } from '../../../config.js';
+import { EmailTemplates } from '../../../emails/mjml/index.js';
+import type { MeetupDocument } from '../../../models/meetup.model.js';
+import { EmailService } from '../../email/email.service.js';
+import { EmailUtils } from '../../email/email.utils.js';
 
 /**
  * Send an email to the event host when somebody responds to an event invitation
  */
 export default async function notifyMeetupHost(
 	theEvent: MeetupDocument,
-	data: { name: string; response: string; comment: string; hostEmail: string },
+	data: { name: string; response: string; comment: string; hostEmail: string }
 ): Promise<{
 	success: boolean;
 	error: string;
@@ -22,16 +22,16 @@ export default async function notifyMeetupHost(
 	try {
 		// direct link to the event
 		// like: http://localhost:3000/dashboard/details/9252be9a-daa0-4539-b532-be94f6e7fd63
-		const domainStub = config.DOMAIN || "";
+		const domainStub = config.DOMAIN || '';
 		const url = `${domainStub}/dashboard/details/${theEvent.meetupId}`;
 
 		if (!EmailTemplates.invitationResponseEmailTemplate) {
-			throw new Error("Cannot find email template!");
+			throw new Error('Cannot find email template!');
 		}
 
 		// populate email template
 		const rendered = EmailUtils.getRenderedEmailTemplateHtml<
-			"name" | "comment" | "response" | "url"
+			'name' | 'comment' | 'response' | 'url'
 		>(EmailTemplates.invitationResponseEmailTemplate, {
 			name,
 			response,
@@ -45,23 +45,23 @@ export default async function notifyMeetupHost(
 			const sent = await EmailService.sendMail(
 				{
 					to: data.hostEmail,
-					from: "noreply@herdcats.io",
+					from: 'noreply@herdcats.io',
 					subject: `${data.name} has reponded`,
-					text: "View your new reply on Herding Cats",
+					text: 'View your new reply on Herding Cats',
 					html: rendered.renderedHtml,
 				},
-				DEBUG_MODE,
+				DEBUG_MODE
 			);
 
 			if (sent) {
 				return Promise.resolve({
 					success: true,
-					error: "",
+					error: '',
 				});
 			}
-			throw new Error("Error sending email");
+			throw new Error('Error sending email');
 		}
-		throw new Error("Email template render issue!");
+		throw new Error('Email template render issue!');
 	} catch (error) {
 		if (error instanceof Error) {
 			return Promise.resolve({
@@ -71,7 +71,7 @@ export default async function notifyMeetupHost(
 		}
 		return Promise.resolve({
 			success: false,
-			error: "An error occurred when trying to notify the user",
+			error: 'An error occurred when trying to notify the user',
 		});
 	}
 }

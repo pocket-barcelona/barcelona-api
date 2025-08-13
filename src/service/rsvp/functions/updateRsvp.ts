@@ -1,15 +1,12 @@
-import {
-	type MeetupDocument,
-	TicketTypeEnum,
-} from "../../../models/meetup.model";
-import type { MeetupRsvpModel } from "../../../models/rsvp.model";
-import type { UpdateRsvpInput } from "../../../schema/meetup/rsvp.schema";
-// import logger from "../../../utils/logger";
+import { type MeetupDocument, TicketTypeEnum } from '../../../models/meetup.model.js';
+import type { MeetupRsvpModel } from '../../../models/rsvp.model.js';
+import type { UpdateRsvpInput } from '../../../schema/meetup/rsvp.schema.js';
+// import logger from "../../../utils/logger.js";
 
 export default async function updateResponse(
 	theEvent: MeetupDocument,
 	input: UpdateRsvpInput,
-	userId: string,
+	userId: string
 ): Promise<MeetupRsvpModel | null> {
 	const { rsvpId, meetupId } = input.params;
 
@@ -19,9 +16,7 @@ export default async function updateResponse(
 
 	// make sure specific rsvp ID exists
 	const existingGuest = theEvent.rsvps.find((r) => r.rsvpId === rsvpId);
-	const existingGuestIndex = theEvent.rsvps.findIndex(
-		(r) => r.rsvpId === rsvpId,
-	);
+	const existingGuestIndex = theEvent.rsvps.findIndex((r) => r.rsvpId === rsvpId);
 
 	if (!existingGuest) {
 		return null;

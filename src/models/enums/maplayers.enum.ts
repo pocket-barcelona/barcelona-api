@@ -1,5 +1,5 @@
 export enum MapLayersEnum {
-  Places = 'places',
-  Poi = 'poi',
-  Coworking = 'coworking',
+	Places = 'places',
+	Poi = 'poi',
+	Coworking = 'coworking',
 }

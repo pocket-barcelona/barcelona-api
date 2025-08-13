@@ -1,11 +1,11 @@
 export enum TravelModesEnum {
-  Walk,
-  Bus,
-  Metro,
-  LocalTrain,
-  LongDistanceTrain,
-  Airplane,
-  Boat
+	Walk,
+	Bus,
+	Metro,
+	LocalTrain,
+	LongDistanceTrain,
+	Airplane,
+	Boat,
 }
 // icons:
 // walk: directions_walk
@@ -16,11 +16,11 @@ export enum TravelModesEnum {
 // plane: airplanemode_active
 // boat: directions_boat
 export enum TravelModesIconsEnum {
-  Walk = 'directions_walk',
-  Bus = 'directions_bus',
-  Metro = 'subway',
-  LocalTrain = 'directions_transit',
-  LongDistanceTrain = 'directions_transit',
-  Airplane = 'airplanemode_active',
-  Boat = 'directions_boat'
+	Walk = 'directions_walk',
+	Bus = 'directions_bus',
+	Metro = 'subway',
+	LocalTrain = 'directions_transit',
+	LongDistanceTrain = 'directions_transit',
+	Airplane = 'airplanemode_active',
+	Boat = 'directions_boat',
 }

@@ -1,10 +1,7 @@
-import dynamoose from "dynamoose";
-import type { Item } from "dynamoose/dist/Item";
-import {
-	type GenericMediaItem,
-	genericMediaAssetSchema,
-} from "./imageAssets.model";
-import type { MeetupItem } from "./meetup.model";
+import dynamoose from 'dynamoose';
+import type { Item } from 'dynamoose/dist/Item';
+import { type GenericMediaItem, genericMediaAssetSchema } from './imageAssets.model.js';
+import type { MeetupItem } from './meetup.model.js';
 
 export interface MeetupGroupItem {
 	/** The group ID */
@@ -29,7 +26,7 @@ export interface MeetupGroupItem {
 	/** UTC of user's last logged-in time */
 	lastLogin: Date;
 	/** List of meetup IDs related to this group */
-	meetupIds: MeetupItem["meetupId"][];
+	meetupIds: MeetupItem['meetupId'][];
 	/** Logo for the meetup group - main logo will be featured=true */
 	logo: GenericMediaItem[];
 	/** Profile photos for the group */
@@ -181,14 +178,14 @@ const meetupGroupSchema = new dynamoose.Schema(
 	},
 	{
 		timestamps: true,
-		saveUnknown: ["social.*"],
-	},
+		saveUnknown: ['social.*'],
+	}
 );
 
-export const MEETUP_GROUPS_TABLE_NAME = "Meetup_Groups";
+export const MEETUP_GROUPS_TABLE_NAME = 'Meetup_Groups';
 const MeetupGroupModel = dynamoose.model<MeetupGroupDocument>(
 	MEETUP_GROUPS_TABLE_NAME,
-	meetupGroupSchema,
+	meetupGroupSchema
 );
 
 export default MeetupGroupModel;

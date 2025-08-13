@@ -28,6 +28,117 @@
   ```
 
 </details>
+
+<details>
+  <summary>Linting and Code Quality</summary>
+
+  # Linting and Code Quality Setup
+
+  This project uses **Biome** for code linting/formatting and custom scripts to enforce `.js` extensions in ES module imports.
+
+  ## 🛠️ Tools Used
+
+  - **[Biome](https://biomejs.dev/)** - Fast formatter and linter for JavaScript/TypeScript
+  - **Custom import checker** - Ensures `.js` extensions are used in relative imports
+
+  ## 📝 Available Scripts
+
+  ### Linting Commands
+  ```bash
+  # Check all (code style + imports)
+  yarn lint
+
+  # Fix all issues automatically
+  yarn lint:fix
+
+  # Check only code style/formatting
+  yarn lint:code
+
+  # Fix only code style/formatting
+  yarn lint:code:fix
+
+  # Check only import extensions
+  yarn lint:imports
+
+  # Fix only import extensions
+  yarn lint:imports:fix
+
+  # Format code
+  yarn format
+  ```
+
+  ## 🎯 Why .js Extensions?
+
+  Since this project uses ES modules (`"type": "module"` in package.json), Node.js requires explicit `.js` extensions for relative imports, even in TypeScript files:
+
+  ```typescript
+  // ❌ Wrong - will cause runtime errors
+  import { config } from './config';
+  import routes from './routes';
+
+  // ✅ Correct - works with ES modules
+  import { config } from './config.js';
+  import routes from './routes/index.js';
+  ```
+
+  ## 🔧 VS Code Integration
+
+  The project includes VS Code settings (`.vscode/`) that:
+  - Use Biome as the default formatter
+  - Format on save
+  - Provide tasks for linting commands
+
+  ### Available VS Code Tasks
+  1. **Lint: Check All** (Ctrl/Cmd + Shift + P → "Tasks: Run Task")
+  2. **Lint: Fix All**
+  3. **Lint: Check Imports Only**
+  4. **Lint: Fix Imports Only**
+  5. **Format Code**
+
+  ## 🪝 Git Hooks
+
+  A pre-commit hook automatically checks import extensions before each commit:
+  - ✅ Commits succeed if all imports are properly formatted
+  - ❌ Commits are blocked if `.js` extensions are missing
+  - 💡 Provides helpful fix commands when issues are found
+
+  ## 🚨 Common Issues & Solutions
+
+  ### "Directory import not supported" Error
+  ```
+  Error [ERR_UNSUPPORTED_DIR_IMPORT]: Directory import '/path/to/handlers' is not supported
+  ```
+
+  **Solution:** Use explicit index file imports:
+  ```typescript
+  // ❌ Wrong
+  import { handler } from './handlers';
+
+  // ✅ Correct
+  import { handler } from './handlers/index.js';
+  ```
+
+  ### Import Extension Missing
+  ```
+  ❌ Found 1 import(s) missing .js extensions in 1 file(s).
+  ```
+
+  **Solution:** Run the auto-fix command:
+  ```bash
+  yarn lint:imports:fix
+  ```
+
+  ## 🔄 Workflow
+
+  1. **Write code** with proper imports (VS Code will help format)
+  2. **Save files** (auto-formatted by Biome)
+  3. **Commit changes** (pre-commit hook validates imports)
+  4. **If issues found**, run `yarn lint:fix` and commit again
+
+  This setup ensures your ES modules work correctly in Node.js while maintaining code quality! ✨
+
+</details>
+
 <details>
   <summary>Setup on Local Machine</summary>
 

@@ -1,5 +1,3 @@
-import getList from './getList';
+import getList from './getList.js';
 
-export {
-  getList,
-}
+export { getList };

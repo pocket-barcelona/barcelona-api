@@ -1,15 +1,15 @@
-import createMeetup from './create';
-import deleteMeetup from './delete';
-import getMeetupById from './getById';
-import getMeetupByShortId from './getByShortId';
-import getMeetupsList from './getList';
-import updateMeetup from './update';
+import createMeetup from './create.js';
+import deleteMeetup from './delete.js';
+import getMeetupById from './getById.js';
+import getMeetupByShortId from './getByShortId.js';
+import getMeetupsList from './getList.js';
+import updateMeetup from './update.js';
 
 export {
-  createMeetup,
-  deleteMeetup,
-  getMeetupById,
-  getMeetupByShortId,
-  getMeetupsList,
-  updateMeetup,
-}
+	createMeetup,
+	deleteMeetup,
+	getMeetupById,
+	getMeetupByShortId,
+	getMeetupsList,
+	updateMeetup,
+};

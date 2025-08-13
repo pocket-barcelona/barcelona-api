@@ -1,5 +1,5 @@
-import { object, string, type TypeOf } from "zod";
-import { USER_MAXIMUM_PASSWORD_LENGTH, USER_MINIMUM_PASSWORD_LENGTH } from "./constants";
+import { object, string, type TypeOf } from 'zod';
+import { USER_MAXIMUM_PASSWORD_LENGTH, USER_MINIMUM_PASSWORD_LENGTH } from './constants.js';
 
 // /**
 //  * @openapi
@@ -32,34 +32,31 @@ import { USER_MAXIMUM_PASSWORD_LENGTH, USER_MINIMUM_PASSWORD_LENGTH } from "./co
 //  *          type: string
 //  */
 export const resetPasswordUserSchema = object({
-  body: object({
-    password: string({
-      required_error: "Password is required",
-    })
-    .min(USER_MINIMUM_PASSWORD_LENGTH, "Password is too short")
-    .max(USER_MAXIMUM_PASSWORD_LENGTH, "Password is too long"),
+	body: object({
+		password: string({
+			required_error: 'Password is required',
+		})
+			.min(USER_MINIMUM_PASSWORD_LENGTH, 'Password is too short')
+			.max(USER_MAXIMUM_PASSWORD_LENGTH, 'Password is too long'),
 
-    passwordConfirmation: string({
-      required_error: "Password confirmation is required",
-    }),
+		passwordConfirmation: string({
+			required_error: 'Password confirmation is required',
+		}),
 
-    token: string({
-      required_error: "Token is required",
-    }),
+		token: string({
+			required_error: 'Token is required',
+		}),
 
-    email: string({
-      required_error: "Email is required",
-    }).email("Not a valid email"),
-
-  }).refine((data) => data.password === data.passwordConfirmation, {
-
-    message: "Passwords do not match",
-    path: ["passwordConfirmation"],
-  }),
-
+		email: string({
+			required_error: 'Email is required',
+		}).email('Not a valid email'),
+	}).refine((data) => data.password === data.passwordConfirmation, {
+		message: 'Passwords do not match',
+		path: ['passwordConfirmation'],
+	}),
 });
 
 export type ResetPasswordUserInput = Omit<
-  TypeOf<typeof resetPasswordUserSchema>,
-  "body.passwordConfirmation"
+	TypeOf<typeof resetPasswordUserSchema>,
+	'body.passwordConfirmation'
 >;

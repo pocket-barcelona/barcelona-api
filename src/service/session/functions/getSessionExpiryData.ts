@@ -1,11 +1,9 @@
-import { config } from "../../../config";
-import type { SessionExpiry } from "../../../models/auth/session.model";
+import { config } from '../../../config.js';
+import type { SessionExpiry } from '../../../models/auth/session.model.js';
 
-export default function getSessionExpiryData(
-	type: "access" | "refresh",
-): SessionExpiry {
+export default function getSessionExpiryData(type: 'access' | 'refresh'): SessionExpiry {
 	let ttl = 0;
-	if (type === "refresh") {
+	if (type === 'refresh') {
 		ttl = config.refreshTokenTtl;
 	} else {
 		ttl = config.accessTokenTtl;

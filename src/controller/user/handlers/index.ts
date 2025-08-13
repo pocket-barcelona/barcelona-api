@@ -1,21 +1,21 @@
-import checkResetToken from './checkResetToken';
-import confirmEmailAddress from './confirmEmailAddress';
-import createUser from './createUser';
-import deleteUser from './deleteUser';
-import forgotPassword from './forgotPassword';
-import getList from './getList';
-import getLoggedInUser from './getLoggedInUser';
-import resetPassword from './resetPassword';
-import updateUser from './updateUser';
+import checkResetToken from './checkResetToken.js';
+import confirmEmailAddress from './confirmEmailAddress.js';
+import createUser from './createUser.js';
+import deleteUser from './deleteUser.js';
+import forgotPassword from './forgotPassword.js';
+import getList from './getList.js';
+import getLoggedInUser from './getLoggedInUser.js';
+import resetPassword from './resetPassword.js';
+import updateUser from './updateUser.js';
 
 export {
-  checkResetToken,
-  confirmEmailAddress,
-  createUser,
-  deleteUser,
-  forgotPassword,
-  getList,
-  getLoggedInUser,
-  resetPassword,
-  updateUser,
-}
+	checkResetToken,
+	confirmEmailAddress,
+	createUser,
+	deleteUser,
+	forgotPassword,
+	getList,
+	getLoggedInUser,
+	resetPassword,
+	updateUser,
+};

@@ -7,9 +7,9 @@
 // // ALSO COULD LOOK INTO: --transpile-only then run the JS file: Seee "Usage" headline https://www.npmjs.com/package/ts-node#installation
 // import * as fs from "node:fs";
 // import * as path from "node:path";
-// import type { BarrioCsv } from "./barrioCsv.type";
+// import type { BarrioCsv } from "./barrioCsv.type.js";
 // import { fileURLToPath } from 'node:url';
-// import { type BarrioInput, TABLE_NAME_BARRIOS } from "../../models/barrio.model";
+// import { type BarrioInput, TABLE_NAME_BARRIOS } from "../../models/barrio.model.js";
 // import { parse } from "csv-parse/sync";
 // import 'dotenv/config'; // support for dotenv injecting into the process env
 // // import AWS from "aws-sdk";
@@ -36,7 +36,7 @@
 //     TableName: string;
 //     Item: TRecord;
 //   }, theRecord: TRecord, callback?: (err: ServiceException, data: BarrioInput) => any) {
-    
+
 //     docClient.put(params, (err, data) => {
 //       if (err) {
 //         console.error(
@@ -64,7 +64,6 @@
 // // read file
 // const fileContent = fs.readFileSync(csvFilePath, { encoding: 'utf-8' });
 
-
 // const parserService = <T>(fileContent: string, csvHeaders: string[]) => {
 //   // init output
 //   let records: T[] = [];
@@ -82,7 +81,6 @@
 //   return records;
 // }
 
-
 // // CSV-SPECIFIC DATA...
 
 // // csv headers
@@ -93,7 +91,7 @@
 // const records = parserService<BarrioCsv>(fileContent, csvHeaders);
 
 // if (records && records.length > 0) {
-  
+
 //   // put the new records in the database...
 
 //   // build new mapped objects
@@ -108,16 +106,16 @@
 //       barrioCentrality: Number(r.barrio_central_range),
 //     };
 //   });
-  
+
 //   console.log(`Importing ${mappedRecords.length} record/s into the DynamoDB inside table: ${TABLE_NAME_BARRIOS}. Please wait...`);
-  
+
 //   // perform PUT operation for each document
 //   // Warning: running this multiple times will overwrite existing items by ID!
 //   // biome-ignore lint/complexity/noForEach: <explanation>
 //   mappedRecords
 //   .slice(1) // skip the header row!
 //   .forEach((theRecord) => {
-    
+
 //     const params = {
 //       TableName: TABLE_NAME_BARRIOS,
 //       Item: {

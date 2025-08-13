@@ -1,28 +1,27 @@
-import checkResetTokenHandler from './checkResetToken';
-import confirmEmailAddressHandler from './confirmEmailAddress';
-import createUserHandler from './createUser';
-import forgotPasswordHandler from './forgotPassword';
-import generatePasswordResetTokenHandler from './generatePasswordResetToken';
-import getUserByEmailHandler from './getUserByEmail';
-import getUserByIdAndEmailHandler from './getUserByIdAndEmail';
-import getUsersHandler from './getUsers';
-import resetPasswordHandler from './resetPassword';
-import sendWelcomeEmailHandler from './sendWelcomeEmail';
-import updateUserHandler from './updateUser';
-import validatePasswordHandler from './validatePassword';
-
+import checkResetTokenHandler from './checkResetToken.js';
+import confirmEmailAddressHandler from './confirmEmailAddress.js';
+import createUserHandler from './createUser.js';
+import forgotPasswordHandler from './forgotPassword.js';
+import generatePasswordResetTokenHandler from './generatePasswordResetToken.js';
+import getUserByEmailHandler from './getUserByEmail.js';
+import getUserByIdAndEmailHandler from './getUserByIdAndEmail.js';
+import getUsersHandler from './getUsers.js';
+import resetPasswordHandler from './resetPassword.js';
+import sendWelcomeEmailHandler from './sendWelcomeEmail.js';
+import updateUserHandler from './updateUser.js';
+import validatePasswordHandler from './validatePassword.js';
 
 export {
-  checkResetTokenHandler,
-  confirmEmailAddressHandler,
-  createUserHandler,
-  forgotPasswordHandler,
-  generatePasswordResetTokenHandler,
-  getUserByEmailHandler,
-  getUserByIdAndEmailHandler,
-  getUsersHandler,
-  resetPasswordHandler,
-  sendWelcomeEmailHandler,
-  updateUserHandler,
-  validatePasswordHandler,
-}
+	checkResetTokenHandler,
+	confirmEmailAddressHandler,
+	createUserHandler,
+	forgotPasswordHandler,
+	generatePasswordResetTokenHandler,
+	getUserByEmailHandler,
+	getUserByIdAndEmailHandler,
+	getUsersHandler,
+	resetPasswordHandler,
+	sendWelcomeEmailHandler,
+	updateUserHandler,
+	validatePasswordHandler,
+};

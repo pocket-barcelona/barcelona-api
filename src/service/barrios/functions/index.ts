@@ -1,7 +1,4 @@
-import getRegionsListHandler from './getRegionsList';
-import getListHandler from './getList';
+import getListHandler from './getList.js';
+import getRegionsListHandler from './getRegionsList.js';
 
-export {
-    getRegionsListHandler,
-    getListHandler,
-};
+export { getRegionsListHandler, getListHandler };

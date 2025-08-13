@@ -1,12 +1,12 @@
-import lodash from "lodash";
+import lodash from 'lodash';
 import SessionModel, {
 	type SessionDocument,
 	type SessionTokenModel,
-} from "../../../models/auth/session.model";
-import { UserStatusEnum } from "../../../models/auth/user.model";
-import { SessionUtils } from "../../../utils/jwt.utils";
-import { UserService } from "../../user/user.service";
-import { SessionService } from "../session.service";
+} from '../../../models/auth/session.model.js';
+import { UserStatusEnum } from '../../../models/auth/user.model.js';
+import { SessionUtils } from '../../../utils/jwt.utils.js';
+import { UserService } from '../../user/user.service.js';
+import { SessionService } from '../session.service.js';
 
 const { get } = lodash;
 
@@ -28,13 +28,11 @@ export enum ReissueAccessTokenErrorEnum {
  */
 export default async function reIssueAccessToken({
 	refreshToken,
-}: Pick<SessionTokenModel, "refreshToken">): Promise<
-	string | ReissueAccessTokenErrorEnum
-> {
+}: Pick<SessionTokenModel, 'refreshToken'>): Promise<string | ReissueAccessTokenErrorEnum> {
 	// decode token
 	const { decoded, valid, expired } = await SessionUtils.verifyJwt(
 		refreshToken,
-		"refreshTokenPublicKey",
+		'refreshTokenPublicKey'
 	);
 
 	// refresh token is not valid or has expired
@@ -42,10 +40,9 @@ export default async function reIssueAccessToken({
 	if (expired) return ReissueAccessTokenErrorEnum.ExpiredRefreshToken;
 
 	// @todo should be a string not undefined? https://www.geeksforgeeks.org/lodash-_-get-method/
-	const sessionValue = get(decoded, "session") as unknown as string;
+	const sessionValue = get(decoded, 'session') as unknown as string;
 
-	if (!decoded || !sessionValue)
-		return ReissueAccessTokenErrorEnum.MalformedRefreshToken; // invalid refresh token object - model could have changed!
+	if (!decoded || !sessionValue) return ReissueAccessTokenErrorEnum.MalformedRefreshToken; // invalid refresh token object - model could have changed!
 
 	let session: SessionDocument;
 	try {
@@ -74,7 +71,7 @@ export default async function reIssueAccessToken({
 			return ReissueAccessTokenErrorEnum.UserAccountDisabled;
 
 		// build new expiry object
-		const sessionExpiry = SessionService.getSessionExpiryData("access");
+		const sessionExpiry = SessionService.getSessionExpiryData('access');
 
 		/**
 		 * Note: must be same as!
@@ -82,13 +79,13 @@ export default async function reIssueAccessToken({
 		 */
 		const accessToken = await SessionUtils.signJwt(
 			{ ...user, ...sessionExpiry, session: session },
-			"accessTokenPrivateKey",
+			'accessTokenPrivateKey'
 			// { expiresIn: `${config.accessTokenTtl}m` } // e.g. "30m" (30 minutes)
 		);
 
 		if (!accessToken) return ReissueAccessTokenErrorEnum.AuthServerError; // error signing new jwt token
 
-		return accessToken ?? "";
+		return accessToken ?? '';
 	} catch (error) {
 		return ReissueAccessTokenErrorEnum.AuthServerError;
 	}

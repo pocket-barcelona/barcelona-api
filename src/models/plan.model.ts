@@ -1,17 +1,17 @@
-import type { CategoryDocument, CategoryInput } from "./category.model";
-import { CategoryIdEnum } from "./enums/categoryid.enum";
-import { ChildrenEnum } from "./enums/children.enum";
-import { CommitmentEnum } from "./enums/commitment.enum";
-import type { PriceEnum } from "./enums/price.enum";
-import { ProfileTypeEnum } from "./enums/profiletype.enum";
-import { RequiresBookingEnum } from "./enums/requiresbooking.enum";
-import { TeenagerEnum } from "./enums/teenager.enum";
-import type { TimeRecommendedEnum } from "./enums/timerecommended.enum";
-import type { TimeOfDayEnum } from "./enums/tod.enum";
-import type { EventInput } from "./event.model";
-import type { PlaceDocument, PlaceInput } from "./place.model";
-import type { PlanThemeEnum } from "./planThemes";
-import type { PoiInput } from "./poi.model";
+import type { CategoryDocument, CategoryInput } from './category.model.js';
+import { CategoryIdEnum } from './enums/categoryid.enum.js';
+import { ChildrenEnum } from './enums/children.enum.js';
+import { CommitmentEnum } from './enums/commitment.enum.js';
+import type { PriceEnum } from './enums/price.enum.js';
+import { ProfileTypeEnum } from './enums/profiletype.enum.js';
+import { RequiresBookingEnum } from './enums/requiresbooking.enum.js';
+import { TeenagerEnum } from './enums/teenager.enum.js';
+import type { TimeRecommendedEnum } from './enums/timerecommended.enum.js';
+import type { TimeOfDayEnum } from './enums/tod.enum.js';
+import type { EventInput } from './event.model.js';
+import type { PlaceDocument, PlaceInput } from './place.model.js';
+import type { PlanThemeEnum } from './planThemes.js';
+import type { PoiInput } from './poi.model.js';
 
 /** The response of the structured plan */
 export interface StructuredPlanResponse {
@@ -49,14 +49,14 @@ export interface StructuredPlanResponse {
 		/** @todo - if places are all close, mark as true */
 		easyWalking: boolean;
 		/** A distinct list of the categories in the result set */
-		categoriesIncluded: Array<CategoryDocument["categoryId"]>;
+		categoriesIncluded: Array<CategoryDocument['categoryId']>;
 		/** Spend time in 1 place or move around. Use ENUM */
 		// focusOnSameLocation: number;
 		/** Create an average time of day. Could be day, night or both */
 		timeOfDay: TimeOfDayEnum;
 		/** True is dataset contains places only in the central neighbourhoods */
 		centralBarriosOnly: boolean;
-		excludePlaceIds: Array<PlaceDocument["placeId"]>;
+		excludePlaceIds: Array<PlaceDocument['placeId']>;
 
 		/** @todo... */
 		visitingWithPets: boolean;
@@ -82,7 +82,7 @@ export interface PlanBuilderInput {
 	/** Budget € - €€€€€ */
 	budget: PriceEnum;
 	/** Array of category IDs (requires min 3) */
-	categoryIds: Array<CategoryInput["categoryId"]>;
+	categoryIds: Array<CategoryInput['categoryId']>;
 	/** Visit places outside BCN: boolean (Do you want to include day trips outside of Barcelona?) */
 	includePlacesOutsideBarcelona: boolean;
 	/** Can you walk between places easily? */
@@ -94,7 +94,7 @@ export interface PlanBuilderInput {
 	/** Focus results on central neighbourhoods only? NULL=don't mind */
 	centralBarriosOnly: boolean | null;
 	/** A list of place IDs to not include in the results */
-	excludePlaceIds: Array<PlaceInput["placeId"]>;
+	excludePlaceIds: Array<PlaceInput['placeId']>;
 	/** Are you visiting with pet/s? */
 	visitingWithPets: boolean;
 	/** Visiting with kids (less than 13) */

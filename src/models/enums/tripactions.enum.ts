@@ -1,5 +1,5 @@
 export enum TripActionsEnum {
-  LoadTrip = 'load',
-  NewTrip = 'new',
-  AddPlaceToTrip = 'addplace',
+	LoadTrip = 'load',
+	NewTrip = 'new',
+	AddPlaceToTrip = 'addplace',
 }

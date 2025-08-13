@@ -1,4 +1,4 @@
-import { object, string, type TypeOf } from "zod";
+import { object, string, type TypeOf } from 'zod';
 
 /**
  * @openapi
@@ -19,11 +19,11 @@ import { object, string, type TypeOf } from "zod";
  *          type: string
  */
 export const forgotPasswordUserSchema = object({
-  body: object({
-    email: string({
-      required_error: "Email is required",
-    }).email("Not a valid email"),
-  })
+	body: object({
+		email: string({
+			required_error: 'Email is required',
+		}).email('Not a valid email'),
+	}),
 });
 
 export type ForgotPasswordUserInput = TypeOf<typeof forgotPasswordUserSchema>;

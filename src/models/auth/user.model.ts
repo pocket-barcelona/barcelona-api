@@ -1,10 +1,7 @@
-import dynamoose from "dynamoose";
-import type { Item } from "dynamoose/dist/Item";
-import { UserUtils } from "../../service/user/user.utils";
-import {
-	type GenericMediaItem,
-	genericMediaAssetSchema,
-} from "../imageAssets.model";
+import dynamoose from 'dynamoose';
+import type { Item } from 'dynamoose/dist/Item';
+import { UserUtils } from '../../service/user/user.utils.js';
+import { type GenericMediaItem, genericMediaAssetSchema } from '../imageAssets.model.js';
 
 /** What the user must provide to create their user account */
 export interface UserInput {
@@ -19,7 +16,7 @@ export interface UserInput {
 	/** User active status */
 	userStatus: UserStatusEnum;
 	/** What they used to auth/login with */
-	authMethod: "FB" | "IG" | "GOOGLE" | "EMAIL";
+	authMethod: 'FB' | 'IG' | 'GOOGLE' | 'EMAIL';
 	/** The external auth token of their auth session */
 	authToken: string;
 	/** UTC of when user signed up */
@@ -127,7 +124,7 @@ const identitySchema = new dynamoose.Schema(
 	{
 		timestamps: false,
 		saveUnknown: false,
-	},
+	}
 );
 
 const userSchema = new dynamoose.Schema(
@@ -141,10 +138,7 @@ const userSchema = new dynamoose.Schema(
 		emailConfirmed: {
 			type: Number,
 			required: true,
-			enum: [
-				UserEmailConfirmedEnum.Unconfirmed,
-				UserEmailConfirmedEnum.Confirmed,
-			],
+			enum: [UserEmailConfirmedEnum.Unconfirmed, UserEmailConfirmedEnum.Confirmed],
 			default: UserEmailConfirmedEnum.Unconfirmed,
 		},
 		userId: {
@@ -160,7 +154,7 @@ const userSchema = new dynamoose.Schema(
 		},
 		passwordResetToken: {
 			type: String,
-			default: "",
+			default: '',
 		},
 		role: {
 			type: Number,
@@ -271,7 +265,7 @@ const userSchema = new dynamoose.Schema(
 	{
 		timestamps: true,
 		saveUnknown: false,
-	},
+	}
 );
 
 // userSchema.pre("save", async function (next) {
@@ -301,6 +295,6 @@ const userSchema = new dynamoose.Schema(
 /**
  * @todo - add a method for comparePassword: https://dynamoosejs.com/guide/Model#modelmethodssetname-function
  */
-const UserModel = dynamoose.model<UserDocument>("User", userSchema);
+const UserModel = dynamoose.model<UserDocument>('User', userSchema);
 
 export default UserModel;

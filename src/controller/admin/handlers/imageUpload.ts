@@ -1,88 +1,78 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { AdminService } from "../../../service/admin/admin.service";
-import { error, success } from "../../../middleware/apiResponse";
-import FormData from "form-data";
-import { PostsService } from "../../../service/posts/posts.service";
+import type { Request, Response } from 'express';
+import FormData from 'form-data';
+import { StatusCodes } from 'http-status-codes';
+import { error, success } from '../../../middleware/apiResponse.js';
+import { AdminService } from '../../../service/admin/admin.service.js';
+import { PostsService } from '../../../service/posts/posts.service.js';
 
 const MAX_IMAGES_PER_POST = 20;
 
 export default async function (req: Request<unknown>, res: Response) {
-  try {
-    const { fields, formidableFile } = await AdminService.getFileUploadData(
-      req
-    );
+	try {
+		const { fields, formidableFile } = await AdminService.getFileUploadData(req);
 
-    if (!fields) {
-      return res
-        .status(StatusCodes.UNPROCESSABLE_ENTITY)
-        .send(error("No fields provided", res.statusCode));
-    }
+		if (!fields) {
+			return res
+				.status(StatusCodes.UNPROCESSABLE_ENTITY)
+				.send(error('No fields provided', res.statusCode));
+		}
 
-    // make sure post exists...
-    // @todo - fix...
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        const post = await PostsService.getById(fields as any);
-    if (!post) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send(error("Post not found", res.statusCode));
-    }
+		// make sure post exists...
+		// @todo - fix...
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		const post = await PostsService.getById(fields as any);
+		if (!post) {
+			return res.status(StatusCodes.NOT_FOUND).send(error('Post not found', res.statusCode));
+		}
 
-    if (post.postImages.length >= MAX_IMAGES_PER_POST) {
-      return res
-        .status(StatusCodes.UNPROCESSABLE_ENTITY)
-        .send(
-          error(
-            `Too many images for this post. The maximum allowed is ${MAX_IMAGES_PER_POST}`,
-            res.statusCode
-          )
-        );
-    }
+		if (post.postImages.length >= MAX_IMAGES_PER_POST) {
+			return res
+				.status(StatusCodes.UNPROCESSABLE_ENTITY)
+				.send(
+					error(
+						`Too many images for this post. The maximum allowed is ${MAX_IMAGES_PER_POST}`,
+						res.statusCode
+					)
+				);
+		}
 
-    // @todo - use admin service for this...so can ignore published status
+		// @todo - use admin service for this...so can ignore published status
 
-    const uploadedSuccess = await AdminService.handleFileUploads({
-      fields,
-      formidableFile,
-    });
+		const uploadedSuccess = await AdminService.handleFileUploads({
+			fields,
+			formidableFile,
+		});
 
-    if (false === uploadedSuccess) {
-      return res
-        .status(StatusCodes.UNPROCESSABLE_ENTITY)
-        .send(error("Error uploading file, please try again", res.statusCode));
-    }
+		if (false === uploadedSuccess) {
+			return res
+				.status(StatusCodes.UNPROCESSABLE_ENTITY)
+				.send(error('Error uploading file, please try again', res.statusCode));
+		}
 
-    const {
-      fields: parsedFields,
-      object: newS3Object,
-      uploadedFile,
-    } = uploadedSuccess;
+		const { fields: parsedFields, object: newS3Object, uploadedFile } = uploadedSuccess;
 
-    // if file uploaded to S3, update post images array
-    // const updatedPost = await PostService.updatePost(req.params.id, req.body);
+		// if file uploaded to S3, update post images array
+		// const updatedPost = await PostService.updatePost(req.params.id, req.body);
 
-    // post.postImages.push(uploadedFile);
-    // await post.save();
+		// post.postImages.push(uploadedFile);
+		// await post.save();
 
-    return res.send(
-      success(uploadedFile, {
-        meta: {
-          object: newS3Object,
-          fields: parsedFields,
-          // post: post,
-        },
-      })
-    );
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  } catch (err: any) {
-    if (err?.message) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .send(error(err.message, res.statusCode));
-    }
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(error("Error uploading file", res.statusCode));
-  }
+		return res.send(
+			success(uploadedFile, {
+				meta: {
+					object: newS3Object,
+					fields: parsedFields,
+					// post: post,
+				},
+			})
+		);
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	} catch (err: any) {
+		if (err?.message) {
+			return res.status(StatusCodes.BAD_REQUEST).send(error(err.message, res.statusCode));
+		}
+		return res
+			.status(StatusCodes.INTERNAL_SERVER_ERROR)
+			.send(error('Error uploading file', res.statusCode));
+	}
 }

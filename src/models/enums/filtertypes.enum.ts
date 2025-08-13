@@ -1,45 +1,45 @@
 export enum FilterTypesEnum {
-  Page = 'page',
-  PageSize = 'page_size',
-  Entity = 'entity',
-  OrderBy = 'order_by',
+	Page = 'page',
+	PageSize = 'page_size',
+	Entity = 'entity',
+	OrderBy = 'order_by',
 
-  Persona = 'persona',
-  Province = 'province',
-  Town = 'town',
-  // Barrio = 'barrio',
-  Barrios = 'barrios',
-  // Type = 'type',
-  Types = 'types',
-  Keyword = 'keyword',
-  Popular = 'popular',
-  
-  TimeTaken = 'time',
-  TimeOfDay = 'tod',
-  Price = 'price',
-  Commitment = 'commitment',
+	Persona = 'persona',
+	Province = 'province',
+	Town = 'town',
+	// Barrio = 'barrio',
+	Barrios = 'barrios',
+	// Type = 'type',
+	Types = 'types',
+	Keyword = 'keyword',
+	Popular = 'popular',
 
-  Children = 'children',
-  Teenagers = 'teenagers',
+	TimeTaken = 'time',
+	TimeOfDay = 'tod',
+	Price = 'price',
+	Commitment = 'commitment',
 
-  Daytrip = 'daytrip',
-  Sundays = 'sundays',
+	Children = 'children',
+	Teenagers = 'teenagers',
 
-  RequiresBooking = 'requires_booking',
-  Seasonal = 'seasonal',
+	Daytrip = 'daytrip',
+	Sundays = 'sundays',
 
-  PointOfInterest = 'poi',
-  Landmark = 'landmark',
+	RequiresBooking = 'requires_booking',
+	Seasonal = 'seasonal',
 
-  Search = 'search',
-  
-  Exclude = 'exclude',
-  Include = 'include',
+	PointOfInterest = 'poi',
+	Landmark = 'landmark',
 
-  MoreLikeThis = 'more_like_this',
-  LoadTrip = 'loadtrip',
-  TripId = 'trip_id',
-  Suggested = 'suggested', // whether or not the trip is a trip suggestion, else a user one
-  Rating = 'rating',
-  Zone = 'zone',
+	Search = 'search',
+
+	Exclude = 'exclude',
+	Include = 'include',
+
+	MoreLikeThis = 'more_like_this',
+	LoadTrip = 'loadtrip',
+	TripId = 'trip_id',
+	Suggested = 'suggested', // whether or not the trip is a trip suggestion, else a user one
+	Rating = 'rating',
+	Zone = 'zone',
 }

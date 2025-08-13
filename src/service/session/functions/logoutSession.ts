@@ -1,4 +1,4 @@
-import SessionModel, { type SessionDocument } from "../../../models/auth/session.model";
+import SessionModel, { type SessionDocument } from '../../../models/auth/session.model.js';
 
 /**
  * Update a DB session record with partial data
@@ -7,14 +7,14 @@ import SessionModel, { type SessionDocument } from "../../../models/auth/session
  * @returns
  */
 export default async function logoutSession(
-  existingSessionData: Pick<SessionDocument, "user">
+	existingSessionData: Pick<SessionDocument, 'user'>
 ): Promise<SessionDocument | null> {
-  const logoutSessionData: Pick<SessionDocument, "valid"> = { valid: false };
-  try {
-    return SessionModel.update(existingSessionData, {
-      ...logoutSessionData,
-    });
-  } catch (_error) {
-    return null;
-  }
+	const logoutSessionData: Pick<SessionDocument, 'valid'> = { valid: false };
+	try {
+		return SessionModel.update(existingSessionData, {
+			...logoutSessionData,
+		});
+	} catch (_error) {
+		return null;
+	}
 }

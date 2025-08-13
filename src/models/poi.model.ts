@@ -4,16 +4,16 @@
  * Bars, Restaurants, Coffee Shops, Clubs etc
  * */
 
-import dynamoose from "dynamoose";
-import type { Item } from "dynamoose/dist/Item";
-import type { CategoryIdEnum } from "./enums/categoryid.enum";
-// import { ChildrenEnum } from "./enums/children.enum";
-// import { CommitmentEnum } from "./enums/commitment.enum";
-// import { PriceEnum } from "./enums/price.enum";
-import type { RequiresBookingEnum } from "./enums/requiresbooking.enum";
-// import { TeenagerEnum } from "./enums/teenager.enum";
-// import { TimeRecommendedEnum } from "./enums/timerecommended.enum";
-import type { TimeOfDayEnum } from "./enums/tod.enum";
+import dynamoose from 'dynamoose';
+import type { Item } from 'dynamoose/dist/Item';
+import type { CategoryIdEnum } from './enums/categoryid.enum.js';
+// import { ChildrenEnum } from "./enums/children.enum.js";
+// import { CommitmentEnum } from "./enums/commitment.enum.js";
+// import { PriceEnum } from "./enums/price.enum.js";
+import type { RequiresBookingEnum } from './enums/requiresbooking.enum.js';
+// import { TeenagerEnum } from "./enums/teenager.enum.js";
+// import { TimeRecommendedEnum } from "./enums/timerecommended.enum.js";
+import type { TimeOfDayEnum } from './enums/tod.enum.js';
 
 export interface PoiInput {
 	/** The POI ID */
@@ -185,10 +185,10 @@ const poiSchema = new dynamoose.Schema(
 	{
 		timestamps: true,
 		saveUnknown: false,
-	},
+	}
 );
 
-export const TABLE_NAME_POI = "Poi";
+export const TABLE_NAME_POI = 'Poi';
 const PoiModel = dynamoose.model<PoiDocument>(TABLE_NAME_POI, poiSchema);
 
 export default PoiModel;

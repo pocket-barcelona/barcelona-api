@@ -1,18 +1,18 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
-import lodash from "lodash";
-import { config } from "../../../config";
-import { error, success } from "../../../middleware/apiResponse";
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
+import lodash from 'lodash';
+import { config } from '../../../config.js';
+import { error, success } from '../../../middleware/apiResponse.js';
 // import {
 // 	SessionDocument,
 // 	SessionTokenModel,
-// } from "../../../models/auth/session.model";
-// import { SessionInput } from "../../../schema/session/session.schema";
-import { SessionService } from "../../../service/session/session.service";
-// import { UserService } from "../../../service/user/user.service";
-import { SessionUtils } from "../../../utils/jwt.utils";
+// } from "../../../models/auth/session.model.js";
+// import { SessionInput } from "../../../schema/session/session.schema.js";
+import { SessionService } from '../../../service/session/session.service.js';
+// import { UserService } from "../../../service/user/user.service.js";
+import { SessionUtils } from '../../../utils/jwt.utils.js';
 
-// import logger from "../../../utils/logger";
+// import logger from "../../../utils/logger.js";
 
 const { get } = lodash;
 
@@ -23,58 +23,50 @@ const { get } = lodash;
  * @param  {Response} res
  */
 export default async function refreshSession(req: Request, res: Response) {
-	const accessToken = get(
-		req,
-		`headers.${config.HEADER_AUTHORIZATION.toLowerCase()}`,
-		"",
-	)
+	const accessToken = get(req, `headers.${config.HEADER_AUTHORIZATION.toLowerCase()}`, '')
 		.toString()
-		.replace(/^Bearer\s/, "") as string;
+		.replace(/^Bearer\s/, '') as string;
 
 	if (!accessToken) {
 		return res
 			.status(StatusCodes.BAD_REQUEST)
-			.send(error("Invalid or no access token supplied", res.statusCode));
+			.send(error('Invalid or no access token supplied', res.statusCode));
 	}
 
 	const {
-    // decoded,
-    // expired,
-    valid } = await SessionUtils.verifyJwt(
-		accessToken,
-		"accessTokenPublicKey",
-	);
+		// decoded,
+		// expired,
+		valid,
+	} = await SessionUtils.verifyJwt(accessToken, 'accessTokenPublicKey');
 
 	if (!valid) {
-		return res
-			.status(StatusCodes.FORBIDDEN)
-			.send(error("Invalid access token", res.statusCode));
+		return res.status(StatusCodes.FORBIDDEN).send(error('Invalid access token', res.statusCode));
 	}
 
 	const refreshToken = get(
 		req,
 		`headers.${config.HEADER_X_REFRESH_TOKEN.toLowerCase()}`,
-		"",
+		''
 	) as string; // in the front end or Postman, can be like: X-Refresh: {{refreshToken}}
 
 	if (!refreshToken) {
 		return res
 			.status(StatusCodes.BAD_REQUEST)
-			.send(error("Invalid or no refresh token supplied", res.statusCode));
+			.send(error('Invalid or no refresh token supplied', res.statusCode));
 	}
 
-	const { expired: expiredRefresh, valid: validRefresh } =
-		await SessionUtils.verifyJwt(refreshToken, "refreshTokenPublicKey");
+	const { expired: expiredRefresh, valid: validRefresh } = await SessionUtils.verifyJwt(
+		refreshToken,
+		'refreshTokenPublicKey'
+	);
 
 	if (!validRefresh) {
-		return res
-			.status(StatusCodes.FORBIDDEN)
-			.send(error("Invalid access token", res.statusCode));
+		return res.status(StatusCodes.FORBIDDEN).send(error('Invalid access token', res.statusCode));
 	}
 	if (expiredRefresh) {
 		return res
 			.status(StatusCodes.FORBIDDEN)
-			.send(error("Refresh token has expired, please sign in", res.statusCode));
+			.send(error('Refresh token has expired, please sign in', res.statusCode));
 	}
 
 	// if the access token is given & valid, and the refresh token is supplied
@@ -82,15 +74,10 @@ export default async function refreshSession(req: Request, res: Response) {
 		refreshToken,
 	});
 
-	if (typeof newAccessToken !== "string") {
+	if (typeof newAccessToken !== 'string') {
 		return res
 			.status(StatusCodes.FORBIDDEN)
-			.send(
-				error(
-					"Refresh token expired or invalid, please sign in",
-					res.statusCode,
-				),
-			);
+			.send(error('Refresh token expired or invalid, please sign in', res.statusCode));
 	}
 
 	// const result = SessionUtils.verifyJwt(
@@ -116,8 +103,8 @@ export default async function refreshSession(req: Request, res: Response) {
 	// .sendStatus(StatusCodes.OK);
 
 	return res.send(
-		success<string>("Refreshed", {
+		success<string>('Refreshed', {
 			statusCode: res.statusCode,
-		}),
+		})
 	);
 }

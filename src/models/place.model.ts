@@ -1,14 +1,14 @@
-import dynamoose from "dynamoose";
-import type { Item } from "dynamoose/dist/Item";
-import type { CategoryIdEnum } from "./enums/categoryid.enum";
-import type { ChildrenEnum } from "./enums/children.enum";
-import type { CommitmentEnum } from "./enums/commitment.enum";
-import type { PriceEnum } from "./enums/price.enum";
-import type { RequiresBookingEnum } from "./enums/requiresbooking.enum";
-import type { TeenagerEnum } from "./enums/teenager.enum";
-import type { TimeRecommendedEnum } from "./enums/timerecommended.enum";
-import type { TimeOfDayEnum } from "./enums/tod.enum";
-import type { ImageAssets } from "./imageAssets.model";
+import dynamoose from 'dynamoose';
+import type { Item } from 'dynamoose/dist/Item';
+import type { CategoryIdEnum } from './enums/categoryid.enum.js';
+import type { ChildrenEnum } from './enums/children.enum.js';
+import type { CommitmentEnum } from './enums/commitment.enum.js';
+import type { PriceEnum } from './enums/price.enum.js';
+import type { RequiresBookingEnum } from './enums/requiresbooking.enum.js';
+import type { TeenagerEnum } from './enums/teenager.enum.js';
+import type { TimeRecommendedEnum } from './enums/timerecommended.enum.js';
+import type { TimeOfDayEnum } from './enums/tod.enum.js';
+import type { ImageAssets } from './imageAssets.model.js';
 
 interface PlaceRating {
 	rating: string;
@@ -300,13 +300,10 @@ const placeSchema = new dynamoose.Schema(
 	{
 		timestamps: true,
 		saveUnknown: false,
-	},
+	}
 );
 
-export const TABLE_NAME_PLACES = "Places";
-const PlaceModel = dynamoose.model<PlaceDocument>(
-	TABLE_NAME_PLACES,
-	placeSchema,
-);
+export const TABLE_NAME_PLACES = 'Places';
+const PlaceModel = dynamoose.model<PlaceDocument>(TABLE_NAME_PLACES, placeSchema);
 
 export default PlaceModel;

@@ -1,12 +1,12 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { error, success } from "../../../middleware/apiResponse";
-import type { ConfirmEmailAddressUserInput } from "../../../schema/user/confirm-email-address";
-import { UserService } from "../../../service/user/user.service";
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { error, success } from '../../../middleware/apiResponse.js';
+import type { ConfirmEmailAddressUserInput } from '../../../schema/user/confirm-email-address.js';
+import { UserService } from '../../../service/user/user.service.js';
 
 export default async function confirmEmailAddress(
-	req: Request<unknown, unknown, ConfirmEmailAddressUserInput["body"]>,
-	res: Response,
+	req: Request<unknown, unknown, ConfirmEmailAddressUserInput['body']>,
+	res: Response
 ) {
 	let confirmed = false;
 
@@ -22,12 +22,12 @@ export default async function confirmEmailAddress(
 		return res.send(
 			success<boolean>(true, {
 				statusCode: res.statusCode,
-				message: "Confirmed",
-			}),
+				message: 'Confirmed',
+			})
 		);
 	}
 
 	return res
 		.status(StatusCodes.FORBIDDEN)
-		.json(error("The email address could not be confirmed.", res.statusCode));
+		.json(error('The email address could not be confirmed.', res.statusCode));
 }

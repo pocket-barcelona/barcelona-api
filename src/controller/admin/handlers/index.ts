@@ -1,6 +1,6 @@
-import imageUpload from './imageUpload';
+import imageUpload from './imageUpload.js';
 
 export {
-  imageUpload,
-  // other...
-}
+	imageUpload,
+	// other...
+};

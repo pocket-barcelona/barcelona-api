@@ -1,4 +1,4 @@
-import { number, object, optional, string, type TypeOf } from "zod";
+import { number, object, optional, string, type TypeOf } from 'zod';
 
 const payload = {
 	body: object({
@@ -11,20 +11,20 @@ const filterByParams = {
 	body: object({
 		lat: optional(
 			number({
-				required_error: "lat is required",
+				required_error: 'lat is required',
 				// invalid_type_error
-			}),
+			})
 		),
 		lng: optional(
 			number({
-				required_error: "lng is required",
+				required_error: 'lng is required',
 				// invalid_type_error
-			}),
+			})
 		),
 		price: optional(
 			number({
-				required_error: "price is required",
-			}),
+				required_error: 'price is required',
+			})
 		),
 	}),
 };
@@ -32,7 +32,7 @@ const filterByParams = {
 const params = {
 	params: object({
 		poiId: string({
-			required_error: "ID is required",
+			required_error: 'ID is required',
 			// invalid_type_error
 		}),
 	}),

@@ -4,18 +4,26 @@
   "version": "1.0.0",
   "private": true,
   "description": "",
+  "engines": {
+    "node": ">=22.0.0",
+    "yarn": ">=1.22.0"
+  },
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-ts": "ts-node index",
-    "start": "tsc && node --loader ts-node/esm --experimental-specifier-resolution=node --es-module-specifier-resolution=node ./dist/src",
-    "start:new": "ts-node-dev --respawn --transpile-only -O '{\"module\":\"es2022\"}' src/index.ts",
-    "start:old": "ts-node-dev --respawn --transpile-only -O '{\"module\":\"commonjs\"}' src/index.ts",
-    "start:old2": "npx tsc && node ./dist/src/index.js",
+    "start-oldish": "tsc && node --loader ts-node/esm --experimental-specifier-resolution=node --es-module-specifier-resolution=node ./dist/src",
+    "dev": "tsx watch src/index.ts",
     "start:dist": "node --experimental-specifier-resolution=node --es-module-specifier-resolution=node ./dist/src/index.js",
-    "process:images:old": "node --loader ts-node/esm ./src/processImages/script.ts",
+    "process:images:old": "tsx ./src/processImages/script.ts",
     "process:images": "node ./src/processImages/script.js",
     "build": "tsc",
+    "lint": "yarn lint:code && yarn lint:imports",
+    "lint:fix": "yarn lint:code:fix && yarn lint:imports:fix",
+    "lint:code": "biome check .",
+    "lint:code:fix": "biome check --write .",
+    "lint:imports": "node lint-imports.cjs",
+    "lint:imports:fix": "node fix-imports.cjs && node fix-directory-imports.cjs",
+    "format": "biome format --write .",
     "sync:images:thumb": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/thumb/ s3://cdn.pocketbarcelona.com/app/places/images/avif/thumb  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
     "sync:images:small": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/small/ s3://cdn.pocketbarcelona.com/app/places/images/avif/small  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
     "sync:images:medium": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/medium/ s3://cdn.pocketbarcelona.com/app/places/images/avif/medium  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
@@ -68,6 +76,7 @@
     "zod": "^3.11.6"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.1.4",
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.2",
     "@types/config": "^3.3.4",
@@ -84,7 +93,7 @@
     "@types/uuid": "10.0.0",
     "sharp": "^0.33.4",
     "ts-node": "10.9.2",
-    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.20.3",
     "type-fest": "^4.25.0",
     "typescript": "5.5.4"
   }

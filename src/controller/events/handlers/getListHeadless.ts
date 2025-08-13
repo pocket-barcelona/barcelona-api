@@ -1,7 +1,7 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { error, success } from "../../../middleware/apiResponse";
-import { CalendarService } from "../../../service/calendar/calendar.service";
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { error, success } from '../../../middleware/apiResponse.js';
+import { CalendarService } from '../../../service/calendar/calendar.service.js';
 
 /**
  * @deprecated
@@ -14,9 +14,7 @@ export default async function getListHeadless(req: Request, res: Response) {
 	const data = await CalendarService.getHeadlessList();
 
 	if (!data) {
-		return res
-			.status(StatusCodes.NOT_FOUND)
-			.send(error("Error getting list", res.statusCode));
+		return res.status(StatusCodes.NOT_FOUND).send(error('Error getting list', res.statusCode));
 	}
 
 	return res.send(success(data));

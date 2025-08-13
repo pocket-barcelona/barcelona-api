@@ -1,8 +1,8 @@
-import createPost from "./createPost";
-import getAdminById from "./getAdminById";
-import getAdminList from "./getAdminList";
-import getById from "./getById";
-import getList from "./getList";
-import updatePost from "./updatePost";
+import createPost from './createPost.js';
+import getAdminById from './getAdminById.js';
+import getAdminList from './getAdminList.js';
+import getById from './getById.js';
+import getList from './getList.js';
+import updatePost from './updatePost.js';
 
 export { getList, getById, createPost, updatePost, getAdminList, getAdminById };

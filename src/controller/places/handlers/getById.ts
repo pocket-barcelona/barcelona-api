@@ -1,8 +1,8 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { error, success } from "../../../middleware/apiResponse";
-import type { ReadPlaceInput } from "../../../schema/place/place.schema";
-import { PlacesService } from "../../../service/places/places.service";
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { error, success } from '../../../middleware/apiResponse.js';
+import type { ReadPlaceInput } from '../../../schema/place/place.schema.js';
+import { PlacesService } from '../../../service/places/places.service.js';
 
 /**
  * Get a place by ID
@@ -10,23 +10,18 @@ import { PlacesService } from "../../../service/places/places.service";
  * @param res
  * @returns
  */
-export default async function getById(
-	req: Request<ReadPlaceInput["params"]>,
-	res: Response,
-) {
+export default async function getById(req: Request<ReadPlaceInput['params']>, res: Response) {
 	if (!req.params.placeId) {
 		return res
 			.status(StatusCodes.BAD_REQUEST)
-			.send(error("Please provide a place ID", res.statusCode));
+			.send(error('Please provide a place ID', res.statusCode));
 	}
 
 	const placeId = Number(req.params.placeId);
 	const record = await PlacesService.getById(placeId);
 
 	if (!record) {
-		return res
-			.status(StatusCodes.NOT_FOUND)
-			.send(error("Error getting item", res.statusCode));
+		return res.status(StatusCodes.NOT_FOUND).send(error('Error getting item', res.statusCode));
 	}
 	const mappedRecord = PlacesService.getMappedPlace(record);
 

@@ -1,4 +1,4 @@
-import type { StructuredPlanDayProfile } from "../../models/planThemes";
+import type { StructuredPlanDayProfile } from '../../models/planThemes.js';
 import {
 	ThemesBestOf,
 	ThemesCategory,
@@ -7,7 +7,7 @@ import {
 	ThemesNightsOut,
 	ThemesRoute,
 	ThemesTrips,
-} from "./all";
+} from './all/index.js';
 
 // Parallel metro!
 // 41.37510536783193, 2.1681203940848635

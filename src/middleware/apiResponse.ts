@@ -4,44 +4,44 @@
  */
 
 type HttpResponseType<T> = {
-  data: T;
-  error?: boolean;
-  message?: string;
-  code?: number;
-  meta?: any;
-}
+	data: T;
+	error?: boolean;
+	message?: string;
+	code?: number;
+	meta?: any;
+};
 interface HttpResponseOptions {
-  message?: string | undefined,
-  statusCode?: number;
-  error?: boolean;
-  /** Any additional meta data - e.g. pagination info, count of items etc */
-  meta?: any;
+	message?: string | undefined;
+	statusCode?: number;
+	error?: boolean;
+	/** Any additional meta data - e.g. pagination info, count of items etc */
+	meta?: any;
 }
 
 /**
  * @desc Send any success response
  *
  */
-export function success<T = any>(data: T, options?: HttpResponseOptions ): any {
-  const resp: HttpResponseType<T> = {
-    data,
-  }
-  if (options) {
-    if (options.error !== undefined) {
-      resp.error = options.error
-    }
-    if (options.message !== undefined) {
-      resp.message = options.message
-    }
-    if (options.statusCode !== undefined && options.statusCode > -1) {
-      resp.code = options.statusCode
-    }
-    if (options.meta !== undefined) {
-      resp.meta = options.meta;
-    }
-  }
+export function success<T = any>(data: T, options?: HttpResponseOptions): any {
+	const resp: HttpResponseType<T> = {
+		data,
+	};
+	if (options) {
+		if (options.error !== undefined) {
+			resp.error = options.error;
+		}
+		if (options.message !== undefined) {
+			resp.message = options.message;
+		}
+		if (options.statusCode !== undefined && options.statusCode > -1) {
+			resp.code = options.statusCode;
+		}
+		if (options.meta !== undefined) {
+			resp.meta = options.meta;
+		}
+	}
 
-  return resp;
+	return resp;
 }
 
 /**
@@ -50,24 +50,28 @@ export function success<T = any>(data: T, options?: HttpResponseOptions ): any {
  * @param {number} statusCode
  * @param {number} proprietaryErrorCode - A special error code for more verbosity
  */
-export function error(message: string, statusCode: number, proprietaryErrorCode: string | number = ''): any {
-  return {
-    message,
-    code: statusCode,
-    error: true,
-    errorCode: (proprietaryErrorCode?.toString().length > 0 ? proprietaryErrorCode.toString() : '0'),
-  };
-};
+export function error(
+	message: string,
+	statusCode: number,
+	proprietaryErrorCode: string | number = ''
+): any {
+	return {
+		message,
+		code: statusCode,
+		error: true,
+		errorCode: proprietaryErrorCode?.toString().length > 0 ? proprietaryErrorCode.toString() : '0',
+	};
+}
 
 /**
  * @desc Send any validation response
  * @param {object | array} errors
  */
 export function validation(errors: any): any {
-  return {
-    message: "Validation errors",
-    error: true,
-    code: 422,
-    errors,
-  };
-};
+	return {
+		message: 'Validation errors',
+		error: true,
+		code: 422,
+		errors,
+	};
+}

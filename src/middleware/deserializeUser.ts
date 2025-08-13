@@ -1,12 +1,12 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from 'express';
 // import { StatusCodes } from "http-status-codes";
-import lodash from "lodash";
-import { config } from "../config";
-// import { SessionService } from "../service/session/session.service";
-import { SessionUtils } from "../utils/jwt.utils";
+import lodash from 'lodash';
+import { config } from '../config.js';
+// import { SessionService } from "../service/session/session.service.js";
+import { SessionUtils } from '../utils/jwt.utils.js';
 
-// import logger from "../utils/logger";
-// import { error } from "./apiResponse";
+// import logger from "../utils/logger.js";
+// import { error } from "./apiResponse.js";
 
 const { get } = lodash;
 
@@ -17,27 +17,16 @@ const { get } = lodash;
  * 2. The access token has expired, but the refresh token is valid
  * Note: This middleware is called on EVERY request
  */
-const deserializeUser = async (
-	req: Request,
-	res: Response,
-	next: NextFunction,
-) => {
-	const accessToken = get(
-		req,
-		`headers.${config.HEADER_AUTHORIZATION.toLowerCase()}`,
-		"",
-	)
+const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
+	const accessToken = get(req, `headers.${config.HEADER_AUTHORIZATION.toLowerCase()}`, '')
 		.toString()
-		.replace(/^Bearer\s/, "") as string;
+		.replace(/^Bearer\s/, '') as string;
 
 	if (!accessToken) {
 		return next();
 	}
 
-	const { decoded, expired } = await SessionUtils.verifyJwt(
-		accessToken,
-		"accessTokenPublicKey",
-	);
+	const { decoded, expired } = await SessionUtils.verifyJwt(accessToken, 'accessTokenPublicKey');
 
 	if (decoded && !expired) {
 		// session token valid and not expired yet

@@ -1,11 +1,11 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes"; // https://www.npmjs.com/package/http-status-codes
-import { error, success } from "../../../middleware/apiResponse";
-import type { SessionTokenModel } from "../../../models/auth/session.model";
-import type { SessionInput } from "../../../schema/session/session.schema";
-import { SessionService } from "../../../service/session/session.service";
-import { UserService } from "../../../service/user/user.service";
-import { SessionUtils } from "../../../utils/jwt.utils";
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
+import { error, success } from '../../../middleware/apiResponse.js';
+import type { SessionTokenModel } from '../../../models/auth/session.model.js';
+import type { SessionInput } from '../../../schema/session/session.schema.js';
+import { SessionService } from '../../../service/session/session.service.js';
+import { UserService } from '../../../service/user/user.service.js';
+import { SessionUtils } from '../../../utils/jwt.utils.js';
 
 /**
  * Login the user. Check the POSTed email and password
@@ -14,8 +14,8 @@ import { SessionUtils } from "../../../utils/jwt.utils";
  * @returns
  */
 export default async function createSession(
-	req: Request<unknown, unknown, SessionInput["body"]>,
-	res: Response,
+	req: Request<unknown, unknown, SessionInput['body']>,
+	res: Response
 ) {
 	// Validate the user's password
 	const user = await UserService.validatePassword(req.body);
@@ -23,16 +23,13 @@ export default async function createSession(
 	if (!user) {
 		return res
 			.status(StatusCodes.UNAUTHORIZED)
-			.json(error("Invalid email or password", res.statusCode));
+			.json(error('Invalid email or password', res.statusCode));
 	}
 
 	// logger.info('Attempting to create a user session token')
 
 	// create a session
-	const session = await SessionService.createOrUpdateSession(
-		user,
-		req.get("user-agent") || "",
-	);
+	const session = await SessionService.createOrUpdateSession(user, req.get('user-agent') || '');
 
 	if (!session) {
 		// logger.warn({
@@ -40,13 +37,11 @@ export default async function createSession(
 		// })
 		return res
 			.status(StatusCodes.INTERNAL_SERVER_ERROR)
-			.json(error("Error creating session!", res.statusCode));
+			.json(error('Error creating session!', res.statusCode));
 	}
 
-	const sessionExpiryAccessToken =
-		SessionService.getSessionExpiryData("access");
-	const sessionExpiryRefreshToken =
-		SessionService.getSessionExpiryData("refresh");
+	const sessionExpiryAccessToken = SessionService.getSessionExpiryData('access');
+	const sessionExpiryRefreshToken = SessionService.getSessionExpiryData('refresh');
 
 	// build token data - decoded on FE
 	const accessTokenData = {
@@ -65,27 +60,22 @@ export default async function createSession(
 	const accessToken =
 		(await SessionUtils.signJwt(
 			accessTokenData,
-			"accessTokenPrivateKey",
+			'accessTokenPrivateKey'
 			// { expiresIn: `${config.accessTokenTtl}m` } // e.g. "30m" (30 minutes)
-		)) ?? "";
+		)) ?? '';
 
 	// create a signed refresh token
 	const refreshToken =
 		(await SessionUtils.signJwt(
 			refreshTokenData,
-			"refreshTokenPrivateKey",
+			'refreshTokenPrivateKey'
 			// { expiresIn: `${config.refreshTokenTtl}m` } // e.g. 1 year
-		)) ?? "";
+		)) ?? '';
 
 	if (!accessToken || !refreshToken) {
 		return res
 			.status(StatusCodes.INTERNAL_SERVER_ERROR)
-			.json(
-				error(
-					"Error creating session tokens, please try again later.",
-					res.statusCode,
-				),
-			);
+			.json(error('Error creating session tokens, please try again later.', res.statusCode));
 	}
 
 	// return access & refresh tokens
@@ -97,7 +87,7 @@ export default async function createSession(
 			},
 			{
 				statusCode: res.statusCode,
-			},
-		),
+			}
+		)
 	);
 }

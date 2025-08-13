@@ -1,9 +1,9 @@
-import { createSecretKey } from "node:crypto";
-import "dotenv/config";
-import { type JWTPayload, jwtVerify, SignJWT } from "jose";
-import { nanoid } from "nanoid";
-import { config } from "../config";
-import logger from "./logger";
+import { createSecretKey } from 'node:crypto';
+import 'dotenv/config';
+import { type JWTPayload, jwtVerify, SignJWT } from 'jose';
+import { nanoid } from 'nanoid';
+import { config } from '../config.js';
+import logger from './logger.js';
 
 // const secretKey = createSecretKey(config.JWT_SECRET, 'utf-8');
 export namespace SessionUtils {
@@ -17,27 +17,27 @@ export namespace SessionUtils {
 	 */
 	export async function signJwt(
 		object: object,
-		keyName: "accessTokenPrivateKey" | "refreshTokenPrivateKey",
+		keyName: 'accessTokenPrivateKey' | 'refreshTokenPrivateKey'
 	): Promise<string | undefined> {
 		let privateKey: string;
-		if (keyName === "refreshTokenPrivateKey") {
+		if (keyName === 'refreshTokenPrivateKey') {
 			privateKey = `${config.refreshTokenPrivateKey}`;
 		} else {
 			privateKey = `${config.accessTokenPrivateKey}`;
 		}
 		// const signingKey = new TextEncoder().encode(privateKey);
-		const signingKey = createSecretKey(privateKey, "utf-8");
+		const signingKey = createSecretKey(privateKey, 'utf-8');
 
 		try {
 			const token = await new SignJWT({
 				...object,
 			})
-				.setProtectedHeader({ alg: "HS256" })
+				.setProtectedHeader({ alg: 'HS256' })
 				.setJti(nanoid())
 				.setIssuedAt()
 				// .setIssuer(process.env.JWT_ISSUER ?? '') // issuer
 				// .setAudience(process.env.JWT_AUDIENCE ?? '') // audience
-				.setExpirationTime("6h")
+				.setExpirationTime('6h')
 				.sign(signingKey);
 			return token;
 		} catch (error) {
@@ -62,17 +62,17 @@ export namespace SessionUtils {
 	 */
 	export async function verifyJwt(
 		token: string,
-		keyName: "accessTokenPublicKey" | "refreshTokenPublicKey", // @todo - PrivateKey?
+		keyName: 'accessTokenPublicKey' | 'refreshTokenPublicKey' // @todo - PrivateKey?
 	) {
 		let privateKey: string;
-		if (keyName === "refreshTokenPublicKey") {
+		if (keyName === 'refreshTokenPublicKey') {
 			privateKey = `${config.refreshTokenPrivateKey}`;
 		} else {
 			privateKey = `${config.accessTokenPrivateKey}`;
 		}
 
 		// const signingKey = new TextEncoder().encode(privateKey);
-		const signingKey = createSecretKey(privateKey, "utf-8");
+		const signingKey = createSecretKey(privateKey, 'utf-8');
 		// let publicKey = '';
 
 		// if (keyName === 'refreshTokenPublicKey') {
@@ -103,7 +103,7 @@ export namespace SessionUtils {
 
 			validity = {
 				valid: false,
-				expired: e.message === "JWT expired",
+				expired: e.message === 'JWT expired',
 				decoded: null,
 			};
 		}

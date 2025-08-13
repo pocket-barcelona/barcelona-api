@@ -5,7 +5,7 @@ import {
 	object,
 	string,
 	type TypeOf,
-} from "zod";
+} from 'zod';
 
 const createMeetupPayload = {
 	body: object({
@@ -26,27 +26,27 @@ const createMeetupPayload = {
 		privacy: number(),
 		rsvpType: string(),
 		title: string()
-			.min(5, "Event title is required and must be at least 5 chars")
-			.max(100, "Event title - too long!"),
+			.min(5, 'Event title is required and must be at least 5 chars')
+			.max(100, 'Event title - too long!'),
 		subtitle: string()
-			.min(5, "Event subtitle must be at least 5 chars")
-			.max(255, "Event subtitle - too long!")
+			.min(5, 'Event subtitle must be at least 5 chars')
+			.max(255, 'Event subtitle - too long!')
 			.optional(),
 		description: string()
-			.min(20, "Event description must be at least 20 chars")
-			.max(4000, "Event description - too long! Max 4000 chars"),
+			.min(20, 'Event description must be at least 20 chars')
+			.max(4000, 'Event description - too long! Max 4000 chars'),
 		directions: string()
-			.min(5, "Event directions must be at least 5 chars")
-			.max(500, "Event directions - too long! Max 500 chars")
+			.min(5, 'Event directions must be at least 5 chars')
+			.max(500, 'Event directions - too long! Max 500 chars')
 			.optional(),
 		category: string(),
 		subcategory: string().array(),
 		mode: string(), // "IN_PERSON", "ONLINE", "HYBRID"
 		startTime: number({
-			invalid_type_error: "Event start time must be a number",
+			invalid_type_error: 'Event start time must be a number',
 		}).min(Date.now(), "Event can't be in the past"),
 		endTime: number({
-			invalid_type_error: "Event end time must be a number",
+			invalid_type_error: 'Event end time must be a number',
 		}).min(Date.now(), "Event can't be in the past"),
 		location: object({
 			locationName: string(),
@@ -63,7 +63,7 @@ const createMeetupPayload = {
 			mapsLink: string(),
 			locationIsHidden: boolean(),
 			locationAvailableFrom: number({
-				invalid_type_error: "locationAvailableFrom must be a number",
+				invalid_type_error: 'locationAvailableFrom must be a number',
 			}).min(Date.now(), "locationAvailableFrom can't be in the past"),
 		}),
 		price: object({
@@ -95,7 +95,7 @@ const updateMeetupPayload = {
 	}),
 	params: object({
 		meetupId: string({
-			required_error: "meetup ID is required",
+			required_error: 'meetup ID is required',
 		}),
 	}),
 };
@@ -103,7 +103,7 @@ const updateMeetupPayload = {
 const getByGroupIdParams = {
 	params: object({
 		groupId: string({
-			required_error: "group ID is required",
+			required_error: 'group ID is required',
 		}),
 	}),
 };
@@ -111,7 +111,7 @@ const getByGroupIdParams = {
 const selectByIdParams = {
 	params: object({
 		meetupId: string({
-			required_error: "meetup ID is required",
+			required_error: 'meetup ID is required',
 		}),
 	}),
 };
@@ -119,7 +119,7 @@ const selectByIdParams = {
 const selectByShortIdParams = {
 	params: object({
 		meetupShortId: string({
-			required_error: "short ID is required",
+			required_error: 'short ID is required',
 		}),
 	}),
 };

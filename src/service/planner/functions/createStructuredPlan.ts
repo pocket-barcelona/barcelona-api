@@ -1,19 +1,17 @@
-import PlaceModel, { type PlaceDocument } from "../../../models/place.model";
 import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
-import type { PlanBuilderInput, StructuredPlanResponse } from "../../../models/plan.model";
-import { PlanHelper } from "./createStructuredPlan.helper";
-import { PlanThemeEnum, type StructuredPlanDayProfile } from "../../../models/planThemes";
-// import { themesTestData } from "../../../collections/themes/themesTestData";
-import type { PoiDocument } from "../../../models/poi.model";
-// import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input";
-import { RequiresBookingEnum } from '../../../models/enums/requiresbooking.enum';
-import { CommitmentEnum } from '../../../models/enums/commitment.enum';
-import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category';
-import { TimeOfDayEnum } from '../../../models/enums/tod.enum';
+import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category.js';
+import { CommitmentEnum } from '../../../models/enums/commitment.enum.js';
+// import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input.js";
+import { RequiresBookingEnum } from '../../../models/enums/requiresbooking.enum.js';
+import { TimeOfDayEnum } from '../../../models/enums/tod.enum.js';
+import PlaceModel, { type PlaceDocument } from '../../../models/place.model.js';
+import type { PlanBuilderInput, StructuredPlanResponse } from '../../../models/plan.model.js';
+import { PlanThemeEnum, type StructuredPlanDayProfile } from '../../../models/planThemes.js';
+// import { themesTestData } from "../../../collections/themes/themesTestData.js";
+import type { PoiDocument } from '../../../models/poi.model.js';
+import { PlanHelper } from './createStructuredPlan.helper.js';
 
 const DOCUMENT_SCAN_LIMIT = 2500;
-
-
 
 /**
  * Generate a structured plan
@@ -37,200 +35,197 @@ const DOCUMENT_SCAN_LIMIT = 2500;
  * @returns
  */
 export default async function (input: PlanBuilderInput): Promise<StructuredPlanResponse | null> {
-  let documents: Scan<PlaceDocument>;
-  const helper = new PlanHelper();
-  const { activeField,
-    provinceIdField,
-    placeIdField,
-    barrioIdField,
-    categoryIdField,
-    timeRecommendedField,
-    bestTodField,
-    commitmentRequiredField,
-    priceField,
-    freeToVisitField,
-    childrenSuitabilityField,
-    teenagerSuitabilityField,
-    popularField,
-    annualOnlyField,
-    seasonalField,
-    daytripField,
-    availableDailyField,
-    availableSundaysField,
-    isLandmarkField,
-    requiresBookingField,
-    metroZoneField,
-    latField,
-    lngField,
-  } = helper.fields();
+	let documents: Scan<PlaceDocument>;
+	const helper = new PlanHelper();
+	const {
+		activeField,
+		provinceIdField,
+		placeIdField,
+		barrioIdField,
+		categoryIdField,
+		timeRecommendedField,
+		bestTodField,
+		commitmentRequiredField,
+		priceField,
+		freeToVisitField,
+		childrenSuitabilityField,
+		teenagerSuitabilityField,
+		popularField,
+		annualOnlyField,
+		seasonalField,
+		daytripField,
+		availableDailyField,
+		availableSundaysField,
+		isLandmarkField,
+		requiresBookingField,
+		metroZoneField,
+		latField,
+		lngField,
+	} = helper.fields();
 
-  const oneDayMs = 60*60*24*1000;
-  const tomorrowTimestamp = new Date().getTime() + oneDayMs;
-  const hasDates = input.travelDates?.from && input.travelDates.to ? input.travelDates : null;
-  const theme: StructuredPlanDayProfile = {
-    id: 0,
-    themeTod: TimeOfDayEnum.Both, // check hour now...
-    name: 'Custom Itinerary',
-    theme: PlanThemeEnum.Custom,
-    verbs: ['Go to'],
-    dateStart: hasDates ? hasDates.from : new Date().getTime(),
-    dateEnd: hasDates ? hasDates.to : new Date(tomorrowTimestamp).getTime(),
-  };
+	const oneDayMs = 60 * 60 * 24 * 1000;
+	const tomorrowTimestamp = new Date().getTime() + oneDayMs;
+	const hasDates = input.travelDates?.from && input.travelDates.to ? input.travelDates : null;
+	const theme: StructuredPlanDayProfile = {
+		id: 0,
+		themeTod: TimeOfDayEnum.Both, // check hour now...
+		name: 'Custom Itinerary',
+		theme: PlanThemeEnum.Custom,
+		verbs: ['Go to'],
+		dateStart: hasDates ? hasDates.from : new Date().getTime(),
+		dateEnd: hasDates ? hasDates.to : new Date(tomorrowTimestamp).getTime(),
+	};
 
-  const categoryIdsSubset = input.categoryIds && input.categoryIds.length > 0 ? input.categoryIds : [];
-  const hasBudget = input.budget <= 1 ? 1 : input.budget > 32 ? 32 : input.budget;
-  const hasTimeSpent = input.timeRecommended <= 0 ? 0 : input.timeRecommended;
-  const hasTod = input.preferredTimeOfDay <= 0 ? 0 : input.preferredTimeOfDay;
-  const hasCentralBarrios = input.centralBarriosOnly === true;
-  const hasExcludePlaceIds = input.excludePlaceIds && input.excludePlaceIds.length > 0;
-  const shouldIncludeFood = input.includeFoodSuggestions === true;
-  const shouldIncludeDrink = input.includeDrinkSuggestions === true;
-  const shouldIncludeClubs = input.includeNightclubSuggestions === true;
-  const hasPets = input.visitingWithPets === true;
-  const hasKids = input.visitingWithKids === true;
-  const hasTeens = input.visitingWithTeenagers === true;
-  const hasWalkBetweenPlaces = input.walkBetweenPlacesEnabled !== false;
-  const today = new Date();
-  const numDays = input.numberOfDays;
+	const categoryIdsSubset =
+		input.categoryIds && input.categoryIds.length > 0 ? input.categoryIds : [];
+	const hasBudget = input.budget <= 1 ? 1 : input.budget > 32 ? 32 : input.budget;
+	const hasTimeSpent = input.timeRecommended <= 0 ? 0 : input.timeRecommended;
+	const hasTod = input.preferredTimeOfDay <= 0 ? 0 : input.preferredTimeOfDay;
+	const hasCentralBarrios = input.centralBarriosOnly === true;
+	const hasExcludePlaceIds = input.excludePlaceIds && input.excludePlaceIds.length > 0;
+	const shouldIncludeFood = input.includeFoodSuggestions === true;
+	const shouldIncludeDrink = input.includeDrinkSuggestions === true;
+	const shouldIncludeClubs = input.includeNightclubSuggestions === true;
+	const hasPets = input.visitingWithPets === true;
+	const hasKids = input.visitingWithKids === true;
+	const hasTeens = input.visitingWithTeenagers === true;
+	const hasWalkBetweenPlaces = input.walkBetweenPlacesEnabled !== false;
+	const today = new Date();
+	const numDays = input.numberOfDays;
 
-  today.setHours(8);
-  today.setSeconds(0);
-  today.setMinutes(0);
-  today.setMilliseconds(0);
-  
-  let travelDate: Date = new Date();
-  if (input.travelDates?.from) {
-    travelDate = new Date(input.travelDates.from);
-  }
-  travelDate.setHours(8);
-  travelDate.setSeconds(0);
-  travelDate.setMinutes(0);
-  travelDate.setMilliseconds(0);
-  const planIsForToday = today.getTime() <= travelDate.getTime();
+	today.setHours(8);
+	today.setSeconds(0);
+	today.setMinutes(0);
+	today.setMilliseconds(0);
 
-  // const nextBudgetDown = hasBudget
-  
-  try {
-    
-    documents = PlaceModel.scan().where(activeField).eq(true).and().where(provinceIdField).eq(2);
+	let travelDate: Date = new Date();
+	if (input.travelDates?.from) {
+		travelDate = new Date(input.travelDates.from);
+	}
+	travelDate.setHours(8);
+	travelDate.setSeconds(0);
+	travelDate.setMinutes(0);
+	travelDate.setMilliseconds(0);
+	const planIsForToday = today.getTime() <= travelDate.getTime();
 
-    // basic filters
+	// const nextBudgetDown = hasBudget
 
-    // metro zone 1 - in BCN
-    documents.and().where(metroZoneField).eq(1);
-    // remove annual only things
-    documents.and().where(annualOnlyField).eq(false);
-    // remove seasonal things
-    documents.and().where(seasonalField).eq(false);
-    // remove partially available things
-    documents.and().where(availableDailyField).eq(true);
-    // remove non-landmarks
-    documents.and().where(isLandmarkField).eq(true);
-    
-    // include sunday items if it's sunday today
-    if (today.getDay() === 0) {
-      documents.and().where(availableSundaysField).eq(true);
-    }
+	try {
+		documents = PlaceModel.scan().where(activeField).eq(true).and().where(provinceIdField).eq(2);
 
-    // check booking requirements...
-    // if travel date is in the future, allow items which have requires booking in the future, else hide them
-    if (planIsForToday) {
-      documents.and()
-      .where(requiresBookingField).in([RequiresBookingEnum.No, RequiresBookingEnum.OnArrival, RequiresBookingEnum.SameDay]);
-    }
+		// basic filters
 
-    // filter out places which require a lot of commitment to get to
-    if (!hasWalkBetweenPlaces) {
-      documents.and()
-      .where(commitmentRequiredField).in([CommitmentEnum.Casual, CommitmentEnum.Easy]);
-    }
+		// metro zone 1 - in BCN
+		documents.and().where(metroZoneField).eq(1);
+		// remove annual only things
+		documents.and().where(annualOnlyField).eq(false);
+		// remove seasonal things
+		documents.and().where(seasonalField).eq(false);
+		// remove partially available things
+		documents.and().where(availableDailyField).eq(true);
+		// remove non-landmarks
+		documents.and().where(isLandmarkField).eq(true);
 
-    // filter by budget up to this budget
-    if (hasBudget) {
-      documents.and()
-      .where(priceField).le(hasBudget); // find everything up to this budget
-    }
-    
-    // filter by one or more categories
-    if (categoryIdsSubset.length > 0) {
-      documents.and()
-      .where(categoryIdField).in(categoryIdsSubset);
-    }
+		// include sunday items if it's sunday today
+		if (today.getDay() === 0) {
+			documents.and().where(availableSundaysField).eq(true);
+		}
 
-    // include places outside Barcelona
-    if (input.includePlacesOutsideBarcelona) {
-      documents.and()
-      .where(daytripField).in([0, 1]);
-      // .where(daytripField).in([0, 1, 2]); // @todo - include places outside Spain?!
-    } else {
-      documents.and()
-      .where(daytripField).in([0]);
-    }
+		// check booking requirements...
+		// if travel date is in the future, allow items which have requires booking in the future, else hide them
+		if (planIsForToday) {
+			documents
+				.and()
+				.where(requiresBookingField)
+				.in([RequiresBookingEnum.No, RequiresBookingEnum.OnArrival, RequiresBookingEnum.SameDay]);
+		}
 
-    if (hasTimeSpent) {
-      documents.and()
-      .where(timeRecommendedField).eq(input.timeRecommended);
-    }
+		// filter out places which require a lot of commitment to get to
+		if (!hasWalkBetweenPlaces) {
+			documents
+				.and()
+				.where(commitmentRequiredField)
+				.in([CommitmentEnum.Casual, CommitmentEnum.Easy]);
+		}
 
-    if (hasTod) {
-      documents.and()
-      .where(bestTodField).eq(input.preferredTimeOfDay);
-    }
+		// filter by budget up to this budget
+		if (hasBudget) {
+			documents.and().where(priceField).le(hasBudget); // find everything up to this budget
+		}
 
-    if (hasCentralBarrios) {
-      documents.and()
-      .where(barrioIdField).in([...CENTRAL_BARRIO_IDS]);
-    }
+		// filter by one or more categories
+		if (categoryIdsSubset.length > 0) {
+			documents.and().where(categoryIdField).in(categoryIdsSubset);
+		}
 
-    if (hasKids) {
-      // if tourists have kids, only show kids suitable things
-      documents.and()
-      .where(childrenSuitabilityField).eq(hasKids)
-    }
+		// include places outside Barcelona
+		if (input.includePlacesOutsideBarcelona) {
+			documents.and().where(daytripField).in([0, 1]);
+			// .where(daytripField).in([0, 1, 2]); // @todo - include places outside Spain?!
+		} else {
+			documents.and().where(daytripField).in([0]);
+		}
 
-    if (hasTeens) {
-      // if tourists have teenagers, only show teenager suitable things
-      documents.and()
-      .where(teenagerSuitabilityField).eq(hasTeens)
-    }
+		if (hasTimeSpent) {
+			documents.and().where(timeRecommendedField).eq(input.timeRecommended);
+		}
 
-    // TO ADD to data
-    // if (hasPets) {
-    //   // filter by places which are only suitable for pets
-    //   documents.and()
-    //   .where(petSuitabilityField).eq(hasPets)
-    // }
+		if (hasTod) {
+			documents.and().where(bestTodField).eq(input.preferredTimeOfDay);
+		}
 
-    // WORK OUT HOW TO DO "NOT IN"
-    // if (hasExcludePlaceIds) {
-    //   documents.and()
-    //   .where(barrioIdField).not().in(input.excludePlaceIds);
-    // }
-    
-    let results: PlaceDocument[] = [];
-    try {
-      const allResults = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
-      results = allResults.toJSON() as PlaceDocument[]; // will contain all results
-    } catch (error) {
-      return null;
-    }
+		if (hasCentralBarrios) {
+			documents
+				.and()
+				.where(barrioIdField)
+				.in([...CENTRAL_BARRIO_IDS]);
+		}
 
-    let foodDrinkResults: PoiDocument[] = [];
-    if (shouldIncludeFood || shouldIncludeDrink || shouldIncludeClubs) {
-      foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(theme, results);
-    }
+		if (hasKids) {
+			// if tourists have kids, only show kids suitable things
+			documents.and().where(childrenSuitabilityField).eq(hasKids);
+		}
 
-    console.log('Number of results: ', results.length);
+		if (hasTeens) {
+			// if tourists have teenagers, only show teenager suitable things
+			documents.and().where(teenagerSuitabilityField).eq(hasTeens);
+		}
 
-    // const dayNumber = 1;
-    const thePlan = helper.buildPlanResponse(theme, results, foodDrinkResults, numDays);
-    return thePlan;
-    
+		// TO ADD to data
+		// if (hasPets) {
+		//   // filter by places which are only suitable for pets
+		//   documents.and()
+		//   .where(petSuitabilityField).eq(hasPets)
+		// }
 
-    // console.log('Default response');
-    // return TEST_RESPONSE_PLAN_1;
-    
-  } catch (e) {
-    return null;
-  }
+		// WORK OUT HOW TO DO "NOT IN"
+		// if (hasExcludePlaceIds) {
+		//   documents.and()
+		//   .where(barrioIdField).not().in(input.excludePlaceIds);
+		// }
+
+		let results: PlaceDocument[] = [];
+		try {
+			const allResults = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
+			results = allResults.toJSON() as PlaceDocument[]; // will contain all results
+		} catch (error) {
+			return null;
+		}
+
+		let foodDrinkResults: PoiDocument[] = [];
+		if (shouldIncludeFood || shouldIncludeDrink || shouldIncludeClubs) {
+			foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(theme, results);
+		}
+
+		console.log('Number of results: ', results.length);
+
+		// const dayNumber = 1;
+		const thePlan = helper.buildPlanResponse(theme, results, foodDrinkResults, numDays);
+		return thePlan;
+
+		// console.log('Default response');
+		// return TEST_RESPONSE_PLAN_1;
+	} catch (e) {
+		return null;
+	}
 }

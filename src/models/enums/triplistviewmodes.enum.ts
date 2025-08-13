@@ -1,4 +1,4 @@
 export enum TripListViewModesEnum {
-  Default = 'default',
-  Slim = 'slim',
+	Default = 'default',
+	Slim = 'slim',
 }

@@ -1,12 +1,12 @@
-import type { Request, Response } from "express";
-import type { calendar_v3 } from "googleapis";
-import { StatusCodes } from "http-status-codes";
-import { error, success } from "../../../middleware/apiResponse";
-import type { CalendarEventDirectus } from "../../../models/calendar.type";
+import type { Request, Response } from 'express';
+import type { calendar_v3 } from 'googleapis';
+import { StatusCodes } from 'http-status-codes';
+import { error, success } from '../../../middleware/apiResponse.js';
+import type { CalendarEventDirectus } from '../../../models/calendar.type.js';
 import GoogleCalendarService, {
 	OLDEST_PB_EVENT,
-} from "../../../service/calendar/googleCalendar.service";
-import DirectusService from "../../../service/shared/directus.service";
+} from '../../../service/calendar/googleCalendar.service.js';
+import DirectusService from '../../../service/shared/directus.service.js';
 
 const DRY_RUN = false;
 const CALENDAR_API_ERROR_THRESHOLD_TIMES = 1; // stop syncing to google if this many errors are encountered
@@ -40,7 +40,7 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 	// return res.send(success(events));
 
 	if (DRY_RUN) {
-		console.log("PERFORMING DRY-RUN...");
+		console.log('PERFORMING DRY-RUN...');
 	}
 
 	const eventsToBeDeleted: calendar_v3.Schema$Event[] = [];
@@ -60,9 +60,7 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 	const eventsNotUpdated: calendar_v3.Schema$Event[] = [];
 
 	const directusEvents = (
-		await DirectusService.getAllDirectusItems<"events", CalendarEventDirectus>(
-			"events",
-		)
+		await DirectusService.getAllDirectusItems<'events', CalendarEventDirectus>('events')
 	)
 		.filter((e) => e.event_active)
 		.filter((e) => {
@@ -75,7 +73,7 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 	if (directusEvents.length === 0) {
 		return res
 			.status(StatusCodes.NOT_FOUND)
-			.send(error("Headless CMS contains no items to sync", res.statusCode));
+			.send(error('Headless CMS contains no items to sync', res.statusCode));
 	}
 
 	// make sure Directus event start/end times are correct
@@ -88,47 +86,32 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 				.send(
 					error(
 						`Warning: An event has an invalid start time: ID: ${event.id} - ${event.event_name}`,
-						res.statusCode,
-					),
+						res.statusCode
+					)
 				);
 		}
 	}
 
-	const googleEvents = await GoogleCalendarService.listEvents(
-		OLDEST_PB_EVENT,
-		1000,
-	);
+	const googleEvents = await GoogleCalendarService.listEvents(OLDEST_PB_EVENT, 1000);
 	if (undefined === googleEvents) {
 		return res
 			.status(StatusCodes.NOT_FOUND)
-			.send(
-				error(
-					"Warning: Error fetching Google Calendar events during sync!",
-					res.statusCode,
-				),
-			);
+			.send(error('Warning: Error fetching Google Calendar events during sync!', res.statusCode));
 	}
 
 	const invalidIds = googleEvents.some((i) => i.id === undefined);
 	if (invalidIds) {
 		return res
 			.status(StatusCodes.NOT_FOUND)
-			.send(
-				error(
-					"Invalid Google calendar IDs found - at least 1 is undefined!",
-					res.statusCode,
-				),
-			);
+			.send(error('Invalid Google calendar IDs found - at least 1 is undefined!', res.statusCode));
 	}
 
 	// Logic check warning - see if there are more Directus events than Google events
 	if (googleEvents.length > directusEvents.length) {
-		console.debug(
-			"Warning: Less Directus events than Google Calendar events. Is this right?!",
-		);
+		console.debug('Warning: Less Directus events than Google Calendar events. Is this right?!');
 	}
 
-	const directusUUIDs = directusEvents.map((e) => e.uuid ?? "");
+	const directusUUIDs = directusEvents.map((e) => e.uuid ?? '');
 
 	// find events to be deleted from GC, which are not in Directus
 	for (const gEvent of googleEvents) {
@@ -141,8 +124,7 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 	// find events to be updated
 	for (const directusEvent of directusEvents) {
 		const gcEvent = googleEvents.find((e) => e.iCalUID === directusEvent.uuid);
-		const mappedEvent =
-			GoogleCalendarService.buildCalendarEventPayload(directusEvent);
+		const mappedEvent = GoogleCalendarService.buildCalendarEventPayload(directusEvent);
 		// compare events
 		if (gcEvent) {
 			// non-greedy update - only update if data is actually different
@@ -160,9 +142,9 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 		}
 	}
 
-	console.log("To be deleted: ", eventsToBeDeleted.length);
-	console.log("To be created: ", eventsToBeCreated.length);
-	console.log("To be updated: ", eventsToBeUpdated.length);
+	console.log('To be deleted: ', eventsToBeDeleted.length);
+	console.log('To be created: ', eventsToBeCreated.length);
+	console.log('To be updated: ', eventsToBeUpdated.length);
 
 	if (DRY_RUN) {
 		for (const i of eventsToBeCreated) {
@@ -177,13 +159,13 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 
 		// spit out payload if there's only 1
 		if (eventsToBeCreated.length === 1) {
-			console.log("Single create event payload: ", eventsToBeCreated[0]);
+			console.log('Single create event payload: ', eventsToBeCreated[0]);
 		}
 		if (eventsToBeUpdated.length === 1) {
-			console.log("Single update event payload: ", eventsToBeUpdated[0]);
+			console.log('Single update event payload: ', eventsToBeUpdated[0]);
 		}
 		if (eventsToBeDeleted.length === 1) {
-			console.log("Single delete event payload: ", eventsToBeDeleted[0]);
+			console.log('Single delete event payload: ', eventsToBeDeleted[0]);
 		}
 
 		return res.send(
@@ -194,27 +176,24 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 					toUpdate: eventsToBeUpdated,
 				},
 				{
-					message: "Dry run completed.",
+					message: 'Dry run completed.',
 					meta: {
 						toDelete: eventsToBeDeleted.length,
 						toCreate: eventsToBeCreated.length,
 						toUpdate: eventsToBeUpdated.length,
 					},
-				},
-			),
+				}
+			)
 		);
 	}
 
-	console.log(
-		`---------- Deleting ${eventsToBeDeleted.length} event/s... ----------`,
-	);
+	console.log(`---------- Deleting ${eventsToBeDeleted.length} event/s... ----------`);
 	for (const eventPayload of eventsToBeDeleted) {
 		if (!eventPayload.id) continue;
 		// delete this event from GC
 		console.log(`Deleting ${eventPayload.summary}. id: ${eventPayload.id}`);
 		// const success = await GoogleCalendarService.deleteEvent(eventPayload.id);
-		const success =
-			await GoogleCalendarService.deleteEventByHiding(eventPayload);
+		const success = await GoogleCalendarService.deleteEventByHiding(eventPayload);
 		console.log(`Delete success: ${success ? success.id : success}`);
 		if (success) {
 			eventsDeleted.push(eventPayload);
@@ -226,17 +205,15 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 			return res.send(
 				error(
 					`Event deletion failed ${CALENDAR_API_ERROR_THRESHOLD_TIMES} time/s, stopping!`,
-					StatusCodes.INTERNAL_SERVER_ERROR,
-				),
+					StatusCodes.INTERNAL_SERVER_ERROR
+				)
 			);
 		}
 	}
 
 	let createdOrUpdatedCounter = 0;
 
-	console.log(
-		`---------- Updating ${eventsToBeUpdated.length} event/s... ----------`,
-	);
+	console.log(`---------- Updating ${eventsToBeUpdated.length} event/s... ----------`);
 	for (const eventPayload of eventsToBeUpdated) {
 		// break for throttling sync action
 		if (createdOrUpdatedCounter >= THROTTLE_MAX_CREATE_OR_UPDATE) continue;
@@ -244,14 +221,9 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 		if (eventPayload.recurrence !== undefined) {
 			if (!eventPayload.id) continue;
 
-			const instances = await GoogleCalendarService.getEventInstances(
-				eventPayload.id,
-			);
+			const instances = await GoogleCalendarService.getEventInstances(eventPayload.id);
 			if (instances && instances.length !== 0) {
-				const success = await GoogleCalendarService.patchEventInstance(
-					instances,
-					eventPayload,
-				);
+				const success = await GoogleCalendarService.patchEventInstance(instances, eventPayload);
 				console.log(`Update success: ${success ? success.id : success}`);
 				if (success) {
 					eventsUpdated.push(eventPayload);
@@ -259,7 +231,7 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 					eventsNotUpdated.push(eventPayload);
 				}
 			} else {
-				console.warn("No instances found for event!");
+				console.warn('No instances found for event!');
 			}
 		} else {
 			console.log(`Updating ${eventPayload.summary}. id: ${eventPayload.id}`);
@@ -277,8 +249,8 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 				return res.send(
 					error(
 						`Event updating failed ${CALENDAR_API_ERROR_THRESHOLD_TIMES} time/s, stopping!`,
-						StatusCodes.INTERNAL_SERVER_ERROR,
-					),
+						StatusCodes.INTERNAL_SERVER_ERROR
+					)
 				);
 			}
 
@@ -287,21 +259,15 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 		}
 	}
 
-	console.log(
-		`---------- Creating ${eventsToBeCreated.length} event/s... ----------`,
-	);
+	console.log(`---------- Creating ${eventsToBeCreated.length} event/s... ----------`);
 	for (const eventPayload of eventsToBeCreated) {
 		// break for throttling sync action
 		if (createdOrUpdatedCounter >= THROTTLE_MAX_CREATE_OR_UPDATE) continue;
 
-		console.log(
-			`Creating ${eventPayload.summary}. iCalUID: ${eventPayload.iCalUID}`,
-		);
+		console.log(`Creating ${eventPayload.summary}. iCalUID: ${eventPayload.iCalUID}`);
 		const success = await GoogleCalendarService.insertEvent(eventPayload);
 		console.log(
-			`Create success: ${!!success}. Event: ${
-				!success ? "No event data" : success.summary
-			}`,
+			`Create success: ${!!success}. Event: ${!success ? 'No event data' : success.summary}`
 		);
 		if (success) {
 			eventsCreated.push(eventPayload);
@@ -313,25 +279,22 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 			return res.send(
 				error(
 					`Event creation failed ${CALENDAR_API_ERROR_THRESHOLD_TIMES} time/s, stopping!`,
-					StatusCodes.INTERNAL_SERVER_ERROR,
-				),
+					StatusCodes.INTERNAL_SERVER_ERROR
+				)
 			);
 		}
 		createdOrUpdatedCounter++;
 	}
 
-	const deleteErrors =
-		eventsToBeDeleted.length > 0 && eventsNotDeleted.length > 0;
-	const createErrors =
-		eventsToBeCreated.length > 0 && eventsNotCreated.length > 0;
-	const updateErrors =
-		eventsToBeUpdated.length > 0 && eventsNotUpdated.length > 0;
+	const deleteErrors = eventsToBeDeleted.length > 0 && eventsNotDeleted.length > 0;
+	const createErrors = eventsToBeCreated.length > 0 && eventsNotCreated.length > 0;
+	const updateErrors = eventsToBeUpdated.length > 0 && eventsNotUpdated.length > 0;
 
 	if (deleteErrors || createErrors || updateErrors) {
 		console.log(`Delete errors: ${deleteErrors}`);
 		console.log(`Create errors: ${createErrors}`);
 		console.log(`Update errors: ${updateErrors}`);
-		return res.send(success("Events synced, but with errors"));
+		return res.send(success('Events synced, but with errors'));
 	}
 
 	if (
@@ -339,13 +302,13 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 		eventsToBeCreated.length === 0 &&
 		eventsToBeUpdated.length === 0
 	) {
-		return res.send(success("No events to sync. All done."));
+		return res.send(success('No events to sync. All done.'));
 	}
 
-	console.log("DONE!");
+	console.log('DONE!');
 
 	return res.send(
-		success("Events synced!", {
+		success('Events synced!', {
 			meta: {
 				deleted: eventsDeleted.length,
 				notDeleted: eventsNotDeleted.length,
@@ -354,13 +317,13 @@ export default async function syncEventsGoogle(req: Request, res: Response) {
 				updated: eventsUpdated.length,
 				notUpdated: eventsNotUpdated.length,
 			},
-		}),
+		})
 	);
 }
 
 function compareEvents(
 	gcEvent: calendar_v3.Schema$Event,
-	directusMappedEvent: calendar_v3.Schema$Event,
+	directusMappedEvent: calendar_v3.Schema$Event
 ) {
 	if (gcEvent?.summary !== directusMappedEvent.summary) {
 		return false;
@@ -378,10 +341,7 @@ function compareEvents(
 	if (gcEvent?.end?.date !== directusMappedEvent.end?.date) {
 		return false;
 	}
-	if (
-		gcEvent?.recurrence &&
-		gcEvent?.recurrence !== directusMappedEvent.recurrence
-	) {
+	if (gcEvent?.recurrence && gcEvent?.recurrence !== directusMappedEvent.recurrence) {
 		return false;
 	}
 	return true;

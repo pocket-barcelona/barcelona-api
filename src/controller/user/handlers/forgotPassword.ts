@@ -1,13 +1,13 @@
-import type { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { error, success } from "../../../middleware/apiResponse";
-import type { UserDocument } from "../../../models/auth/user.model";
-import type { ForgotPasswordUserInput } from "../../../schema/user/forgot-password.schema";
-import { UserService } from "../../../service/user/user.service";
+import type { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { error, success } from '../../../middleware/apiResponse.js';
+import type { UserDocument } from '../../../models/auth/user.model.js';
+import type { ForgotPasswordUserInput } from '../../../schema/user/forgot-password.schema.js';
+import { UserService } from '../../../service/user/user.service.js';
 
 export default async function forgotPassword(
-	req: Request<unknown, unknown, ForgotPasswordUserInput["body"]>,
-	res: Response,
+	req: Request<unknown, unknown, ForgotPasswordUserInput['body']>,
+	res: Response
 ) {
 	// check if user exists
 	let userDocument: UserDocument | null = null;
@@ -19,9 +19,9 @@ export default async function forgotPassword(
 	if (!userDocument) {
 		return res.status(StatusCodes.NOT_FOUND).json(
 			error(
-				"The user does not exist or the account is invalid", // or some other error
-				res.statusCode,
-			),
+				'The user does not exist or the account is invalid', // or some other error
+				res.statusCode
+			)
 		);
 	}
 
@@ -31,33 +31,28 @@ export default async function forgotPassword(
 	if (!resetDocument) {
 		return res
 			.status(StatusCodes.INTERNAL_SERVER_ERROR)
-			.json(
-				error("There was an error, please try again later", res.statusCode),
-			);
+			.json(error('There was an error, please try again later', res.statusCode));
 	}
 
 	// attempt to send a reset email to the user
-	const hasSentEmail = await UserService.forgotPassword(
-		resetDocument,
-		userDocument,
-	);
+	const hasSentEmail = await UserService.forgotPassword(resetDocument, userDocument);
 	if (hasSentEmail !== 1) {
 		// return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(
 		return res
 			.status(StatusCodes.INTERNAL_SERVER_ERROR)
 			.json(
 				error(
-					"There was an error sending the reset email, please try again",
+					'There was an error sending the reset email, please try again',
 					res.statusCode,
-					hasSentEmail.toString(),
-				),
+					hasSentEmail.toString()
+				)
 			);
 	}
 
 	return res.send(
 		success<boolean>(true, {
 			statusCode: res.statusCode,
-			message: "A reset password email has been sent to the user",
-		}),
+			message: 'A reset password email has been sent to the user',
+		})
 	);
 }
