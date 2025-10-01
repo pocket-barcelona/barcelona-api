@@ -16,6 +16,7 @@
     "start:dist": "node --experimental-specifier-resolution=node --es-module-specifier-resolution=node ./dist/src/index.js",
     "process:images:old": "tsx ./src/processImages/script.ts",
     "process:images": "node ./src/processImages/script.js",
+    "process:places": "tsx ./src/collections/googleplaces/googleplacesParser.ts",
     "build": "tsc",
     "lint": "yarn lint:code && yarn lint:imports",
     "lint:fix": "yarn lint:code:fix && yarn lint:imports:fix",
@@ -29,7 +30,8 @@
     "sync:images:medium": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/medium/ s3://cdn.pocketbarcelona.com/app/places/images/avif/medium  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
     "sync:images:large": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/large/ s3://cdn.pocketbarcelona.com/app/places/images/avif/large  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
     "sync:images:xlarge": "aws s3 sync /Volumes/DAZZLE_FILES/BCN\\ Website\\ Photos/Barcelona_Barrios_And_Places/PlacesConverted/xlarge/ s3://cdn.pocketbarcelona.com/app/places/images/avif/xlarge  --exclude '*' --include '*.avif' --include 'schema.json' --cache-control 'max-age=172800 no-cache must-revalidate' --metadata-directive REPLACE",
-    "sync:images:all": "npm run sync:images:thumb && npm run sync:images:small && npm run sync:images:medium && npm run sync:images:large && npm run sync:images:xlarge"
+    "sync:images:all": "npm run sync:images:thumb && npm run sync:images:small && npm run sync:images:medium && npm run sync:images:large && npm run sync:images:xlarge",
+    "events:sync": "tsx -r dotenv/config ./src/collections/events/eventsParser.ts"
   },
   "repository": {
     "type": "git",

@@ -32,11 +32,13 @@ export interface PoiInput {
 	/** The official name of the place or activity, but without accents. Note: Could be in Catalan */
 	nameOfficialAccentless: string;
 	/**
-	 * urlSlug is a URL-friendly version of the place name, without a slash
+	 * slug is a URL-friendly version of the place name, without a slash
 	 */
-	urlSlug: string;
+	slug: string;
 	/** Like Carrer de Ferran, 6, 08002 Barcelona, Spain */
 	address: string;
+	/** Like 08005 */
+	postcode: string;
 	/**
 	 * A short description of the place or activity
 	 * Ex. A busy market for the local people of Barceloneta
@@ -72,7 +74,10 @@ export interface PoiInput {
 	/** The official website for this place or activity */
 	website: string;
 	/** A list of tags to assist with searching places. Ex. beach,playa,platja */
-	tags: string;
+	tags: string[];
+	/** From Google Places API */
+	status: 'OPERATIONAL' | 'CLOSED_PERMANENTLY' | 'CLOSED_TEMPORARILY' | 'UNKNOWN' | ({} & string);
+	comments: string[];
 }
 
 export interface PoiDocument extends Item, PoiInput {
@@ -115,7 +120,15 @@ const poiSchema = new dynamoose.Schema(
 		//   type: String,
 		//   required: true,
 		// },
-		urlSlug: {
+		slug: {
+			type: String,
+			required: true,
+		},
+		address: {
+			type: String,
+			required: true,
+		},
+		postcode: {
 			type: String,
 			required: true,
 		},
@@ -135,15 +148,15 @@ const poiSchema = new dynamoose.Schema(
 		//   type: Number,
 		//   required: true,
 		// },
+		// childrenSuitability: {
+		// 	type: Number,
+		// 	required: true,
+		// },
+		// teenagerSuitability: {
+		// 	type: Number,
+		// 	required: true,
+		// },
 		price: {
-			type: Number,
-			required: true,
-		},
-		childrenSuitability: {
-			type: Number,
-			required: true,
-		},
-		teenagerSuitability: {
 			type: Number,
 			required: true,
 		},
@@ -151,12 +164,10 @@ const poiSchema = new dynamoose.Schema(
 			type: Number,
 			required: true,
 		},
-
 		requiresBooking: {
 			type: Number,
 			required: true,
 		},
-
 		latlngAccurate: {
 			type: Boolean,
 			required: true,
@@ -169,16 +180,34 @@ const poiSchema = new dynamoose.Schema(
 			type: Number,
 			required: true,
 		},
+		countryCode: {
+			type: String,
+			required: true,
+		},
 		website: {
 			type: String,
 			required: true,
 		},
 		tags: {
+			type: Array,
+			schema: [
+				{
+					type: String,
+				},
+			],
+			required: true,
+		},
+		status: {
 			type: String,
 			required: true,
 		},
-		requiresChecking: {
-			type: Boolean,
+		comments: {
+			type: Array,
+			schema: [
+				{
+					type: String,
+				},
+			],
 			required: true,
 		},
 	},

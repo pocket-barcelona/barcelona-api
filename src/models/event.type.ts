@@ -21,16 +21,25 @@ export type EventCsvFile = {
 	event_notes: string;
 };
 
+// const someYearsInMs = 60 * 60 * 24 * 365 * 3 * 1000;
+// DONE FOR MAKING EVENTS APPEAR IN API WHILE BUILDING!
+const someYearsInMs = 0;
+
 export function mapCsvToEventInput(record: EventCsvFile): EventInput {
 	return {
 		eventId: record.id,
 		uuid: record.uuid,
-		dateStart: new Date(record.date_start),
-		dateEnd: new Date(record.date_end),
-		eventType: record.event_type,
-		eventRecurs: record.event_recurs.toLowerCase() === 'true',
+		eventActive: record.event_active.toLowerCase() === 'true',
+		// dateStart: new Date(record.date_start),
+		// dateEnd: new Date(record.date_end),
+		// HACK IN 3 YEARS!
+		dateStart: new Date(new Date(record.date_start).getTime() + someYearsInMs),
+		dateEnd: new Date(new Date(record.date_end).getTime() + someYearsInMs),
 		eventName: record.event_name,
 		slug: record.slug,
+		eventType: record.event_type,
+		eventRecurs: record.event_recurs.toLowerCase() === 'true',
+		recurrenceRule: record.recurrence_rule,
 		location: record.location,
 		lat: Number.parseFloat(record.lat),
 		lng: Number.parseFloat(record.lng),
@@ -38,7 +47,5 @@ export function mapCsvToEventInput(record: EventCsvFile): EventInput {
 		isInBarcelona: record.is_in_barcelona.toLowerCase() === 'true',
 		url: record.url,
 		eventNotes: record.event_notes,
-		eventActive: record.event_active.toLowerCase() === 'true',
-		recurrenceRule: record.recurrence_rule,
 	};
 }

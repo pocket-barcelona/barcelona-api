@@ -11,7 +11,7 @@ import GoogleCalendarService, {
  * @param res
  * @returns
  */
-export default async function getList(req: Request, res: Response) {
+export default async function getList(_req: Request, res: Response) {
 	const data = await GoogleCalendarService.listEvents(OLDEST_PB_EVENT, 100);
 
 	if (!data) {

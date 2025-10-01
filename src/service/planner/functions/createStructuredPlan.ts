@@ -1,7 +1,8 @@
+/** biome-ignore-all lint/correctness/noUnusedImports: WIP */
+/** biome-ignore-all lint/correctness/noUnusedVariables: WIP */
 import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category.js';
 import { CommitmentEnum } from '../../../models/enums/commitment.enum.js';
-// import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input.js";
 import { RequiresBookingEnum } from '../../../models/enums/requiresbooking.enum.js';
 import { TimeOfDayEnum } from '../../../models/enums/tod.enum.js';
 import PlaceModel, { type PlaceDocument } from '../../../models/place.model.js';
@@ -62,9 +63,10 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 		latField,
 		lngField,
 	} = helper.fields();
+	const now = Date.now();
 
 	const oneDayMs = 60 * 60 * 24 * 1000;
-	const tomorrowTimestamp = new Date().getTime() + oneDayMs;
+	const tomorrowTimestamp = now + oneDayMs;
 	const hasDates = input.travelDates?.from && input.travelDates.to ? input.travelDates : null;
 	const theme: StructuredPlanDayProfile = {
 		id: 0,
@@ -72,7 +74,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 		name: 'Custom Itinerary',
 		theme: PlanThemeEnum.Custom,
 		verbs: ['Go to'],
-		dateStart: hasDates ? hasDates.from : new Date().getTime(),
+		dateStart: hasDates ? hasDates.from : now,
 		dateEnd: hasDates ? hasDates.to : new Date(tomorrowTimestamp).getTime(),
 	};
 
@@ -82,6 +84,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 	const hasTimeSpent = input.timeRecommended <= 0 ? 0 : input.timeRecommended;
 	const hasTod = input.preferredTimeOfDay <= 0 ? 0 : input.preferredTimeOfDay;
 	const hasCentralBarrios = input.centralBarriosOnly === true;
+	const hasBarrioIds = (input.barrioIds ?? []).length > 0;
 	const hasExcludePlaceIds = input.excludePlaceIds && input.excludePlaceIds.length > 0;
 	const shouldIncludeFood = input.includeFoodSuggestions === true;
 	const shouldIncludeDrink = input.includeDrinkSuggestions === true;
@@ -174,11 +177,16 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 			documents.and().where(bestTodField).eq(input.preferredTimeOfDay);
 		}
 
+		let filteredByBarrioIds = hasBarrioIds ? input.barrioIds : [];
 		if (hasCentralBarrios) {
+			filteredByBarrioIds = filteredByBarrioIds.concat(CENTRAL_BARRIO_IDS);
+		}
+		const uniqueBarrioIds = new Set(filteredByBarrioIds);
+		if (uniqueBarrioIds.size > 0) {
 			documents
 				.and()
 				.where(barrioIdField)
-				.in([...CENTRAL_BARRIO_IDS]);
+				.in([...uniqueBarrioIds]);
 		}
 
 		if (hasKids) {
@@ -217,14 +225,10 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 			foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(theme, results);
 		}
 
-		console.log('Number of results: ', results.length);
-
-		// const dayNumber = 1;
 		const thePlan = helper.buildPlanResponse(theme, results, foodDrinkResults, numDays);
 		return thePlan;
 
-		// console.log('Default response');
-		// return TEST_RESPONSE_PLAN_1;
+		// console.log('Number of results: ', results.length);
 	} catch (e) {
 		return null;
 	}

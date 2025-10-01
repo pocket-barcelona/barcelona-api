@@ -35,12 +35,11 @@ export namespace AppMJMLUtils {
 		let finalTemplate = file;
 
 		try {
-			// biome-ignore lint/complexity/noForEach: <explanation>
 			Object.keys(vars).forEach((key) => {
 				const regex = new RegExp(`{${key}}`, 'g');
 				finalTemplate = finalTemplate.replace(regex, vars[key]);
 			});
-		} catch (error) {
+		} catch (_error) {
 			throw new Error('Error replacing template keys and values');
 		}
 
@@ -78,7 +77,6 @@ export namespace AppMJMLUtils {
 		const regExp = /\{\{([^}}]+)\}\}/;
 		const matches = regExp.exec(file);
 		const thetokens: string[] = [];
-		// biome-ignore lint/complexity/noForEach: <explanation>
 		matches?.forEach((m) => {
 			if (m.indexOf('\n') === -1) {
 				thetokens.push(m);

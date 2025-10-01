@@ -373,24 +373,14 @@
 </details>
 
 <details>
-  <summary>Importing calendar events into Directus from Google Sheets</summary>
+  <summary>TODO - Importing events into Dynamo and Google Calendar</summary>
 
-  1. Make sure UUID is set
+  1. Master events list is in Google Sheets. Make sure the UUID field is set for each
   2. Download the `"Events_CSV"` table as a CSV
   3. Find and replace in the exported file: `"""` > `"` (so that there’s only 1 set of quotes)
-  4. Import into Directus
-  5. Version the CSV file in repo
-  6. Run sync endpoint
-
-</details>
-
-<details>
-  <summary>Importing calendar events into Dynamo DB from Google Sheets</summary>
-
-  1. Make sure UUID is set
-  2. Download the `"Events_CSV"` table as a CSV
-  3. Find and replace in the exported file: `"""` > `"` (so that there’s only 1 set of quotes)
-  4. Run the import endpoint/script, which will upsert Dynamo DB
-  5. Version the CSV file in repo
+  4. Run the Events -> import endpoint, which will upsert Dynamo DB: http://localhost:3002/api/events/aws/sync
+  5. TODO: Run the Events -> import endpoint, which will upsert Google Calendar
+  6. Version the CSV file in repo
+  7. Check event by ID: http://localhost:3002/api/events/99
 
 </details>

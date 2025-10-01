@@ -12,7 +12,7 @@ import { PlannerService } from '../../../service/planner/planner.service.js';
  * @returns
  */
 export default async function createStructuredPlan(req: Request<BuildPlanInput>, res: Response) {
-	console.log('Logging payload', req.body);
+	// console.log('Logging payload', req.body);
 	const data = await PlannerService.createStructuredPlan(req.body).catch((e) => {
 		console.log(e);
 	});

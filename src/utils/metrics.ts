@@ -21,7 +21,7 @@ export function startMetricsServer() {
 
 	collectDefaultMetrics();
 
-	app.get('/metrics', async (req, res) => {
+	app.get('/metrics', async (_req, res) => {
 		res.set('Content-Type', client.register.contentType);
 
 		return res.send(await client.register.metrics());

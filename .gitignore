@@ -28,3 +28,5 @@ src/collections/googleplaces/data.json
 
 token.json
 credentials.json
+
+src/collections/googleplaces/cache/*

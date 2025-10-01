@@ -45,8 +45,8 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 		// RANDOM
 
 		let theme: StructuredPlanDayProfile;
-		// let's say that anything after 3pm is the afternoon/night
-		if (timeHourNow >= 15) {
+		// let's say that anything after 1pm is the afternoon/night
+		if (timeHourNow >= 13) {
 			// only consider plans which are night time
 			theme = helper.getRandomItemFromArray(
 				themesTestData.filter((p) => p.themeTod !== TimeOfDayEnum.Day)
@@ -56,9 +56,8 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 			theme = helper.getRandomItemFromArray(
 				themesTestData.filter((p) => p.themeTod !== TimeOfDayEnum.Night)
 			);
-		}
+		} // todo - could check multiple times of day: day, night, both
 
-		// console.log(theme);
 		// SPECIFIC - FOR TESTING
 		// const themeId = 1041;
 		// const theme = themesTestData.find((t) => t.id === themeId);
@@ -289,7 +288,7 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 		try {
 			const allResults = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
 			results = allResults.toJSON() as PlaceDocument[];
-		} catch (error) {
+		} catch (_error: unknown) {
 			return null;
 		}
 
@@ -310,7 +309,7 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 
 		// return TEST_RESPONSE_PLAN_1;
 		return null;
-	} catch (e) {
+	} catch (_e: unknown) {
 		return null;
 	}
 }

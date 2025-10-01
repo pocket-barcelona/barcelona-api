@@ -36,6 +36,8 @@ export interface EventInput {
 	url: string;
 	/** Optional notes or remarks about the event */
 	eventNotes: string;
+	/** Built, like: https://www.google.com/maps/search/?query=[lat],[lng] - might not work on mobile! */
+	locationMaps?: string;
 }
 
 export interface EventDocument extends Item, EventInput {

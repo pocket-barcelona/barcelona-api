@@ -16,7 +16,7 @@ const themes: StructuredPlanDayProfile[] = [
 		// [Poblenou/Born/Gothic/Raval]
 		barrioIds: [79, 13, 12, 11], //@todo - no results sometimes as waiting for restaurants
 		barrioIdsChooseAmount: 1,
-		categoryIds: [CategoryIdEnum.Beaches],
+		categoryIds: [CategoryIdEnum.BarsRestaurants],
 		// categoryIdsChooseAmount: 1,
 		foodCategories: [FoodCategoryEnum.Brunch],
 	},

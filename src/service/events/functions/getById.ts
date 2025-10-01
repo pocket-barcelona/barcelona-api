@@ -1,4 +1,5 @@
 import EventModel, { type EventDocument } from '../../../models/event.model.js';
+import { buildGoogleMapsLocationString } from '../../../utils/globalUtils.js';
 
 /**
  * Get an event by ID
@@ -8,12 +9,19 @@ export default async function (eventId: EventDocument['eventId']): Promise<Event
 	try {
 		// const activeField: keyof EventDocument = "active";
 		const result = EventModel.get(eventId);
-
-		return await result.catch((err) => {
+		const data = await result.catch((_err) => {
 			// logger.warn(err)
 			return null;
 		});
-	} catch (e) {
+		if (!data) return null;
+		return {
+			...data,
+			locationMaps: buildGoogleMapsLocationString({
+				lat: data?.lat,
+				lng: data?.lng,
+			}),
+		} as EventDocument;
+	} catch (_e) {
 		return null;
 	}
 }

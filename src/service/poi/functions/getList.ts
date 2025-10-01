@@ -1,6 +1,8 @@
+import { Condition } from 'dynamoose/dist/Condition.js';
 import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
 import PoiModel, { type PoiDocument } from '../../../models/poi.model.js';
 import type { FilterByPoiInput } from '../../../schema/poi/poi.schema.js';
+import logger from '../../../utils/logger.js';
 
 /**
  * Get a list of poi's
@@ -11,8 +13,16 @@ export default async function (
 ): Promise<ScanResponse<PoiDocument> | null> {
 	try {
 		const activeField: keyof PoiDocument = 'active';
-		const latField: keyof PoiDocument = 'lat';
-		const lngField: keyof PoiDocument = 'lng';
+		const statusField: keyof PoiDocument = 'status';
+		const barrioIdField: keyof PoiDocument = 'barrioId';
+		// const latField: keyof PoiDocument = 'lat';
+		// const lngField: keyof PoiDocument = 'lng';
+		// const tagField: keyof PoiDocument = 'tags';
+
+		const barrioIds = filters.barrioId
+			.filter((b) => !!b)
+			.map(Number)
+			.slice(0, 10); // max 10?
 
 		// @todo - check location
 		// filters.lat
@@ -20,19 +30,42 @@ export default async function (
 		const documents = PoiModel.scan()
 			// only fetch my events
 			.where(activeField)
-			.eq(true);
+			.eq(true)
+			.and()
+			.where(statusField)
+			.eq('OPERATIONAL')
+			.and()
+			.where(barrioIdField)
+			.in(barrioIds);
 
-		// apply filters
-		// if (filters.lat) {
-		//   documents.and().where(latField).between()
+		// apply filters - doesn't work filtering like this on DB level
+		// if (filters.tagId && Array.isArray(filters.tagId) && filters.tagId.length > 0) {
+		// 	documents.and().parenthesis(
+		// 		new Condition()
+		// 			.where(tagField)
+		// 			.contains(filters.tagId[0])
+		// 			.or()
+		// 			.where(tagField)
+		// 			.contains(filters.tagId[1])
+		// 		// new Condition().where(poiLatField).between(lowerLat, upperLat).or().where(poiLngField).between(lowerLng, upperLng)
+		// 	);
+		// 	// documents.and().parenthesis((condition) => {
+		// 	// 	(filters.tagId ?? []).forEach((tagId, index) => {
+		// 	// 		if (index === 0) {
+		// 	// 			condition.where(tagField).contains(tagId);
+		// 	// 		} else {
+		// 	// 			condition.or().where(tagField).contains(tagId);
+		// 	// 		}
+		// 	// 	});
+		// 	// });
 		// }
 
 		const result = documents.exec(); // this will scan every record
-		return await result.catch((err) => {
-			// logger.warn(err)
+		return await result.catch((_err: unknown) => {
+			logger.warn(_err);
 			return null;
 		});
-	} catch (e) {
+	} catch (_e: unknown) {
 		return null;
 	}
 }

@@ -6,12 +6,7 @@ import { filterByPoiSchema } from '../schema/poi/poi.schema.js';
 const router = express.Router();
 
 // ########### POINTS OF INTEREST ###########
-router.post(
-	'/',
-	[
-		// validateResource(filterByPoiSchema)
-	],
-	PoiController.getListHandler
-);
+router.post('/', [validateResource(filterByPoiSchema)], PoiController.getListHandler);
+router.get('/tags', [], PoiController.getTagListHandler);
 
 export default router;

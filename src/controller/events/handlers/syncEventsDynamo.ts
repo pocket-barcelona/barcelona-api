@@ -11,7 +11,7 @@ const __dirname = new URL('.', import.meta.url).pathname;
 /**
  * Sync all calendar events from CSV to AWS Dynamo DB
  */
-export default async function syncEventsDynamo(req: Request, res: Response) {
+export default async function syncEventsDynamo(_req: Request, res: Response) {
 	// 1. parse CSV file
 	// 2. map to Dynamo schema
 	// 3. put into Dynamo DB table

@@ -1,4 +1,4 @@
-import { number, object, optional, string, type TypeOf } from 'zod';
+import { array, number, object, optional, string, type TypeOf } from 'zod';
 
 const payload = {
 	body: object({
@@ -6,7 +6,7 @@ const payload = {
 	}),
 };
 
-/** Filter the poi's by location etc */
+/** Filter the poi's by location, tag etc */
 const filterByParams = {
 	body: object({
 		lat: optional(
@@ -26,6 +26,12 @@ const filterByParams = {
 				required_error: 'price is required',
 			})
 		),
+		barrioId: array(
+			number({
+				required_error: 'barrioId needs to be an array and is required',
+			})
+		).min(1),
+		tagId: array(string()).optional(),
 	}),
 };
 

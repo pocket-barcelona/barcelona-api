@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/noUnusedImports: WIP */
 import type { CategoryDocument, CategoryInput } from './category.model.js';
 import { CategoryIdEnum } from './enums/categoryid.enum.js';
 import { ChildrenEnum } from './enums/children.enum.js';
@@ -93,6 +94,8 @@ export interface PlanBuilderInput {
 	preferredTimeOfDay: TimeOfDayEnum | 0;
 	/** Focus results on central neighbourhoods only? NULL=don't mind */
 	centralBarriosOnly: boolean | null;
+	/** In contrast with `centralBarriosOnly`, specify to include one or more barrios */
+	barrioIds: Array<PlaceInput['barrioId']>;
 	/** A list of place IDs to not include in the results */
 	excludePlaceIds: Array<PlaceInput['placeId']>;
 	/** Are you visiting with pet/s? */

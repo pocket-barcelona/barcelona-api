@@ -107,7 +107,7 @@ export default async function (
 				// logger.warn(err)
 				return null;
 			});
-	} catch (e) {
+	} catch (_e: unknown) {
 		return null;
 	}
 }

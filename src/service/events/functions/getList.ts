@@ -1,4 +1,5 @@
 import EventModel, { type EventDocument } from '../../../models/event.model.js';
+import { buildGoogleMapsLocationString } from '../../../utils/globalUtils.js';
 import logger from '../../../utils/logger.js';
 
 /**
@@ -23,7 +24,18 @@ export default async function (): Promise<EventDocument[] | null> {
 			})
 			.then((data) => {
 				if (!data) return null;
-				return data.filter(filterOldEvents).sort(sortByDate);
+				return data
+					.filter(filterOldEvents)
+					.sort(sortByDate)
+					.map((event) => {
+						return {
+							...event,
+							locationMaps: buildGoogleMapsLocationString({
+								lat: event.lat,
+								lng: event.lng,
+							}),
+						} as EventDocument;
+					});
 			});
 	} catch (_e) {
 		return null;

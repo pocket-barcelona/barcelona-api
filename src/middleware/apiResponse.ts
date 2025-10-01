@@ -8,6 +8,7 @@ type HttpResponseType<T> = {
 	error?: boolean;
 	message?: string;
 	code?: number;
+	// biome-ignore lint/suspicious/noExplicitAny: WIP
 	meta?: any;
 };
 interface HttpResponseOptions {
@@ -15,6 +16,7 @@ interface HttpResponseOptions {
 	statusCode?: number;
 	error?: boolean;
 	/** Any additional meta data - e.g. pagination info, count of items etc */
+	// biome-ignore lint/suspicious/noExplicitAny: WIP
 	meta?: any;
 }
 
@@ -22,6 +24,8 @@ interface HttpResponseOptions {
  * @desc Send any success response
  *
  */
+
+// biome-ignore lint/suspicious/noExplicitAny: OK
 export function success<T = any>(data: T, options?: HttpResponseOptions): any {
 	const resp: HttpResponseType<T> = {
 		data,
@@ -54,7 +58,7 @@ export function error(
 	message: string,
 	statusCode: number,
 	proprietaryErrorCode: string | number = ''
-): any {
+) {
 	return {
 		message,
 		code: statusCode,
@@ -67,6 +71,7 @@ export function error(
  * @desc Send any validation response
  * @param {object | array} errors
  */
+// biome-ignore lint/suspicious/noExplicitAny: WIP
 export function validation(errors: any): any {
 	return {
 		message: 'Validation errors',

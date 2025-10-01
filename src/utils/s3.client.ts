@@ -10,9 +10,9 @@ import 'dotenv/config';
 export const s3Client = new S3Client({
 	region: process.env.AWS_REGION,
 	credentials: {
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: OK
 		accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		// biome-ignore lint/style/noNonNullAssertion: OK
 		secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
 	},
 });
