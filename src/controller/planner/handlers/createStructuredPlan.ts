@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 // import { PlanBuilderInput } from "../../../models/plan.model.js";
 import type { BuildPlanInput } from '../../../schema/plan/plan.schema.js';
-import { PlannerService } from '../../../service/planner/planner.service.js';
+import PlannerService from '../../../service/planner/planner.service.js';
 
 /**
  * Create a structured x-day plan

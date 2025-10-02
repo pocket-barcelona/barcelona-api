@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { PlaceDocument } from '../../../models/place.model.js';
-import { PlacesService } from '../../../service/places/places.service.js';
+import PlacesService from '../../../service/places/places.service.js';
 
 /**
  * Get a simple list of place Ids and their names for the Dashboard

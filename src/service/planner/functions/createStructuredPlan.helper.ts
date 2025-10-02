@@ -5,7 +5,7 @@ import type { PlaceDocument } from '../../../models/place.model.js';
 import type { StructuredPlanResponse } from '../../../models/plan.model.js';
 import type { StructuredPlanDayProfile, ThemeInputSpecs } from '../../../models/planThemes.js';
 import PoiModel, { type PoiDocument } from '../../../models/poi.model.js';
-import { PlacesService } from '../../places/places.service.js';
+import PlacesService from '../../places/places.service.js';
 import { sortByLngAsc, sortByLngDesc } from '../../places/utils.js';
 
 const DOCUMENT_LIST_RETURN_LIMIT = 25;

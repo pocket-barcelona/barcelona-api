@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { PlaceDocument, PlaceInput } from '../../../models/place.model.js';
 import type { ReadExploreInput } from '../../../schema/explore/explore.schema.js';
-import { PlacesService } from '../../../service/places/places.service.js';
+import PlacesService from '../../../service/places/places.service.js';
 
 const DEFAULT_PER_PAGE = 10;
 const MAX_PER_PAGE = 100;

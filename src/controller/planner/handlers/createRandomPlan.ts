@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
-import { PlannerService } from '../../../service/planner/planner.service.js';
+import PlannerService from '../../../service/planner/planner.service.js';
 
 /**
  * Create a random 1-day plan
