@@ -9,11 +9,11 @@ export default async function (placeId: PlaceDocument['placeId']): Promise<Place
 		// const activeField: keyof PlaceDocument = "active";
 		const result = PlaceModel.get(placeId);
 
-		return await result.catch((err) => {
+		return await result.catch((_error) => {
 			// logger.warn(err)
 			return null;
 		});
-	} catch (e) {
+	} catch (_error) {
 		return null;
 	}
 }

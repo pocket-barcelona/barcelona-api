@@ -8,11 +8,11 @@ export default async function (postId: PostDocument['postId']): Promise<PostDocu
 	try {
 		const result = PostModel.get(postId);
 
-		return await result.catch((err) => {
+		return await result.catch((_error) => {
 			// logger.warn(err)
 			return null;
 		});
-	} catch (e) {
+	} catch (_error) {
 		return null;
 	}
 }

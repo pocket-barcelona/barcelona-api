@@ -40,11 +40,11 @@ export default async function (
 			.eq(placeId)
 			.exec();
 
-		return await results.catch((err) => {
+		return await results.catch((_error) => {
 			// logger.warn(err)
 			return null;
 		});
-	} catch (e) {
+	} catch (_error) {
 		return null;
 	}
 }

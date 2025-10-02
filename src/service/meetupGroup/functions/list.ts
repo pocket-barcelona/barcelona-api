@@ -19,7 +19,7 @@ export default async function getList(
 		//   // logger.warn(err);
 		//   return null;
 		// });
-	} catch (e) {
+	} catch (_error) {
 		// timer({ ...metricsLabels, success: "false" });
 		return null;
 	}

@@ -14,11 +14,11 @@ export default async function (): Promise<ScanResponse<CategoryDocument> | null>
 			//   .where(activeField)
 			//   .eq(true)
 			.exec(); // this will scan every record
-		return await result.catch((err) => {
+		return await result.catch((_error) => {
 			// logger.warn(err)
 			return null;
 		});
-	} catch (e) {
+	} catch (_error) {
 		return null;
 	}
 }

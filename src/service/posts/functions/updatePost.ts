@@ -18,11 +18,11 @@ export default async function updatePost(
 			// handle dates...
 			// myDate: input.myDate ? new Date(input.myDate) : new Date(0),
 		};
-		return await PostModel.update(payload).catch((err) => {
+		return await PostModel.update(payload).catch((_error) => {
 			// logger.warn(err);
 			return null;
 		});
-	} catch (error) {
+	} catch (_error) {
 		// logger.warn(error);
 		return null;
 	}

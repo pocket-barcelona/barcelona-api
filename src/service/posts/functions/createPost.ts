@@ -6,7 +6,7 @@ import PostModel, {
 	PostVisibilityEnum,
 } from '../../../models/post.model.js';
 import type { CreatePostInput } from '../../../schema/post/post.schema.js';
-import logger from '../../../utils/logger.js';
+// import logger from '../../../utils/logger.js';
 import { createTinyUuid } from '../../../utils/tiny.uuid.js';
 
 /**
@@ -32,7 +32,7 @@ export default async function (input: CreatePostInput['body']): Promise<PostDocu
 		});
 
 		return result;
-	} catch (e) {
+	} catch (_error) {
 		return null;
 	}
 }

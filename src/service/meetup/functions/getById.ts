@@ -47,7 +47,7 @@ export default async function getById(
 
 		// @todo - pick fields, like src/service/meetup/functions/getByShortId.ts
 		return result;
-	} catch (e) {
+	} catch (_error) {
 		// timer({ ...metricsLabels, success: "false" });
 		// throw e;
 		return null;

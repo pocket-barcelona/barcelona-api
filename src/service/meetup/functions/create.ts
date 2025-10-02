@@ -18,7 +18,7 @@ import generateShortId from '../../../utils/generateMeetupShortId.js';
 
 export default async function create(
 	input: CreateMeetupInput['body'],
-	userId: string
+	_userId: string
 ): Promise<MeetupDocument | null | string> {
 	try {
 		// const pollQuestions = input.pollQuestions?.map((question) => ({
@@ -79,7 +79,7 @@ export default async function create(
 		});
 
 		return result;
-	} catch (err: unknown) {
+	} catch (_error: unknown) {
 		return null;
 	}
 }

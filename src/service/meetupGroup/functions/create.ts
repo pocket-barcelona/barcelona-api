@@ -51,7 +51,7 @@ export default async function create(
 		});
 
 		return result;
-	} catch (err: unknown) {
+	} catch (_error: unknown) {
 		// post values were malformed
 		return null;
 	}

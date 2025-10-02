@@ -1,5 +1,5 @@
 import PostModel, { type PostDocument } from '../../../models/post.model.js';
-import logger from '../../../utils/logger.js';
+// import logger from '../../../utils/logger.js';
 
 /**
  * Get a specific blog post - regardless of status/published
@@ -9,11 +9,11 @@ export default async function (postId: PostDocument['postId']): Promise<PostDocu
 	try {
 		const result = PostModel.get(postId);
 
-		return await result.catch((err) => {
+		return await result.catch((_error) => {
 			// logger.warn(err)
 			return null;
 		});
-	} catch (e) {
+	} catch (_error) {
 		return null;
 	}
 }
