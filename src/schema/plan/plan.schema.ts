@@ -1,4 +1,4 @@
-import { number, object, string, type TypeOf } from 'zod';
+import z from 'zod';
 
 /**
  * @todo - these schemas need revising.
@@ -6,16 +6,16 @@ import { number, object, string, type TypeOf } from 'zod';
  *
  */
 const payload = {
-	body: object({
-		profileType: number({
+	body: z.object({
+		profileType: z.number({
 			required_error: 'Profile type is required',
 			invalid_type_error: 'Must be a number',
 		}),
-		numberOfDays: number({
+		numberOfDays: z.number({
 			required_error: 'Number of days is required',
 			invalid_type_error: 'Must be a number',
 		}),
-		budget: number({
+		budget: z.number({
 			required_error: 'Budget is required',
 			invalid_type_error: 'Must be a number',
 		}),
@@ -27,41 +27,41 @@ const payload = {
 };
 
 const params = {
-	params: object({
-		planId: string({
+	params: z.object({
+		planId: z.string({
 			required_error: 'ID is required',
 			// invalid_type_error
 		}),
 	}),
 };
 
-export const buildPlanSchema = object({
+export const buildPlanSchema = z.object({
 	...payload,
 });
 
-export const createPlanSchema = object({
+export const createPlanSchema = z.object({
 	// TODO!
 	// ...payload,
 });
 
-export const readPlanSchema = object({
+export const readPlanSchema = z.object({
 	...params,
 });
 
-export const updatePlanSchema = object({
+export const updatePlanSchema = z.object({
 	...payload,
 	...params,
 });
 
-export const deletePlanSchema = object({
+export const deletePlanSchema = z.object({
 	...params,
 });
 
 /** The schema for creating a new planned itinerary */
-export type BuildPlanInput = TypeOf<typeof createPlanSchema>;
+export type BuildPlanInput = z.TypeOf<typeof createPlanSchema>;
 
 /** The schema for inserting a new plan template into DB */
-export type CreatePlanInput = TypeOf<typeof createPlanSchema>;
-export type ReadPlanInput = TypeOf<typeof readPlanSchema>;
-export type UpdatePlanInput = TypeOf<typeof updatePlanSchema>;
-export type DeletePlanInput = TypeOf<typeof deletePlanSchema>;
+export type CreatePlanInput = z.TypeOf<typeof createPlanSchema>;
+export type ReadPlanInput = z.TypeOf<typeof readPlanSchema>;
+export type UpdatePlanInput = z.TypeOf<typeof updatePlanSchema>;
+export type DeletePlanInput = z.TypeOf<typeof deletePlanSchema>;
