@@ -1,8 +1,7 @@
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
-// import { PlanBuilderInput } from "../../../models/plan.model.js";
-import type { BuildPlanInput } from '../../../schema/plan/plan.schema.js';
+import type { BuildPlanInput } from '../../../schema/planner/planner.schema.js';
 import PlannerService from '../../../service/planner/planner.service.js';
 
 /**
@@ -11,14 +10,22 @@ import PlannerService from '../../../service/planner/planner.service.js';
  * @param res
  * @returns
  */
-export default async function createStructuredPlan(req: Request<BuildPlanInput>, res: Response) {
-	// console.log('Logging payload', req.body);
-	const data = await PlannerService.createStructuredPlan(req.body).catch((e) => {
-		console.log(e);
+export default async function createStructuredPlan(
+	req: Request<unknown, unknown, BuildPlanInput['body']>,
+	res: Response
+) {
+	const data = await PlannerService.createStructuredPlan(req.body).catch((error) => {
+		console.log(error);
 	});
-	// @todo
 	if (!data) {
-		return res.status(StatusCodes.NOT_FOUND).send(error('Error getting itinerary', res.statusCode));
+		return res
+			.status(StatusCodes.NOT_FOUND)
+			.send(
+				error(
+					"Sorry, we couldn't create a plan with those criteria. Please narrow down your search so we can include more results.",
+					res.statusCode
+				)
+			);
 	}
 
 	return res.send(success(data));

@@ -54,18 +54,34 @@ export class PlanHelper {
 	async fetchFoodAndDrinkDocuments(
 		// biome-ignore lint/correctness/noUnusedFunctionParameters: WIP
 		theme: StructuredPlanDayProfile,
-		results: PlaceDocument[]
+		results: PlaceDocument[],
+		barrioCenter?: { lat: number; lng: number }
 	): Promise<PoiDocument[]> {
-		if (results.length <= 0) return Promise.resolve([]);
+		// food and drink options need to be based on a lat/lng and or tag
+		// const isValid = results.length > 0 ||
+
+		let latLng = {
+			lat: -1,
+			lng: -1,
+		};
+		if (results.length > 0) {
+			latLng = {
+				lat: results[0].lat,
+				lng: results[0].lng,
+			};
+		} else if (barrioCenter) {
+			latLng = barrioCenter;
+		} else {
+			return Promise.resolve([]);
+		}
+
+		// if (results.length <= 0 && !barrioCenter) return Promise.resolve([]);
 
 		const poiActiveField: keyof PoiDocument = 'active';
 		const poiLatField: keyof PoiDocument = 'lat';
 		const poiLngField: keyof PoiDocument = 'lng';
+		const poiAddressField: keyof PoiDocument = 'address';
 
-		const latLng = {
-			lat: results[0].lat || -1,
-			lng: results[0].lng || -1,
-		};
 		if (latLng.lat === -1 || latLng.lng === -1) return Promise.resolve([]);
 
 		let documents: Scan<PoiDocument>;
@@ -130,7 +146,7 @@ export class PlanHelper {
 		_startEnd?: { from: number; to: number } | undefined
 	): StructuredPlanResponse {
 		// augment place data
-		let results = places.map((r) => PlacesService.getMappedPlace(r) as PlaceDocument);
+		let results = places.map((item) => PlacesService.getMappedPlace(item) as PlaceDocument);
 
 		// sort list
 		results = this.sortResultSubset(theme, results);
@@ -165,7 +181,7 @@ export class PlanHelper {
 		// });
 
 		// // generate a plan title, like "Custom Itinerary"
-		const planTitle = this.getPlanTitle(theme.name, itinerary[0].places ?? []);
+		const planTitle = this.getPlanTitle(theme.name, itinerary[0]?.places ?? []);
 
 		// // this is an array of places which are best visited during the day only
 		// const todDay = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Day);
@@ -177,7 +193,7 @@ export class PlanHelper {
 			.flatMap((d) => d.places.length)
 			.reduce((accumulator, currentValue) => {
 				return accumulator + currentValue;
-			});
+			}, 0);
 
 		const priceAverage = 0; // might not need this
 		const includesPlacesOutsideCity = itinerary

@@ -5,6 +5,7 @@ import { getListHandler, getRegionsListHandler } from './functions/index.js';
 export default {
 	getRegionsList: getRegionsListHandler,
 	getList: getListHandler,
+	// TODO - static lookup is here: src/collections/barrios/data.ts
 };
 
 export function findBarrioByLatLng(lat: number, lng: number): Barris | null {

@@ -1,15 +1,18 @@
 /** biome-ignore-all lint/correctness/noUnusedImports: WIP */
 /** biome-ignore-all lint/correctness/noUnusedVariables: WIP */
 import type { Scan } from 'dynamoose/dist/ItemRetriever.js';
+import { getStaticBarrioById } from '../../../collections/barrios/data.js';
 import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category.js';
+import BarrioModel, { type BarrioInput } from '../../../models/barrio.model.js';
 import { CommitmentEnum } from '../../../models/enums/commitment.enum.js';
 import { RequiresBookingEnum } from '../../../models/enums/requiresbooking.enum.js';
 import { TimeOfDayEnum } from '../../../models/enums/tod.enum.js';
 import PlaceModel, { type PlaceDocument } from '../../../models/place.model.js';
-import type { PlanBuilderInput, StructuredPlanResponse } from '../../../models/plan.model.js';
+import type { StructuredPlanResponse } from '../../../models/plan.model.js';
 import { PlanThemeEnum, type StructuredPlanDayProfile } from '../../../models/planThemes.js';
 // import { themesTestData } from "../../../collections/themes/themesTestData.js";
 import type { PoiDocument } from '../../../models/poi.model.js';
+import type { BuildPlanInput } from '../../../schema/planner/planner.schema.js';
 import { PlanHelper } from './createStructuredPlan.helper.js';
 
 const DOCUMENT_SCAN_LIMIT = 2500;
@@ -35,7 +38,9 @@ const DOCUMENT_SCAN_LIMIT = 2500;
  * food can be, breakfast, brunch, coffee before, lunch, coffee after, drinks before, dinner, dessert, drinks after, cocktails, night club
  * @returns
  */
-export default async function (input: PlanBuilderInput): Promise<StructuredPlanResponse | null> {
+export default async function (
+	input: BuildPlanInput['body']
+): Promise<StructuredPlanResponse | null> {
 	let documents: Scan<PlaceDocument>;
 	const helper = new PlanHelper();
 	const {
@@ -81,8 +86,8 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 	const categoryIdsSubset =
 		input.categoryIds && input.categoryIds.length > 0 ? input.categoryIds : [];
 	const hasBudget = input.budget <= 1 ? 1 : input.budget > 32 ? 32 : input.budget;
-	const hasTimeSpent = input.timeRecommended <= 0 ? 0 : input.timeRecommended;
-	const hasTod = input.preferredTimeOfDay <= 0 ? 0 : input.preferredTimeOfDay;
+	const hasTimeSpent = (input.timeRecommended ?? 0) <= 0 ? 0 : input.timeRecommended;
+	const hasTod = (input.preferredTimeOfDay ?? 0) <= 0 ? 0 : input.preferredTimeOfDay;
 	const hasCentralBarrios = input.centralBarriosOnly === true;
 	const hasBarrioIds = (input.barrioIds ?? []).length > 0;
 	const hasExcludePlaceIds = input.excludePlaceIds && input.excludePlaceIds.length > 0;
@@ -92,7 +97,8 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 	const hasPets = input.visitingWithPets === true;
 	const hasKids = input.visitingWithKids === true;
 	const hasTeens = input.visitingWithTeenagers === true;
-	const hasWalkBetweenPlaces = input.walkBetweenPlacesEnabled !== false;
+	const hasWalkBetweenPlaces = input.walkBetweenPlacesEnabled === true;
+	const hasAddressStringFilter = input.addressContains && input.addressContains !== '';
 	const today = new Date();
 	const numDays = input.numberOfDays;
 
@@ -109,8 +115,8 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 	travelDate.setSeconds(0);
 	travelDate.setMinutes(0);
 	travelDate.setMilliseconds(0);
-	const planIsForToday = today.getTime() <= travelDate.getTime();
 
+	const planIsForToday = today.getTime() <= travelDate.getTime();
 	// const nextBudgetDown = hasBudget
 
 	try {
@@ -216,21 +222,45 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 		try {
 			const allResults = await documents.limit(DOCUMENT_SCAN_LIMIT).exec();
 			results = allResults.toJSON() as PlaceDocument[]; // will contain all results
+			// if (results.length === 0) {
+			// 	return null;
+			// }
 		} catch (error) {
 			return null;
 		}
 
+		// if no place results, make sure there's a barrio as we need a lat/lng
+		if (results.length === 0 && filteredByBarrioIds.length === 0) {
+			return null;
+		}
+
+		let relatedBarrio: BarrioInput | null = null;
+		if (results.length === 0) {
+			const firstBarrio = input.barrioIds[0];
+			relatedBarrio = getStaticBarrioById(firstBarrio);
+			if (!relatedBarrio) {
+				return null;
+			}
+		}
+
+		// PUT THIS ELSEWHERE?
+
 		let foodDrinkResults: PoiDocument[] = [];
 		if (shouldIncludeFood || shouldIncludeDrink || shouldIncludeClubs) {
-			foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(theme, results);
+			const latLng = {
+				lat: relatedBarrio?.centre.lat ?? 41.387023, // plaza cat!
+				lng: relatedBarrio?.centre.lng ?? 2.170051,
+			};
+
+			foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(theme, results, latLng);
 		}
 
 		const thePlan = helper.buildPlanResponse(theme, results, foodDrinkResults, numDays);
 		return thePlan;
 
 		// console.log('Number of results: ', results.length);
-	} catch (e) {
-		console.warn(e);
+	} catch (error) {
+		console.warn(error);
 		return null;
 	}
 }
