@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
-import { BarriosService } from '../../../service/barrios/barrios.service.js';
+import BarriosService from '../../../service/barrios/barrios.service.js';
 
 /**
  * Get a list of barrio top-level barrio regions
