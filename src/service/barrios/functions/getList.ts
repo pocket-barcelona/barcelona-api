@@ -24,10 +24,12 @@ export default async function (
 		const result = documents.exec(); // this will scan every record
 
 		return await result.catch((_err: unknown) => {
+			// console.log(_err);
 			// logger.warn(err)
 			return null;
 		});
 	} catch (_e) {
+		// console.log(_e);
 		return null;
 	}
 }
