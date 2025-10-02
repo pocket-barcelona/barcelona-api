@@ -3,6 +3,7 @@ node_modules
 dist
 dist-old
 build
+coverage
 *.log
 
 # local env files
