@@ -15,7 +15,7 @@ export default async function deleteSession(_req: Request, res: Response) {
 	});
 	if (loggedOut) {
 		return res.send(
-			success<any>(
+			success(
 				{
 					accessToken: null,
 					refreshToken: null,

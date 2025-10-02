@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/noUnusedImports: WIP */
 import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
 // import { SessionService } from "../service/session/session.service.js";
@@ -6,6 +7,7 @@ import { config } from '../config.js';
 import { SessionUtils } from '../utils/jwt.utils.js';
 import { error } from './apiResponse.js';
 
+// biome-ignore lint/correctness/noUnusedVariables: WIP
 const { get } = lodash;
 
 /** Curry middleware function - check that the user is logged in */

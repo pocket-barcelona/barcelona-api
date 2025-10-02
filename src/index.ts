@@ -32,7 +32,7 @@ app.use(
  * Support for CORS
  * @link https://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue
  */
-app.use((req, res, next) => {
+app.use((_req, res, next) => {
 	// Add headers before the routes are defined
 
 	// Website you wish to allow to connect

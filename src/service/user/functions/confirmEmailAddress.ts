@@ -58,7 +58,7 @@ export default async function confirmEmailAddress(
 			// throw new Error('Error saving user document');
 			return Promise.resolve(false);
 		}
-	} catch (e) {
+	} catch (_error) {
 		// if (e instanceof Error) {
 		//   return Promise.resolve(false);
 		// } else {

@@ -1,14 +1,9 @@
-import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category.js';
 import { WALKING_DISTANCES } from '../../../collections/themes/themesTestData.js';
-import { TimeOfDayEnum } from '../../../models/enums/tod.enum.js';
 import type { PlaceDocument } from '../../../models/place.model.js';
 import type { StructuredPlanResponse } from '../../../models/plan.model.js';
-import {
-	PlanThemeEnum,
-	type StructuredPlanDayProfile,
-	type ThemeInputSpecs,
-} from '../../../models/planThemes.js';
+import type { StructuredPlanDayProfile, ThemeInputSpecs } from '../../../models/planThemes.js';
 import PoiModel, { type PoiDocument } from '../../../models/poi.model.js';
 import { PlacesService } from '../../places/places.service.js';
 import { sortByLngAsc, sortByLngDesc } from '../../places/utils.js';
@@ -57,6 +52,7 @@ export class PlanHelper {
 	// }
 
 	async fetchFoodAndDrinkDocuments(
+		// biome-ignore lint/correctness/noUnusedFunctionParameters: WIP
 		theme: StructuredPlanDayProfile,
 		results: PlaceDocument[]
 	): Promise<PoiDocument[]> {
@@ -131,7 +127,7 @@ export class PlanHelper {
 		places: PlaceDocument[],
 		pois: PoiDocument[],
 		numberOfDays: number,
-		startEnd?: { from: number; to: number } | undefined
+		_startEnd?: { from: number; to: number } | undefined
 	): StructuredPlanResponse {
 		// augment place data
 		let results = places.map((r) => PlacesService.getMappedPlace(r) as PlaceDocument);
@@ -458,7 +454,7 @@ export class PlanHelper {
 
 		const allInsideBcn = places.every((p) => p.barrioId !== 86);
 		const allOutsideBcn = !allInsideBcn;
-		const someOutsideBcn = places.some((p) => p.barrioId === 86);
+		const _someOutsideBcn = places.some((p) => p.barrioId === 86);
 		// true if more than half of the places are in BCN
 		// const mainlyInBcn = (places.filter(p => p.barrioId !== 86).length / places.length) > 0.5;
 
@@ -467,7 +463,7 @@ export class PlanHelper {
 		// all places which are inside BCN
 		const placesInsideBcn = places.filter((p) => p.barrioId !== 86);
 
-		const placesAllInCentralBarrios = places.every((p) => {
+		const _placesAllInCentralBarrios = places.every((p) => {
 			// return true if barrio is raval, gothic or born
 			return [...CENTRAL_BARRIO_IDS].indexOf(p.barrioId) > -1;
 		});

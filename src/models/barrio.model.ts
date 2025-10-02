@@ -1,5 +1,5 @@
 import dynamoose from 'dynamoose';
-import type { Item } from 'dynamoose/dist/Item';
+import type { Item } from 'dynamoose/dist/Item.js';
 
 export interface BarrioInput {
 	/** Unique ID number for the barrio */

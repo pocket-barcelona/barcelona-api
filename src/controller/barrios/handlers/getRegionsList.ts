@@ -9,7 +9,7 @@ import { BarriosService } from '../../../service/barrios/barrios.service.js';
  * @param res
  * @returns
  */
-export default async function getRegionsList(req: Request, res: Response) {
+export default async function getRegionsList(_req: Request, res: Response) {
 	const data = await BarriosService.getRegionsList();
 
 	if (!data) {

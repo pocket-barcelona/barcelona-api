@@ -1,4 +1,4 @@
-import type { Query, ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { Query, ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import type { MeetupDocument, MeetupItem, MeetupStatusEnum } from '../../models/meetup.model.js';
 import type { CreateMeetupInput, UpdateMeetupInput } from '../../schema/meetup/meetup.schema.js';
 import {
@@ -11,7 +11,7 @@ import {
 	updateHandler,
 } from './functions/index.js';
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: WIP
 export class MeetupService {
 	static create = async (
 		input: CreateMeetupInput['body'],

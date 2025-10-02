@@ -179,10 +179,10 @@
   # build app
   npm run build
   # host local server
-  node --experimental-specifier-resolution=node build/src/app.js
+  node --experimental-specifier-resolution=node dist/src/index.js
   ```
 
-  > Probably works with node v18, but not tested!
+  > Works with node v22
 
 </details>
 

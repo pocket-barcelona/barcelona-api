@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import type { CategoryDocument } from '../../models/category.model.js';
 import type { ImageAssetsSize } from '../../models/imageAssets.model.js';
 import type { PlaceDocument, PlaceInput } from '../../models/place.model.js';
@@ -16,7 +16,7 @@ import {
 } from './functions/index.js';
 // import 'dotenv/config'; // support for dotenv injecting into the process env
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: WIP
 export class PlacesService {
 	static getList = async (
 		params: ReadExploreInput['body']

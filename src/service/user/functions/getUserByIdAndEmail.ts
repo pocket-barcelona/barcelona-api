@@ -22,7 +22,7 @@ export default async function getUserByIdAndEmail(
 			.eq(userId.toString())
 			.limit(1)
 			.exec()
-			.catch((err: unknown) => {
+			.catch((_error: unknown) => {
 				// logger.warn(err)
 				return null;
 			});
@@ -30,7 +30,7 @@ export default async function getUserByIdAndEmail(
 		if (!userFound || !userFound[0]) return null;
 
 		return userFound[0];
-	} catch (error) {
+	} catch (_error) {
 		// logger.warn(error)
 		return null;
 	}

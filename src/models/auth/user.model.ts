@@ -1,5 +1,5 @@
 import dynamoose from 'dynamoose';
-import type { Item } from 'dynamoose/dist/Item';
+import type { Item } from 'dynamoose/dist/Item.js';
 import { UserUtils } from '../../service/user/user.utils.js';
 import { type GenericMediaItem, genericMediaAssetSchema } from '../imageAssets.model.js';
 

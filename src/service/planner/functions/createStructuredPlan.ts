@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/correctness/noUnusedImports: WIP */
 /** biome-ignore-all lint/correctness/noUnusedVariables: WIP */
-import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { Scan } from 'dynamoose/dist/ItemRetriever.js';
 import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category.js';
 import { CommitmentEnum } from '../../../models/enums/commitment.enum.js';
 import { RequiresBookingEnum } from '../../../models/enums/requiresbooking.enum.js';
@@ -230,6 +230,7 @@ export default async function (input: PlanBuilderInput): Promise<StructuredPlanR
 
 		// console.log('Number of results: ', results.length);
 	} catch (e) {
+		console.warn(e);
 		return null;
 	}
 }

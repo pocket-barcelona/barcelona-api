@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import type { PoiDocument } from '../../models/poi.model.js';
 import type { PoiTagDocument } from '../../models/poiTag.model.js';
 import type { FilterByPoiInput } from '../../schema/poi/poi.schema.js';

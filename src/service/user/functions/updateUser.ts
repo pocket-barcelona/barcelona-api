@@ -9,7 +9,7 @@ export default async function updateUser(input: UpdateUserInput): Promise<UserDo
 		const user = await UserModel.update(input.body);
 		// only return certain field from the document
 		return omit(user.toJSON(), 'password') as UserDocument;
-	} catch (e: unknown) {
+	} catch (_e: unknown) {
 		// throw new Error(e);
 		// logger.warn(e)
 		return false;

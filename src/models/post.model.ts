@@ -1,5 +1,5 @@
 import dynamoose from 'dynamoose';
-import type { Item } from 'dynamoose/dist/Item';
+import type { Item } from 'dynamoose/dist/Item.js';
 import type { CategoryDocument } from './category.model.js';
 
 export enum PostStatusEnum {

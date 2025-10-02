@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import CategoryModel, { type CategoryDocument } from '../../../models/category.model.js';
 
 /**

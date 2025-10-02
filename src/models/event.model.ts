@@ -1,5 +1,5 @@
 import dynamoose from 'dynamoose';
-import type { Item } from 'dynamoose/dist/Item';
+import type { Item } from 'dynamoose/dist/Item.js';
 
 export interface EventInput {
 	/** Internal Unique ID for the event from Google Sheets. Ex: 1, 2, 3 */

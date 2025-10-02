@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import UserModel, { type UserDocument } from '../../../models/auth/user.model.js';
 
 type UserListAttributesType = keyof Pick<
@@ -11,11 +11,11 @@ export default async function getUsers(): Promise<ScanResponse<UserDocument> | n
 	try {
 		const result = UserModel.scan().attributes(scanAttributes).exec();
 
-		return await result.catch((err: unknown) => {
+		return await result.catch((_error: unknown) => {
 			// logger.warn(err);
 			return null;
 		});
-	} catch (e) {
+	} catch (_error) {
 		return null;
 	}
 }

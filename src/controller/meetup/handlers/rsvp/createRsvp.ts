@@ -1,8 +1,9 @@
+/** biome-ignore-all lint/correctness/noUnusedImports: WIP */
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
 import { error, success } from '../../../../middleware/apiResponse.js';
 import type { UserDocument } from '../../../../models/auth/user.model.js';
-import { type MeetupDocument, MeetupStatusEnum } from '../../../../models/meetup.model.js';
+import type { MeetupDocument } from '../../../../models/meetup.model.js';
 import {
 	getAttendanceStatusHumanMessage,
 	type MeetupRsvpModel,
@@ -45,6 +46,8 @@ export default async function createRsvp(
 	// logged in host is trying to respond to their own event
 	// const groupOwnerIsRespondingToOwnEvent =
 	//   user?.userId !== "" && user?.userId === meetup.organiser.userId;
+
+	// biome-ignore lint/correctness/noUnusedVariables: WIP
 	const groupOwnerIsRespondingToOwnEvent = false;
 
 	// add or update the response attendance data

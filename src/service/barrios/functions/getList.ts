@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import BarrioModel, { type BarrioDocument } from '../../../models/barrio.model.js';
 import type { ReadBarrioInput } from '../../../schema/barrio/barrio.schema.js';
 

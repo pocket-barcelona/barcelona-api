@@ -14,7 +14,7 @@ import {
 	reIssueAccessTokenHandler,
 } from './functions/index.js';
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: WIP
 export class SessionService {
 	static createOrUpdateSession = async (
 		user: UserDocument,

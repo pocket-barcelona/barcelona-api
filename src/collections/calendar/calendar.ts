@@ -6,7 +6,7 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as process from 'node:process';
 import { authenticate } from '@google-cloud/local-auth';
-import type { JSONClient } from 'google-auth-library/build/src/auth/googleauth';
+// import type { JSONClient } from 'google-auth-library/build/src/auth/googleauth.js';
 import { type calendar_v3, google } from 'googleapis';
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import type { OAuth2Client } from 'google-auth-library';
@@ -32,7 +32,7 @@ async function loadSavedCredentialsIfExist() {
 		const content = await fs.readFile(TOKEN_PATH);
 		const credentials = JSON.parse(content.toString('utf-8'));
 		return google.auth.fromJSON(credentials);
-	} catch (err) {
+	} catch (_err) {
 		return null;
 	}
 }
@@ -78,6 +78,8 @@ async function authorize() {
 }
 
 /** List all calendars and IDs for this account */
+// biome-ignore lint/correctness/noUnusedVariables: WIP
+// biome-ignore lint/suspicious/noExplicitAny: WIP
 async function listCalendars(auth: any) {
 	const calendar = google.calendar({ version: 'v3', auth });
 	const res = await calendar.calendarList.list();
@@ -88,7 +90,7 @@ async function listCalendars(auth: any) {
 		return;
 	}
 	console.log('Calendars:');
-	calendars.map((calendar, i) => {
+	calendars.map((calendar) => {
 		console.log(`${calendar.summary ?? 'NO summary found'} - ${calendar.id}`);
 	});
 }
@@ -113,7 +115,7 @@ async function listEvents(auth: any) {
 		return;
 	}
 	console.log('Upcoming 10 events:');
-	events.map((event, i) => {
+	events.map((event) => {
 		const start = event.start?.dateTime || event.start?.date || 'No start date';
 		console.log(`${start} - ${event.summary ?? 'NO summary found'}`, event);
 	});

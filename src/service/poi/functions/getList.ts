@@ -1,5 +1,5 @@
 import { Condition } from 'dynamoose/dist/Condition.js';
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import PoiModel, { type PoiDocument } from '../../../models/poi.model.js';
 import type { FilterByPoiInput } from '../../../schema/poi/poi.schema.js';
 import logger from '../../../utils/logger.js';

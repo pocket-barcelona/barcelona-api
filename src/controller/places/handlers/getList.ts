@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { getDistance } from 'geolib';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
-import type { PlaceInput } from '../../../models/place.model.js';
+import type { PlaceDocument, PlaceInput } from '../../../models/place.model.js';
 import type { ReadExploreInput } from '../../../schema/explore/explore.schema.js';
 import { PlacesService } from '../../../service/places/places.service.js';
 
@@ -55,26 +55,27 @@ export default async function getList(
 	req: Request<any, any, any, ReadExploreInput['body']>,
 	res: Response
 ) {
-	let records = await PlacesService.getList(req.body);
+	const records = await PlacesService.getList(req.body);
 
 	if (!records) {
 		return res.status(StatusCodes.NOT_FOUND).send(error('Error getting list', res.statusCode));
 	}
 
+	let filteredRecords: PlaceDocument[] = [];
 	// support for filter by tags
 	if (req.body.tags && req.body.tags.length > 0) {
 		// @todo - support for more than 1 tag?
 		const tag = (req.body.tags[0] ?? '').toString().toLowerCase();
-		records = records.filter((d) => {
+		filteredRecords = records.filter((d) => {
 			if (!d.tags) return false;
 			const tagsList = d.tags.split(',').filter((t) => t);
 			if (!tagsList.includes(tag)) return false;
 			return true;
-		}) as any;
+		});
 	}
 
 	// augment data with extra info
-	let mappedRecords = PlacesService.getMappedPlaceDocuments(records as any);
+	let mappedRecords = PlacesService.getMappedPlaceDocuments(filteredRecords);
 
 	// do ordering here...
 	if (req.body?.poi) {

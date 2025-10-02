@@ -22,7 +22,7 @@ export default async function getUserByEmail(
 		// return userFound.count > 0
 		const userFound = await UserModel.get({
 			email: user.email,
-		}).catch((err) => {
+		}).catch((_error) => {
 			// logger.warn(err)
 			return null;
 		});
@@ -34,7 +34,7 @@ export default async function getUserByEmail(
 		}
 		return omit(userFound, 'password') as UserDocument;
 		// return user as UserDocument;
-	} catch (error) {
+	} catch (_error) {
 		// logger.info({'User not found': error})
 	}
 	return null;

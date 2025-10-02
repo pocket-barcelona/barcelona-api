@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import { isPointInPolygon } from 'geolib';
 import Barrios, { type Barris } from '../../data/barrios/index.js';
 import type { BarrioDocument } from '../../models/barrio.model.js';

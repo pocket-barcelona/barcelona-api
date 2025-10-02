@@ -13,7 +13,7 @@ export namespace UserUtils {
 		userDatabasePassword: string,
 		candidatePassword: string
 	): Promise<boolean> {
-		return bcrypt.compare(candidatePassword, userDatabasePassword).catch((e) => false);
+		return bcrypt.compare(candidatePassword, userDatabasePassword).catch((_error) => false);
 	}
 
 	export const generateResetPasswordUrl = (email: string, token: string): string => {

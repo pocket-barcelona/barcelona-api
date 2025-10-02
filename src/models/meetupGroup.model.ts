@@ -1,5 +1,5 @@
 import dynamoose from 'dynamoose';
-import type { Item } from 'dynamoose/dist/Item';
+import type { Item } from 'dynamoose/dist/Item.js';
 import { type GenericMediaItem, genericMediaAssetSchema } from './imageAssets.model.js';
 import type { MeetupItem } from './meetup.model.js';
 
