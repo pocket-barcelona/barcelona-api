@@ -1,38 +1,38 @@
-import { object, string, type TypeOf } from 'zod';
+import z from 'zod';
 
 const payload = {
-	body: object({
+	body: z.object({
 		// not needed at the moment...
 	}),
 };
 
 const params = {
-	params: object({
-		placeId: string({
+	params: z.object({
+		placeId: z.string({
 			required_error: 'ID is required',
 			// invalid_type_error
 		}),
 	}),
 };
 
-export const createPlaceSchema = object({
+export const createPlaceSchema = z.object({
 	...payload,
 });
 
-export const readPlaceSchema = object({
+export const readPlaceSchema = z.object({
 	...params,
 });
 
-export const updatePlaceSchema = object({
+export const updatePlaceSchema = z.object({
 	...payload,
 	...params,
 });
 
-export const deletePlaceSchema = object({
+export const deletePlaceSchema = z.object({
 	...params,
 });
 
-export type CreatePlaceInput = TypeOf<typeof createPlaceSchema>;
-export type ReadPlaceInput = TypeOf<typeof readPlaceSchema>;
-export type UpdatePlaceInput = TypeOf<typeof updatePlaceSchema>;
-export type DeletePlaceInput = TypeOf<typeof deletePlaceSchema>;
+export type CreatePlaceInput = z.TypeOf<typeof createPlaceSchema>;
+export type ReadPlaceInput = z.TypeOf<typeof readPlaceSchema>;
+export type UpdatePlaceInput = z.TypeOf<typeof updatePlaceSchema>;
+export type DeletePlaceInput = z.TypeOf<typeof deletePlaceSchema>;
