@@ -1,126 +1,168 @@
-import { array, boolean, number, object, string, type TypeOf } from 'zod';
+import z from 'zod';
 
 // https://github.com/colinhacks/zod
 
 // const payload = {
-//   body: object({
+//   body: z.object({
 //     // not needed at the moment...
 //   }),
 // };
 
 const params = {
-	body: object({
-		provinceId: number({
-			required_error: 'At least one province ID is required',
-			invalid_type_error: 'Expected array of numbers',
-		})
+	body: z.object({
+		provinceId: z
+			.number({
+				required_error: 'At least one province ID is required',
+				invalid_type_error: 'Expected array of numbers',
+			})
 			.array()
 			.optional(),
-		barrioId: number({
-			required_error: 'At least one barrio ID is required',
-			invalid_type_error: 'Expected array of numbers',
-		})
+		barrioId: z
+			.number({
+				required_error: 'At least one barrio ID is required',
+				invalid_type_error: 'Expected array of numbers',
+			})
 			.array()
 			.optional(),
-		categoryId: number({
-			required_error: 'At least one category ID is required',
-			invalid_type_error: 'Expected array of numbers',
-		})
+		categoryId: z
+			.number({
+				required_error: 'At least one category ID is required',
+				invalid_type_error: 'Expected array of numbers',
+			})
 			.array()
 			.optional(),
-		town: string({
-			required_error: 'town is required',
-			invalid_type_error: 'Expected string',
-		}).optional(),
-		keyword: string({
-			required_error: 'Keyword is required',
-			// invalid_type_error
-		}).optional(),
-		price: number({
-			required_error: 'price is required',
-			// invalid_type_error
-		}).optional(),
-		timeRecommended: number({
-			required_error: 'timeRecommended is required',
-			// invalid_type_error
-		}).optional(),
-		bestTod: number({
-			required_error: 'bestTod is required',
-			// invalid_type_error
-		}).optional(),
-		commitmentRequired: number({
-			required_error: 'commitmentRequired is required',
-			// invalid_type_error
-		}).optional(),
-		childrenSuitability: number({
-			required_error: 'childrenSuitability is required',
-			// invalid_type_error
-		}).optional(),
-		teenagerSuitability: number({
-			required_error: 'teenagerSuitability is required',
-			// invalid_type_error
-		}).optional(),
-		requiresBooking: number({
-			required_error: 'requiresBooking is required',
-			// invalid_type_error
-		}).optional(),
-		metroZone: number({
-			required_error: 'metroZone is required',
-			// invalid_type_error
-		}).optional(),
-		popular: boolean({
-			required_error: 'popular is required',
-			invalid_type_error: 'Expected boolean',
-		}).optional(),
-		seasonal: boolean({
-			required_error: 'seasonal is required',
-			// invalid_type_error
-		}).optional(),
-		availableSundays: boolean({
-			required_error: 'availableSundays is required',
-			// invalid_type_error
-		}).optional(),
-		daytrip: number({
-			required_error: 'daytrip is required',
-			// invalid_type_error
-		}).optional(),
-		exclude: number({
-			required_error: 'exclude is required',
-			// invalid_type_error
-		})
+		town: z
+			.string({
+				required_error: 'town is required',
+				invalid_type_error: 'Expected string',
+			})
+			.optional(),
+		keyword: z
+			.string({
+				required_error: 'Keyword is required',
+				// invalid_type_error
+			})
+			.optional(),
+		price: z
+			.number({
+				required_error: 'price is required',
+				// invalid_type_error
+			})
+			.optional(),
+		timeRecommended: z
+			.number({
+				required_error: 'timeRecommended is required',
+				// invalid_type_error
+			})
+			.optional(),
+		bestTod: z
+			.number({
+				required_error: 'bestTod is required',
+				// invalid_type_error
+			})
+			.optional(),
+		commitmentRequired: z
+			.number({
+				required_error: 'commitmentRequired is required',
+				// invalid_type_error
+			})
+			.optional(),
+		childrenSuitability: z
+			.number({
+				required_error: 'childrenSuitability is required',
+				// invalid_type_error
+			})
+			.optional(),
+		teenagerSuitability: z
+			.number({
+				required_error: 'teenagerSuitability is required',
+				// invalid_type_error
+			})
+			.optional(),
+		requiresBooking: z
+			.number({
+				required_error: 'requiresBooking is required',
+				// invalid_type_error
+			})
+			.optional(),
+		metroZone: z
+			.number({
+				required_error: 'metroZone is required',
+				// invalid_type_error
+			})
+			.optional(),
+		popular: z
+			.boolean({
+				required_error: 'popular is required',
+				invalid_type_error: 'Expected boolean',
+			})
+			.optional(),
+		seasonal: z
+			.boolean({
+				required_error: 'seasonal is required',
+				// invalid_type_error
+			})
+			.optional(),
+		availableSundays: z
+			.boolean({
+				required_error: 'availableSundays is required',
+				// invalid_type_error
+			})
+			.optional(),
+		daytrip: z
+			.number({
+				required_error: 'daytrip is required',
+				// invalid_type_error
+			})
+			.optional(),
+		exclude: z
+			.number({
+				required_error: 'exclude is required',
+				// invalid_type_error
+			})
 			.array()
 			.optional(),
-		include: number({
-			required_error: 'include is required',
-			// invalid_type_error
-		})
+		include: z
+			.number({
+				required_error: 'include is required',
+				// invalid_type_error
+			})
 			.array()
 			.optional(),
-		tags: string({
-			// invalid_type_error
-		})
+		tags: z
+			.string({
+				// invalid_type_error
+			})
 			.array()
 			.optional(),
 		/** This is a lat/lng like: lat,lng */
-		poi: string({
-			required_error: 'poi is required',
-			// invalid_type_error
-		}).optional(),
-		orderBy: string({
-			required_error: 'orderBy is required',
-			// invalid_type_error
-		}).optional(),
-		page: number({
-			invalid_type_error: 'Expected number',
-		}).optional(),
-		pageSize: number({
-			invalid_type_error: 'Expected number',
-		}).optional(),
+		poi: z
+			.string({
+				required_error: 'poi is required',
+				// invalid_type_error
+			})
+			.optional(),
+		orderBy: z
+			.string({
+				required_error: 'orderBy is required',
+				// invalid_type_error
+			})
+			.optional(),
+		page: z
+			.number({
+				invalid_type_error: 'Expected number',
+			})
+			.optional(),
+		pageSize: z
+			.number({
+				invalid_type_error: 'Expected number',
+			})
+			.optional(),
 	}),
 };
 
-export const exploreSchema = object({
+export const exploreSchema = z.object({
 	...params,
 });
 
-export type ReadExploreInput = TypeOf<typeof exploreSchema>;
+export type ReadExploreInput = z.TypeOf<typeof exploreSchema>;
