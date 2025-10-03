@@ -8,13 +8,12 @@ import z from 'zod';
 const payload = {
 	body: z.object({
 		numberOfDays: z.number().min(1).max(5),
-		budget: z.number().min(1).max(32),
+		budget: z.number().min(0).max(32),
 		categoryIds: z.array(z.number()).optional(),
-
 		includePlacesOutsideBarcelona: z.boolean().optional(),
 		walkBetweenPlacesEnabled: z.boolean().optional(),
-		timeRecommended: z.number().min(1).max(64).optional(),
-		preferredTimeOfDay: z.number().min(1).max(16).optional(),
+		timeRecommended: z.number().min(0).max(64).optional(),
+		preferredTimeOfDay: z.number().min(0).max(16).optional(),
 		centralBarriosOnly: z.boolean().optional(),
 		barrioIds: z.array(z.number()),
 		excludePlaceIds: z.array(z.number()).optional(),
