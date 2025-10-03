@@ -1,10 +1,15 @@
 import { statSync } from 'node:fs';
-import { mkdir, readdir } from 'node:fs/promises';
+import { readdir } from 'node:fs/promises';
 import * as path from 'node:path';
 import * as sharp from 'sharp';
 
-// RUN like:
-// node ./src/processImages/script.js
+type ExportImageSettings = {
+	width: number;
+	height: number;
+	inputFile: string;
+	outputFilePath: string;
+	outputFileName: string;
+};
 
 // if error: Error: Could not load the "sharp" module using the darwin-x64 runtime
 // make sure optional dependencies are installed: yarn add sharp --ignore-engines
@@ -57,7 +62,7 @@ import * as sharp from 'sharp';
 // if true, no processing will happen, only console logging
 const DRY_RUN = false;
 // the list of files to be processed - for logging only
-const DRY_RUN_FILE_LIST = [];
+const DRY_RUN_FILE_LIST: { in: string; out: string }[] = [];
 const ignoreFiles = ['.DS_Store'];
 // const srcFolder = "./../Pictures/PocketBarcelona/app_images_dont_rename/";
 const SOURCE_FOLDER =
@@ -65,7 +70,7 @@ const SOURCE_FOLDER =
 const DESTINATION_FOLDER =
 	'/Volumes/DAZZLE_FILES/BCN Website Photos/Barcelona_Barrios_And_Places/PlacesConverted/';
 
-const SKIPPED_FOLDERS = []; // folders which don't have a _poster.jpg in them
+const SKIPPED_FOLDERS: string[] = []; // folders which don't have a _poster.jpg in them
 const RESIZE_FOLDERS = [
 	{
 		name: 'thumb',
@@ -92,15 +97,13 @@ const RESIZE_FOLDERS = [
 	//   width: 1200,
 	//   height: 1200
 	// }
-];
+] as const;
 
 if (DRY_RUN) {
 	console.warn('DRY RUN. Will process the following files:');
 }
 
 const folders = await readdir(SOURCE_FOLDER);
-
-// let counter = 0;
 
 for (const folder of folders) {
 	if (ignoreFiles.indexOf(folder) > -1) {
@@ -111,12 +114,6 @@ for (const folder of folders) {
 		processFolder(folder);
 		// break; // do only 1!
 	}
-
-	// testing
-	// counter += 1;
-	// if (counter > 5) {
-	//   break;
-	// }
 }
 
 if (DRY_RUN_FILE_LIST.length > 0) {
@@ -129,7 +126,7 @@ if (SKIPPED_FOLDERS.length > 0) {
 	console.warn(`Skipped folders total: ${SKIPPED_FOLDERS.length} folders`);
 }
 
-async function processFolder(folderName) {
+async function processFolder(folderName: string) {
 	const srcFolderName = path.join(SOURCE_FOLDER, folderName);
 	if (!statSync(srcFolderName).isDirectory()) {
 		return;
@@ -142,7 +139,7 @@ async function processFolder(folderName) {
 	let posterExists = false;
 	try {
 		posterExists = statSync(file).isFile();
-	} catch (error) {
+	} catch (_error: unknown) {
 		SKIPPED_FOLDERS.push(srcFolderName);
 	}
 	if (!posterExists) {
@@ -156,24 +153,33 @@ async function processFolder(folderName) {
 		console.warn(`ID is not numeric: ${folderName}, ${id}. Stopping`);
 		return;
 	}
-	processImages(Number(id), file, srcFolderName, '_poster.jpg', '_poster');
+	processImages({
+		id: Number(id),
+		file,
+		sourceFolder: srcFolderName,
+		originalFilename: '_poster.jpg',
+		newFilenameWithoutExtension: '_poster',
+	});
 }
 
-/**
- * Process images in a folder
- * @param {number} id like: 1
- * @param {string} file /Volumes/DAZZLE_FILES/BCN Website Photos/Barcelona_Barrios_And_Places/Places/0_food/_poster.jpg
- * @param {string} sourceFolder /Volumes/DAZZLE_FILES/BCN Website Photos/Barcelona_Barrios_And_Places/Places/0_food
- * @param {string} originalFilename _poster.jpg
- * @param {string} newFilenameWithoutExtension _poster
- */
-async function processImages(
+async function processImages({
 	id,
 	file,
-	sourceFolder,
-	originalFilename,
-	newFilenameWithoutExtension
-) {
+	// sourceFolder,
+	// originalFilename,
+	// newFilenameWithoutExtension,
+}: {
+	/** id like: 1 */
+	id: number;
+	/** like /Volumes/DAZZLE_FILES/BCN Website Photos/Barcelona_Barrios_And_Places/Places/0_food/_poster.jpg */
+	file: string;
+	/** like /Volumes/DAZZLE_FILES/BCN Website Photos/Barcelona_Barrios_And_Places/Places/0_food */
+	sourceFolder: string;
+	/** like _poster.jpg */
+	originalFilename: string;
+	/** like _poster */
+	newFilenameWithoutExtension: string;
+}) {
 	//   const metaData = await sharp.default(file).metadata();
 	//   console.log(metaData);
 
@@ -194,7 +200,7 @@ async function processImages(
 	}
 }
 
-async function exportImage(settings) {
+async function exportImage(settings: ExportImageSettings) {
 	const { width, height, inputFile, outputFilePath, outputFileName } = settings;
 
 	const outputFile = path.join(outputFilePath, outputFileName);
