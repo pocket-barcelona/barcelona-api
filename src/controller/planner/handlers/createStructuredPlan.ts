@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { BuildPlanInput } from '../../../schema/planner/planner.schema.js';
 import PlannerService from '../../../service/planner/planner.service.js';
+import PoiService from '../../../service/poi/poi.service.js';
 
 /**
  * Create a structured x-day plan
@@ -14,10 +15,10 @@ export default async function createStructuredPlan(
 	req: Request<unknown, unknown, BuildPlanInput['body']>,
 	res: Response
 ) {
-	const data = await PlannerService.createStructuredPlan(req.body).catch((error) => {
+	const data = await PlannerService.createStructuredPlan(req.body).catch((error: unknown) => {
 		console.log(error);
 	});
-	if (!data) {
+	if (!data || data.itinerary.length === 0) {
 		return res
 			.status(StatusCodes.NOT_FOUND)
 			.send(
@@ -26,6 +27,22 @@ export default async function createStructuredPlan(
 					res.statusCode
 				)
 			);
+	}
+
+	const place = data.itinerary[0].places[0];
+
+	// now fetch POI's
+	const poiData = await PoiService.getList({
+		lat: place.lat,
+		lng: place.lng,
+		barrioId: [place.barrioId],
+		tagId: ['restaurant'], // for now we don't need this as all POI's are restaurants - but in future might be needed
+	}).catch((error: unknown) => {
+		console.log(error);
+	});
+
+	if (poiData) {
+		data.itinerary[0].pois = poiData;
 	}
 
 	return res.send(success(data));

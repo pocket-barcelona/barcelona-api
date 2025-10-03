@@ -234,26 +234,8 @@ export default async function (
 			return null;
 		}
 
-		let relatedBarrio: BarrioInput | null = null;
-		if (results.length === 0) {
-			const firstBarrio = input.barrioIds[0];
-			relatedBarrio = getStaticBarrioById(firstBarrio);
-			if (!relatedBarrio) {
-				return null;
-			}
-		}
-
-		// PUT THIS ELSEWHERE?
-
-		let foodDrinkResults: PoiDocument[] = [];
-		if (shouldIncludeFood || shouldIncludeDrink || shouldIncludeClubs) {
-			const latLng = {
-				lat: relatedBarrio?.centre.lat ?? 41.387023, // plaza cat!
-				lng: relatedBarrio?.centre.lng ?? 2.170051,
-			};
-
-			foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(theme, results, latLng);
-		}
+		// TODO - refactor this
+		const foodDrinkResults: PoiDocument[] = [];
 
 		const thePlan = helper.buildPlanResponse(theme, results, foodDrinkResults, numDays);
 		return thePlan;

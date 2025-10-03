@@ -1,4 +1,4 @@
-import { Condition } from 'dynamoose/dist/Condition.js';
+// import { Condition } from 'dynamoose/dist/Condition.js';
 import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import PoiModel, { type PoiDocument } from '../../../models/poi.model.js';
 import type { FilterByPoiInput } from '../../../schema/poi/poi.schema.js';
@@ -37,6 +37,27 @@ export default async function (
 			.and()
 			.where(barrioIdField)
 			.in(barrioIds);
+
+		// let relatedBarrio: BarrioInput | null = null;
+		// if (results.length === 0) {
+		// 	const firstBarrio = input.barrioIds[0];
+		// 	relatedBarrio = getStaticBarrioById(firstBarrio);
+		// 	if (!relatedBarrio) {
+		// 		return null;
+		// 	}
+		// }
+
+		// PUT THIS ELSEWHERE?
+
+		// let foodDrinkResults: PoiDocument[] = [];
+		// if (shouldIncludeFood || shouldIncludeDrink || shouldIncludeClubs) {
+		// 	const latLng = {
+		// 		lat: relatedBarrio?.centre.lat ?? 41.387023, // plaza cat!
+		// 		lng: relatedBarrio?.centre.lng ?? 2.170051,
+		// 	};
+
+		// 	foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(theme, results, latLng);
+		// }
 
 		// apply filters - doesn't work filtering like this on DB level
 		// if (filters.tagId && Array.isArray(filters.tagId) && filters.tagId.length > 0) {

@@ -80,7 +80,7 @@ export class PlanHelper {
 		const poiActiveField: keyof PoiDocument = 'active';
 		const poiLatField: keyof PoiDocument = 'lat';
 		const poiLngField: keyof PoiDocument = 'lng';
-		const poiAddressField: keyof PoiDocument = 'address';
+		// const poiAddressField: keyof PoiDocument = 'address';
 
 		if (latLng.lat === -1 || latLng.lng === -1) return Promise.resolve([]);
 
