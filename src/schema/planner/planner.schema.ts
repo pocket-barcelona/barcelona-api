@@ -14,8 +14,8 @@ const payload = {
 		walkBetweenPlacesEnabled: z.boolean().optional(),
 		timeRecommended: z.number().min(0).max(64).optional(),
 		preferredTimeOfDay: z.number().min(0).max(16).optional(),
-		centralBarriosOnly: z.boolean().optional(),
-		barrioIds: z.array(z.number()),
+		centralBarriosOnly: z.number().optional(),
+		barrioIds: z.array(z.number()).optional(),
 		excludePlaceIds: z.array(z.number()).optional(),
 
 		visitingWithPets: z.boolean().optional(),

@@ -55,8 +55,8 @@ export interface StructuredPlanResponse {
 		// focusOnSameLocation: number;
 		/** Create an average time of day. Could be day, night or both */
 		timeOfDay: TimeOfDayEnum;
-		/** True is dataset contains places only in the central neighbourhoods */
-		centralBarriosOnly: boolean;
+		/** Focus results on central neighbourhoods only? 1=Yes,2=No,NULL=don't mind */
+		centralBarriosOnly: number;
 		excludePlaceIds: Array<PlaceDocument['placeId']>;
 
 		/** @todo... */
@@ -92,8 +92,8 @@ export interface PlanBuilderInput {
 	timeRecommended: TimeRecommendedEnum | 0;
 	/** The preferred time of day, or 0=any */
 	preferredTimeOfDay: TimeOfDayEnum | 0;
-	/** Focus results on central neighbourhoods only? NULL=don't mind */
-	centralBarriosOnly: boolean | null;
+	/** Focus results on central neighbourhoods only? 1=Yes,2=No,NULL=don't mind */
+	centralBarriosOnly: number;
 	/** In contrast with `centralBarriosOnly`, specify to include one or more barrios */
 	barrioIds: Array<PlaceInput['barrioId']>;
 	/** A list of place IDs to not include in the results */

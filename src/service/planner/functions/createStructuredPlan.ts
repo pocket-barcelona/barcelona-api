@@ -88,7 +88,7 @@ export default async function (
 	const hasBudget = input.budget <= 1 ? 1 : input.budget > 32 ? 32 : input.budget;
 	const hasTimeSpent = (input.timeRecommended ?? 0) <= 0 ? 0 : input.timeRecommended;
 	const hasTod = (input.preferredTimeOfDay ?? 0) <= 0 ? 0 : input.preferredTimeOfDay;
-	const hasCentralBarrios = input.centralBarriosOnly === true;
+	const hasCentralBarrios = input.centralBarriosOnly === 1;
 	const hasBarrioIds = (input.barrioIds ?? []).length > 0;
 	const hasExcludePlaceIds = input.excludePlaceIds && input.excludePlaceIds.length > 0;
 	const shouldIncludeFood = input.includeFoodSuggestions === true;
@@ -183,7 +183,7 @@ export default async function (
 			documents.and().where(bestTodField).eq(input.preferredTimeOfDay);
 		}
 
-		let filteredByBarrioIds = hasBarrioIds ? input.barrioIds : [];
+		let filteredByBarrioIds = hasBarrioIds ? (input.barrioIds as number[]) : [];
 		if (hasCentralBarrios) {
 			filteredByBarrioIds = filteredByBarrioIds.concat(CENTRAL_BARRIO_IDS);
 		}
