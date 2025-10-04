@@ -29,20 +29,32 @@ export default async function createStructuredPlan(
 			);
 	}
 
-	const place = data.itinerary[0].places[0];
+	// fetch POI's if required
+	const { body: input } = req;
+	const shouldIncludeFood = input.includeFoodSuggestions === true;
+	const shouldIncludeDrink = input.includeDrinkSuggestions === true;
+	const shouldIncludeClubs = input.includeNightclubSuggestions === true;
+	if (shouldIncludeFood || shouldIncludeDrink || shouldIncludeClubs) {
+		// const latLng = {
+		// 	lat: relatedBarrio?.centre.lat ?? 41.387023, // plaza cat!
+		// 	lng: relatedBarrio?.centre.lng ?? 2.170051,
+		// };
 
-	// now fetch POI's
-	const poiData = await PoiService.getList({
-		lat: place.lat,
-		lng: place.lng,
-		barrioId: [place.barrioId],
-		tagId: ['restaurant'], // for now we don't need this as all POI's are restaurants - but in future might be needed
-	}).catch((error: unknown) => {
-		console.log(error);
-	});
+		const place = data.itinerary[0].places[0];
 
-	if (poiData) {
-		data.itinerary[0].pois = poiData;
+		// @todo - use the helper: await helper.fetchFoodAndDrinkDocuments(theme, results); ?
+		const poiData = await PoiService.getList({
+			lat: place.lat,
+			lng: place.lng,
+			barrioId: [place.barrioId],
+			tagId: ['restaurant'], // for now we don't need this as all POI's are restaurants - but in future might be needed
+		}).catch((error: unknown) => {
+			console.log(error);
+		});
+
+		if (poiData) {
+			data.itinerary[0].pois = poiData;
+		}
 	}
 
 	return res.send(success(data));

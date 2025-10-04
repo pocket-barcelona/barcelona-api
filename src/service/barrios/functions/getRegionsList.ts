@@ -12,11 +12,11 @@ export default async function (): Promise<ScanResponse<BarrioDocument> | null> {
 		// support for top-level barrios, where parentId is undefined
 
 		const result = BarrioModel.scan().where(parentIdField).eq(0).exec(); // this will scan every record
-		return await result.catch((err: unknown) => {
+		return await result.catch((_err: unknown) => {
 			// logger.warn(err)
 			return null;
 		});
-	} catch (e) {
+	} catch (_error) {
 		return null;
 	}
 }

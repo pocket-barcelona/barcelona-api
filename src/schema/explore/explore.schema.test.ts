@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { exploreSchema } from './explore.schema.js';
 
 describe('exploreSchema', () => {
@@ -15,8 +15,8 @@ describe('exploreSchema', () => {
 				categoryId: [5],
 				exclude: [1, 2, 3],
 				include: [4, 5],
-				tags: ['tag1', 'tag2']
-			}
+				tags: ['tag1', 'tag2'],
+			},
 		});
 		expect(result.success).toBe(true);
 	});
@@ -27,8 +27,8 @@ describe('exploreSchema', () => {
 				town: 'Barcelona',
 				keyword: 'restaurant',
 				poi: '41.3851,2.1734',
-				orderBy: 'name'
-			}
+				orderBy: 'name',
+			},
 		});
 		expect(result.success).toBe(true);
 	});
@@ -46,8 +46,8 @@ describe('exploreSchema', () => {
 				metroZone: 1,
 				daytrip: 0,
 				page: 1,
-				pageSize: 20
-			}
+				pageSize: 20,
+			},
 		});
 		expect(result.success).toBe(true);
 	});
@@ -57,29 +57,29 @@ describe('exploreSchema', () => {
 			body: {
 				popular: true,
 				seasonal: false,
-				availableSundays: true
-			}
+				availableSundays: true,
+			},
 		});
 		expect(result.success).toBe(true);
 	});
 
 	it('should fail with invalid array types', () => {
 		const result = exploreSchema.safeParse({
-			body: { provinceId: 'invalid' }
+			body: { provinceId: 'invalid' },
 		});
 		expect(result.success).toBe(false);
 	});
 
 	it('should fail with invalid number types', () => {
 		const result = exploreSchema.safeParse({
-			body: { price: 'invalid' }
+			body: { price: 'invalid' },
 		});
 		expect(result.success).toBe(false);
 	});
 
 	it('should fail with invalid boolean types', () => {
 		const result = exploreSchema.safeParse({
-			body: { popular: 'invalid' }
+			body: { popular: 'invalid' },
 		});
 		expect(result.success).toBe(false);
 	});

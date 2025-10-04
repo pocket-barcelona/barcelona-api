@@ -47,18 +47,6 @@ export default async function (
 		// 	}
 		// }
 
-		// PUT THIS ELSEWHERE?
-
-		// let foodDrinkResults: PoiDocument[] = [];
-		// if (shouldIncludeFood || shouldIncludeDrink || shouldIncludeClubs) {
-		// 	const latLng = {
-		// 		lat: relatedBarrio?.centre.lat ?? 41.387023, // plaza cat!
-		// 		lng: relatedBarrio?.centre.lng ?? 2.170051,
-		// 	};
-
-		// 	foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(theme, results, latLng);
-		// }
-
 		// apply filters - doesn't work filtering like this on DB level
 		// if (filters.tagId && Array.isArray(filters.tagId) && filters.tagId.length > 0) {
 		// 	documents.and().parenthesis(
