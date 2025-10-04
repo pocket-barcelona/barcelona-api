@@ -1,13 +1,15 @@
-import { date, number, object, optional, string, type TypeOf } from 'zod';
+import z from 'zod';
 
 const params = {
-	query: object({
-		regionId: string().optional(),
-	}),
+	query: z
+		.object({
+			regionId: z.string().optional(),
+		})
+		.optional(),
 };
 
-export const readBarrioSchema = object({
+export const readBarrioSchema = z.object({
 	...params,
 });
 
-export type ReadBarrioInput = TypeOf<typeof readBarrioSchema>;
+export type ReadBarrioInput = z.TypeOf<typeof readBarrioSchema>;

@@ -34,7 +34,6 @@ const themes: StructuredPlanDayProfile[] = [
 		daytrip: 0,
 		limit: 4,
 	},
-
 	{
 		id: 403,
 		theme: PlanThemeEnum.BestOf,

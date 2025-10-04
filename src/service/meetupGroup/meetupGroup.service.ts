@@ -1,4 +1,4 @@
-import type { Query, ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import type { MeetupGroupDocument, MeetupGroupItem } from '../../models/meetupGroup.model.js';
 import type {
 	CreateMeetupGroupInput,
@@ -12,7 +12,7 @@ import {
 	// deleteByIdHandler,
 } from './functions/index.js';
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: WIP
 export class MeetupGroupService {
 	static create = async (
 		input: CreateMeetupGroupInput['body'],

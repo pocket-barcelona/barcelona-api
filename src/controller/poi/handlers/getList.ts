@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { FilterByPoiInput } from '../../../schema/poi/poi.schema.js';
-import { PoiService } from '../../../service/poi/poi.service.js';
+import PoiService from '../../../service/poi/poi.service.js';
 
 /**
  * Get a list of points of interest
@@ -11,7 +11,7 @@ import { PoiService } from '../../../service/poi/poi.service.js';
  * @returns
  */
 export default async function getList(
-	req: Request<any, any, any, FilterByPoiInput>,
+	req: Request<unknown, unknown, FilterByPoiInput['body']>,
 	res: Response
 ) {
 	const data = await PoiService.getList(req.body);

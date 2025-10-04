@@ -1,11 +1,11 @@
-import type { Query } from 'dynamoose/dist/ItemRetriever';
+import type { Query } from 'dynamoose/dist/ItemRetriever.js';
 import MeetupModel, { type MeetupDocument } from '../../../models/meetup.model.js';
 
 export default async function search(
 	query: Query<MeetupDocument>
 	// options?: QueryOptions = { lean: true }
 ): Promise<Query<MeetupDocument>> {
-	const metricsLabels = {
+	const _metricsLabels = {
 		operation: 'search',
 	};
 

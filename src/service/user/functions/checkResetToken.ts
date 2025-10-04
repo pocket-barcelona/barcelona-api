@@ -30,10 +30,10 @@ export default async function checkResetToken(
 
 		// check timestamp expirt
 		const timestamp = resetDocument.resetTimestamp ?? 0;
-		const timeNow = new Date().getTime();
+		const timeNow = Date.now();
 		const resetLinkIsValid = Number(timestamp) + USER_RESET_PASSWORD_LINK_EXPIRY > timeNow;
 		return resetLinkIsValid ? CheckResetTokenEnum.TokenValid : CheckResetTokenEnum.TokenExpired;
-	} catch (error) {
+	} catch (_error) {
 		// logger.warn('Error fetching reset password document');
 	}
 	return CheckResetTokenEnum.NoDocument;

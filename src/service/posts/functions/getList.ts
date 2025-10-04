@@ -1,6 +1,7 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import PostModel, { type PostDocument, PostStatusEnum } from '../../../models/post.model.js';
-import logger from '../../../utils/logger.js';
+
+// import logger from '../../../utils/logger.js';
 
 const sortBlogPosts = (a: PostDocument, b: PostDocument) => {
 	const aPub = new Date(a.published).getTime();
@@ -32,7 +33,7 @@ export default async function (): Promise<ScanResponse<PostDocument> | PostDocum
 
 		const res = query.exec(); // this will scan every record
 		return await res
-			.catch((err) => {
+			.catch((_err) => {
 				// logger.warn(err)
 				return null;
 			})
@@ -40,7 +41,7 @@ export default async function (): Promise<ScanResponse<PostDocument> | PostDocum
 				if (!data) return null;
 				return data.filter(filterBlogPosts).sort(sortBlogPosts);
 			});
-	} catch (e) {
+	} catch (_e) {
 		return null;
 	}
 }

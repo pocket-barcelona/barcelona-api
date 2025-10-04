@@ -23,7 +23,7 @@ export default async function resetPassword(
 			password: password.toString(),
 		});
 		return omit(newUser.toJSON(), 'password') as UserDocument;
-	} catch (error) {
+	} catch (_error) {
 		// logger.warn(error)
 		return false;
 	}

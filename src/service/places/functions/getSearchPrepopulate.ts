@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import PlaceModel, { type PlaceDocument } from '../../../models/place.model.js';
 
 const DOCUMENT_SCAN_LIMIT = 1000;

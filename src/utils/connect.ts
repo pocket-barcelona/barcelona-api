@@ -41,7 +41,7 @@ async function connect() {
 			tables: tablesList,
 		});
 		logger.info('DB connected');
-	} catch (err) {
+	} catch (_error) {
 		logger.error('Could not connect to db. Check AWS accessKeyId and secretAccessKey?');
 	}
 	return client;

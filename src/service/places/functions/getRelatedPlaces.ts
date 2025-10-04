@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import PlaceModel, { type PlaceDocument } from '../../../models/place.model.js';
 import type { ReadPlaceInput } from '../../../schema/place/place.schema.js';
 
@@ -40,11 +40,11 @@ export default async function (
 			.eq(placeId)
 			.exec();
 
-		return await results.catch((err) => {
+		return await results.catch((_error) => {
 			// logger.warn(err)
 			return null;
 		});
-	} catch (e) {
+	} catch (_error) {
 		return null;
 	}
 }

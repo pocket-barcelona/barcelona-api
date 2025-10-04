@@ -71,53 +71,53 @@ export const getBitwiseValue = (weight: number | undefined, binaryValues: number
 	return [];
 };
 
-const getHaversineDistance = (lat1: number, lat2: number, lng1: number, lng2: number): number => {
-	// haversineSql = getHaversineDistance('pl.place_lat', ':lat_2', 'pl.place_lng', ':lng_2');
-	// return "(
-	//   6371 * acos(
-	//       sin(radians(".lat1.")) * sin(radians(".lat2.")) + cos(radians(".lat1.")) * cos(radians(".lat2.")) * cos(radians(".lng2.") - radians(".lng1."))
-	//   )
-	// )";
+// const getHaversineDistance = (lat1: number, lat2: number, lng1: number, lng2: number): number => {
+// 	// haversineSql = getHaversineDistance('pl.place_lat', ':lat_2', 'pl.place_lng', ':lng_2');
+// 	// return "(
+// 	//   6371 * acos(
+// 	//       sin(radians(".lat1.")) * sin(radians(".lat2.")) + cos(radians(".lat1.")) * cos(radians(".lat2.")) * cos(radians(".lng2.") - radians(".lng1."))
+// 	//   )
+// 	// )";
 
-	const degreesToRadians = (degrees: number): number => {
-		return degrees * (Math.PI / 180);
-	};
-	const radiansToDegrees = (radians: number): number => {
-		return radians * (180 / Math.PI);
-	};
+// 	const degreesToRadians = (degrees: number): number => {
+// 		return degrees * (Math.PI / 180);
+// 	};
+// 	const radiansToDegrees = (radians: number): number => {
+// 		return radians * (180 / Math.PI);
+// 	};
 
-	const diameterOfEarth = 6371;
-	const radians = {
-		lat1: degreesToRadians(lat1),
-		lat2: degreesToRadians(lat2),
-		lng1: degreesToRadians(lng1),
-		lng2: degreesToRadians(lng2),
-	};
+// 	const diameterOfEarth = 6371;
+// 	const radians = {
+// 		lat1: degreesToRadians(lat1),
+// 		lat2: degreesToRadians(lat2),
+// 		lng1: degreesToRadians(lng1),
+// 		lng2: degreesToRadians(lng2),
+// 	};
 
-	const calc = Math.acos(
-		Math.sin(radians.lat1) * Math.sin(radians.lat2) +
-			Math.cos(radians.lat1) * Math.cos(radians.lat2) * Math.cos(radians.lng2 - radians.lng1)
-	);
-	return diameterOfEarth * calc;
-};
+// 	const calc = Math.acos(
+// 		Math.sin(radians.lat1) * Math.sin(radians.lat2) +
+// 			Math.cos(radians.lat1) * Math.cos(radians.lat2) * Math.cos(radians.lng2 - radians.lng1)
+// 	);
+// 	return diameterOfEarth * calc;
+// };
 
 // These sorting algorithms are super approximate!
 
 /** Sort by sea -> mountain */
-export const sortByLatAsc = (a: PlaceDocument, b: PlaceDocument) => {
+export const sortByLatAsc = (a: PlaceDocument, b: PlaceDocument): 1 | -1 => {
 	return a.lat < b.lat ? 1 : -1;
 };
 /** Sort by mountain -> sea */
-export const sortByLatDesc = (a: PlaceDocument, b: PlaceDocument) => {
+export const sortByLatDesc = (a: PlaceDocument, b: PlaceDocument): 1 | -1 => {
 	return a.lat > b.lat ? 1 : -1;
 };
 /** Sort by tarragona -> girona */
-export const sortByLngAsc = (a: PlaceDocument, b: PlaceDocument) => {
-	return a.lng > b.lng ? 1 : -1;
+export const sortByLngAsc = (a: PlaceDocument, b: PlaceDocument): 1 | -1 => {
+	return a.lng < b.lng ? 1 : -1;
 };
 /** Sort by girona -> tarragona */
-export const sortByLngDesc = (a: PlaceDocument, b: PlaceDocument) => {
-	return a.lng < b.lng ? 1 : -1;
+export const sortByLngDesc = (a: PlaceDocument, b: PlaceDocument): 1 | -1 => {
+	return a.lng > b.lng ? 1 : -1;
 };
 
 /**

@@ -1,6 +1,7 @@
 import type { BarrioInput } from '../../models/barrio.model.js';
 
-export const BarriosData: BarrioInput[] = [
+/** @TODO - use this instead of the DB for static lookup? */
+const BarriosData: BarrioInput[] = [
 	{
 		barrioId: 1,
 		parentId: 0,
@@ -1034,3 +1035,7 @@ export const BarriosData: BarrioInput[] = [
 		},
 	},
 ];
+
+export const getStaticBarrioById = (barrioId: number): BarrioInput | null => {
+	return BarriosData.find((b) => b.barrioId === barrioId) ?? null;
+};

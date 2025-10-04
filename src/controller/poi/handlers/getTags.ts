@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
-import { PoiService } from '../../../service/poi/poi.service.js';
+import PoiService from '../../../service/poi/poi.service.js';
 
 /**
  * Get a list of restaurant tags for points of interest

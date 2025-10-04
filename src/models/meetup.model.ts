@@ -1,5 +1,6 @@
+/** biome-ignore-all lint/correctness/noUnusedVariables: WIP */
 import dynamoose from 'dynamoose';
-import type { Item } from 'dynamoose/dist/Item';
+import type { Item } from 'dynamoose/dist/Item.js';
 import { type GenericMediaItem, genericMediaAssetSchema } from './imageAssets.model.js';
 import { type MeetupRsvpModel, rsvpSchema } from './rsvp.model.js';
 

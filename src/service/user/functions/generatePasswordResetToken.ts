@@ -20,13 +20,13 @@ export default async function generatePasswordResetToken(
 		const resetDocument = await ResetPasswordModel.update({
 			email: user.email.toString(),
 			resetToken: resetToken,
-			resetTimestamp: new Date().getTime(),
+			resetTimestamp: Date.now(),
 		});
 
 		// return processed.unprocessedItems.length === 0 ? processed
 
 		return resetDocument;
-	} catch (error) {
+	} catch (_error) {
 		// logger.warn({ "Problem creating reset token for": user.email });
 	}
 	return resetDocument;

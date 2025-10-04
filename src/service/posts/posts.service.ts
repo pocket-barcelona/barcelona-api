@@ -9,6 +9,7 @@ import {
 	updatePostHandler,
 } from './functions/index.js';
 
+// biome-ignore lint/complexity/noStaticOnlyClass: WIP
 export class PostsService {
 	static getList = async () => getListHandler();
 	static getAdminList = async () => getAdminListHandler();

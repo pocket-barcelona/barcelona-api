@@ -1,5 +1,7 @@
+/** biome-ignore-all lint/correctness/noUnusedImports: WIP */
 import { type calendar_v3, google } from 'googleapis';
 
+// biome-ignore lint/correctness/noUnusedVariables: WIP
 const event: calendar_v3.Schema$Event = {
 	summary: 'Mecal Air Barcelona (Open Air Cinema)',
 	location: 'Museo Can Framis',
@@ -26,6 +28,7 @@ const event: calendar_v3.Schema$Event = {
 
 // Instances: https://developers.google.com/calendar/api/guides/recurringevents#accessing_instances
 // like parent event, but without recurrence field
+// biome-ignore lint/correctness/noUnusedVariables: WIP
 const instances: calendar_v3.Schema$Event[] = [
 	{
 		kind: 'calendar#event',

@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { ReadPlaceInput } from '../../../schema/place/place.schema.js';
-import { PlacesService } from '../../../service/places/places.service.js';
+import PlacesService from '../../../service/places/places.service.js';
 
 /**
  * Get a place by ID

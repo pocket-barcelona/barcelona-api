@@ -10,12 +10,13 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:watch": "vitest --watch",
     "start-oldish": "tsc && node --loader ts-node/esm --experimental-specifier-resolution=node --es-module-specifier-resolution=node ./dist/src",
     "dev": "tsx watch src/index.ts",
     "start:dist": "node --experimental-specifier-resolution=node --es-module-specifier-resolution=node ./dist/src/index.js",
-    "process:images:old": "tsx ./src/processImages/script.ts",
-    "process:images": "node ./src/processImages/script.js",
+    "process:images": "tsx ./src/processImages/script.ts",
     "process:places": "tsx ./src/collections/googleplaces/googleplacesParser.ts",
     "build": "tsc",
     "lint": "yarn lint:code && yarn lint:imports",
@@ -94,10 +95,12 @@
     "@types/pino": "^7.0.5",
     "@types/response-time": "^2.3.5",
     "@types/uuid": "10.0.0",
+    "@vitest/coverage-v8": "^3.2.4",
     "sharp": "^0.33.4",
     "ts-node": "10.9.2",
     "tsx": "^4.20.3",
     "type-fest": "^4.25.0",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "vitest": "^3.2.4"
   }
 }

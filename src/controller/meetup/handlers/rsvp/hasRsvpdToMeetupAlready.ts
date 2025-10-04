@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
-import { error, success } from '../../../../middleware/apiResponse.js';
+import { success } from '../../../../middleware/apiResponse.js';
 import type { UserDocument } from '../../../../models/auth/user.model.js';
 import type { MeetupDocument } from '../../../../models/meetup.model.js';
 import type { CreateRsvpInput } from '../../../../schema/meetup/rsvp.schema.js';

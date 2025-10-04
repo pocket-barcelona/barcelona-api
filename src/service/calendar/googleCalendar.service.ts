@@ -4,7 +4,7 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as process from 'node:process';
 import { authenticate } from '@google-cloud/local-auth';
-import type { JSONClient } from 'google-auth-library/build/src/auth/googleauth';
+import type { JSONClient } from 'google-auth-library/build/src/auth/googleauth.js';
 import { type calendar_v3, google } from 'googleapis';
 import 'dotenv/config'; // support for dotenv injecting into the process env
 import type { OAuth2Client } from 'google-auth-library';
@@ -119,7 +119,7 @@ class GoogleCalendarService {
 		maxResults = 1000,
 		showDeleted = false
 	): Promise<calendar_v3.Schema$Event[] | undefined> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return []; // @todo - throw error?;
 
@@ -142,7 +142,7 @@ class GoogleCalendarService {
 
 	/** Get an event from a Google calendar using it's GC event ID (not iCalUID) */
 	public async getEventById(eventId: string): Promise<calendar_v3.Schema$Event | null> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return null;
 		const calendar = google.calendar({ version: 'v3', auth });
@@ -160,7 +160,7 @@ class GoogleCalendarService {
 
 	/** Get an event from a Google calendar using its iCalUID */
 	public async getEventByUID(uuid: string): Promise<calendar_v3.Schema$Event | null> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return null;
 		const calendar = google.calendar({ version: 'v3', auth });
@@ -184,7 +184,7 @@ class GoogleCalendarService {
 	public async insertEvent(
 		event: calendar_v3.Schema$Event
 	): Promise<calendar_v3.Schema$Event | false> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return false;
 		const calendar = google.calendar({ version: 'v3', auth });
@@ -224,7 +224,7 @@ class GoogleCalendarService {
 				);
 			}
 			return createdEvent;
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			// biome-ignore lint/suspicious/noExplicitAny: WIP
 		} catch (error: any) {
 			// If the google event already exists, update the event instead...
 			// Google events seem to be never deleted, instead they are status=cancelled
@@ -262,7 +262,7 @@ class GoogleCalendarService {
 		eventId: string,
 		event: calendar_v3.Schema$Event
 	): Promise<calendar_v3.Schema$Event | false> {
-		// // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// // biome-ignore lint/suspicious/noExplicitAny: WIP
 		// const auth = (await this.authorize()) as any;
 		// if (!auth) return false;
 		// const calendar = google.calendar({ version: "v3", auth });
@@ -301,7 +301,7 @@ class GoogleCalendarService {
 		instances: calendar_v3.Schema$Event[],
 		event: calendar_v3.Schema$Event
 	): Promise<calendar_v3.Schema$Event | false> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return false;
 		const calendar = google.calendar({ version: 'v3', auth });
@@ -312,7 +312,6 @@ class GoogleCalendarService {
 			return new Promise((resolve) => setTimeout(resolve, Math.ceil(time * 1000)));
 		};
 
-		// biome-ignore lint/complexity/noForEach: <explanation>
 		instances.forEach(async (instance) => {
 			if (!instance.id) return false;
 			await sleep(5);
@@ -340,7 +339,7 @@ class GoogleCalendarService {
 					return res.data;
 				}
 				return false;
-				// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+				// biome-ignore lint/suspicious/noExplicitAny: WIP
 			} catch (error: any) {
 				console.log(`${error?.message ?? 'Error'} - Failed to patch ${instance.id}`);
 				return false;
@@ -360,7 +359,7 @@ class GoogleCalendarService {
 		eventId: string,
 		payload: calendar_v3.Schema$Event
 	): Promise<false | calendar_v3.Schema$Event> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return false;
 		const calendar = google.calendar({ version: 'v3', auth });
@@ -390,7 +389,7 @@ class GoogleCalendarService {
 	 * @param eventId Google calendar ID
 	 */
 	public async getEventInstances(eventId: string): Promise<calendar_v3.Schema$Event[] | false> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return false;
 		const calendar = google.calendar({ version: 'v3', auth });
@@ -416,7 +415,7 @@ class GoogleCalendarService {
 		originalEvent: calendar_v3.Schema$Event,
 		newEvent: Partial<calendar_v3.Schema$Event>
 	): Promise<calendar_v3.Schema$Event | false> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return false;
 		if (!originalEvent.id) return false;
@@ -458,7 +457,7 @@ class GoogleCalendarService {
 	 * the future with the same ID!
 	 */
 	public async deleteEvent(eventId: string): Promise<boolean> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return false;
 		const calendar = google.calendar({ version: 'v3', auth });
@@ -481,7 +480,7 @@ class GoogleCalendarService {
 	public async deleteEventByHiding(
 		event: calendar_v3.Schema$Event
 	): Promise<calendar_v3.Schema$Event | false> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return false;
 		const calendar = google.calendar({ version: 'v3', auth });
@@ -520,7 +519,7 @@ class GoogleCalendarService {
 
 	/** @untested - Delete an event in Google calendar by iCalUID */
 	public async deleteEventByUID(uuid: string): Promise<boolean> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const auth = (await this.authorize()) as any;
 		if (!auth) return false;
 		const calendar = google.calendar({ version: 'v3', auth });

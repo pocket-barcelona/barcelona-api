@@ -1,7 +1,7 @@
-import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import { ChildrenBits } from '../../../models/enums/children.enum.js';
 import { CommitmentBits } from '../../../models/enums/commitment.enum.js';
-import { PriceBits, PriceEnum } from '../../../models/enums/price.enum.js';
+import { PriceBits } from '../../../models/enums/price.enum.js';
 import { RequiresBookingBits } from '../../../models/enums/requiresbooking.enum.js';
 import { TeenagerBits } from '../../../models/enums/teenager.enum.js';
 import { TimeRecommendedBits } from '../../../models/enums/timerecommended.enum.js';
@@ -47,7 +47,6 @@ export default async function (
 		const teenagerSuitabilityIn = getBitwiseValue(body.teenagerSuitability, TeenagerBits);
 		const requiresBookingIn = getBitwiseValue(body.requiresBooking, RequiresBookingBits);
 
-		// biome-ignore lint/complexity/noForEach: <explanation>
 		[
 			{ field: PLACE_FILTER_FIELDS.price, value: priceIn },
 			{ field: PLACE_FILTER_FIELDS.timeRecommended, value: timeRecommendedIn },

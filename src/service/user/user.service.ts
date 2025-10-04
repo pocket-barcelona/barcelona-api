@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import type { ResetPasswordDocument } from '../../models/auth/reset-password.model.js';
 import type UserModel from '../../models/auth/user.model.js';
 import type { CheckResetTokenEnum, UserDocument, UserInput } from '../../models/auth/user.model.js';
@@ -22,7 +22,7 @@ import {
 	validatePasswordHandler,
 } from './functions/index.js';
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: WIP
 export class UserService {
 	static checkResetToken = (user: CheckResetTokenUserInput): Promise<CheckResetTokenEnum> =>
 		checkResetTokenHandler(user);

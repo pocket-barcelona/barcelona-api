@@ -1,5 +1,5 @@
 import dynamoose from 'dynamoose';
-import type { Item } from 'dynamoose/dist/Item';
+import type { Item } from 'dynamoose/dist/Item.js';
 import type { CategoryIdEnum } from './enums/categoryid.enum.js';
 import type { ChildrenEnum } from './enums/children.enum.js';
 import type { CommitmentEnum } from './enums/commitment.enum.js';

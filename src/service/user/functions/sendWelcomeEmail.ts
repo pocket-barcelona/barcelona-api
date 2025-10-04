@@ -37,7 +37,7 @@ export default async function sendWelcomeEmail(user: UserDocument): Promise<bool
 				url: confirmEmailUrl,
 			}
 		);
-	} catch (error) {
+	} catch (_error) {
 		// logger.info({
 		//   message: 'Error rendering template',
 		// });

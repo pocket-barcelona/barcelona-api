@@ -10,7 +10,7 @@ import { CalendarService } from '../../../service/calendar/calendar.service.js';
  * @param res
  * @returns
  */
-export default async function getListHeadless(req: Request, res: Response) {
+export default async function getListHeadless(_req: Request, res: Response) {
 	const data = await CalendarService.getHeadlessList();
 
 	if (!data) {

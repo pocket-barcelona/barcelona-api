@@ -1,5 +1,5 @@
-import { Condition } from 'dynamoose/dist/Condition.js';
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+// import { Condition } from 'dynamoose/dist/Condition.js';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import PoiModel, { type PoiDocument } from '../../../models/poi.model.js';
 import type { FilterByPoiInput } from '../../../schema/poi/poi.schema.js';
 import logger from '../../../utils/logger.js';
@@ -37,6 +37,15 @@ export default async function (
 			.and()
 			.where(barrioIdField)
 			.in(barrioIds);
+
+		// let relatedBarrio: BarrioInput | null = null;
+		// if (results.length === 0) {
+		// 	const firstBarrio = input.barrioIds[0];
+		// 	relatedBarrio = getStaticBarrioById(firstBarrio);
+		// 	if (!relatedBarrio) {
+		// 		return null;
+		// 	}
+		// }
 
 		// apply filters - doesn't work filtering like this on DB level
 		// if (filters.tagId && Array.isArray(filters.tagId) && filters.tagId.length > 0) {

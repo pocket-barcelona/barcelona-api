@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import type { MeetupGroupDocument } from '../../../models/meetupGroup.model.js';
 import MeetupGroupModel from '../../../models/meetupGroup.model.js';
 
@@ -19,7 +19,7 @@ export default async function getList(
 		//   // logger.warn(err);
 		//   return null;
 		// });
-	} catch (e) {
+	} catch (_error) {
 		// timer({ ...metricsLabels, success: "false" });
 		return null;
 	}

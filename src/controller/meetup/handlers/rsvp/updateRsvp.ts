@@ -21,7 +21,7 @@ export default async function updateRsvp(
 	// 2. get response by response ID
 	// 3. if exists, update the response
 
-	const { meetupId, rsvpId } = req.params;
+	// const { meetupId, rsvpId } = req.params;
 
 	// user may or may not be logged in
 

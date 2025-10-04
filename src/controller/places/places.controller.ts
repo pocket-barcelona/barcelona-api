@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import type { ReadExploreInput } from '../../schema/explore/explore.schema.js';
 import type { ReadPlaceInput } from '../../schema/place/place.schema.js';
 import {
 	getById,
@@ -12,10 +11,7 @@ import {
 
 // biome-ignore lint/complexity/noStaticOnlyClass: N/A
 export class PlacesController {
-	static getListHandler = (
-		req: Request<unknown, unknown, unknown, ReadExploreInput['body']>,
-		res: Response
-	) => getList(req, res);
+	static getListHandler = (req: Request, res: Response) => getList(req, res);
 
 	static getByIdHandler = (req: Request<ReadPlaceInput['params']>, res: Response) =>
 		getById(req, res);

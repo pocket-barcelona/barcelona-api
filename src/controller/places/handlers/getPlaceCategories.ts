@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
-import { PlacesService } from '../../../service/places/places.service.js';
+import PlacesService from '../../../service/places/places.service.js';
 
 /**
  * Get a list of categories

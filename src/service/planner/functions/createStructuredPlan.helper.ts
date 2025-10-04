@@ -1,16 +1,11 @@
-import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import { CENTRAL_BARRIO_IDS } from '../../../collections/themes/all/theme-category.js';
 import { WALKING_DISTANCES } from '../../../collections/themes/themesTestData.js';
-import { TimeOfDayEnum } from '../../../models/enums/tod.enum.js';
 import type { PlaceDocument } from '../../../models/place.model.js';
 import type { StructuredPlanResponse } from '../../../models/plan.model.js';
-import {
-	PlanThemeEnum,
-	type StructuredPlanDayProfile,
-	type ThemeInputSpecs,
-} from '../../../models/planThemes.js';
+import type { StructuredPlanDayProfile, ThemeInputSpecs } from '../../../models/planThemes.js';
 import PoiModel, { type PoiDocument } from '../../../models/poi.model.js';
-import { PlacesService } from '../../places/places.service.js';
+import PlacesService from '../../places/places.service.js';
 import { sortByLngAsc, sortByLngDesc } from '../../places/utils.js';
 
 const DOCUMENT_LIST_RETURN_LIMIT = 25;
@@ -57,19 +52,36 @@ export class PlanHelper {
 	// }
 
 	async fetchFoodAndDrinkDocuments(
+		// biome-ignore lint/correctness/noUnusedFunctionParameters: WIP
 		theme: StructuredPlanDayProfile,
-		results: PlaceDocument[]
+		results: PlaceDocument[],
+		barrioCenter?: { lat: number; lng: number }
 	): Promise<PoiDocument[]> {
-		if (results.length <= 0) return Promise.resolve([]);
+		// food and drink options need to be based on a lat/lng and or tag
+		// const isValid = results.length > 0 ||
+
+		let latLng = {
+			lat: -1,
+			lng: -1,
+		};
+		if (results.length > 0) {
+			latLng = {
+				lat: results[0].lat,
+				lng: results[0].lng,
+			};
+		} else if (barrioCenter) {
+			latLng = barrioCenter;
+		} else {
+			return Promise.resolve([]);
+		}
+
+		// if (results.length <= 0 && !barrioCenter) return Promise.resolve([]);
 
 		const poiActiveField: keyof PoiDocument = 'active';
 		const poiLatField: keyof PoiDocument = 'lat';
 		const poiLngField: keyof PoiDocument = 'lng';
+		// const poiAddressField: keyof PoiDocument = 'address';
 
-		const latLng = {
-			lat: results[0].lat || -1,
-			lng: results[0].lng || -1,
-		};
 		if (latLng.lat === -1 || latLng.lng === -1) return Promise.resolve([]);
 
 		let documents: Scan<PoiDocument>;
@@ -131,10 +143,10 @@ export class PlanHelper {
 		places: PlaceDocument[],
 		pois: PoiDocument[],
 		numberOfDays: number,
-		startEnd?: { from: number; to: number } | undefined
+		_startEnd?: { from: number; to: number } | undefined
 	): StructuredPlanResponse {
 		// augment place data
-		let results = places.map((r) => PlacesService.getMappedPlace(r) as PlaceDocument);
+		let results = places.map((item) => PlacesService.getMappedPlace(item) as PlaceDocument);
 
 		// sort list
 		results = this.sortResultSubset(theme, results);
@@ -169,7 +181,7 @@ export class PlanHelper {
 		// });
 
 		// // generate a plan title, like "Custom Itinerary"
-		const planTitle = this.getPlanTitle(theme.name, itinerary[0].places ?? []);
+		const planTitle = this.getPlanTitle(theme.name, itinerary[0]?.places ?? []);
 
 		// // this is an array of places which are best visited during the day only
 		// const todDay = limitedResultSet.filter(i => i.bestTod === TimeOfDayEnum.Day);
@@ -181,7 +193,7 @@ export class PlanHelper {
 			.flatMap((d) => d.places.length)
 			.reduce((accumulator, currentValue) => {
 				return accumulator + currentValue;
-			});
+			}, 0);
 
 		const priceAverage = 0; // might not need this
 		const includesPlacesOutsideCity = itinerary
@@ -226,7 +238,7 @@ export class PlanHelper {
 				categoriesIncluded: [],
 				// focusOnSameLocation: 1,
 				timeOfDay,
-				centralBarriosOnly,
+				centralBarriosOnly: centralBarriosOnly ? 1 : 2, // TODO
 				excludePlaceIds: theme.placeIdsExclude ?? [],
 
 				// TODO
@@ -458,7 +470,7 @@ export class PlanHelper {
 
 		const allInsideBcn = places.every((p) => p.barrioId !== 86);
 		const allOutsideBcn = !allInsideBcn;
-		const someOutsideBcn = places.some((p) => p.barrioId === 86);
+		const _someOutsideBcn = places.some((p) => p.barrioId === 86);
 		// true if more than half of the places are in BCN
 		// const mainlyInBcn = (places.filter(p => p.barrioId !== 86).length / places.length) > 0.5;
 
@@ -467,7 +479,7 @@ export class PlanHelper {
 		// all places which are inside BCN
 		const placesInsideBcn = places.filter((p) => p.barrioId !== 86);
 
-		const placesAllInCentralBarrios = places.every((p) => {
+		const _placesAllInCentralBarrios = places.every((p) => {
 			// return true if barrio is raval, gothic or born
 			return [...CENTRAL_BARRIO_IDS].indexOf(p.barrioId) > -1;
 		});

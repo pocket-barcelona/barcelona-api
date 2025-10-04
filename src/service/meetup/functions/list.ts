@@ -1,9 +1,9 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import MeetupModel, {
 	type MeetupDocument,
 	MeetupStatusEnum,
 } from '../../../models/meetup.model.js';
-import logger from '../../../utils/logger.js';
+// import logger from '../../../utils/logger.js';
 
 export default async function getList(
 	groupId: MeetupDocument['groupId']
@@ -33,11 +33,11 @@ export default async function getList(
 			.in([MeetupStatusEnum.Published, MeetupStatusEnum.Provisional])
 			.limit(500)
 			.exec(); // this will scan every record!
-		return await result.catch((err) => {
-			console.log(err);
+		return await result.catch((error) => {
+			console.log(error);
 			return null;
 		});
-	} catch (e) {
+	} catch (_error) {
 		return null;
 	}
 }

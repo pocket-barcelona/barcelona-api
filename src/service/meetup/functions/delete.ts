@@ -24,11 +24,11 @@ export default async function deleteDocument(
 
 	try {
 		theItem.status = MeetupStatusEnum.SoftDeleted;
-		theItem.save().catch((err) => {
+		theItem.save().catch((_err) => {
 			// logger.warn(err)
 			return null;
 		});
-	} catch (error) {
+	} catch (_error) {
 		// logger.warn(error)
 		return null;
 	}

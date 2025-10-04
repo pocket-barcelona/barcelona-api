@@ -16,7 +16,7 @@ import {
 	updateMeetup,
 } from './handlers/index.js';
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: WIP
 export class MeetupController {
 	static createMeetupHandler = (
 		req: Request<unknown, unknown, CreateMeetupInput['body']>,

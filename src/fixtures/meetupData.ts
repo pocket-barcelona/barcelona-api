@@ -4,6 +4,7 @@ import type { MeetupGroupItem } from '../models/meetupGroup.model.js';
 
 // import type { MeetupRsvpResponse } from '../models/rsvp.model.js';
 
+// biome-ignore lint/correctness/noUnusedVariables: WIP
 const group: MeetupGroupItem = {
 	ownerId: 'test',
 	groupId: 'my-parent-group',
@@ -62,6 +63,7 @@ const group: MeetupGroupItem = {
 	timezone: 'Europe/Madrid',
 };
 
+// biome-ignore lint/correctness/noUnusedVariables: WIP
 const event: MeetupItem = {
 	meetupId: 'abc-123-def-456',
 	shortId: 'abc-123',
@@ -143,6 +145,7 @@ const event: MeetupItem = {
 	rsvps: [],
 };
 
+// biome-ignore lint/correctness/noUnusedVariables: WIP
 const user: UserInput = {
 	userId: 'abcd',
 	role: UserRoleEnum.Admin,

@@ -1,5 +1,6 @@
 // import { TEST_RESPONSE_PLAN_1 } from "../../../input/plan.input.js";
-import type { Scan, ScanResponse } from 'dynamoose/dist/ItemRetriever';
+/** biome-ignore-all lint/correctness/noUnusedVariables: WIP */
+import type { Scan } from 'dynamoose/dist/ItemRetriever.js';
 import { themesTestData } from '../../../collections/themes/themesTestData.js';
 import { TimeOfDayEnum } from '../../../models/enums/tod.enum.js';
 import PlaceModel, { type PlaceDocument } from '../../../models/place.model.js';

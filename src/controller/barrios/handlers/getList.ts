@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { ReadBarrioInput } from '../../../schema/barrio/barrio.schema.js';
-import { BarriosService } from '../../../service/barrios/barrios.service.js';
+import BarriosService from '../../../service/barrios/barrios.service.js';
 
 /**
  * Get a list of barrios

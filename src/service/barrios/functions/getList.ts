@@ -1,4 +1,4 @@
-import type { ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import type { ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
 import BarrioModel, { type BarrioDocument } from '../../../models/barrio.model.js';
 import type { ReadBarrioInput } from '../../../schema/barrio/barrio.schema.js';
 
@@ -24,10 +24,12 @@ export default async function (
 		const result = documents.exec(); // this will scan every record
 
 		return await result.catch((_err: unknown) => {
+			// console.log(_err);
 			// logger.warn(err)
 			return null;
 		});
 	} catch (_e) {
+		// console.log(_e);
 		return null;
 	}
 }

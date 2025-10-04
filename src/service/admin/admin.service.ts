@@ -1,10 +1,11 @@
-import type { Request, Response } from 'express';
+import type { Request } from 'express';
 import 'dotenv/config';
 import fs from 'node:fs';
-import { PassThrough, Transform } from 'node:stream';
+// import { PassThrough, Transform } from 'node:stream';
 import { PutObjectCommand, type PutObjectCommandOutput } from '@aws-sdk/client-s3';
 // import { imageUploadHandler } from "./functions/index.js";
-import formidable, { type Fields, type Files, errors as formidableErrors } from 'formidable';
+// import formidable, { type Fields, type Files, errors as formidableErrors } from 'formidable';
+import formidable, { type Fields, type Files } from 'formidable';
 import urlSlug from 'url-slug';
 import { v4 as uuidv4 } from 'uuid';
 import type { PostImage } from '../../models/post.model.js';
@@ -12,7 +13,7 @@ import s3Client from '../../utils/s3.client.js';
 
 const IMAGE_FILESIZE_MAX = 2 * 1024 * 1024; // 2MB
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: WIP
 export class AdminService {
 	// static uploadImage = async (req: any, res: any): Promise<any> =>
 	//   imageUploadHandler(req, res);
@@ -45,7 +46,7 @@ export class AdminService {
 		formidableFile: formidable.File;
 		fields: formidable.Fields;
 	}> {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 		const { files, fields } = await AdminService.parseFile(req as any);
 		// const file = fs.createReadStream(formidableFile.filepath);
 		// get the file
@@ -116,7 +117,7 @@ export class AdminService {
 				postId = '',
 				// } = fields as { imageAlt: string; imageTitle: string; postId: string };
 				// @todo - fix this!
-				// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+				// biome-ignore lint/suspicious/noExplicitAny: WIP
 			} = fields as any;
 
 			// build file key
@@ -166,7 +167,7 @@ export class AdminService {
 			} catch (err) {
 				// console.error(err);
 			}
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			// biome-ignore lint/suspicious/noExplicitAny: WIP
 		} catch (err: any) {
 			throw new Error(err);
 			// nothing
@@ -251,7 +252,7 @@ export class AdminService {
 		// create an 8 char UUID-like string - it will be unique enough!
 		smallUuid = smallUuid.substring(0, 8);
 		// build a url slug based on image title from user - will include chars [a-z0-9-] and no spaces
-		let safeFilename = urlSlug(imageTitle);
+		let safeFilename = urlSlug.convert(imageTitle);
 		safeFilename = (safeFilename || 'myfile')
 			.concat('-')
 			.concat(smallUuid)

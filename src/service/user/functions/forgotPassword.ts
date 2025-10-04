@@ -50,7 +50,7 @@ export default async function forgotPassword(
 		if (rendered.renderedHtml) {
 			renderedTemplate = rendered.renderedHtml;
 		}
-	} catch (error) {
+	} catch (_error) {
 		// logger.info({
 		//   message: 'Error rendering template',
 		// });

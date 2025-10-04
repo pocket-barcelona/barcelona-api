@@ -10,7 +10,7 @@ const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: N
 			params: req.params,
 		});
 		next();
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: WIP
 	} catch (e: any) {
 		// extract schema validation errors from Zod
 		let errorMessage = '';

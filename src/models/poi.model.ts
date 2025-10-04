@@ -5,7 +5,7 @@
  * */
 
 import dynamoose from 'dynamoose';
-import type { Item } from 'dynamoose/dist/Item';
+import type { Item } from 'dynamoose/dist/Item.js';
 import type { CategoryIdEnum } from './enums/categoryid.enum.js';
 // import { ChildrenEnum } from "./enums/children.enum.js";
 // import { CommitmentEnum } from "./enums/commitment.enum.js";

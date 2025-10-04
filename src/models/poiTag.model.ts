@@ -4,7 +4,7 @@
  * */
 
 import dynamoose from 'dynamoose';
-import type { Item } from 'dynamoose/dist/Item';
+import type { Item } from 'dynamoose/dist/Item.js';
 
 export interface PoiTagInput {
 	/** The Tag ID */

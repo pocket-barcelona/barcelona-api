@@ -1,73 +1,75 @@
-import { array, number, object, optional, string, type TypeOf } from 'zod';
+import z from 'zod';
 
 const payload = {
-	body: object({
+	body: z.object({
 		//
 	}),
 };
 
 /** Filter the poi's by location, tag etc */
 const filterByParams = {
-	body: object({
-		lat: optional(
-			number({
+	body: z.object({
+		lat: z.optional(
+			z.number({
 				required_error: 'lat is required',
 				// invalid_type_error
 			})
 		),
-		lng: optional(
-			number({
+		lng: z.optional(
+			z.number({
 				required_error: 'lng is required',
 				// invalid_type_error
 			})
 		),
-		price: optional(
-			number({
+		price: z.optional(
+			z.number({
 				required_error: 'price is required',
 			})
 		),
-		barrioId: array(
-			number({
-				required_error: 'barrioId needs to be an array and is required',
-			})
-		).min(1),
-		tagId: array(string()).optional(),
+		barrioId: z
+			.array(
+				z.number({
+					required_error: 'barrioId needs to be an array and is required',
+				})
+			)
+			.min(1),
+		tagId: z.array(z.string()).optional(),
 	}),
 };
 
 const params = {
-	params: object({
-		poiId: string({
+	params: z.object({
+		poiId: z.string({
 			required_error: 'ID is required',
 			// invalid_type_error
 		}),
 	}),
 };
 
-export const filterByPoiSchema = object({
+export const filterByPoiSchema = z.object({
 	...filterByParams,
 });
 
-export const createPoiSchema = object({
+export const createPoiSchema = z.object({
 	...payload,
 });
 
-export const readPoiSchema = object({
+export const readPoiSchema = z.object({
 	...params,
 });
 
 // @todo
-export const updatePoiSchema = object({
+export const updatePoiSchema = z.object({
 	...payload,
 	...params,
 });
 
-export const deletePoiSchema = object({
+export const deletePoiSchema = z.object({
 	...params,
 });
 
-export type FilterByPoiInput = TypeOf<typeof filterByPoiSchema>;
-export type CreatePoiInput = TypeOf<typeof createPoiSchema>;
-export type ReadPoiInput = TypeOf<typeof readPoiSchema>;
-export type UpdatePoiInput = TypeOf<typeof updatePoiSchema>;
-export type DeletePoiInput = TypeOf<typeof deletePoiSchema>;
+export type FilterByPoiInput = z.TypeOf<typeof filterByPoiSchema>;
+export type CreatePoiInput = z.TypeOf<typeof createPoiSchema>;
+export type ReadPoiInput = z.TypeOf<typeof readPoiSchema>;
+export type UpdatePoiInput = z.TypeOf<typeof updatePoiSchema>;
+export type DeletePoiInput = z.TypeOf<typeof deletePoiSchema>;
