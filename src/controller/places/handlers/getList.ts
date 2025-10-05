@@ -51,21 +51,24 @@ function orderByDistanceClosest(from: LatLng, records: PlaceInput[]) {
  * @param res
  * @returns
  */
-export default async function getList(req: Request<ReadExploreInput['body']>, res: Response) {
+export default async function getList(
+	req: Request<unknown, unknown, ReadExploreInput['body']>,
+	res: Response
+) {
 	const records = await PlacesService.getList(req.body);
 
 	if (!records) {
 		return res.status(StatusCodes.NOT_FOUND).send(error('Error getting list', res.statusCode));
 	}
 
-	let filteredRecords: PlaceDocument[] = [];
+	let filteredRecords: PlaceDocument[] = [...records];
 	// support for filter by tags
 	if (req.body.tags && req.body.tags.length > 0) {
 		// @todo - support for more than 1 tag?
 		const tag = (req.body.tags[0] ?? '').toString().toLowerCase();
-		filteredRecords = records.filter((d) => {
-			if (!d.tags) return false;
-			const tagsList = d.tags.split(',').filter((t) => t);
+		filteredRecords = filteredRecords.filter((item) => {
+			if (!item.tags) return false;
+			const tagsList = item.tags.split(',').filter((t) => t);
 			if (!tagsList.includes(tag)) return false;
 			return true;
 		});
@@ -74,10 +77,9 @@ export default async function getList(req: Request<ReadExploreInput['body']>, re
 	// augment data with extra info
 	let mappedRecords = PlacesService.getMappedPlaceDocuments(filteredRecords);
 
-	// do ordering here...
-	if (req.body?.poi) {
-		// if there is a POI then order by distance closest
-		const fromPairs = (req.body.poi as string).trim().split(',');
+	// if there is a POI specified, then order places by distance away from the place
+	if (req.body.poi) {
+		const fromPairs = req.body.poi.trim().split(',');
 		if (fromPairs.length === 2) {
 			const lat = Number.parseFloat(fromPairs[0]);
 			const lng = Number.parseFloat(fromPairs[1]);

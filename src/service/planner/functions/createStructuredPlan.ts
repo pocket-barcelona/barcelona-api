@@ -92,6 +92,7 @@ export default async function (
 	const hasBarrioIds = (input.barrioIds ?? []).length > 0;
 	const hasExcludePlaceIds = input.excludePlaceIds && input.excludePlaceIds.length > 0;
 	const hasIncludePlaceIds = input.includePlaceIds && input.includePlaceIds.length > 0;
+	const hasPlacesOutsideBarcelona = !!input.includePlacesOutsideBarcelona;
 
 	const hasPets = input.visitingWithPets === true;
 	const hasKids = input.visitingWithKids === true;
@@ -123,16 +124,26 @@ export default async function (
 
 		// basic filters
 
-		// metro zone 1 - in BCN
-		documents.and().where(metroZoneField).eq(1);
-		// remove annual only things
-		documents.and().where(annualOnlyField).eq(false);
-		// remove seasonal things
-		documents.and().where(seasonalField).eq(false);
-		// remove partially available things
-		documents.and().where(availableDailyField).eq(true);
-		// remove non-landmarks
-		documents.and().where(isLandmarkField).eq(true);
+		if (!hasIncludePlaceIds) {
+			// metro zone 1 - in BCN
+			documents.and().where(metroZoneField).eq(1);
+			// remove annual only things
+			documents.and().where(annualOnlyField).eq(false);
+			// remove seasonal things
+			documents.and().where(seasonalField).eq(false);
+			// remove partially available things
+			documents.and().where(availableDailyField).eq(true);
+			// remove non-landmarks
+			documents.and().where(isLandmarkField).eq(true);
+
+			// filter out places which require a lot of commitment to get to
+			if (!hasWalkBetweenPlaces) {
+				documents
+					.and()
+					.where(commitmentRequiredField)
+					.in([CommitmentEnum.Casual, CommitmentEnum.Easy]);
+			}
+		}
 
 		// include sunday items if it's sunday today
 		if (today.getDay() === 0) {
@@ -146,14 +157,6 @@ export default async function (
 				.and()
 				.where(requiresBookingField)
 				.in([RequiresBookingEnum.No, RequiresBookingEnum.OnArrival, RequiresBookingEnum.SameDay]);
-		}
-
-		// filter out places which require a lot of commitment to get to
-		if (!hasWalkBetweenPlaces) {
-			documents
-				.and()
-				.where(commitmentRequiredField)
-				.in([CommitmentEnum.Casual, CommitmentEnum.Easy]);
 		}
 
 		// filter by budget up to this budget
@@ -182,7 +185,7 @@ export default async function (
 		}
 
 		// include places outside Barcelona
-		if (input.includePlacesOutsideBarcelona) {
+		if (hasPlacesOutsideBarcelona) {
 			documents.and().where(daytripField).in([0, 1]);
 			// .where(daytripField).in([0, 1, 2]); // @todo - include places outside Spain?!
 		} else {
