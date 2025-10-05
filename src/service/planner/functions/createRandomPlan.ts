@@ -8,6 +8,7 @@ import type { StructuredPlanResponse } from '../../../models/plan.model.js';
 import { PlanThemeEnum, type StructuredPlanDayProfile } from '../../../models/planThemes.js';
 import type { PoiDocument } from '../../../models/poi.model.js';
 import { PlanHelper } from './createStructuredPlan.helper.js';
+import { getMultipleRandomItemsFromArray, getRandomItemFromArray } from './utils.js';
 
 const DOCUMENT_SCAN_LIMIT = 2500;
 
@@ -49,12 +50,12 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 		// let's say that anything after 1pm is the afternoon/night
 		if (timeHourNow >= 13) {
 			// only consider plans which are night time
-			theme = helper.getRandomItemFromArray(
+			theme = getRandomItemFromArray(
 				themesTestData.filter((p) => p.themeTod !== TimeOfDayEnum.Day)
 			);
 		} else {
 			// only consider plans which are not night
-			theme = helper.getRandomItemFromArray(
+			theme = getRandomItemFromArray(
 				themesTestData.filter((p) => p.themeTod !== TimeOfDayEnum.Night)
 			);
 		} // todo - could check multiple times of day: day, night, both
@@ -111,7 +112,7 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 			theme.placeIdsChooseAmount !== undefined &&
 			hasPlaceIds &&
 			hasPlaceIdsChooseAmount
-				? helper.getMultipleRandomItemsFromArray(theme.placeIds, theme.placeIdsChooseAmount)
+				? getMultipleRandomItemsFromArray(theme.placeIds, theme.placeIdsChooseAmount)
 				: theme.placeIds || [];
 
 		const barrioIdsSubset =
@@ -119,7 +120,7 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 			theme.barrioIdsChooseAmount !== undefined &&
 			hasBarrioIds &&
 			hasBarrioIdsChooseAmount
-				? helper.getMultipleRandomItemsFromArray(theme.barrioIds, theme.barrioIdsChooseAmount)
+				? getMultipleRandomItemsFromArray(theme.barrioIds, theme.barrioIdsChooseAmount)
 				: theme.barrioIds || [];
 
 		const categoryIdsSubset =
@@ -127,7 +128,7 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 			theme.categoryIdsChooseAmount !== undefined &&
 			hasCategoryIds &&
 			hasCategoryIdsChooseAmount
-				? helper.getMultipleRandomItemsFromArray(theme.categoryIds, theme.categoryIdsChooseAmount)
+				? getMultipleRandomItemsFromArray(theme.categoryIds, theme.categoryIdsChooseAmount)
 				: theme.categoryIds || [];
 
 		// decide how to query the places table

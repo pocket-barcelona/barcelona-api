@@ -10,47 +10,19 @@ import { sortByLngAsc, sortByLngDesc } from '../../places/utils.js';
 
 const DOCUMENT_LIST_RETURN_LIMIT = 25;
 
+// // https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+// randomlySortArray<T[]>(theArray: T[]): T[] {
+//   const shuffleArray = array => {
+//     for (let i = array.length - 1; i > 0; i--) {
+//       const j = Math.floor(Math.random() * (i + 1));
+//       const temp = array[i];
+//       array[i] = array[j];
+//       array[j] = temp;
+//     }
+//   }
+// }
+
 export class PlanHelper {
-	/** Choose a random item from an array */
-	getRandomItemFromArray<T>(theArray: T[]): T {
-		const randomArrayIndex = this.getRandomNumberFromTo(0, theArray.length - 1);
-		return theArray[randomArrayIndex];
-	}
-
-	/**
-	 * Returns a random number between min (inclusive) and max (exclusive)
-	 * @url https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-	 */
-	getRandomNumberFromTo(_min: number, _max: number): number {
-		const min = Math.ceil(_min);
-		const max = Math.floor(_max);
-		return Math.floor(Math.random() * (max - min + 1)) + min;
-	}
-
-	/**
-	 * Get n random items from an array
-	 * @link https://bobbyhadz.com/blog/javascript-get-multiple-random-elements-from-array#:~:text=To%20get%20multiple%20random%20elements,to%20get%20multiple%20random%20elements.
-	 * @param  {T[]} arr
-	 * @param  {number} num
-	 * @returns T
-	 */
-	getMultipleRandomItemsFromArray<T>(arr: T[], num: number): T[] {
-		const shuffled = [...arr].sort(() => 0.5 - Math.random());
-		return shuffled.slice(0, num);
-	}
-
-	// // https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
-	// randomlySortArray<T[]>(theArray: T[]): T[] {
-	//   const shuffleArray = array => {
-	//     for (let i = array.length - 1; i > 0; i--) {
-	//       const j = Math.floor(Math.random() * (i + 1));
-	//       const temp = array[i];
-	//       array[i] = array[j];
-	//       array[j] = temp;
-	//     }
-	//   }
-	// }
-
 	async fetchFoodAndDrinkDocuments(
 		// biome-ignore lint/correctness/noUnusedFunctionParameters: WIP
 		theme: StructuredPlanDayProfile,
@@ -453,7 +425,7 @@ export class PlanHelper {
 	 * @param places A list of places that are logically/geographically unordered
 	 * @returns A list of logically ordered places, so the route is simplified as much as possible
 	 */
-	private orderResultsBasedOnLatLng = (places: PlaceDocument[]): PlaceDocument[] => {
+	orderResultsBasedOnLatLng = (places: PlaceDocument[]): PlaceDocument[] => {
 		// 1. Check to see if all the places are outside BCN
 		// 1a. If yes, just order by up the coast or down the coast?
 		// 1b. Else...
@@ -510,7 +482,7 @@ export class PlanHelper {
 		return [...orderedOutside, ...orderedInside];
 	};
 
-	private sortResultSubset = (
+	sortResultSubset = (
 		theme: StructuredPlanDayProfile,
 		subsetPlaces: PlaceDocument[]
 	): PlaceDocument[] => {
