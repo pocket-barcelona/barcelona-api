@@ -13,7 +13,7 @@ import { PlanThemeEnum, type StructuredPlanDayProfile } from '../../../models/pl
 import type { PoiDocument } from '../../../models/poi.model.js';
 import type { BuildPlanInput } from '../../../schema/planner/planner.schema.js';
 import { PlanHelper } from './createStructuredPlan.helper.js';
-import { ONE_DAY_IN_MS } from './utils.js';
+import { getLatLngFromString, ONE_DAY_IN_MS } from './utils.js';
 
 const DOCUMENT_SCAN_LIMIT = 2500;
 
@@ -247,7 +247,17 @@ export default async function (
 		// TODO - refactor this
 		const foodDrinkResults: PoiDocument[] = [];
 
-		const thePlan = helper.buildPlanResponse(theme, results, foodDrinkResults, numDays);
+		const hasHomeStartingPoint = input.homeCentrePoint
+			? getLatLngFromString(input.homeCentrePoint)
+			: undefined;
+
+		const thePlan = helper.buildPlanResponse(
+			theme,
+			results,
+			foodDrinkResults,
+			numDays,
+			hasHomeStartingPoint
+		);
 		return thePlan;
 	} catch (error) {
 		console.warn(error);

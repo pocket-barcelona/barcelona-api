@@ -1,3 +1,5 @@
+import { getDistance } from 'geolib';
+
 /** Choose a random item from an array */
 export const getRandomItemFromArray = <T>(theArray: T[]): T => {
 	const randomArrayIndex = getRandomNumberFromTo(0, theArray.length - 1);
@@ -27,3 +29,51 @@ export const getMultipleRandomItemsFromArray = <T>(arr: T[], num: number): T[] =
 };
 
 export const ONE_DAY_IN_MS = 60 * 60 * 24 * 1000;
+
+export type LatLng = {
+	lat: number;
+	lng: number;
+};
+
+export const orderByDistanceClosest = <T>(from: LatLng, records: Array<T & LatLng>) => {
+	const newRecords = records.sort((aPlace, bPlace) => {
+		const distanceFromA = getDistance(from, {
+			lat: aPlace.lat,
+			lng: aPlace.lng,
+		});
+		const distanceFromB = getDistance(from, {
+			lat: bPlace.lat,
+			lng: bPlace.lng,
+		});
+
+		if (distanceFromB < distanceFromA) {
+			return -1;
+		}
+		if (distanceFromB > distanceFromA) {
+			return 1;
+		}
+		return 0;
+	});
+
+	return newRecords;
+};
+
+export const getLatLngFromString = (latLngString: string): LatLng => {
+	const [lat, lng] = latLngString.split(',');
+	return {
+		lat: parseFloat(lat),
+		lng: parseFloat(lng),
+	};
+};
+
+// // https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+// randomlySortArray<T[]>(theArray: T[]): T[] {
+//   const shuffleArray = array => {
+//     for (let i = array.length - 1; i > 0; i--) {
+//       const j = Math.floor(Math.random() * (i + 1));
+//       const temp = array[i];
+//       array[i] = array[j];
+//       array[j] = temp;
+//     }
+//   }
+// }
