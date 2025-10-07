@@ -87,7 +87,7 @@ export default async function (
 	const hasBudget = input.budget ? input.budget : 0;
 	const hasTimeSpent = (input.timeRecommended ?? 0) <= 0 ? 0 : input.timeRecommended;
 	const hasTod = (input.preferredTimeOfDay ?? 0) <= 0 ? 0 : input.preferredTimeOfDay;
-	const hasCentralBarrios = input.centralBarriosOnly === 1;
+	const hasCentralBarrios = input.centralBarriosOnly === true;
 	const hasBarrioIds = (input.barrioIds ?? []).length > 0;
 	const hasExcludePlaceIds = input.excludePlaceIds && input.excludePlaceIds.length > 0;
 	const hasIncludePlaceIds = input.includePlaceIds && input.includePlaceIds.length > 0;

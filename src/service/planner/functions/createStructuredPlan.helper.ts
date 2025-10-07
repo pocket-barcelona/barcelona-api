@@ -207,7 +207,7 @@ export class PlanHelper {
 				categoriesIncluded: [],
 				// focusOnSameLocation: 1,
 				timeOfDay,
-				centralBarriosOnly: centralBarriosOnly ? 1 : 2, // TODO
+				centralBarriosOnly,
 				excludePlaceIds: theme.placeIdsExclude ?? [],
 
 				// TODO

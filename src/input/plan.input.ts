@@ -21,7 +21,7 @@ export const TEST_INPUT_PLAN_1: PlanBuilderInput = {
 	walkBetweenPlacesEnabled: true,
 	timeRecommended: TimeRecommendedEnum.QuarterDay,
 	preferredTimeOfDay: 0,
-	centralBarriosOnly: 2,
+	centralBarriosOnly: false,
 	barrioIds: [19],
 	excludePlaceIds: [21],
 	visitingWithPets: false,
