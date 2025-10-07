@@ -34,11 +34,15 @@ const payload = {
 		includeEventRemarks: z.boolean().optional(),
 		bookingRemarks: z.boolean().optional(),
 		homeCentrePoint: z
-			.string()
-			.min(3)
-			.refine((val) => val?.includes(','))
-			.refine((val) => val?.includes('.'))
-			.optional(), // like "41.123,2.456"
+			.union([
+				z.string().length(0),
+				z
+					.string()
+					.min(3)
+					.refine((val) => val?.includes(','))
+					.refine((val) => val?.includes('.')), // like "41.123,2.456"
+			])
+			.optional(),
 		preferPlacesNearTheSea: z.boolean().optional(),
 		hasCar: z.boolean().optional(),
 		addressContains: z.string().optional(),
