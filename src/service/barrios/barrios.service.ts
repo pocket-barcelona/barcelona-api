@@ -23,17 +23,13 @@ export function findBarrioByLatLng(lat: number, lng: number): Barris | null {
 		Barrios.SarriaSantGervasi,
 	];
 
-	let found: Barris | null = null;
-
-	data.forEach(({ barris }) => {
-		barris.forEach((barrio) => {
-			const isInside = isPointInPolygon({ lat, lng }, barrio.area);
-			if (isInside) {
-				found = barrio;
+	for (const { barris } of data) {
+		for (const barrio of barris) {
+			if (isPointInPolygon({ lat, lng }, barrio.area)) {
 				return barrio;
 			}
-		});
-	});
+		}
+	}
 
-	return found;
+	return null;
 }
