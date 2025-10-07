@@ -10,10 +10,10 @@ import { TimeOfDayEnum } from '../../../models/enums/tod.enum.js';
 import PlaceModel, { type PlaceDocument } from '../../../models/place.model.js';
 import type { StructuredPlanResponse } from '../../../models/plan.model.js';
 import { PlanThemeEnum, type StructuredPlanDayProfile } from '../../../models/planThemes.js';
-// import { themesTestData } from "../../../collections/themes/themesTestData.js";
 import type { PoiDocument } from '../../../models/poi.model.js';
 import type { BuildPlanInput } from '../../../schema/planner/planner.schema.js';
 import { PlanHelper } from './createStructuredPlan.helper.js';
+import { getLatLngFromString, ONE_DAY_IN_MS } from './utils.js';
 
 const DOCUMENT_SCAN_LIMIT = 2500;
 
@@ -70,8 +70,7 @@ export default async function (
 	} = helper.fields();
 	const now = Date.now();
 
-	const oneDayMs = 60 * 60 * 24 * 1000;
-	const tomorrowTimestamp = now + oneDayMs;
+	const tomorrowTimestamp = now + ONE_DAY_IN_MS;
 	const hasDates = input.travelDates?.from && input.travelDates.to ? input.travelDates : null;
 	const theme: StructuredPlanDayProfile = {
 		id: 0,
@@ -248,7 +247,17 @@ export default async function (
 		// TODO - refactor this
 		const foodDrinkResults: PoiDocument[] = [];
 
-		const thePlan = helper.buildPlanResponse(theme, results, foodDrinkResults, numDays);
+		const hasHomeStartingPoint = input.homeCentrePoint
+			? getLatLngFromString(input.homeCentrePoint)
+			: undefined;
+
+		const thePlan = helper.buildPlanResponse(
+			theme,
+			results,
+			foodDrinkResults,
+			numDays,
+			hasHomeStartingPoint
+		);
 		return thePlan;
 	} catch (error) {
 		console.warn(error);

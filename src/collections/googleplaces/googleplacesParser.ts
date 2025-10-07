@@ -9,7 +9,7 @@ import type {
 import 'dotenv/config'; // support for dotenv injecting into the process env
 // import { v4 as uuidv4 } from 'uuid';
 import type { PoiInput } from '../../models/poi.model.js';
-import PoiTagModel, { type PoiTagInput } from '../../models/poiTag.model.js';
+import type { PoiTagInput } from '../../models/poiTag.model.js';
 // import { findBarrioByLatLng } from '../../service/barrios/barrios.service.js';
 // import { BarriosData } from '../barrios/data.js';
 import {
@@ -67,6 +67,14 @@ const hasRecords = features.length > 0;
 if (!hasRecords) {
 	throw new Error('No data to process');
 }
+
+const capitalizeWords = (str: string) => {
+	return str.replace(/(?:^|\s)\S/g, (a) => a.toUpperCase());
+};
+
+const tagToLabel = (tag: string) => {
+	return capitalizeWords(tag.replaceAll('_', ' '));
+};
 
 const placesMap = new Map<string, MergedPlaceLookupData>();
 const placesWithErrorsMap = new Map<string, MergedPlaceLookupData>();
@@ -179,27 +187,26 @@ if (placesWithErrorsMap.size > 0) {
 	});
 }
 
-const onlyRestaurants = [...placesMap.values()].filter(({ data }) => {
-	if (data.tags.includes('restaurant')) {
+const onlyPoiPlaces = [...placesMap.values()].filter(({ data }) => {
+	if (data.status !== 'OPERATIONAL') return false;
+	if (
+		data.tags.includes('restaurant') ||
+		data.tags.includes('bar') ||
+		data.tags.includes('pub') ||
+		data.tags.includes('night_club')
+	) {
 		return data;
 	}
+	return false;
 });
 
-const onlyRestaurantsUniqueMap = new Map<
+const onlyPoiPlacesUniqueMap = new Map<
 	string,
 	{
 		place: PoiInput;
 		count: number;
 	}
 >();
-
-const capitalizeWords = (str: string) => {
-	return str.replace(/(?:^|\s)\S/g, (a) => a.toUpperCase());
-};
-
-const tagToLabel = (tag: string) => {
-	return capitalizeWords(tag.replaceAll('_', ' '));
-};
 
 const excludeTags: string[] = [
 	'restaurant',
@@ -247,9 +254,17 @@ const excludeTags: string[] = [
 	'donut_shop',
 	'sandwich_shop',
 	'dog_cafe',
+	'cultural_center',
+	'bed_and_breakfast',
+	'hostel',
+	'art_gallery',
+	'art_studio',
+	'sports_club',
+	// 'performing_arts_theater'
 ];
+
 const allTags = new Map<string, PoiTagInput>();
-onlyRestaurants.forEach(({ data }) => {
+onlyPoiPlaces.forEach(({ data }) => {
 	data.tags.forEach((tag) => {
 		if (typeof tag !== 'string') {
 			console.log('Found non-string tag: ', tag);
@@ -274,23 +289,23 @@ onlyRestaurants.forEach(({ data }) => {
 		}
 	});
 
-	const exists = onlyRestaurantsUniqueMap.get(data.poiId);
+	const exists = onlyPoiPlacesUniqueMap.get(data.poiId);
 	if (!exists) {
-		onlyRestaurantsUniqueMap.set(data.poiId, {
+		onlyPoiPlacesUniqueMap.set(data.poiId, {
 			place: data,
 			count: 1,
 		});
 	} else {
-		onlyRestaurantsUniqueMap.set(data.poiId, {
+		onlyPoiPlacesUniqueMap.set(data.poiId, {
 			place: exists.place,
 			count: exists.count + 1,
 		});
 	}
 });
 
-console.log('Total restaurants found: ', onlyRestaurants.length);
+console.log('Total bars, restaurants, pubs and nightclubs found: ', onlyPoiPlaces.length);
 
-Array.from(onlyRestaurantsUniqueMap.values()).forEach(({ place, count }) => {
+Array.from(onlyPoiPlacesUniqueMap.values()).forEach(({ place, count }) => {
 	if (count > 1) {
 		console.warn(`Warning: duplicate: ${place.nameOfficial}. Count ${count}`);
 	}
@@ -314,8 +329,11 @@ console.warn('#################################');
 console.warn('Total Google Places API calls: ', NUMBER_OF_GOOGLE_API_CALLS);
 console.warn('#################################');
 
-const uniqueRestaurants = [...onlyRestaurantsUniqueMap.values()];
+const uniqueRestaurants = [...onlyPoiPlacesUniqueMap.values()];
 
+// console.log(uniqueRestaurants.map((p) => p.place.nameOfficial));
+
+console.log([...allTags.values()].filter((t) => t.active).map((p) => p.tagId));
 // try {
 // 	const unprocessed: PoiInput[] = [];
 // 	// batch put only supports X at a time!
@@ -343,32 +361,32 @@ const uniqueRestaurants = [...onlyRestaurantsUniqueMap.values()];
 // 	console.error('Server error!');
 // }
 
-// IMPORT TAGS
-const tagsArray = [...allTags.values()].filter((t) => t.active);
-try {
-	const unprocessed: PoiTagInput[] = [];
-	// batch put only supports X at a time!
+// 2. IMPORT TAGS - this will import all unique tags from all the POIs
+// const tagsArray = [...allTags.values()].filter((t) => t.active);
+// try {
+// 	const unprocessed: PoiTagInput[] = [];
+// 	// batch put only supports X at a time!
 
-	const chunkSize = 10;
-	for (let i = 0; i < tagsArray.length; i += chunkSize) {
-		// if (i >= chunkSize) continue; // stop after first batch
+// 	const chunkSize = 10;
+// 	for (let i = 0; i < tagsArray.length; i += chunkSize) {
+// 		// if (i >= chunkSize) continue; // stop after first batch
 
-		const chunk = tagsArray.slice(i, i + chunkSize);
-		// console.log('Would put: ', chunk);
-		PoiTagModel.batchPut(chunk, (err) => {
-			if (err) {
-				console.log('Batch Put Error: ', err);
-				unprocessed.push(err);
-			}
-		});
-	}
+// 		const chunk = tagsArray.slice(i, i + chunkSize);
+// 		// console.log('Would put: ', chunk);
+// 		PoiTagModel.batchPut(chunk, (err) => {
+// 			if (err) {
+// 				console.log('Batch Put Error: ', err);
+// 				unprocessed.push(err);
+// 			}
+// 		});
+// 	}
 
-	if (unprocessed.length > 0) {
-		console.error(`Unprocessed: ${unprocessed.length} tags`);
-	}
-} catch (err) {
-	if (err instanceof Error) {
-		console.error(err.message);
-	}
-	console.error('Server error!');
-}
+// 	if (unprocessed.length > 0) {
+// 		console.error(`Unprocessed: ${unprocessed.length} tags`);
+// 	}
+// } catch (err) {
+// 	if (err instanceof Error) {
+// 		console.error(err.message);
+// 	}
+// 	console.error('Server error!');
+// }

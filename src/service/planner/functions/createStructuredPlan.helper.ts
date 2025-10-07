@@ -7,50 +7,11 @@ import type { StructuredPlanDayProfile, ThemeInputSpecs } from '../../../models/
 import PoiModel, { type PoiDocument } from '../../../models/poi.model.js';
 import PlacesService from '../../places/places.service.js';
 import { sortByLngAsc, sortByLngDesc } from '../../places/utils.js';
+import { type LatLng, orderByDistanceClosest } from './utils.js';
 
 const DOCUMENT_LIST_RETURN_LIMIT = 25;
 
 export class PlanHelper {
-	/** Choose a random item from an array */
-	getRandomItemFromArray<T>(theArray: T[]): T {
-		const randomArrayIndex = this.getRandomNumberFromTo(0, theArray.length - 1);
-		return theArray[randomArrayIndex];
-	}
-
-	/**
-	 * Returns a random number between min (inclusive) and max (exclusive)
-	 * @url https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-	 */
-	getRandomNumberFromTo(_min: number, _max: number): number {
-		const min = Math.ceil(_min);
-		const max = Math.floor(_max);
-		return Math.floor(Math.random() * (max - min + 1)) + min;
-	}
-
-	/**
-	 * Get n random items from an array
-	 * @link https://bobbyhadz.com/blog/javascript-get-multiple-random-elements-from-array#:~:text=To%20get%20multiple%20random%20elements,to%20get%20multiple%20random%20elements.
-	 * @param  {T[]} arr
-	 * @param  {number} num
-	 * @returns T
-	 */
-	getMultipleRandomItemsFromArray<T>(arr: T[], num: number): T[] {
-		const shuffled = [...arr].sort(() => 0.5 - Math.random());
-		return shuffled.slice(0, num);
-	}
-
-	// // https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
-	// randomlySortArray<T[]>(theArray: T[]): T[] {
-	//   const shuffleArray = array => {
-	//     for (let i = array.length - 1; i > 0; i--) {
-	//       const j = Math.floor(Math.random() * (i + 1));
-	//       const temp = array[i];
-	//       array[i] = array[j];
-	//       array[j] = temp;
-	//     }
-	//   }
-	// }
-
 	async fetchFoodAndDrinkDocuments(
 		// biome-ignore lint/correctness/noUnusedFunctionParameters: WIP
 		theme: StructuredPlanDayProfile,
@@ -136,6 +97,7 @@ export class PlanHelper {
 		}
 	}
 
+	/** Takes all places and put them into a day-by-day itinerary */
 	buildPlanResponse(
 		// dayNumber: number,
 		theme: StructuredPlanDayProfile,
@@ -143,6 +105,7 @@ export class PlanHelper {
 		places: PlaceDocument[],
 		pois: PoiDocument[],
 		numberOfDays: number,
+		homeStartingPoint?: LatLng,
 		_startEnd?: { from: number; to: number } | undefined
 	): StructuredPlanResponse {
 		// augment place data
@@ -154,7 +117,13 @@ export class PlanHelper {
 		// @todo - consider randomize
 
 		// put places into "day buckets" by filling up the day according time recommended metric
-		const itinerary = this.getDayByDayItinerary(theme, results, pois, numberOfDays);
+		const itinerary = this.getDayByDayItinerary(
+			theme,
+			results,
+			pois,
+			numberOfDays,
+			homeStartingPoint
+		);
 
 		// truncate list...
 		// const hasLimit = theme.limit !== undefined && Number.isInteger(theme.limit) && theme.limit > 0;
@@ -283,9 +252,18 @@ export class PlanHelper {
 		theme: StructuredPlanDayProfile,
 		allPlaces: PlaceDocument[],
 		pois: PoiDocument[],
-		numberOfDays: number
+		numberOfDays: number,
+		homeStartingPoint?: LatLng
 	): StructuredPlanResponse['itinerary'] {
 		const itinerary: StructuredPlanResponse['itinerary'] = [];
+
+		let sortedPlaces = [...allPlaces];
+		if (homeStartingPoint) {
+			sortedPlaces = orderByDistanceClosest(
+				{ lat: homeStartingPoint.lat, lng: homeStartingPoint.lng },
+				sortedPlaces
+			);
+		}
 
 		// include enough places to do in 1 day, using the timeRecommended as a guide
 		// the maximum number of things to do in 1 day will be about 16
@@ -295,13 +273,13 @@ export class PlanHelper {
 		let placeIndex = 0;
 		const maxBucket = 12; // one day=8 but allow for extra
 		let dayNumber = 0;
-		while (allPlaces.length > 0 && itinerary.length < numberOfDays) {
+		while (sortedPlaces.length > 0 && itinerary.length < numberOfDays) {
 			dayNumber++;
 			placeIndex = 0;
 			dayBucket = 0;
 			// loop through the array until we fill a bucket
 			// take note of the index
-			allPlaces.every((p, idx) => {
+			sortedPlaces.every((p, idx) => {
 				placeIndex = idx + 1; // otherwise slice pos will be zero
 				dayBucket += p.timeRecommended;
 				if (dayBucket > maxBucket) {
@@ -314,7 +292,7 @@ export class PlanHelper {
 			// const sliceAt = placeCounter > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeCounter;
 			const sliceAt =
 				placeIndex > DOCUMENT_LIST_RETURN_LIMIT ? DOCUMENT_LIST_RETURN_LIMIT : placeIndex;
-			const thisDayPlaces = allPlaces.splice(0, sliceAt);
+			const thisDayPlaces = sortedPlaces.splice(0, sliceAt);
 
 			itinerary.push({
 				action: theme.verbs && theme.verbs.length > 0 ? theme.verbs[0] : 'Go to',
@@ -453,7 +431,7 @@ export class PlanHelper {
 	 * @param places A list of places that are logically/geographically unordered
 	 * @returns A list of logically ordered places, so the route is simplified as much as possible
 	 */
-	private orderResultsBasedOnLatLng = (places: PlaceDocument[]): PlaceDocument[] => {
+	orderResultsBasedOnLatLng = (places: PlaceDocument[]): PlaceDocument[] => {
 		// 1. Check to see if all the places are outside BCN
 		// 1a. If yes, just order by up the coast or down the coast?
 		// 1b. Else...
@@ -510,7 +488,7 @@ export class PlanHelper {
 		return [...orderedOutside, ...orderedInside];
 	};
 
-	private sortResultSubset = (
+	sortResultSubset = (
 		theme: StructuredPlanDayProfile,
 		subsetPlaces: PlaceDocument[]
 	): PlaceDocument[] => {
