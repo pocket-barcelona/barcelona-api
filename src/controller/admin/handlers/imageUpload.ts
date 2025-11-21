@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import { AdminService } from '../../../service/admin/admin.service.js';
-import { PostsService } from '../../../service/posts/posts.service.js';
+import PostsService from '../../../service/posts/posts.service.js';
 
 const MAX_IMAGES_PER_POST = 20;
 

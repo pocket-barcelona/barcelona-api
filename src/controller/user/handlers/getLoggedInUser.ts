@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { UserDocument } from '../../../models/auth/user.model.js';
-import { UserService } from '../../../service/user/user.service.js';
+import UserService from '../../../service/user/user.service.js';
 
 export default async function getLoggedInUser(_req: Request, res: Response) {
 	const email = (res.locals.user as UserDocument).email as string;

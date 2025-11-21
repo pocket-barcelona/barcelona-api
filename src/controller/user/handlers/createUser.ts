@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { UserDocument } from '../../../models/auth/user.model.js';
 import type { CreateUserInput } from '../../../schema/user/user.schema.js';
-import { UserService } from '../../../service/user/user.service.js';
+import UserService from '../../../service/user/user.service.js';
 
 /** Signup */
 export default async function createUser(

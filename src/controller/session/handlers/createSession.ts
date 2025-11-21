@@ -3,8 +3,8 @@ import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/packag
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { SessionTokenModel } from '../../../models/auth/session.model.js';
 import type { SessionInput } from '../../../schema/session/session.schema.js';
-import { SessionService } from '../../../service/session/session.service.js';
-import { UserService } from '../../../service/user/user.service.js';
+import SessionService from '../../../service/session/session.service.js';
+import UserService from '../../../service/user/user.service.js';
 import { SessionUtils } from '../../../utils/jwt.utils.js';
 
 /**

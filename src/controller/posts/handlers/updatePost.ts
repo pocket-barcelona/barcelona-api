@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/packag
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { PostDocument } from '../../../models/post.model.js';
 import type { UpdatePostInput } from '../../../schema/post/post.schema.js';
-import { PostsService } from '../../../service/posts/posts.service.js';
+import PostsService from '../../../service/posts/posts.service.js';
 
 /**
  * Patch a post by updating one or more fields

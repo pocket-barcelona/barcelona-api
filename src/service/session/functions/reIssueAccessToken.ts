@@ -5,8 +5,8 @@ import SessionModel, {
 } from '../../../models/auth/session.model.js';
 import { UserStatusEnum } from '../../../models/auth/user.model.js';
 import { SessionUtils } from '../../../utils/jwt.utils.js';
-import { UserService } from '../../user/user.service.js';
-import { SessionService } from '../session.service.js';
+import UserService from '../../user/user.service.js';
+import SessionService from '../session.service.js';
 
 const { get } = lodash;
 
@@ -53,7 +53,7 @@ export default async function reIssueAccessToken({
 		if (!session) return ReissueAccessTokenErrorEnum.NotSignedIn;
 		// session exists, but is not valid - user has logged out
 		if (session.valid === false) return ReissueAccessTokenErrorEnum.NotSignedIn;
-	} catch (error) {
+	} catch (_error: unknown) {
 		// generic error calling DB
 		return ReissueAccessTokenErrorEnum.AuthServerError;
 	}
@@ -86,7 +86,7 @@ export default async function reIssueAccessToken({
 		if (!accessToken) return ReissueAccessTokenErrorEnum.AuthServerError; // error signing new jwt token
 
 		return accessToken ?? '';
-	} catch (error) {
+	} catch (_error: unknown) {
 		return ReissueAccessTokenErrorEnum.AuthServerError;
 	}
 }

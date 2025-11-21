@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
 import { error, success } from '../../../middleware/apiResponse.js';
-import { SessionService } from '../../../service/session/session.service.js';
+import SessionService from '../../../service/session/session.service.js';
 
 export default async function deleteSession(_req: Request, res: Response) {
 	const sessionId = res.locals.user ? res.locals.user.session : null;

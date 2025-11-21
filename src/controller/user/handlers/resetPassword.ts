@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import { CheckResetTokenEnum, type UserDocument } from '../../../models/auth/user.model.js';
 import type { ResetPasswordUserInput } from '../../../schema/user/reset-password.schema.js';
-import { UserService } from '../../../service/user/user.service.js';
+import UserService from '../../../service/user/user.service.js';
 
 export default async function resetPassword(
 	req: Request<unknown, unknown, ResetPasswordUserInput['body']>,

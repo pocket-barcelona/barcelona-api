@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import { CheckResetTokenEnum } from '../../../models/auth/user.model.js';
 import type { CheckResetTokenUserInput } from '../../../schema/user/check-reset-token.schema.js';
-import { UserService } from '../../../service/user/user.service.js';
+import UserService from '../../../service/user/user.service.js';
 
 export default async function checkResetToken(
 	req: Request<unknown, unknown, CheckResetTokenUserInput['body']>,

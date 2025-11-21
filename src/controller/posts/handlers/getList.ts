@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
-import { PostsService } from '../../../service/posts/posts.service.js';
+import PostsService from '../../../service/posts/posts.service.js';
 
 /**
  * Get a list of posts

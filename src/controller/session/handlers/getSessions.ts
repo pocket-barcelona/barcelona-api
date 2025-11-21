@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { SessionDocument } from '../../../models/auth/session.model.js';
-import { SessionService } from '../../../service/session/session.service.js';
+import SessionService from '../../../service/session/session.service.js';
 // import logger from "../../../utils/logger.js";
 
 export default async function getSessions(_req: Request, res: Response) {

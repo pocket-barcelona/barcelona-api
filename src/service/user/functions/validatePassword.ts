@@ -1,7 +1,7 @@
 import lodash from 'lodash';
 import type { UserDocument } from '../../../models/auth/user.model.js';
 import type { SessionInput } from '../../../schema/session/session.schema.js';
-import { UserService } from '../user.service.js';
+import UserService from '../user.service.js';
 import { UserUtils } from '../user.utils.js';
 
 const { omit } = lodash;

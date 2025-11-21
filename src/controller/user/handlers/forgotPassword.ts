@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { UserDocument } from '../../../models/auth/user.model.js';
 import type { ForgotPasswordUserInput } from '../../../schema/user/forgot-password.schema.js';
-import { UserService } from '../../../service/user/user.service.js';
+import UserService from '../../../service/user/user.service.js';
 
 export default async function forgotPassword(
 	req: Request<unknown, unknown, ForgotPasswordUserInput['body']>,

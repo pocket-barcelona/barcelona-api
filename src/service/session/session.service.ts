@@ -1,42 +1,15 @@
-import type {
-	SessionDocument,
-	SessionExpiry,
-	SessionTokenModel,
-} from '../../models/auth/session.model.js';
-import type { UserDocument } from '../../models/auth/user.model.js';
-import {
-	createOrUpdateSessionHandler,
-	findSessionHandler,
-	getSessionExpiryDataHandler,
-	getSessionHandler,
-	logoutSessionHandler,
-	type ReissueAccessTokenErrorEnum,
-	reIssueAccessTokenHandler,
-} from './functions/index.js';
+import createOrUpdateSession from './functions/createOrUpdateSession.js';
+import findSession from './functions/findSession.js';
+import getSession from './functions/getSession.js';
+import getSessionExpiryData from './functions/getSessionExpiryData.js';
+import logoutSession from './functions/logoutSession.js';
+import reIssueAccessToken from './functions/reIssueAccessToken.js';
 
-// biome-ignore lint/complexity/noStaticOnlyClass: WIP
-export class SessionService {
-	static createOrUpdateSession = async (
-		user: UserDocument,
-		userAgent: string
-	): Promise<SessionDocument | null> => createOrUpdateSessionHandler(user, userAgent);
-
-	static findSession = async (
-		session: Pick<SessionDocument, 'user' | 'valid'>
-	): Promise<SessionDocument | null> => findSessionHandler(session);
-
-	static getSessionExpiryData = (type: 'access' | 'refresh'): SessionExpiry =>
-		getSessionExpiryDataHandler(type);
-
-	static getSession = (user: UserDocument): Promise<SessionDocument | false> =>
-		getSessionHandler(user);
-
-	static logoutSession = async (
-		existingSessionData: Pick<SessionDocument, 'user'>
-	): Promise<SessionDocument | null> => logoutSessionHandler(existingSessionData);
-
-	static reIssueAccessToken = async ({
-		refreshToken,
-	}: Pick<SessionTokenModel, 'refreshToken'>): Promise<string | ReissueAccessTokenErrorEnum> =>
-		reIssueAccessTokenHandler({ refreshToken });
-}
+export default {
+	createOrUpdateSession,
+	findSession,
+	getSessionExpiryData,
+	getSession,
+	logoutSession,
+	reIssueAccessToken,
+};

@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import { UserStatusEnum } from '../../../models/auth/user.model.js';
 import type { DeleteUserInput } from '../../../schema/user/user.schema.js';
-import { UserService } from '../../../service/user/user.service.js';
+import UserService from '../../../service/user/user.service.js';
 
 export default async function deleteUser(
 	req: Request<DeleteUserInput['params'], unknown, DeleteUserInput['body']>,
