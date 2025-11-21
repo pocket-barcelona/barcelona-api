@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
-import { CalendarService } from '../../../service/calendar/calendar.service.js';
+import CalendarService from '../../../service/calendar/calendar.service.js';
 
 /**
  * @deprecated
