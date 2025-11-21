@@ -1,5 +1,5 @@
 import express from 'express';
-import { BarriosController } from '../controller/barrios/barrios.controller.js';
+import BarriosController from '../controller/barrios/barrios.controller.js';
 
 const router = express.Router();
 
