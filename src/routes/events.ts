@@ -1,5 +1,5 @@
 import express from 'express';
-import { EventsController } from '../controller/events/events.controller.js';
+import EventsController from '../controller/events/events.controller.js';
 import requireUser from '../middleware/requireUser.js';
 import validateResource from '../middleware/validateResource.js';
 import { readCalendarEventSchema } from '../schema/event/calendar.schema.js';
@@ -28,7 +28,7 @@ router.get(
 
 router.get('/calendar/google/sync', [requireUser], EventsController.syncToGoogleCalendarHandler);
 
-router.get('/calendar/google', [requireUser], EventsController.getGoogleCalendarListHandler);
+router.get('/calendar/google', [requireUser], EventsController.getGoogleCalendarEventsListHandler);
 
 // id=Google calendar ID
 router.get(

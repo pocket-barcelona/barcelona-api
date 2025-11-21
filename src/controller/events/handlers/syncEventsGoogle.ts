@@ -14,6 +14,7 @@ const THROTTLE_MAX_CREATE_OR_UPDATE = 100;
 
 /**
  * Sync all calendar events from Directus to Google Calendar
+ * @todo - skip Directus in favour of CSV.
  * @param req
  * @param res
  * @returns
