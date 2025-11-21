@@ -12,7 +12,7 @@ import type { StructuredPlanResponse } from '../../../models/plan.model.js';
 import { PlanThemeEnum, type StructuredPlanDayProfile } from '../../../models/planThemes.js';
 import type { PoiDocument } from '../../../models/poi.model.js';
 import type { BuildPlanInput } from '../../../schema/planner/planner.schema.js';
-import { PlanHelper } from './createStructuredPlan.helper.js';
+import { buildPlanResponse, fields } from './createStructuredPlan.helper.js';
 import { getLatLngFromString, ONE_DAY_IN_MS } from './utils.js';
 
 const DOCUMENT_SCAN_LIMIT = 2500;
@@ -42,7 +42,6 @@ export default async function (
 	input: BuildPlanInput['body']
 ): Promise<StructuredPlanResponse | null> {
 	let documents: Scan<PlaceDocument>;
-	const helper = new PlanHelper();
 	const {
 		activeField,
 		provinceIdField,
@@ -67,7 +66,7 @@ export default async function (
 		metroZoneField,
 		latField,
 		lngField,
-	} = helper.fields();
+	} = fields();
 	const now = Date.now();
 
 	const tomorrowTimestamp = now + ONE_DAY_IN_MS;
@@ -251,7 +250,7 @@ export default async function (
 			? getLatLngFromString(input.homeCentrePoint)
 			: undefined;
 
-		const thePlan = helper.buildPlanResponse(
+		const thePlan = buildPlanResponse(
 			theme,
 			results,
 			foodDrinkResults,

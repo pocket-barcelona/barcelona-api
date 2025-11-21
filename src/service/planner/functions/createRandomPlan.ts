@@ -7,7 +7,11 @@ import PlaceModel, { type PlaceDocument } from '../../../models/place.model.js';
 import type { StructuredPlanResponse } from '../../../models/plan.model.js';
 import { PlanThemeEnum, type StructuredPlanDayProfile } from '../../../models/planThemes.js';
 import type { PoiDocument } from '../../../models/poi.model.js';
-import { PlanHelper } from './createStructuredPlan.helper.js';
+import {
+	buildPlanResponse,
+	fetchFoodAndDrinkDocuments,
+	getThemeInputParams,
+} from './createStructuredPlan.helper.js';
 import { getMultipleRandomItemsFromArray, getRandomItemFromArray } from './utils.js';
 
 const DOCUMENT_SCAN_LIMIT = 2500;
@@ -42,7 +46,6 @@ const lngField: keyof PlaceDocument = 'lng';
  */
 export default async function (): Promise<StructuredPlanResponse | null> {
 	try {
-		const helper = new PlanHelper();
 		const timeHourNow = new Date().getHours(); // will be like 9 or 17 (9am or 5pm)
 		// RANDOM
 
@@ -93,7 +96,7 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 			hasFoodCategories,
 			hasDrinkCategories,
 			hasPhysicalLandmark,
-		} = helper.getThemeInputParams(theme);
+		} = getThemeInputParams(theme);
 
 		let documents: Scan<PlaceDocument>;
 
@@ -298,13 +301,13 @@ export default async function (): Promise<StructuredPlanResponse | null> {
 		let foodDrinkResults: PoiDocument[] = [];
 		if (hasFoodCategories) {
 			console.log('Fetching food and drink documents...');
-			foodDrinkResults = await helper.fetchFoodAndDrinkDocuments(theme, results);
+			foodDrinkResults = await fetchFoodAndDrinkDocuments(theme, results);
 		}
 
 		// build response
 
 		// const dayNumber = 1; // random plans only have 1 day
-		const thePlan = helper.buildPlanResponse(theme, results, foodDrinkResults, 1);
+		const thePlan = buildPlanResponse(theme, results, foodDrinkResults, 1);
 		if (thePlan) {
 			return thePlan;
 		}
