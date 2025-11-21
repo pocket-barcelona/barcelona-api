@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/packag
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { MeetupGroupDocument } from '../../../models/meetupGroup.model.js';
 import type { UpdateMeetupGroupInput } from '../../../schema/meetupGroup/meetupGroup.schema.js';
-import { MeetupGroupService } from '../../../service/meetupGroup/meetupGroup.service.js';
+import MeetupGroupService from '../../../service/meetupGroup/meetupGroup.service.js';
 
 /**
  * Patch a document by updating one or more fields

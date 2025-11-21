@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
 import { error, success } from '../../../middleware/apiResponse.js';
-import { MeetupGroupService } from '../../../service/meetupGroup/meetupGroup.service.js';
+import MeetupGroupService from '../../../service/meetupGroup/meetupGroup.service.js';
 
 /**
  * Get a list of documents
