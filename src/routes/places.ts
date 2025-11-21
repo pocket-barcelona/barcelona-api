@@ -1,5 +1,5 @@
 import express from 'express';
-import { PlacesController } from '../controller/places/places.controller.js';
+import PlacesController from '../controller/places/places.controller.js';
 import validateResource from '../middleware/validateResource.js';
 
 // import requireUser from "../middleware/requireUser.js";
