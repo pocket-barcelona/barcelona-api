@@ -2,14 +2,21 @@ import type { ImageAssetsSize } from '../../models/imageAssets.model.js';
 import type { PlaceDocument, PlaceInput } from '../../models/place.model.js';
 import type { PlaceLookupDocument } from '../../models/placeLookup.js';
 import type { PlaceSearchDocument } from '../../models/placeSearch.js';
-import {
-	getByIdHandler,
-	getListHandler,
-	getPlaceCategoriesHandler,
-	getPlaceLookupHandler,
-	getRelatedPlacesHandler,
-	getSearchPrepopulateHandler,
-} from './functions/index.js';
+import getById from './functions/getById.js';
+import getList from './functions/getList.js';
+import getPlaceCategories from './functions/getPlaceCategories.js';
+import getPlaceLookupList from './functions/getPlaceLookup.js';
+import getRelatedPlaces from './functions/getRelatedPlaces.js';
+import getSearchPrepopulate from './functions/getSearchPrepopulate.js';
+
+// import {
+// 	getByIdHandler,
+// 	getListHandler,
+// 	getPlaceCategoriesHandler,
+// 	getPlaceLookupHandler,
+// 	getRelatedPlacesHandler,
+// 	getSearchPrepopulateHandler,
+// } from './functions/index.js';
 
 // import 'dotenv/config'; // support for dotenv injecting into the process env
 
@@ -157,12 +164,12 @@ const provincesLookup = [
 ];
 
 export default {
-	getList: getListHandler,
-	getById: getByIdHandler,
-	getRelatedPlaces: getRelatedPlacesHandler,
-	getPlaceCategories: getPlaceCategoriesHandler,
-	getSearchPrepopulate: getSearchPrepopulateHandler,
-	getPlaceLookupList: getPlaceLookupHandler,
+	getList,
+	getById,
+	getRelatedPlaces,
+	getPlaceCategories,
+	getSearchPrepopulate,
+	getPlaceLookupList,
 	getMappedPlaceDocuments,
 	getMappedPlace,
 	getMappedSearchPlace,

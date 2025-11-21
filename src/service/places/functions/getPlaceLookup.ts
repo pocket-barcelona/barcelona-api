@@ -25,7 +25,7 @@ export default async function (): Promise<ScanResponse<PlaceDocument> | null> {
 				// logger.warn(err)
 				return null;
 			});
-	} catch (e) {
+	} catch (_error: unknown) {
 		return null;
 	}
 }
