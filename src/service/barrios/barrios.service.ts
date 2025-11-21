@@ -1,10 +1,11 @@
 import { isPointInPolygon } from 'geolib';
 import Barrios, { type Barris } from '../../data/barrios/index.js';
-import { getListHandler, getRegionsListHandler } from './functions/index.js';
+import getList from './functions/getList.js';
+import getRegionsList from './functions/getRegionsList.js';
 
 export default {
-	getRegionsList: getRegionsListHandler,
-	getList: getListHandler,
+	getRegionsList,
+	getList,
 	// TODO - static lookup is here: src/collections/barrios/data.ts
 };
 
