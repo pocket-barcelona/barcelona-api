@@ -2,7 +2,7 @@ import { config } from '../../../config.js';
 import { EmailTemplates } from '../../../emails/mjml/index.js';
 import type { ConfirmEmail } from '../../../models/auth/confirm-email.model.js';
 import type { UserDocument } from '../../../models/auth/user.model.js';
-import { EmailService } from '../../email/email.service.js';
+import EmailService from '../../email/email.service.js';
 import { EmailUtils } from '../../email/email.utils.js';
 
 export default async function sendWelcomeEmail(user: UserDocument): Promise<boolean> {

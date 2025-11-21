@@ -2,7 +2,7 @@
 import { config } from '../../../config.js';
 import { EmailTemplates } from '../../../emails/mjml/index.js';
 import type { MeetupDocument } from '../../../models/meetup.model.js';
-import { EmailService } from '../../email/email.service.js';
+import EmailService from '../../email/email.service.js';
 import { EmailUtils } from '../../email/email.utils.js';
 
 /**
