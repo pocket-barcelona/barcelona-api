@@ -1,5 +1,5 @@
 import express from 'express';
-import { UserController } from '../controller/user/user.controller.js';
+import UserController from '../controller/user/user.controller.js';
 import requireUser from '../middleware/requireUser.js';
 import validateResource from '../middleware/validateResource.js';
 import { checkResetTokenUserSchema } from '../schema/user/check-reset-token.schema.js';

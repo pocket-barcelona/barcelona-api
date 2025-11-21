@@ -1,5 +1,5 @@
 import express from 'express';
-import { SessionController } from '../controller/session/session.controller.js';
+import SessionController from '../controller/session/session.controller.js';
 import requireRefreshToken from '../middleware/requireRefreshToken.js';
 import requireUser from '../middleware/requireUser.js';
 import validateResource from '../middleware/validateResource.js';
