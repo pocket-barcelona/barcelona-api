@@ -1,5 +1,5 @@
 import express from 'express';
-import { PoiController } from '../controller/poi/poi.controller.js';
+import PoiController from '../controller/poi/poi.controller.js';
 import validateResource from '../middleware/validateResource.js';
 import { filterByPoiSchema } from '../schema/poi/poi.schema.js';
 
