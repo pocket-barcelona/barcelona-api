@@ -1,45 +1,17 @@
-import type { Query, ScanResponse } from 'dynamoose/dist/ItemRetriever.js';
-import type { MeetupDocument, MeetupItem, MeetupStatusEnum } from '../../models/meetup.model.js';
-import type { CreateMeetupInput, UpdateMeetupInput } from '../../schema/meetup/meetup.schema.js';
-import {
-	createHandler,
-	deleteByIdHandler,
-	getByIdHandler,
-	getByShortIdHandler,
-	getListHandler,
-	searchHandler,
-	updateHandler,
-} from './functions/index.js';
+import create from './functions/create.js';
+import deleteById from './functions/delete.js';
+import getById from './functions/getById.js';
+import getByShortId from './functions/getByShortId.js';
+import listHandler from './functions/list.js';
+import search from './functions/search.js';
+import update from './functions/update.js';
 
-// biome-ignore lint/complexity/noStaticOnlyClass: WIP
-export class MeetupService {
-	static create = async (
-		input: CreateMeetupInput['body'],
-		userId: string
-	): Promise<MeetupDocument | null | string> => createHandler(input, userId);
-
-	static search = async (query: Query<MeetupDocument>): Promise<Query<MeetupDocument>> =>
-		searchHandler(query);
-
-	static getMeetups = async (
-		groupId: MeetupDocument['groupId']
-	): Promise<ScanResponse<MeetupDocument> | null> => getListHandler(groupId);
-
-	static getById = async (
-		input: Pick<MeetupItem, 'meetupId'> & { loggedIn?: boolean }
-	): Promise<MeetupDocument | Partial<MeetupDocument> | null> => getByIdHandler(input);
-
-	static getByShortId = async (
-		input: Pick<MeetupItem, 'shortId'>
-	): Promise<MeetupDocument | Partial<MeetupDocument> | null> => getByShortIdHandler(input);
-
-	static update = async (
-		eventId: MeetupItem['meetupId'],
-		input: UpdateMeetupInput['body']
-	): Promise<MeetupDocument | null> => updateHandler(eventId, input);
-
-	static deleteById = async (
-		theEvent: MeetupDocument,
-		newStatus: MeetupStatusEnum
-	): Promise<string | null | undefined> => deleteByIdHandler(theEvent, newStatus);
-}
+export default {
+	create,
+	deleteById,
+	getById,
+	getByShortId,
+	getMeetups: listHandler,
+	search,
+	update,
+};

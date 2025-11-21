@@ -4,7 +4,7 @@ import { error, success } from '../../../middleware/apiResponse.js';
 import { type UserDocument, UserRoleEnum } from '../../../models/auth/user.model.js';
 import type { MeetupDocument } from '../../../models/meetup.model.js';
 import type { UpdateMeetupInput } from '../../../schema/meetup/meetup.schema.js';
-import { MeetupService } from '../../../service/meetup/meetup.service.js';
+import MeetupService from '../../../service/meetup/meetup.service.js';
 
 /**
  * Patch a document by updating one or more fields

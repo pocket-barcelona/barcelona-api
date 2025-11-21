@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
 import type { CreateRsvpInput } from '../schema/meetup/rsvp.schema.js';
-import { MeetupService } from '../service/meetup/meetup.service.js';
+import MeetupService from '../service/meetup/meetup.service.js';
 import { error } from './apiResponse.js';
 
 /** Curry middleware function - check that the meetup exists */

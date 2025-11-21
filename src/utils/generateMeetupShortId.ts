@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { MeetupService } from '../service/meetup/meetup.service.js';
+import MeetupService from '../service/meetup/meetup.service.js';
 
 const eventExists = async (shortId: string) => {
 	const event = await MeetupService.getByShortId({ shortId });

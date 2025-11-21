@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/package/http-status-codes
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { ReadMeetupByShortIdInput } from '../../../schema/meetup/meetup.schema.js';
-import { MeetupService } from '../../../service/meetup/meetup.service.js';
+import MeetupService from '../../../service/meetup/meetup.service.js';
 
 /**
  * Get a document by short ID

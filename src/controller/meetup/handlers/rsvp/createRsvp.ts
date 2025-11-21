@@ -9,7 +9,7 @@ import {
 	type MeetupRsvpModel,
 } from '../../../../models/rsvp.model.js';
 import type { CreateRsvpInput } from '../../../../schema/meetup/rsvp.schema.js';
-import { MeetupService } from '../../../../service/meetup/meetup.service.js';
+// import MeetupService from '../../../../service/meetup/meetup.service.js';
 import { RsvpService } from '../../../../service/rsvp/rsvp.service.js';
 
 /**

@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/packag
 import { error, success } from '../../../middleware/apiResponse.js';
 import { type MeetupDocument, MeetupStatusEnum } from '../../../models/meetup.model.js';
 import type { DeleteMeetupInput, UpdateMeetupInput } from '../../../schema/meetup/meetup.schema.js';
-import { MeetupService } from '../../../service/meetup/meetup.service.js';
+import MeetupService from '../../../service/meetup/meetup.service.js';
 
 export default async function deleteDocument(
 	req: Request<DeleteMeetupInput['params'], unknown, UpdateMeetupInput['body']>,

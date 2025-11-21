@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'; // https://www.npmjs.com/packag
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { UserDocument } from '../../../models/auth/user.model.js';
 import type { CreateMeetupInput } from '../../../schema/meetup/meetup.schema.js';
-import { MeetupService } from '../../../service/meetup/meetup.service.js';
+import MeetupService from '../../../service/meetup/meetup.service.js';
 
 /**
  * Create a new document
