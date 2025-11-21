@@ -5,7 +5,7 @@ import type { UserDocument } from '../../../../models/auth/user.model.js';
 import { type MeetupDocument, MeetupStatusEnum } from '../../../../models/meetup.model.js';
 import type { MeetupRsvpModel } from '../../../../models/rsvp.model.js';
 import type { CreateRsvpInput, UpdateRsvpInput } from '../../../../schema/meetup/rsvp.schema.js';
-import { RsvpService } from '../../../../service/rsvp/rsvp.service.js';
+import RsvpService from '../../../../service/rsvp/rsvp.service.js';
 
 /**
  * Update a meetup rsvp response
@@ -52,7 +52,7 @@ export default async function updateRsvp(
 	const responseUserId = !userId ? '' : userId.toString();
 
 	// add or update the response attendance data
-	const updatedResponse = await RsvpService.updateResponse(theEvent, req, responseUserId);
+	const updatedResponse = await RsvpService.updateRsvp(theEvent, req, responseUserId);
 
 	if (updatedResponse) {
 		// for security, do not send back the whole event as it potentially contains a lot of info

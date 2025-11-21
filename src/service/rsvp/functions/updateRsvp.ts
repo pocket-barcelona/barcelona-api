@@ -1,9 +1,10 @@
+// biome-ignore lint/correctness/noUnusedImports: WIP
 import { type MeetupDocument, TicketTypeEnum } from '../../../models/meetup.model.js';
 import type { MeetupRsvpModel } from '../../../models/rsvp.model.js';
 import type { UpdateRsvpInput } from '../../../schema/meetup/rsvp.schema.js';
 // import logger from "../../../utils/logger.js";
 
-export default async function updateResponse(
+export default async function updateRsvp(
 	theEvent: MeetupDocument,
 	input: UpdateRsvpInput,
 	userId: string
@@ -38,11 +39,12 @@ export default async function updateResponse(
 	let updated = null;
 
 	try {
-		updated = await theEvent.save().catch((err) => {
+		updated = await theEvent.save().catch((_error: unknown) => {
 			// logger.warn(err);
 			return null;
 		});
-	} catch (error) {
+		// return updated;
+	} catch (_error: unknown) {
 		return null;
 	}
 	return newResponse;

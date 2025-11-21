@@ -10,7 +10,7 @@ import {
 } from '../../../../models/rsvp.model.js';
 import type { CreateRsvpInput } from '../../../../schema/meetup/rsvp.schema.js';
 // import MeetupService from '../../../../service/meetup/meetup.service.js';
-import { RsvpService } from '../../../../service/rsvp/rsvp.service.js';
+import RsvpService from '../../../../service/rsvp/rsvp.service.js';
 
 /**
  * Create a new rsvp response to the meetup event

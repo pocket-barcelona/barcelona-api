@@ -3,7 +3,7 @@ import { success } from '../../../../middleware/apiResponse.js';
 import type { UserDocument } from '../../../../models/auth/user.model.js';
 import type { MeetupDocument } from '../../../../models/meetup.model.js';
 import type { CreateRsvpInput } from '../../../../schema/meetup/rsvp.schema.js';
-import { RsvpService } from '../../../../service/rsvp/rsvp.service.js';
+import RsvpService from '../../../../service/rsvp/rsvp.service.js';
 
 /**
  * Check if user has responded to this meetup event or not yet
