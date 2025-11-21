@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { error, success } from '../../../middleware/apiResponse.js';
 import type { ReadEventInput } from '../../../schema/event/event.schema.js';
-import { EventsService } from '../../../service/events/events.service.js';
+import EventsService from '../../../service/events/events.service.js';
 
 /**
  * Get an event by ID
