@@ -16,6 +16,7 @@ router.get('/search/prepopulate', [], PlacesController.searchPrepopulateHandler)
 
 router.get('/:placeId', [validateResource(readPlaceSchema)], PlacesController.getByIdHandler);
 
+/** @deprecated @donotuse this endpoint */
 router.get('/categories/list', [], PlacesController.getPlaceCategoriesHandler);
 
 router.get(
