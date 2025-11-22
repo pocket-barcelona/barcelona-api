@@ -8,14 +8,12 @@ import MeetupService from '../../../service/meetup/meetup.service.js';
  * Get a document by ID
  * @param req
  * @param res
- * @param loggedIn If true, returns more information, such as responses list
  * @returns
  */
-export default async function getById(
-	req: Request<ReadMeetupByIdInput['params']>,
-	res: Response,
-	loggedIn = true
-) {
+export default async function getById(req: Request<ReadMeetupByIdInput['params']>, res: Response) {
+	// If true, returns more information, such as responses list
+	const loggedIn = Boolean(res.locals.user);
+
 	const { meetupId } = req.params;
 	const document = await MeetupService.getById({ meetupId, loggedIn });
 

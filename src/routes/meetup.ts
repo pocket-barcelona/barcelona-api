@@ -1,14 +1,14 @@
 import express from 'express';
-import { MeetupController } from '../controller/meetup/meetup.controller.js';
+import MeetupController from '../controller/meetup/meetup.controller.js';
 import { RsvpController } from '../controller/meetup/rsvp.controller.js';
-import requireAdmin from '../middleware/requireAdmin.js';
+// import requireAdmin from '../middleware/requireAdmin.js';
 import requireCanRsvp from '../middleware/requireCanRsvp.js';
 import requireMeetup from '../middleware/requireMeetup.js';
 import requireUser from '../middleware/requireUser.js';
 import validateResource from '../middleware/validateResource.js';
 import {
 	createMeetupSchema,
-	deleteMeetupSchema,
+	// deleteMeetupSchema,
 	getMeetupByIdSchema,
 	getMeetupByShortIdSchema,
 	getMeetupsByGroupIdSchema,
@@ -37,13 +37,14 @@ router.post(
 router.get(
 	'/:meetupId',
 	[requireUser, validateResource(getMeetupByIdSchema)],
-	MeetupController.getMeetupHandler
+	MeetupController.getMeetupByIdHandler
 );
 /** Get public info about the meetup (user doesn't need to be logged in or have an account) */
 router.get(
 	'/:meetupId/public',
 	[validateResource(getMeetupByIdSchema)],
-	MeetupController.getNotLoggedInMeetupHandler
+	// MeetupController.getNotLoggedInMeetupByIdHandler
+	MeetupController.getMeetupByIdHandler
 );
 /** Get public info about the meetup (user doesn't need to be logged in or have an account) */
 router.get(
