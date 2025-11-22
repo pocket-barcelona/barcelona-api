@@ -1,11 +1,11 @@
 import express from 'express';
-import { MeetupGroupController } from '../controller/meetupGroup/meetupGroup.controller.js';
+import MeetupGroupController from '../controller/meetupGroup/meetupGroup.controller.js';
 import requireAdmin from '../middleware/requireAdmin.js';
 import requireUser from '../middleware/requireUser.js';
 import validateResource from '../middleware/validateResource.js';
 import {
 	createMeetupGroupSchema,
-	deleteMeetupGroupSchema,
+	// deleteMeetupGroupSchema,
 	getMeetupGroupByIdSchema,
 	updateMeetupGroupSchema,
 } from '../schema/meetupGroup/meetupGroup.schema.js';
@@ -15,7 +15,7 @@ const router = express.Router();
 // ########### MEETUPS GROUPS ###########
 
 // @todo - ADMIN
-router.get('/', [requireUser, requireAdmin], MeetupGroupController.getMeetupGroupListHandler);
+router.get('/', [requireUser, requireAdmin], MeetupGroupController.getMeetupGroupsListHandler);
 
 // @todo - ADMIN - generate QR code for meetup
 // @todo - ADMIN - validate QR code for this meetup (checks if user has rsvp'd as GOING etc)
@@ -36,7 +36,7 @@ router.post(
 router.get(
 	'/:groupId',
 	[validateResource(getMeetupGroupByIdSchema)],
-	MeetupGroupController.getMeetupGroupHandler
+	MeetupGroupController.getMeetupGroupByIdHandler
 );
 
 // /** Get public info about the group (user doesn't need to be logged in or have an account) */
