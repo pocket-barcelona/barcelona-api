@@ -72,7 +72,7 @@ export class AdminService {
 		// check mime type
 		// generate safe/unique file name based on file title
 
-		const { mimetype, size: fileSize, originalFilename } = formidableFile;
+		const { mimetype, size: fileSize } = formidableFile;
 		if (fileSize > IMAGE_FILESIZE_MAX) {
 			throw new Error('File size too large!');
 		}
@@ -130,7 +130,7 @@ export class AdminService {
 			let blob: Buffer;
 			try {
 				blob = fs.readFileSync(formidableFile.filepath);
-			} catch (error) {
+			} catch (_error: unknown) {
 				throw new Error('Error reading file');
 			}
 
@@ -164,7 +164,7 @@ export class AdminService {
 					fields,
 					uploadedFile,
 				};
-			} catch (err) {
+			} catch (_error: unknown) {
 				// console.error(err);
 			}
 			// biome-ignore lint/suspicious/noExplicitAny: WIP

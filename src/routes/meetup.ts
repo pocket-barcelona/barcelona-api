@@ -1,6 +1,6 @@
 import express from 'express';
 import MeetupController from '../controller/meetup/meetup.controller.js';
-import { RsvpController } from '../controller/meetup/rsvp.controller.js';
+import RsvpController from '../controller/meetup/rsvp.controller.js';
 // import requireAdmin from '../middleware/requireAdmin.js';
 import requireCanRsvp from '../middleware/requireCanRsvp.js';
 import requireMeetup from '../middleware/requireMeetup.js';
