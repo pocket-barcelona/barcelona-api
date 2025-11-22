@@ -1,5 +1,5 @@
 import express from 'express';
-import { AdminController } from '../controller/admin/admin.controller.js';
+import AdminController from '../controller/admin/admin.controller.js';
 import PostsController from '../controller/posts/posts.controller.js';
 import requireUser from '../middleware/requireUser.js';
 import validateResource from '../middleware/validateResource.js';
